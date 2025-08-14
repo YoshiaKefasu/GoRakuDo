@@ -76,4 +76,4 @@ Jika Anda menemukan bug atau ingin mengusulkan fitur, silakan buka **Issue** ter
 
 ## 📄 Lisensi
 
-Proyek ini dilisensikan di bawah **[Lisensi GPL-3.0](./LICENSE)**.
+Proyek ini dilisensikan di bawah **[Lisensi Mozilla Public Versi 2.0](./LICENSE)**.
