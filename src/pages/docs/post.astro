@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post | GoRakuDo Documentation</title>
-    <link is:inline rel="stylesheet" href="/css/post-styles.css">
+    <link is:inline rel="stylesheet" href="/GoRakuDo/css/post-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
@@ -79,7 +79,7 @@
         </div>
     </main>
 
-    <script is:inline src="/scripts/post-script.js"></script>
+    <script is:inline src="/GoRakuDo/scripts/post-script.js"></script>
     <script>
         // Navigation functions
         function goHome() {
@@ -204,7 +204,7 @@
         // Clean up sessionStorage when leaving the page
         window.addEventListener('beforeunload', function() {
             // Only clean up if we're navigating away from post pages
-            if (!window.location.href.includes('/docs/post.html')) {
+            if (!window.location.href.includes('/docs/post')) {
                 sessionStorage.removeItem('currentPost');
             }
         });

@@ -3,10 +3,10 @@
   // 追加したいFaviconの情報を配列として定義します。
   // 将来的にアイコンを追加・変更したい場合は、この配列を編集するだけです。
   const faviconLinks = [
-    { rel: 'icon', href: '/favicon/favicon.ico', sizes: 'any' },
-    { rel: 'icon', href: '/favicon/favicon.svg', type: 'image/svg+xml' },
+    { rel: 'icon', href: '/GoRakuDo/favicon/favicon.ico', sizes: 'any' },
+    { rel: 'icon', href: '/GoRakuDo/favicon/favicon.svg', type: 'image/svg+xml' },
     { rel: 'apple-touch-icon', href: '/favicon/apple-touch-icon.png' },
-    { rel: 'manifest', href: '/favicon/site.webmanifest' }
+    { rel: 'manifest', href: '/GoRakuDo/favicon/site.webmanifest' }
   ];
 
   // ドキュメントの<head>要素を取得します。
