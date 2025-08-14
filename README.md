@@ -1,7 +1,8 @@
 # Project Website 「語楽道」
 Selamat datang di repository resmi untuk website **GoRakuDo**. Proyek ini awalnya dibangun sebagai website statis HTML, CSS, dan JavaScript, dan kini telah dimigrasikan ke **Astro.js** untuk performa yang lebih cepat, pengembangan yang lebih modern, dan kemudahan pengelolaan.
 
-**[➡️ Kunjungi Situs Live](https://gorakudo.org)**
+**[➡️➡️➡️ Kunjungi Situs Live](https://gorakudo.org)**
+
 
 ## 🎯 Misi Proyek
 
@@ -10,6 +11,7 @@ GoRakuDo bertujuan menyediakan jalur belajar bahasa Jepang yang menyenangkan dan
 *   Menyediakan **panduan dan roadmap** yang jelas.
 *   Mengajak pembelajar untuk bergabung dengan **komunitas Discord** kami.
 
+
 ## 🛠️ Tumpukan Teknologi (Tech Stack)
 
 *   **Framework**: [Astro.js](https://astro.build/)
@@ -17,9 +19,11 @@ GoRakuDo bertujuan menyediakan jalur belajar bahasa Jepang yang menyenangkan dan
 *   **Deployment**: GitHub Pages
 *   **CI/CD**: GitHub Actions
 
+
 ## 📂 Struktur Proyek
 
 Proyek ini mengikuti struktur standar Astro untuk kemudahan navigasi.
+
 
 ## 🚀 Memulai (Development Lokal)
 
@@ -50,6 +54,7 @@ Ingin menjalankan proyek ini di mesin lokal Anda? Ikuti langkah-langkah berikut.
     ```
     Proyek akan berjalan di `http://localhost:4321`.
 
+
 ## 📦 Skrip yang Tersedia
 
 | Command                   | Action                                           |
@@ -61,12 +66,14 @@ Ingin menjalankan proyek ini di mesin lokal Anda? Ikuti langkah-langkah berikut.
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+
 ## 🤝 Kontribusi
 
 Saat ini proyek ini dikelola secara pribadi, namun laporan bug, saran fitur, atau Pull Request (PR) untuk perbaikan sangat diterima.
 
 Jika Anda menemukan bug atau ingin mengusulkan fitur, silakan buka **Issue** terlebih dahulu untuk diskusi.
 
+
 ## 📄 Lisensi
 
-Proyek ini dilisensikan di bawah **[Lisensi MIT](./LICENSE)**.
+Proyek ini dilisensikan di bawah **[Lisensi GPL-3.0](./LICENSE)**.
