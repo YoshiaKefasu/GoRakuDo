@@ -1,16 +1,244 @@
----
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO and Social Sharing Meta Tags -->
+    <meta name="description" content="GoRakuDo - Komunitas Japanese Immersion Learning terbesar Indonesia. Belajar bahasa Jepang secara alami dengan metode immersion terbukti dari Prof. Stephen Krashen.">
+    <meta name="keywords" content="bahasa jepang, japanese learning, immersion, anime, manga, otaku, stephen krashen, gorakudo">
+    <meta name="author" content="GoRakuDo Team">
+    <meta property="og:title" content="GoRakuDo - Japanese Immersion Learning Community">
+    <meta property="og:description" content="Komunitas immersion bahasa Jepang terbesar Indonesia. Belajar alami, kuasai seperti penutur asli.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gorakudo.org">
+    
+    <script is:inline src="/scripts/favicon.js" defer></script>
+    
+    <title>語楽道</title>
+    <script is:inline src="/scripts/web-title-manager.js"></script>
+    <script>
+        setPageTitle("Komunitas Immersion Terbesar JP-Indonesia");
+    </script>
+	
+    <!----- Old Browser Support Blocker (CRITICAL) DO NOT MOVE OR DEFER. ----->
+    <script is:inline src="/scripts/upgrade-browsermu.js"></script>
 
----
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/css/homepage-styles.css">
+    
+    <!-- Google Fonts with Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Wave Animation Background (Hidden from screen readers) -->
+    <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+    
+    <!-- Stars Background (Hidden from screen readers) -->
+    <div class="stars" aria-hidden="true">
+        <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+        <div class="star" style="top: 20%; right: 20%; animation-delay: 1s;"></div>
+        <div class="star" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
+        <div class="star" style="bottom: 30%; left: 10%; animation-delay: 1.5s;"></div>
+        <div class="star" style="bottom: 20%; right: 30%; animation-delay: 0.5s;"></div>
+        <div class="star" style="top: 60%; left: 15%; animation-delay: 2.5s;"></div>
+        <div class="star" style="top: 80%; right: 20%; animation-delay: 1.8s;"></div>
+        <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
+    </div>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <div class="nav-left">
+                <span class="nav-item" role="button" tabindex="0">Tentang</span>
+                <span class="nav-item" role="button" tabindex="0">Metodologi</span>
+            </div>
+            <div class="nav-center">
+                <ruby class="logo-japanese" onclick="window.location.href = '/'" role="button" tabindex="0" aria-label="GoRakuDo - Kembali ke beranda">
+                    語楽道</rt>
+                </ruby>
+            </div>
+            <div class="nav-right">
+                <span class="nav-item" role="button" tabindex="0">Resources</span>
+                <span class="nav-item" onclick="goToPosts()" role="button" tabindex="0">Panduan</span>
+                <span class="nav-item" role="button" tabindex="0">Tools</span>
+                <button class="get-started-btn" onclick="scrollToMission()" aria-label="Mulai perjalanan belajar bahasa Jepang">Mulai Sekarang</button>
+            </div>
+            <!-- Mobile menu button -->
+            <button class="mobile-menu-btn" onclick="openInvitationModal()" aria-label="Gabung komunitas Discord">Join</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="hero-content">
+                <div class="hero-subtitle">IMMERSION BAHASA JEPANG</div>
+                <h1 class="hero-title" id="hero-title">
+                    <span class="gold-marker">#Go-IMMERSE</span>
+                    <span class="white-gradient-text">
+                        Belajar Secara Alami,<br/>
+                        Kuasai Layaknya Penutur Asli.
+                    </span>
+                </h1>
+                <p class="hero-description">
+                    Kami ingin kamu mencapai titik di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi dipahami secara instan seperti bahasa ibu. Dan membuat-mu “hidup” dalam bahasa Jepang 🔥
+                </p>
+                <div class="hero-buttons">
+                    <button class="primary-button" onclick="scrollToMission()" aria-label="Mulai perjalanan belajar immersion">
+                        Mulai Perjalananmu
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <button class="secondary-button" onclick="openInvitationModal()" aria-label="Bergabung dengan komunitas Discord">
+                        Gabung Komunitas
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission Section -->
+        <section id="mission" class="mission-section smooth-edge-bottom" aria-labelledby="mission-title">
+            <div class="mission-container">
+                <h2 class="mission-title" id="mission-title">Misi Kami</h2>
+                <div class="mission-content">
+                    <div class="mission-text">
+                        <p>
+    🌊✨ <b>Misi kami adalah memberi jalur yang menyenangkan</b>, dan <i>terbukti secara ilmiah</i> oleh 🎓 Prof. Stephen Krashen bagi siapa pun yang mulai dari <b>nol</b> untuk menguasai bahasa Jepang secara alami 🌱 dan berkelanjutan. 
+</p>
+<p>
+    Kami yakin belajar bahasa itu bukan sekadar menghafal aturan 📖 atau kosakata, tapi membentuk kemampuan berpikir, 🤔 memahami, dan berkomunikasi seperti penutur asli. Dengan immersion, kamu langsung terjun dalam bahasa Jepang sejak hari pertama—mendengar, membaca, dan ⚡ langsung memahaminya di konteks aslinya.
+</p>
+<p>
+    🚀 Kami hadir untuk menghapus rasa takut dan kebingungan pemula. 🗺️ Roadmap kami memecah perjalanan menjadi tahap sederhana—dari huruf dasar (kana) hingga memahami novel, percakapan, dan media kompleks—dengan dukungan tools seperti Anki, kamus monolingual, dan konten Jepang yang sesuai level-mu.
+</p>
+<p>
+    🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu “hidup” dalam bahasa Jepang, bukan sekadar mempelajarinya. Kami ingin kamu mencapai titik di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi ⚡ dipahami secara instan seperti bahasa ibu. Dengan immersion, kamu tidak hanya mempelajari aturan, tetapi membangun hubungan yang mendalam dengan 🎎 budaya, pola pikir, dan ekspresi unik orang Jepang. Ini adalah perjalanan menuju <i>Nativeness</i> 💫, bukan sekadar <i>Fluency</i>—dan kami akan menemani setiap langkahmu 👣.
+</p>
+                    </div>
+                </div>
+                <div class="mission-cta">
+                    <button class="cta-button" onclick="openInvitationModal()" aria-label="Bergabung dengan komunitas GoRakuDo">
+                        Gabung Komunitas Kami
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" aria-labelledby="features-title">
+            <div class="features-container">
+                <h2 class="features-title" id="features-title">Pendekatan Immersion</h2>
+                <div class="features-grid" role="list">
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">🎯</div>
+                        <h3>Belajar Alami</h3>
+                        <p>Pelajari bahasa Jepang sesuai cara otak dirancang untuk memperoleh bahasa—melalui paparan bermakna, bukan hafalan.</p>
+                    </article>
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">📚</div>
+                        <h3>Peta Jalan Terstruktur</h3>
+                        <p>Tahapan yang jelas dan dapat dicapai dari kana dasar hingga media kompleks. Setiap langkah dibangun secara alami dari yang sebelumnya.</p>
+                    </article>
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">🧠</div>
+                        <h3>Berpikir dalam Jepang</h3>
+                        <p>Melampaui terjemahan. Kembangkan kemampuan untuk memahami dan merasakan bahasa Jepang secara instan, seperti penutur asli.</p>
+                    </article>
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">🎌</div>
+                        <h3>Koneksi Budaya</h3>
+                        <p>Bangun pemahaman mendalam tentang budaya, pola pikir, dan ekspresi Jepang melalui konten autentik.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation Preview Section -->
+        <section class="docs-preview-section" aria-labelledby="docs-title">
+            <div class="docs-container">
+                <h2 class="docs-title" id="docs-title">Panduan & Dokumentasi</h2>
+                <p class="docs-description">
+                    Akses panduan lengkap, metodologi immersion, dan sumber daya pembelajaran yang telah terbukti efektif.
+                </p>
+                <div class="docs-cta">
+                    <button class="docs-button" onclick="goToPosts()" aria-label="Lihat semua dokumentasi dan panduan">
+                        Lihat Dokumentasi
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Invitation Modal -->
+    <div id="invitationModal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeInvitationModal()" aria-label="Tutup modal">×</button>
+            
+            <div class="modal-header">
+                <ruby class="modal-japanese-title" id="modal-title">
+                    語<rt>ご</rt>楽<rt>らく</rt>道<rt>どう</rt>
+                </ruby>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    Kami bukan komunitas biasa. Kita adalah rumah bagi para pembelajar otodidak yang terjun langsung ke <strong>🌊 Metode IMMERSION</strong>—sebuah cara belajar yang seru, alami, dan terbukti secara ilmiah oleh 🎓 Prof. Stephen Krashen.
+                </p>
+                
+                <p><strong>Siapa yang kami cari?</strong></p>
+                <ul class="modal-list" role="list">
+                    <li role="listitem">✅ <strong>Otaku & Anime Lovers:</strong> Ubah hobimu jadi skill!</li>
+                    <li role="listitem">✅ <strong>Pembelajar Serius:</strong> Temukan cara belajar paling efektif.</li>
+                </ul>
+
+                <p class="modal-final-pitch">
+                    Semua 100% GRATIS. Yang kamu butuhkan hanya NIAT.<br/>Ayo bergabung! 👍
+                </p>
+            </div>
+
+            <a href="https://discord.gg/j8qmYPAGQh" target="_blank" rel="noopener noreferrer" class="discord-link" aria-label="Bergabung dengan server Discord GoRakuDo">
+                <div class="discord-header">Alamat Komunitas Digital Kami:</div>
+                <div class="discord-url">
+                    discord.gg/j8qmYPAGQh<span class="arrow">→</span>
+                </div>
+            </a>
+            
+            <div class="modal-signature">
+                <img src="/img/Logo%20Discord%2080px.png" alt="Logo Gorakudou" class="logo-stamp">
+                <div class="signature-text">
+                    <div class="signature-title">Hormat kami,</div>
+                    <p class="signature-name">Tim GoRakuDo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script is:inline src="/scripts/hompage-script.js"></script>
+    
+    <!-- Performance and Analytics Script -->
+    <script>
+        // Preload the documentation page to make navigation feel faster
+        const linkPrefetch = document.createElement('link');
+        linkPrefetch.rel = 'prefetch';
+        linkPrefetch.href = '/docs/posts'; // This should be the URL of your documentation page
+        document.head.appendChild(linkPrefetch);
+        
+        // Optional: Track page performance metrics in the browser console
+        window.addEventListener('load', function() {
+            if (performance) {
+                console.log('🏆 Homepage fully loaded in', performance.now().toFixed(2), 'ms');
+            }
+        });
+    </script>
+</body>
 </html>

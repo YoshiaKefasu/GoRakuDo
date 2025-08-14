@@ -1,0 +1,94 @@
+---
+// src/components/head.astro
+
+// Impor aset dari 'src' agar Astro bisa mengoptimalkannya
+import '../styles/global.css'; // Ganti dengan path ke file CSS global Anda
+
+// Tentukan properti yang bisa diterima komponen ini, dengan nilai default
+export interface Props {
+  title: string;
+  description: string;
+  image?: string; // Gambar spesifik untuk halaman ini (opsional)
+  articleDate?: string; // Tanggal publikasi, khusus untuk artikel/dokumentasi
+}
+
+// Ambil props yang dikirim dari halaman, atau gunakan nilai default jika tidak ada
+const {
+  title,
+  description,
+  image,
+  articleDate,
+} = Astro.props;
+
+// ---- Variabel SEO Global ----
+const siteName = "GoRakuDo";
+const siteAuthor = "Tim GoRakuDo";
+const twitterHandle = "@yoshiakefasu"; // Ganti dengan handle Twitter Anda
+
+// ---- Logika Dinamis ----
+// Membuat judul yang SEO-friendly: "Judul Halaman | Nama Situs"
+const formattedTitle = `${title} ・ ${siteName}`;
+
+// Menentukan URL kanonis secara otomatis dari halaman saat ini
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+// Menggunakan gambar spesifik halaman, atau gambar default jika tidak ada
+// PASTIKAN Anda membuat gambar di `public/social-preview.png` (ukuran rekomendasi: 1200x630px)
+const socialImageUrl = new URL(image || '/Logo Discord 1x.png', Astro.site);
+
+// Menentukan tipe konten (website untuk halaman umum, article untuk postingan blog/dok)
+const pageType = articleDate ? "article" : "website";
+---
+
+<!-- ======================================================================= -->
+<!-- ===================     HEAD YANG DIOPTIMALKAN     ==================== -->
+<!-- ======================================================================= -->
+
+<!-- Pengaturan Dasar & Karakter -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Judul Halaman (Penting untuk SEO & Tab Browser) -->
+<title>{formattedTitle}</title>
+
+<!-- Deskripsi Halaman (Muncul di bawah judul di hasil pencarian Google) -->
+<meta name="description" content={description} />
+<meta name="author" content={siteAuthor} />
+
+<!-- URL Kanonis (Memberitahu Google URL "resmi" halaman ini) -->
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Open Graph (untuk pratinjau di Facebook, Discord, LinkedIn, dll.) -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:type" content={pageType} />
+<meta property="og:image" content={socialImageUrl} />
+<meta property="og:image:alt" content={`Gambar pratinjau untuk: ${title}`} />
+<meta property="og:locale" content="id_ID" />
+
+<!-- Twitter Cards (untuk pratinjau di Twitter) -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={twitterHandle} />
+<meta name="twitter:creator" content={twitterHandle} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImageUrl} />
+<meta name="twitter:image:alt" content={`Gambar pratinjau untuk: ${title}`} />
+
+<!-- Tanggal publikasi (khusus untuk tipe "article") -->
+{articleDate && <meta property="article:published_time" content={articleDate} />}
+
+<!-- Favicon (Praktik terbaik menggunakan link statis) -->
+<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/favicon/site.webmanifest" />
+
+<!-- Preconnect ke Google Fonts untuk performa loading yang lebih cepat -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet" />
+
+<!-- Blocker untuk browser lama (tetap gunakan is:inline agar tidak diproses Astro) -->
+<script is:inline src="/upgrade-browsermu.js"></script>

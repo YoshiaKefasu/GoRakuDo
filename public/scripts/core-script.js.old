@@ -1,0 +1,370 @@
+// Fluid Kanagawa Wave Animation
+class WaveAnimation {
+    constructor() {
+        this.canvas = document.getElementById('waveCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.animationId = null;
+        this.time = 0;
+        
+        this.waves = [
+            {
+                amplitude: 40,
+                frequency: 0.01,
+                speed: 0.02,
+                offset: 0,
+                color: 'rgba(139, 93, 255, 0.08)',
+                y: 0.7
+            },
+            {
+                amplitude: 60,
+                frequency: 0.008,
+                speed: -0.015,
+                offset: Math.PI / 3,
+                color: 'rgba(139, 93, 255, 0.06)',
+                y: 0.75
+            },
+            {
+                amplitude: 35,
+                frequency: 0.012,
+                speed: 0.025,
+                offset: Math.PI / 2,
+                color: 'rgba(139, 93, 255, 0.04)',
+                y: 0.8
+            },
+            {
+                amplitude: 45,
+                frequency: 0.009,
+                speed: -0.018,
+                offset: Math.PI,
+                color: 'rgba(139, 93, 255, 0.03)',
+                y: 0.85
+            }
+        ];
+        
+        this.init();
+    }
+    
+    init() {
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+        this.animate();
+    }
+    
+    resizeCanvas() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        
+        // Update wave y positions based on new height
+        this.waves.forEach(wave => {
+            wave.yPos = this.height * wave.y;
+        });
+    }
+    
+    animate() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        // Create gradient background
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+        gradient.addColorStop(0, 'rgba(10, 10, 10, 1)');
+        gradient.addColorStop(0.5, 'rgba(10, 10, 10, 0.95)');
+        gradient.addColorStop(1, 'rgba(139, 93, 255, 0.02)');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        
+        // Draw waves
+        this.waves.forEach((wave, index) => {
+            this.ctx.beginPath();
+            
+            // Create wave path
+            for (let x = 0; x <= this.width + 10; x += 2) {
+                const y = wave.yPos + Math.sin(x * wave.frequency + this.time * wave.speed + wave.offset) * wave.amplitude;
+                
+                if (x === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+            
+            // Close the path to create filled area
+            this.ctx.lineTo(this.width, this.height);
+            this.ctx.lineTo(0, this.height);
+            this.ctx.closePath();
+            
+            this.ctx.fillStyle = wave.color;
+            this.ctx.fill();
+            
+            // Add subtle stroke for more definition
+            this.ctx.strokeStyle = 'rgba(139, 93, 255, 0.1)';
+            this.ctx.lineWidth = 0.5;
+            this.ctx.stroke();
+        });
+        
+        // Add floating particles
+        for (let i = 0; i < 8; i++) {
+            const x = (this.width * 0.1) + (i * this.width * 0.1) + Math.sin(this.time * 0.01 + i) * 20;
+            const y = this.height * 0.3 + Math.sin(this.time * 0.008 + i * 1.5) * 30;
+            const size = 1 + Math.sin(this.time * 0.02 + i) * 0.5;
+            const opacity = 0.3 + Math.sin(this.time * 0.015 + i) * 0.2;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(139, 93, 255, ${opacity})`;
+            this.ctx.fill();
+        }
+        
+        this.time += 1;
+        this.animationId = requestAnimationFrame(() => this.animate());
+    }
+    
+    destroy() {
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+        }
+        window.removeEventListener('resize', () => this.resizeCanvas());
+    }
+}
+
+// Smooth scrolling function
+function scrollToMission() {
+    const missionSection = document.getElementById('mission');
+    if (missionSection) {
+        missionSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// Modal functions
+function openInvitationModal() {
+    const modal = document.getElementById('invitationModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeInvitationModal() {
+    const modal = document.getElementById('invitationModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Navbar scroll effect
+function handleNavbarScroll() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+    } else {
+        navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+    }
+}
+
+// Parallax effect for stars
+function handleStarsParallax() {
+    const scrolled = window.pageYOffset;
+    const stars = document.querySelectorAll('.star');
+    
+    stars.forEach((star, index) => {
+        const speed = 0.5 + (index * 0.1);
+        star.style.transform = `translateY(${scrolled * speed}px)`;
+    });
+}
+
+// Intersection Observer for fade-in animations
+function setupScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe mission and features sections
+    const animatedElements = document.querySelectorAll('.mission-section, .features-section');
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(el);
+    });
+
+    // Stagger animation for feature cards
+    const cards = document.querySelectorAll('.feature-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `opacity 0.8s ease ${index * 0.1}s, transform 0.8s ease ${index * 0.1}s`;
+        
+        const cardObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        cardObserver.observe(card);
+    });
+}
+
+// Enhanced hover effects for feature cards
+function setupFeatureCardEffects() {
+    const featureCards = document.querySelectorAll('.feature-card');
+    featureCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
+// Close modal when clicking outside
+function setupModalClickOutside() {
+    const modal = document.getElementById('invitationModal');
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeInvitationModal();
+        }
+    });
+}
+
+// Keyboard navigation for modal
+function setupKeyboardNavigation() {
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('invitationModal');
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+            closeInvitationModal();
+        }
+    });
+}
+
+// Navigation item click handlers
+function setupNavigationHandlers() {
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        if (item.textContent === 'Gabung Discord') {
+            item.addEventListener('click', openInvitationModal);
+        }
+    });
+}
+
+// Smooth reveal animation for hero content
+function setupHeroAnimation() {
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent) {
+        heroContent.style.opacity = '0';
+        heroContent.style.transform = 'translateY(50px)';
+        
+        setTimeout(() => {
+            heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
+            heroContent.style.opacity = '1';
+            heroContent.style.transform = 'translateY(0)';
+        }, 500);
+    }
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize wave animation
+    const waveAnimation = new WaveAnimation();
+    
+    // Setup all event listeners and animations
+    setupScrollAnimations();
+    setupFeatureCardEffects();
+    setupModalClickOutside();
+    setupKeyboardNavigation();
+    setupNavigationHandlers();
+    setupHeroAnimation();
+    
+    // Window scroll events
+    window.addEventListener('scroll', function() {
+        handleNavbarScroll();
+        handleStarsParallax();
+    });
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+        waveAnimation.destroy();
+    });
+});
+
+// Utility function for smooth scrolling to any element
+function smoothScrollTo(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// Add some interactive sparkle effects on mouse movement
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    // Subtle cursor trail effect
+    if (Math.random() < 0.1) {
+        createSparkle(mouseX, mouseY);
+    }
+});
+
+function createSparkle(x, y) {
+    const sparkle = document.createElement('div');
+    sparkle.style.position = 'fixed';
+    sparkle.style.left = x + 'px';
+    sparkle.style.top = y + 'px';
+    sparkle.style.width = '2px';
+    sparkle.style.height = '2px';
+    sparkle.style.background = '#8B5DFF';
+    sparkle.style.borderRadius = '50%';
+    sparkle.style.pointerEvents = 'none';
+    sparkle.style.zIndex = '9999';
+    sparkle.style.animation = 'sparkle 1s ease-out forwards';
+    
+    document.body.appendChild(sparkle);
+    
+    setTimeout(() => {
+        sparkle.remove();
+    }, 1000);
+}
+
+// Add sparkle animation to CSS if not already present
+if (!document.querySelector('#sparkle-style')) {
+    const style = document.createElement('style');
+    style.id = 'sparkle-style';
+    style.textContent = `
+        @keyframes sparkle {
+            0% {
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}

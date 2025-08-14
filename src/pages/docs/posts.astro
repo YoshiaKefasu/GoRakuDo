@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi & Panduan | GoRakuDo</title>
+    <link is:inline rel="stylesheet" href="/css/post-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <!-- Wave Animation Background -->
+    <canvas id="waveCanvas" class="wave-canvas"></canvas>
+    
+    <!-- Stars Background -->
+    <div class="stars">
+        <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+        <div class="star" style="top: 20%; right: 20%; animation-delay: 1s;"></div>
+        <div class="star" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
+        <div class="star" style="bottom: 30%; left: 10%; animation-delay: 1.5s;"></div>
+        <div class="star" style="bottom: 20%; right: 30%; animation-delay: 0.5s;"></div>
+        <div class="star" style="top: 60%; left: 15%; animation-delay: 2.5s;"></div>
+        <div class="star" style="top: 80%; right: 20%; animation-delay: 1.8s;"></div>
+        <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <span class="nav-item" onclick="goHome()">Beranda</span>
+                <span class="nav-item">Metodologi</span>
+                <span class="nav-item">Sumber Daya</span>
+                <span class="nav-item">Komunitas</span>
+            </div>
+            <div class="nav-center">
+                <ruby class="logo-japanese" onclick="goHome()">
+                    語<rt>ご</rt>楽<rt>らく</rt>道<rt>どう</rt>
+                </ruby>
+            </div>
+            <div class="nav-right">
+                <span class="nav-item">Panduan</span>
+                <span class="nav-item">Tools</span>
+                <span class="nav-item" onclick="goToInvitation()">Gabung Discord</span>
+                <button class="get-started-btn" onclick="goHome()">Kembali ke Beranda</button>
+            </div>
+            <!-- Mobile menu button -->
+            <button class="mobile-menu-btn" onclick="goToInvitation()">Join</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="posts-page">
+        <div class="posts-container">
+            <div class="posts-header">
+                <h1>Dokumentasi & Panduan</h1>
+                <p>Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.</p>
+            </div>
+
+            <div class="posts-grid" id="postsGrid">
+                <!-- Posts will be dynamically loaded here -->
+            </div>
+
+            <!-- Back to home -->
+            <div style="text-align: center; margin-top: 60px;">
+                <button class="cta-button" onclick="goHome()">
+                    Kembali ke Beranda
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script is:inline src="/scripts/post-script.js"></script>
+    <script>
+        // Sample posts data - In a real implementation, this would come from your GitHub repository
+        const posts = [
+            {
+                id: 'getting-started',
+                title: 'Memulai Perjalanan Immersion',
+                description: 'Panduan langkah demi langkah untuk memulai immersion bahasa Jepang dari nol.',
+                date: '2024-01-15',
+                readTime: '10 min read',
+                content: `# Memulai Perjalanan Immersion
+
+## Apa itu Immersion?
+
+Immersion adalah metode pembelajaran bahasa yang melibatkan paparan konstan terhadap bahasa target dalam konteks alami. Daripada belajar melalui terjemahan dan hafalan, Anda belajar seperti cara bayi memperoleh bahasa pertama mereka.
+
+## Langkah Pertama
+
+### 1. Pelajari Hiragana dan Katakana
+
+Sebelum memulai immersion, Anda perlu menguasai sistem penulisan dasar Jepang:
+
+- **Hiragana**: Untuk kata-kata asli Jepang
+- **Katakana**: Untuk kata pinjaman dan nama asing
+
+**Waktu yang dibutuhkan**: 2-4 minggu dengan latihan konsisten
+
+### 2. Memahami Kanji Dasar
+
+Mulai dengan kanji yang paling sering digunakan:
+- Kanji angka (一、二、三...)
+- Kanji hari (月、火、水...)
+- Kanji dasar sehari-hari (人、手、口...)
+
+### 3. Mulai Input yang Dapat Dipahami
+
+Cari konten yang:
+- Sedikit di atas level Anda saat ini
+- Menarik dan menyenangkan
+- Memiliki konteks visual (anime, drama, manga)
+
+## Tips Penting
+
+> **Ingat**: Jangan terlalu fokus pada pemahaman 100%. Tujuannya adalah paparan dan akuisisi alami.
+
+### Konsistensi adalah Kunci
+
+- Minimal 1 jam konten Jepang per hari
+- Variasikan jenis konten (audio, visual, teks)
+- Jangan stres jika tidak mengerti semuanya
+
+## Sumber Daya Recommended
+
+1. **Anki** - Untuk mengingat kanji dan kosakata
+2. **Yomichan** - Browser extension untuk membaca
+3. **Netflix Jepang** - Untuk anime dan drama
+4. **NHK Easy News** - Berita dalam bahasa sederhana
+
+---
+
+*Selamat memulai perjalanan Anda! Ingat, setiap penutur asli pernah menjadi pemula.*`
+            },
+            {
+                id: 'choosing-content',
+                title: 'Memilih Konten yang Tepat',
+                description: 'Cara memilih anime, manga, dan media Jepang yang sesuai dengan level Anda.',
+                date: '2024-01-20',
+                readTime: '8 min read',
+                content: `# Memilih Konten yang Tepat
+
+## Prinsip i+1
+
+Stephen Krashen memperkenalkan konsep **i+1**, di mana 'i' adalah level pemahaman Anda saat ini, dan '+1' adalah sedikit di atas level tersebut.
+
+### Untuk Pemula (0-6 bulan)
+
+**Anime yang Direkomendasikan:**
+- Slice of Life anime (K-On!, Yuru Camp)
+- Anime anak-anak (Doraemon, Anpanman)
+- Anime dengan dialog sederhana
+
+**Mengapa?**
+- Bahasa sehari-hari yang natural
+- Konteks visual membantu pemahaman
+- Dialog yang relatif lambat
+
+### Untuk Level Menengah (6-18 bulan)
+
+**Konten yang Cocok:**
+- Drama sekolah
+- Anime shounen populer (Naruto, One Piece)
+- Manga slice of life
+
+**Tips:**
+- Mulai tanpa subtitle bahasa Indonesia
+- Gunakan subtitle Jepang jika diperlukan
+- Jangan takut skip konten yang terlalu sulit
+
+### Untuk Level Lanjut (18+ bulan)
+
+**Tantangan Baru:**
+- Novel ringan (Light Novel)
+- Berita dan dokumenter
+- Podcast dan radio Jepang
+
+## Red Flags - Hindari Ini
+
+❌ **Konten terlalu sulit** - Membuat frustasi dan menghambat progress
+❌ **Terjemahan berlebihan** - Mengganggu proses akuisisi alami  
+❌ **Konten membosankan** - Motivasi menurun drastis
+
+## Golden Rules
+
+✅ **Pahami 70-80%** - Sweet spot untuk pembelajaran
+✅ **Nikmati prosesnya** - Fun adalah kuncinya
+✅ **Konsisten** - Better 30 menit setiap hari than 5 jam sekali seminggu
+
+---
+
+*Remember: The best content is the content you actually consume!*`
+            },
+            {
+                id: 'anki-guide',
+                title: 'Panduan Menggunakan Anki',
+                description: 'Setup dan strategi optimal untuk menggunakan Anki dalam pembelajaran bahasa Jepang.',
+                date: '2024-01-25',
+                readTime: '12 min read',
+                content: `# Panduan Menggunakan Anki
+
+## Apa itu Anki?
+
+Anki adalah aplikasi flashcard menggunakan sistem **Spaced Repetition System (SRS)** yang membantu Anda mengingat informasi dengan efisien.
+
+## Setup Dasar
+
+### 1. Download dan Install
+- [AnkiDroid](https://play.google.com/store/apps/details?id=com.ichi2.anki) untuk Android
+- [AnkiMobile](https://apps.apple.com/app/ankimobile-flashcards/id373493387) untuk iOS  
+- [Anki Desktop](https://apps.ankiweb.net/) untuk PC/Mac
+
+### 2. Membuat Akun AnkiWeb
+Untuk sinkronisasi antar device:
+1. Buka [ankiweb.net](https://ankiweb.net)
+2. Daftar akun gratis
+3. Sync di semua device Anda
+
+## Deck yang Direkomendasikan
+
+### Untuk Pemula
+**Core 2K/6K Deck**
+- 2000-6000 kata paling sering digunakan
+- Sudah termasuk audio dan contoh kalimat
+- Foundation yang solid untuk vocabulary
+
+### Untuk Mining
+**Sentence Cards**
+- Kartu berisi kalimat utuh dari konten yang Anda konsumsi
+- Lebih natural dan contextual
+- Membantu grammar acquisition
+
+## Best Practices
+
+### Daily Reviews
+- **Consistency over quantity**
+- 20-30 kartu baru per hari maximum
+- Selalu selesaikan review harian
+
+### Card Creation
+\`\`\`
+Front: 今日は[天気]がいいですね。
+Back: 今日は【てんき】がいいですね。
+Translation: The weather is nice today.
+\`\`\`
+
+### Settings Optimal
+- **New cards per day**: 20-25
+- **Maximum reviews**: 200-300
+- **Graduating interval**: 3 days
+- **Easy bonus**: 130%
+
+## Common Mistakes
+
+❌ **Terlalu banyak kartu baru** - Overwhelm dan burnout
+❌ **Skip reviews** - SRS tidak efektif
+❌ **Kartu terlalu sulit** - Frustasi dan demotivasi
+❌ **Tidak consistent** - Progress terhambat
+
+## Advanced Tips
+
+### Add-ons yang Berguna
+1. **Japanese Support** - Furigana generation
+2. **AwesomeTTS** - Text-to-speech
+3. **Review Heatmap** - Visualisasi consistency
+
+### Mining dari Immersion
+1. Temukan kata/kalimat menarik saat immersion
+2. Screenshot atau catat
+3. Buat kartu di Anki
+4. Review secara konsisten
+
+---
+
+*Anki is a tool, not a goal. Use it to support your immersion, not replace it.*`
+            }
+        ];
+
+        // Function to go back to home
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        // Function to go to invitation
+        function goToInvitation() {
+            window.location.href = '/discord';
+        }
+
+        // Function to render posts list
+        function renderPosts() {
+            const postsGrid = document.getElementById('postsGrid');
+            
+            posts.forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.onclick = () => viewPost(post.id);
+                
+                postCard.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p>${post.description}</p>
+                    <div class="post-meta">
+                        <span class="post-date">${formatDate(post.date)}</span>
+                        <span>${post.readTime}</span>
+                    </div>
+                `;
+                
+                postsGrid.appendChild(postCard);
+            });
+        }
+
+        // Function to view individual post
+        function viewPost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                // Store post data in sessionStorage
+                sessionStorage.setItem('currentPost', JSON.stringify(post));
+                // Navigate to post view
+                window.location.href = `/docs/post?id=${postId}`;
+            }
+        }
+
+        // Function to format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        // Initialize posts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPosts();
+        });
+    </script>
+</body>
+</html>
