@@ -1,33 +1,56 @@
-# Astro Starter Kit: Minimal
+# Project Website 「語楽道」
+Selamat datang di repository resmi untuk website **GoRakuDo**. Proyek ini awalnya dibangun sebagai website statis HTML, CSS, dan JavaScript, dan kini telah dimigrasikan ke **Astro.js** untuk performa yang lebih cepat, pengembangan yang lebih modern, dan kemudahan pengelolaan.
 
-```sh
-npm create astro@latest -- --template minimal
-```
+**[➡️ Kunjungi Situs Live](https://gorakudo.org)**
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🎯 Misi Proyek
 
-## 🚀 Project Structure
+GoRakuDo bertujuan menyediakan jalur belajar bahasa Jepang yang menyenangkan dan terbukti secara ilmiah (berdasarkan teori Prof. Stephen Krashen) bagi siapa pun dari level nol. Website ini berfungsi sebagai gerbang utama untuk:
+*   Memperkenalkan **metode immersion**.
+*   Menyediakan **panduan dan roadmap** yang jelas.
+*   Mengajak pembelajar untuk bergabung dengan **komunitas Discord** kami.
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🛠️ Tumpukan Teknologi (Tech Stack)
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+*   **Framework**: [Astro.js](https://astro.build/)
+*   **Bahasa**: HTML, CSS, JavaScript (dengan sedikit TypeScript)
+*   **Deployment**: GitHub Pages
+*   **CI/CD**: GitHub Actions
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 📂 Struktur Proyek
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Proyek ini mengikuti struktur standar Astro untuk kemudahan navigasi.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🚀 Memulai (Development Lokal)
 
-## 🧞 Commands
+Ingin menjalankan proyek ini di mesin lokal Anda? Ikuti langkah-langkah berikut.
 
-All commands are run from the root of the project, from a terminal:
+**Prasyarat**:
+*   Node.js (v22.0 atau lebih baru)
+*   npm / pnpm / yarn
+
+1.  **Clone repository ini:**
+    ```bash
+    git clone https://github.com/YoshiaKefasu/GoRakuDo.git
+    ```
+
+2.  **Masuk ke direktori proyek:**
+    ```bash
+    cd GoRakuDo
+    ```
+
+3.  **Install semua dependency:**
+    ```bash
+    npm install
+    ```
+
+4.  **Jalankan server development:**
+    ```bash
+    npm run dev
+    ```
+    Proyek akan berjalan di `http://localhost:4321`.
+
+## 📦 Skrip yang Tersedia
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -38,6 +61,12 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 🤝 Kontribusi
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Saat ini proyek ini dikelola secara pribadi, namun laporan bug, saran fitur, atau Pull Request (PR) untuk perbaikan sangat diterima.
+
+Jika Anda menemukan bug atau ingin mengusulkan fitur, silakan buka **Issue** terlebih dahulu untuk diskusi.
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah **[Lisensi MIT](./LICENSE)**.
