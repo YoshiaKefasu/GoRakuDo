@@ -30,9 +30,9 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           content: "Hey <@209310690643673088>"
-          title: "deploy"
+          title: "Build"
           description: |
-              Build and deploy to GitHub Pages.
+              Build to GitHub Pages.
               Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
           color: 0x2fa64d
           url: "https://github.com/sarisia/actions-status-discord"
@@ -55,9 +55,9 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           content: "Hey <@209310690643673088>"
-          title: "deploy"
+          title: "Deploy"
           description: |
-              Build and deploy to GitHub Pages.
+              Deploy to GitHub Pages.
               Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
           color: 0x2fa64d
           url: "https://github.com/sarisia/actions-status-discord"

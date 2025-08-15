@@ -1,8 +1,7 @@
 ---
-// src/layouts/BaseLayout.astro
-import HeadSEO from '../components/HeadSEO.astro';
-// CSSはここでインポートします。Astroが自動で<head>内に挿入してくれます。
+import Head from '../components/HeadSEO.astro';
 import '../styles/homepage-styles.css'; 
+import homepageOgImage from '../assets/images/Logo Discord.png';
 
 export interface Props {
     // このレイアウトが受け取るプロパティを定義
@@ -23,10 +22,10 @@ const { title, description, ogImage, pageType, publishedDate, lang } = Astro.pro
 <html lang={lang || 'id'}> 
 <head>
     <!-- HeadSEOコンポーネントに、受け取ったpropsをすべて渡します -->
-    <HeadSEO
+    <Head
         title={title}
         description={description}
-        ogImage={ogImage}
+        ogImage={homepageOgImage}
         pageType={pageType}
         publishedDate={publishedDate}
         lang={lang}

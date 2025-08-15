@@ -2,6 +2,9 @@
 import Head from '../components/HeadSEO.astro';
 import homepageOgImage from '../assets/images/Logo Discord.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
+// Vueコンポーネントをインポート
+import Navbar from '../components/Navbar.vue';
+
 ---
 
 <!DOCTYPE html>
@@ -33,27 +36,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-        <div class="nav-container">
-            <div class="nav-left">
-                <span class="nav-item" role="button" tabindex="0">Tentang</span>
-                <span class="nav-item" role="button" tabindex="0">Metodologi</span>
-            </div>
-            <div class="nav-center">
-                <ruby class="logo-japanese" onclick="window.location.href = '/'" role="button" tabindex="0" aria-label="GoRakuDo - Kembali ke beranda">
-                    語楽道</rt>
-                </ruby>
-            </div>
-            <div class="nav-right">
-                <span class="nav-item" role="button" tabindex="0">Resources</span>
-                <span class="nav-item" onclick="goToPosts()" role="button" tabindex="0">Panduan</span>
-                <span class="nav-item" role="button" tabindex="0">Tools</span>
-                <button class="get-started-btn" onclick="scrollToMission()" aria-label="Mulai perjalanan belajar bahasa Jepang">Mulai Sekarang</button>
-            </div>
-            <!-- Mobile menu button -->
-            <button class="mobile-menu-btn" onclick="openInvitationModal()" aria-label="Gabung komunitas Discord">Join</button>
-        </div>
-    </nav>
+    <Navbar client:load />
 
     <!-- Main Content -->
     <main class="main-content" role="main">
