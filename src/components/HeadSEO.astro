@@ -1,0 +1,158 @@
+---
+// [修正] ImageMetadataは不要。代わりにimportした画像の型を直接使う。
+import defaultOgImage from '../assets/images/Logo Discord.png';
+import type { ImageMetadata } from 'astro';
+
+// [修正] Propsの型定義を修正。importした画像の型を使う。
+export interface Props {
+  title: string;
+  description: string;
+  ogImage?: ImageMetadata;
+  canonicalUrl?: string;
+  pageType?: 'website' | 'article';
+  publishedDate?: string;
+  modifiedDate?: string;
+  authorName?: string;
+  lang?: 'id' | 'ja';
+  noIndex?: boolean;
+  alternateUrl?: string;
+}
+
+// --- Default Props ---
+const {
+  title,
+  description,
+  ogImage,
+  canonicalUrl = Astro.url.href,
+  pageType = 'website',
+  publishedDate,
+  modifiedDate,
+  authorName = 'Tim GoRakuDo',
+  lang = 'id',
+  noIndex = false,
+  alternateUrl,
+} = Astro.props;
+
+
+// --- Site-wide Constants (最初に定義) ---
+const siteUrl = Astro.site ? Astro.site.toString().slice(0, -1) : 'https://gorakudo.org';
+const siteTitle = 'GoRakuDo';
+const twitterHandle = '@yoshiakefasu';
+const siteLogoUrl = new URL('../assets/images/Logo Discord.png', siteUrl).toString();
+
+
+// --- Image Logic (依存関係を解決) ---
+const imageToUse = ogImage || defaultOgImage;
+const finalOgImage = new URL(imageToUse.src, siteUrl).toString();
+const imageWidth = imageToUse.width;
+const imageHeight = imageToUse.height;
+
+
+// --- Other Dynamic Variables ---
+const formattedTitle = `${title} | ${siteTitle}`; // 区切り文字を'|'に変更
+const robotsContent = noIndex ? 'noindex, follow' : 'index, follow';
+const locale = lang === 'ja' ? 'ja_JP' : 'id_ID';
+const alternateLocaleLang = lang === 'ja' ? 'id' : 'ja';
+const alternateLocale = lang === 'ja' ? 'id_ID' : 'ja_JP';
+const isoPublishedDate = publishedDate ? new Date(publishedDate).toISOString() : null;
+const isoModifiedDate = modifiedDate ? new Date(modifiedDate).toISOString() : isoPublishedDate;
+
+
+// --- Structured Data (JSON-LD) ---
+const structuredData = {
+  '@context': 'https://schema.org',
+  ...(pageType === 'article' && {
+    '@type': 'Article',
+    'mainEntityOfPage': { '@type': 'WebPage', '@id': canonicalUrl },
+    'headline': title,
+    'description': description,
+    'image': finalOgImage,
+    'author': { '@type': 'Organization', 'name': authorName, 'url': siteUrl },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'GoRakuDo',
+      'logo': { '@type': 'ImageObject', 'url': siteLogoUrl },
+    },
+    ...(isoPublishedDate && { 'datePublished': isoPublishedDate }),
+    ...(isoModifiedDate && { 'dateModified': isoModifiedDate }),
+  }),
+  ...(pageType === 'website' && {
+    '@type': 'WebSite',
+    'name': siteTitle,
+    'url': siteUrl,
+    'description': description,
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'GoRakuDo',
+      'logo': { '@type': 'ImageObject', 'url': siteLogoUrl },
+    },
+    'potentialAction': {
+      '@type': 'SearchAction',
+      'target': `${siteUrl}/search?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  }),
+};
+---
+
+<!-- ここから下は変更ありません -->
+
+<!-- 基本的なMetaタグ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ページタイトル -->
+<title>{formattedTitle}</title>
+
+<!-- 説明とカノニカルURL -->
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+<meta name="author" content="GoRakuDo Team" />
+
+<!-- 多言語対応 (hreflang) -->
+{ alternateUrl && <link rel="alternate" hreflang={alternateLocaleLang} href={alternateUrl} /> }
+<link rel="alternate" hreflang={lang} href={canonicalUrl} />
+
+<!-- Robots Meta -->
+<meta name="robots" content={robotsContent} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content={siteTitle} />
+<meta property="og:type" content={pageType} />
+<meta property="og:image" content={finalOgImage} />
+<meta property="og:image:alt" content={`${title}のプレビュー画像`} />
+<meta property="og:image:width" content={imageWidth.toString()} />
+<meta property="og:image:height" content={imageHeight.toString()} />
+<meta property="og:locale" content={locale} />
+<meta property="og:locale:alternate" content={alternateLocale} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={twitterHandle} />
+<meta name="twitter:creator" content={twitterHandle} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={finalOgImage} />
+<meta name="twitter:image:alt" content={`${title}のプレビュー画像`} />
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon/favicon.ico" sizes="any" />
+<link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/favicon/site.webmanifest" />
+<meta name="theme-color" content="#8B5DFF">
+
+<!-- フォントのPreconnect & Preload [パフォーマンス最適化] -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"></noscript>
+
+<!-- クリティカルなスクリプト -->
+<script is:inline src="/scripts/upgrade-browsermu.js"></script>
+
+<!-- 構造化データ -->
+{ Object.keys(structuredData).length > 1 && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} /> }

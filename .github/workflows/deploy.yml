@@ -23,6 +23,20 @@ jobs:
         uses: withastro/action@v2
         with:
            node-version: 22 # Sesuaikan dengan versi Node.js Anda
+      - name: Send Discord notification
+        uses: sarisia/actions-status-discord@v1.15.3
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: "Hey <@209310690643673088>"
+          title: "Build"
+          description: |
+              Build to GitHub Pages.
+              Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
+          color: 0x2fa64d
+          url: "https://github.com/sarisia/actions-status-discord"
+          username: GitHub Actions Deployer
 
   deploy:
     needs: build
@@ -34,3 +48,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Send Discord notification
+        uses: sarisia/actions-status-discord@v1.15.3
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: "Hey <@209310690643673088>"
+          title: "Deploy"
+          description: |
+              Deploy to GitHub Pages.
+              Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
+          color: 0x2fa64d
+          url: "https://github.com/sarisia/actions-status-discord"
+          username: GitHub Actions Builder
