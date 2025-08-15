@@ -23,4 +23,3 @@ jobs:
             Branch: `${{ github.ref_name }}`
             Commit: `${{ github.sha }}`
             Triggered by: `${{ github.event_name }}`
-          image: https://your-image-url.com/optional_image.png
