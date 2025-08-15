@@ -1,0 +1,25 @@
+---
+import Sidebar from "../components/DocumentationSidebar.vue";
+import Navbar from "../components/DocumentationNavbar.vue";
+import "@/styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&display=swap"
+    />
+  </head>
+  <body class="h-screen flex flex-col overflow-hidden font-sans bg-black text-white">
+    <Navbar />
+    <div class="flex flex-1 min-h-0">
+      <Sidebar />
+      <main class="flex-1 p-6 overflow-y-auto mx-10">
+        <slot />
+        <!-- konten page akan muncul di sini -->
+      </main>
+    </div>
+  </body>
+</html>
