@@ -1,0 +1,129 @@
+---
+import { Image } from 'astro:assets';
+
+export interface Props {
+  title: string;
+  description: string;
+  ogImage?: string; 
+  canonicalUrl?: string;
+  pageType?: 'website' | 'article';
+  publishedDate?: string; // 'YYYY-MM-DD' or 'YYYY/MM/DD' のような形式も受け入れる
+  authorName?: string;
+  lang?: 'id' | 'ja';
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  canonicalUrl = Astro.url.href,
+  pageType = 'website',
+  publishedDate,
+  authorName = 'Tim GoRakuDo',
+  lang = 'id',
+} = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.toString().slice(0, -1) : 'https://gorakudo.org';
+const siteTitle = 'GoRakuDo';
+const twitterHandle = '@yoshiakefasu';
+
+const locale = lang === 'ja' ? 'ja_JP' : 'id_ID';
+const alternateLocale = lang === 'ja' ? 'id_ID' : 'ja_JP';
+
+const formattedTitle = `${title} ・ ${siteTitle}`;
+const finalOgImage = new URL(ogImage || '/og-images/default.png', siteUrl).toString();
+
+// publishedDateをISO形式に変換する。無効な日付の場合はnullを返す。
+const isoDate = publishedDate ? new Date(publishedDate).toISOString() : null;
+
+// --- 構造化データ (JSON-LD) ---
+const structuredData = {
+  '@context': 'https://schema.org',
+  ...(pageType === 'article' && {
+    '@type': 'Article',
+    'mainEntityOfPage': { '@type': 'WebPage', '@id': canonicalUrl },
+    'headline': title,
+    'description': description,
+    'image': finalOgImage,
+    'author': { '@type': 'Organization', 'name': authorName, 'url': siteUrl },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'GoRakuDo',
+      'logo': { '@type': 'ImageObject', 'url': new URL('/favicon/web-app-manifest-512x512.png', siteUrl).toString() },
+    },
+    // isoDateがnullでない場合のみ、このプロパティを追加
+    ...(isoDate && { 'datePublished': isoDate }),
+  }),
+  ...(pageType === 'website' && {
+    '@type': 'WebSite',
+    'name': siteTitle,
+    'url': siteUrl,
+    'description': description,
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'GoRakuDo',
+      'logo': { '@type': 'ImageObject', 'url': new URL('/favicon/web-app-manifest-512x512.png', siteUrl).toString() },
+    },
+    'potentialAction': {
+      '@type': 'SearchAction',
+      'target': `${siteUrl}/search?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  }),
+};
+---
+
+<!-- 基本的なMetaタグ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ページタイトル -->
+<title>{formattedTitle}</title>
+
+<!-- 説明とカノニカルURL -->
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+<meta name="author" content="GoRakuDo Team" />
+
+<!-- Robots Meta -->
+<meta name="robots" content="index, follow" />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content={siteTitle} />
+<meta property="og:type" content={pageType} />
+<meta property="og:image" content={finalOgImage} />
+<meta property="og:image:alt" content={`${title}のプレビュー画像`} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content={locale} />
+<meta property="og:locale:alternate" content={alternateLocale} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={twitterHandle} />
+<meta name="twitter:creator" content={twitterHandle} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={finalOgImage} />
+<meta name="twitter:image:alt" content={`${title}のプレビュー画像`} />
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/favicon/site.webmanifest" />
+<meta name="theme-color" content="#8B5DFF">
+
+<!-- フォントPreconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+<!-- クリティカルなスクリプト -->
+<script is:inline src="/scripts/upgrade-browsermu.js"></script>
+
+<!-- 構造化データ -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

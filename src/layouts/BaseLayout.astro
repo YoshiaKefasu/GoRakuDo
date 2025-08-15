@@ -1,0 +1,44 @@
+---
+// src/layouts/BaseLayout.astro
+import HeadSEO from '../components/HeadSEO.astro';
+// CSSはここでインポートします。Astroが自動で<head>内に挿入してくれます。
+import '../styles/homepage-styles.css'; 
+
+export interface Props {
+    // このレイアウトが受け取るプロパティを定義
+    title: string;
+    description: string;
+    ogImage?: string;
+    pageType?: 'website' | 'article';
+    publishedDate?: string;
+    // langプロパティを追加
+    lang?: 'id' | 'ja';
+}
+
+// propsを受け取ります
+const { title, description, ogImage, pageType, publishedDate, lang } = Astro.props;
+---
+<!DOCTYPE html>
+<!-- <html>タグのlang属性も動的に設定 -->
+<html lang={lang || 'id'}> 
+<head>
+    <!-- HeadSEOコンポーネントに、受け取ったpropsをすべて渡します -->
+    <HeadSEO
+        title={title}
+        description={description}
+        ogImage={ogImage}
+        pageType={pageType}
+        publishedDate={publishedDate}
+        lang={lang}
+    />
+    <!-- スタイルシートの<link>タグは不要です。上のimport文がその役割を果たします。 -->
+</head>
+<body>
+    <!-- 共通のページ構造（NavbarやFooterなど）をここに記述 -->
+
+    <!-- この<slot />に、各ページのユニークなコンテンツが挿入されます -->
+    <slot /> 
+
+    <!-- 共通のスクリプトなどがあればここに配置 -->
+</body>
+</html>

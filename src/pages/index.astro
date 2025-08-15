@@ -1,37 +1,21 @@
+---
+import Head from '../components/HeadSEO.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO and Social Sharing Meta Tags -->
-    <meta name="description" content="GoRakuDo - Komunitas Japanese Immersion Learning terbesar Indonesia. Belajar bahasa Jepang secara alami dengan metode immersion terbukti dari Prof. Stephen Krashen.">
-    <meta name="keywords" content="bahasa jepang, japanese learning, immersion, anime, manga, otaku, stephen krashen, gorakudo">
-    <meta name="author" content="GoRakuDo Team">
-    <meta property="og:title" content="GoRakuDo - Japanese Immersion Learning Community">
-    <meta property="og:description" content="Komunitas immersion bahasa Jepang terbesar Indonesia. Belajar alami, kuasai seperti penutur asli.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://gorakudo.org">
-    
-    <script is:inline src="/scripts/favicon.js" defer></script>
-    
-    <title>語楽道</title>
-    <script is:inline src="/scripts/web-title-manager.js"></script>
-    <script>
-        setPageTitle("Komunitas Immersion Terbesar JP-Indonesia");
-    </script>
-	
-    <!----- Old Browser Support Blocker (CRITICAL) DO NOT MOVE OR DEFER. ----->
-    <script is:inline src="/scripts/upgrade-browsermu.js"></script>
-
+    <Head
+        title='Komunitas Immersion Terbesar JP-Indonesia'
+        description='Komunitas immersion bahasa Jepang terbesar Indonesia. Belajar alami, kuasai seperti penutur asli.'
+        ogImage='/favicon/web-app-manifest-512x512.png'
+        pageType='website'
+        publishedDate='2025/08/10'
+        lang='id'
+    />
+<body>
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/css/homepage-styles.css">
-    
-    <!-- Google Fonts with Preconnect for Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet">
-</head>
-<body>
     <!-- Wave Animation Background (Hidden from screen readers) -->
     <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
     
