@@ -23,19 +23,20 @@ jobs:
         uses: withastro/action@v2
         with:
            node-version: 22 # Sesuaikan dengan versi Node.js Anda
-      - uses: sarisia/actions-status-discord@v1.15.3
+      - name: Send Discord notification
+        uses: sarisia/actions-status-discord@v1.15.3
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          content: "Hey <@316911818725392384>"
+          content: "Hey <@209310690643673088>"
           title: "deploy"
-          description: "Build and deploy to GitHub Pages"
-          image: ${{ secrets.EMBED_IMAGE }}
-          color: 0x0000ff
+          description: |
+              Build and deploy to GitHub Pages.
+              Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
+          color: 0x2fa64d
           url: "https://github.com/sarisia/actions-status-discord"
-          username: GitHub Actions
-          avatar_url: ${{ secrets.AVATAR_URL }}
+          username: GitHub Actions Deployer
 
   deploy:
     needs: build
@@ -47,3 +48,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Send Discord notification
+        uses: sarisia/actions-status-discord@v1.15.3
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: "Hey <@209310690643673088>"
+          title: "deploy"
+          description: |
+              Build and deploy to GitHub Pages.
+              Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
+          color: 0x2fa64d
+          url: "https://github.com/sarisia/actions-status-discord"
+          username: GitHub Actions Builder

@@ -1,18 +1,19 @@
 ---
 import Head from '../components/HeadSEO.astro';
+import homepageOgImage from '../assets/images/Logo Discord.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <!DOCTYPE html>
 <html lang="id">
-    <Head
+    <head><Head
         title='Komunitas Immersion Terbesar JP-Indonesia'
         description='Komunitas immersion bahasa Jepang terbesar Indonesia. Belajar alami, kuasai seperti penutur asli.'
-        ogImage='/favicon/web-app-manifest-512x512.png'
+        ogImage={homepageOgImage}
         pageType='website'
         publishedDate='2025/08/10'
         lang='id'
-    />
+    /></head>
 <body>
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/css/homepage-styles.css">
