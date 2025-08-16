@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   # Jalankan workflow ini setiap kali ada push ke branch `main`
   push:
-    branches: [ main ]
+    branches: [main]
   # Memungkinkan Anda menjalankan workflow ini secara manual dari tab Actions di GitHub
   workflow_dispatch:
 
@@ -22,7 +22,7 @@ jobs:
       - name: Install, build, and upload your site
         uses: withastro/action@v2
         with:
-           node-version: 22 # Sesuaikan dengan versi Node.js Anda
+          node-version: 22 # Sesuaikan dengan versi Node.js Anda
       - name: Send Discord notification
         uses: sarisia/actions-status-discord@v1.15.3
         if: always()
@@ -32,8 +32,8 @@ jobs:
           content: "Hey <@209310690643673088>"
           title: "Build"
           description: |
-              Build to GitHub Pages.
-              Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
+            Build to GitHub Pages.
+            Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
           color: 0x2fa64d
           url: "https://github.com/sarisia/actions-status-discord"
           username: GitHub Actions Deployer
@@ -57,8 +57,8 @@ jobs:
           content: "Hey <@209310690643673088>"
           title: "Deploy"
           description: |
-              Deploy to GitHub Pages.
-              Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
+            Deploy to GitHub Pages.
+            Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
           color: 0x2fa64d
           url: "https://github.com/sarisia/actions-status-discord"
           username: GitHub Actions Builder

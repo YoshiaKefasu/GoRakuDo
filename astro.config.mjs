@@ -1,13 +1,19 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
-import vue from '@astrojs/vue';
+import vue from "@astrojs/vue";
+
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  site: 'https://gorakudo.org',
-  base: '/',
+  site: "https://gorakudo.org",
+  base: "/",
 
   // Penting untuk GitHub Pages
-  output: 'static',
+  output: "static",
 
-  integrations: [vue()]
+  integrations: [vue()],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

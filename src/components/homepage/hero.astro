@@ -1,0 +1,168 @@
+---
+// src/components/homepage/hero.astro
+const {
+  kicker = 'Belajar bahasa Jepang?',
+  marker = '#Go-IMMERSE',
+  titleLine1 = 'Belajar Secara Alami,',
+  titleLine2 = 'Kuasai Layaknya Penutur Asli.',
+  description = 'Kami ingin kamu mencapai titik di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi dipahami secara instan seperti bahasa ibu. Dan membuat-mu “hidup” dalam bahasa Jepang 🔥',
+  ctaPrimary = 'Mulai Perjalananmu',
+  ctaSecondary = 'Gabung Komunitas',
+  missionId = 'mission',
+  invitationModalId = 'invitationModal',
+  navbarSelector = '.navbar',
+} = Astro.props;
+---
+<section
+  class="bg-transparent flex items-center justify-center px-[15px] sm:px-20"
+  aria-labelledby="hero-title"
+  data-mission-id={missionId}
+  data-invitation-modal-id={invitationModalId}
+  data-navbar-selector={navbarSelector}
+>
+  <div
+    id="hero-content"
+    class="flex flex-col items-center justify-center min-h-screen w-full max-w-5xl px-4 text-center z-20 opacity-0 translate-y-16 scale-80 blur-md transition-all duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] space-y-6 lg:space-y-8"
+  >
+    <div class="text-[clamp(16px,calc((100vw-15px)*0.03),18px)] sm:text-[clamp(16px,3.5vw,18px)] text-[var(--color-accent-purple)] font-medium italic tracking-[0.02em] opacity-65 leading-[1.1]">
+      {kicker}
+    </div>
+
+    <h1 id="hero-title" class="w-full text-[clamp(28px,calc((100vw-15px)*0.12),46px)] sm:text-[clamp(32px,6vw,58px)] font-semibold leading-[1.15] !mb-10 max-w-[48ch] mx-auto px-2">
+      <span class="gold-marker block text-[clamp(28px,5vw,40px)] sm:text-[clamp(32px,6vw,50px)] mb-4">{marker}</span>
+      <span class="white-gradient-text block sm:inline text-[clamp(32px,7.5vw,48px)] font-extrabold mb-6">{titleLine1}</span>
+      <span class="white-gradient-text block sm:inline text-[clamp(32px,7.5vw,48px)] font-extrabold mb-12">{titleLine2}</span>
+    </h1>
+
+    <p class="mb-6 max-w-[650px] text-[clamp(17px,1.5vw,19px)] leading-[1.5] text-[var(--color-text-muted)] mx-auto px-2">
+      {description}
+    </p>
+
+    <div class="hero-buttons flex flex-col md:flex-row items-center justify-center gap-10 !mt-6">
+      <button
+        type="button"
+        class="primary-button"
+        data-action="scroll-to-mission"
+        aria-label="Mulai perjalanan belajar immersion"
+      >
+        {ctaPrimary}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="secondary-button"
+        data-action="open-invitation"
+        aria-label="Bergabung dengan komunitas Discord"
+      >
+        {ctaSecondary}
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Pure client script — NO server-side interpolation here -->
+<script is:inline>
+(() => {
+  // Read server-provided values via data-* attributes (no ${...} inside script)
+  const heroSection = document.querySelector('section[data-mission-id]');
+  const MISSION_ID = heroSection?.dataset?.missionId || 'mission';
+  const INVITATION_MODAL_ID = heroSection?.dataset?.invitationModalId || 'invitationModal';
+  const NAVBAR_SELECTOR = heroSection?.dataset?.navbarSelector || '.navbar';
+
+  // Reveal animation
+  function setupHeroAnimation() {
+    const heroContent = document.querySelector('#hero-content');
+    if (!heroContent) return;
+    setTimeout(() => {
+      heroContent.classList.remove('opacity-0', 'translate-y-16', 'scale-80', 'blur-md');
+    }, 300);
+  }
+
+  // Open modal
+  function openInvitationModal() {
+    try {
+      const modal = document.getElementById(INVITATION_MODAL_ID);
+      if (!modal) {
+        console.warn('Invitation modal not found (id=' + INVITATION_MODAL_ID + ')');
+        return;
+      }
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        modal.style.opacity = '1';
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) modalContent.style.transform = 'scale(1)';
+        // Accessibility: try to focus first focusable element
+        const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable) focusable.focus();
+      });
+    } catch (err) {
+      console.error('openInvitationModal error:', err);
+    }
+  }
+
+  // Close modal
+  function closeInvitationModal() {
+    try {
+      const modal = document.getElementById(INVITATION_MODAL_ID);
+      if (!modal) return;
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 200);
+    } catch (err) {
+      console.error('closeInvitationModal error:', err);
+    }
+  }
+
+  // Scroll to mission
+  function scrollToMission() {
+    try {
+      const missionSection = document.getElementById(MISSION_ID);
+      const navbar = document.querySelector(NAVBAR_SELECTOR);
+      if (missionSection && navbar) {
+        const navbarHeight = navbar.offsetHeight || 0;
+        const missionTop = missionSection.getBoundingClientRect().top + window.pageYOffset;
+        const desiredTopMargin = 40;
+        const scrollToPos = missionTop - navbarHeight - desiredTopMargin;
+        window.scrollTo({ top: scrollToPos, behavior: 'smooth' });
+        return;
+      }
+      if (missionSection) {
+        missionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      console.warn('Mission section not found.');
+    } catch (err) {
+      console.error('scrollToMission error:', err);
+    }
+  }
+
+  // Delegate clicks on data-action buttons
+  document.addEventListener('click', (ev) => {
+    const el = ev.target;
+    if (!el || typeof el.closest !== 'function') return;
+    const btn = el.closest('[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    if (action === 'open-invitation') openInvitationModal();
+    else if (action === 'scroll-to-mission') scrollToMission();
+  });
+
+  // Expose global API to support legacy inline onclicks:
+  window.openInvitationModal = openInvitationModal;
+  window.closeInvitationModal = closeInvitationModal;
+  window.scrollToMission = scrollToMission;
+
+  // Init animation when DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupHeroAnimation);
+  } else {
+    setupHeroAnimation();
+  }
+})();
+</script>

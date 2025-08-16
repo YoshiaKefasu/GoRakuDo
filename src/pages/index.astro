@@ -1,10 +1,11 @@
 ---
 import Head from '../components/HeadSEO.astro';
+import Hero from '../components/homepage/hero.astro';
 import homepageOgImage from '../assets/images/Logo Discord.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
 // Vueコンポーネントをインポート
 import Navbar from '../components/Navbar.vue';
-
+import '../styles/global.css';
 ---
 
 <!DOCTYPE html>
@@ -41,32 +42,12 @@ import Navbar from '../components/Navbar.vue';
     <!-- Main Content -->
     <main class="main-content" role="main">
         <!-- Hero Section -->
-        <section class="hero-section" aria-labelledby="hero-title">
-            <div class="hero-content">
-                <div class="hero-subtitle">IMMERSION BAHASA JEPANG</div>
-                <h1 class="hero-title" id="hero-title">
-                    <span class="gold-marker">#Go-IMMERSE</span>
-                    <span class="white-gradient-text">
-                        Belajar Secara Alami,<br/>
-                        Kuasai Layaknya Penutur Asli.
-                    </span>
-                </h1>
-                <p class="hero-description">
-                    Kami ingin kamu mencapai titik di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi dipahami secara instan seperti bahasa ibu. Dan membuat-mu “hidup” dalam bahasa Jepang 🔥
-                </p>
-                <div class="hero-buttons">
-                    <button class="primary-button" onclick="scrollToMission()" aria-label="Mulai perjalanan belajar immersion">
-                        Mulai Perjalananmu
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </button>
-                    <button class="secondary-button" onclick="openInvitationModal()" aria-label="Bergabung dengan komunitas Discord">
-                        Gabung Komunitas
-                    </button>
-                </div>
-            </div>
-        </section>
+        <Hero client:load
+        missionId="mission"
+        invitationModalId="invitationModal"
+        titleLine1="Belajar Secara Alami,"
+        titleLine2="Kuasai Layaknya Penutur Asli."
+        />
 
         <!-- Mission Section -->
         <section id="mission" class="mission-section smooth-edge-bottom" aria-labelledby="mission-title">
@@ -89,9 +70,14 @@ import Navbar from '../components/Navbar.vue';
                     </div>
                 </div>
                 <div class="mission-cta">
-                    <button class="cta-button" onclick="openInvitationModal()" aria-label="Bergabung dengan komunitas GoRakuDo">
+                    <button
+                    type="button"
+                    class="cta-button"
+                    data-action="open-invitation"
+                    aria-label="Bergabung dengan komunitas GoRakuDo"
+                    >
                         Gabung Komunitas Kami
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" ... aria-hidden="true">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </button>
