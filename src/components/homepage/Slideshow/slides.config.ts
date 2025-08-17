@@ -43,6 +43,7 @@ export const slideshowConfig = {
     threshold: 750, // Time in milliseconds to trigger long-press (750ms = 0.75 seconds)
     moveThreshold: 10, // Maximum pixel movement allowed during long-press
     showIndicator: true, // Show visual indicator when long-press is active
-    indicatorText: "Slideshow paused - Release to resume" // Customize indicator text
+    indicatorText: "Slideshow paused - Release to resume in 0.5s", // Customize indicator text
+    resumeDelay: 500 // Delay in milliseconds before resuming after long-press release
   }
 };

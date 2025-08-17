@@ -9,6 +9,7 @@ import { slides, slideshowConfig } from './slides.config';
   data-long-press-move-threshold={slideshowConfig.longPress.moveThreshold}
   data-long-press-enabled={slideshowConfig.longPress.enabled}
   data-long-press-indicator-text={slideshowConfig.longPress.indicatorText}
+  data-long-press-resume-delay={slideshowConfig.longPress.resumeDelay}
 >
   <!-- Navigation dots - positioned above the slideshow -->
   <div class="flex justify-center space-x-1.5 sm:space-x-2 mb-4 sm:mb-6">
@@ -93,6 +94,10 @@ import { slides, slideshowConfig } from './slides.config';
     private touchStartPosition!: { x: number; y: number };
     private touchMoveThreshold!: number;
     private hasMoved!: boolean;
+    
+    // Progress tracking for pause/resume
+    private pausedProgress!: number;
+    private resumeDelay!: number;
 
     constructor() {
       this.container = document.querySelector('.slideshow-container');
@@ -115,6 +120,10 @@ import { slides, slideshowConfig } from './slides.config';
       this.touchStartPosition = { x: 0, y: 0 };
       this.touchMoveThreshold = parseInt(this.container.dataset.longPressMoveThreshold || '10');
       this.hasMoved = false;
+      
+      // Progress tracking initialization
+      this.pausedProgress = 0;
+      this.resumeDelay = parseInt(this.container.dataset.longPressResumeDelay || '500');
       
       this.init();
     }
@@ -197,7 +206,7 @@ import { slides, slideshowConfig } from './slides.config';
       const touchEndTime = Date.now();
       const touchDuration = touchEndTime - this.touchStartTime;
       
-      // If it was a long-press, prevent the click
+      // If it was a long-press, prevent the click and resume autoplay
       if (this.isLongPressing) {
         event.preventDefault();
         event.stopPropagation();
@@ -206,9 +215,17 @@ import { slides, slideshowConfig } from './slides.config';
       } else if (touchDuration < this.longPressThreshold && !this.hasMoved) {
         // Short touch without movement - allow normal click behavior
         this.cancelLongPress();
+        // Ensure autoplay is running for short touches
+        if (!this.interval) {
+          this.startAutoplay();
+        }
       } else {
         // Touch was too long or moved - prevent click
         this.cancelLongPress();
+        // Ensure autoplay is running for other cases
+        if (!this.interval) {
+          this.startAutoplay();
+        }
         event.preventDefault();
         event.stopPropagation();
       }
@@ -227,7 +244,11 @@ import { slides, slideshowConfig } from './slides.config';
     endLongPress(): void {
       this.isLongPressing = false;
       this.hideLongPressIndicator();
-      this.startAutoplay();
+      
+      // Add delay before resuming
+      setTimeout(() => {
+        this.startAutoplay();
+      }, this.resumeDelay);
     }
     
     cancelLongPress(): void {
@@ -237,6 +258,7 @@ import { slides, slideshowConfig } from './slides.config';
       }
       this.isLongPressing = false;
       this.hideLongPressIndicator();
+      // Don't restart autoplay here - let the calling method handle it
     }
     
     showLongPressIndicator(): void {
@@ -319,6 +341,12 @@ import { slides, slideshowConfig } from './slides.config';
     }
     
     pauseAutoplay(): void {
+      // Store current progress before pausing
+      if (this.progressBar) {
+        const currentWidth = this.progressBar.style.width;
+        this.pausedProgress = parseInt(currentWidth) || 0;
+      }
+      
       if (this.interval) {
         clearInterval(this.interval);
         this.interval = null;
@@ -332,10 +360,11 @@ import { slides, slideshowConfig } from './slides.config';
     startProgress(): void {
       if (!this.progressBar) return;
       
-      let progress = 0;
+      let progress = this.pausedProgress; // Start from paused progress
       const increment = 100 / (this.intervalDuration / 50); // Update every 50ms
       
-      this.progressBar.style.width = '0%';
+      // Set initial progress
+      this.progressBar.style.width = progress + '%';
       
       this.progressInterval = window.setInterval(() => {
         progress += increment;
@@ -354,6 +383,7 @@ import { slides, slideshowConfig } from './slides.config';
     resetProgress(): void {
       if (this.progressBar) {
         this.progressBar.style.width = '0%';
+        this.pausedProgress = 0; // Reset paused progress when manually changing slides
       }
     }
   }
