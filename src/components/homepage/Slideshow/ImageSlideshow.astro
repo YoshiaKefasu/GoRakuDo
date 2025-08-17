@@ -1,6 +1,7 @@
 ---
 // Import slide data from config file
 import { slides, slideshowConfig } from './slides.config';
+import { Image } from 'astro:assets';
 ---
 
 <div 
@@ -41,11 +42,12 @@ import { slides, slideshowConfig } from './slides.config';
         data-slide-index={index}
         data-link={slide.link}
       >
-        <img 
+        <Image 
           src={slide.imageUrl} 
           alt={slide.alt}
           class="w-full h-full object-cover"
-          loading={index === 0 ? "eager" : "lazy"}
+          width={1200}
+          height={800}
         />
         <!-- Gradient overlay for better text visibility -->
         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
