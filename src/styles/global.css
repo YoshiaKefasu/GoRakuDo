@@ -202,6 +202,7 @@
     ) !important;
     transition: background 0.3s ease;
     border: none;
+    backdrop-filter: none !important; /* Remove backdrop filter */
   }
   .nav-container {
     @apply max-w-[1200px] mx-auto! flex justify-between items-center px-5;

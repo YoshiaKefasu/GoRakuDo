@@ -424,9 +424,10 @@ document.addEventListener("DOMContentLoaded", function () {
     waveCanvas: document.getElementById("waveCanvas"),
     invitationModal: document.getElementById("invitationModal"),
     missionSection: document.getElementById("mission"),
+    heroContent: document.querySelector(".hero-content"),
   };
-
   console.log("🔍 Element check:", requiredElements);
+
 
   // Initialize wave animation
   try {
