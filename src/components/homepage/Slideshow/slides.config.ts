@@ -25,12 +25,24 @@ export const slides = [
     imageUrl: "/img/SlideshowHomepage/Slide-post-3.png",
     link: "https://discord.com/channels/1075777026482520114/1300411111002079232/1345340270522142720",
     alt: "matthewkormasela",
+  },
+  {
+    id: 5,
+    imageUrl: "/img/SlideshowHomepage/Slide-post-4.png",
+    link: "https://discord.com/channels/1075777026482520114/1300411111002079232/1383799506419716097",
+    alt: "insky7519_Insky",
+  },
+  {
+    id: 6,
+    imageUrl: "/img/SlideshowHomepage/Slide-post-5.png",
+    link: "https://discord.com/channels/1075777026482520114/1355063064159846431/1389971394812706847",
+    alt: "bas00292_Baskun",
   }
 ];
 
 // Configuration options - modify these to customize behavior
 export const slideshowConfig = {
-  autoAdvanceInterval: 4000, // 4 seconds
+  autoAdvanceInterval: 5000, // 5 seconds
   pauseOnHover: true,
   showProgressBar: true,
   showNavigationDots: true,
