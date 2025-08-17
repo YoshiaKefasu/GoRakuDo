@@ -26,11 +26,16 @@ jobs:
           node-version: 22
           cache: 'npm'
       
-      - name: Install dependencies with rollup fix
+      - name: Install dependencies with clean slate
         run: |
+          # Remove any existing node_modules and lock files
+          rm -rf node_modules package-lock.json
+          # Clear npm cache
+          npm cache clean --force
+          # Install dependencies fresh
           npm install
-          # Force install the problematic rollup dependency
-          npm install @rollup/rollup-linux-x64-gnu --force
+          # Force rebuild native modules
+          npm rebuild
       
       - name: Build the site
         run: npm run build
