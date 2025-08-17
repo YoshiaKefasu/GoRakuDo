@@ -19,10 +19,27 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
-      - name: Install, build, and upload your site
-        uses: withastro/action@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22 # Sesuaikan dengan versi Node.js Anda
+          node-version: 22
+          cache: 'npm'
+      
+      - name: Install dependencies with rollup fix
+        run: |
+          npm install
+          # Force install the problematic rollup dependency
+          npm install @rollup/rollup-linux-x64-gnu --force
+      
+      - name: Build the site
+        run: npm run build
+      
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+      
       - name: Send Discord notification
         uses: sarisia/actions-status-discord@v1.15.3
         if: always()
