@@ -15,21 +15,24 @@ IMPLEMENTATION LOGIC:
     icon tags, to the document.
 ================================================================================
 */
-(function() {
-    // --- Step 1: Feature Detection ---
-    const isBrowserSupported = 
-        window.CSS && 
-        CSS.supports && 
-        CSS.supports('mask-image', 'linear-gradient(to bottom, black, transparent)');
+(function () {
+  // --- Step 1: Feature Detection ---
+  const isBrowserSupported =
+    window.CSS &&
+    CSS.supports &&
+    CSS.supports(
+      "mask-image",
+      "linear-gradient(to bottom, black, transparent)",
+    );
 
-    if (isBrowserSupported) {
-        return;
-    }
+  if (isBrowserSupported) {
+    return;
+  }
 
-    // --- Step 2: If Browser is NOT Supported, Prepare the Blocker ---
+  // --- Step 2: If Browser is NOT Supported, Prepare the Blocker ---
 
-    // Define the CSS for the full-screen blocker overlay.
-    const blockerCSS = `
+  // Define the CSS for the full-screen blocker overlay.
+  const blockerCSS = `
         #browser-blocker {
             position: fixed;
             inset: 0;
@@ -86,8 +89,8 @@ IMPLEMENTATION LOGIC:
         }
     `;
 
-    // Define the HTML for the message, now with Font Awesome icons.
-    const blockerHTML = `
+  // Define the HTML for the message, now with Font Awesome icons.
+  const blockerHTML = `
         <div id="browser-blocker">
             <div id="browser-blocker-content">
                 <h1>Browser Anda Tidak Didukung</h1>
@@ -109,31 +112,33 @@ IMPLEMENTATION LOGIC:
         </div>
     `;
 
-    // --- Step 3: Inject the Blocker, STYLESHEETS, and Stop Page Loading ---
+  // --- Step 3: Inject the Blocker, STYLESHEETS, and Stop Page Loading ---
 
-    // Create and inject the Font Awesome stylesheet link
-    const faLink = document.createElement('link');
-    faLink.rel = 'stylesheet';
-    // Using a reliable CDN for Font Awesome. The brand icons are available in the free version.
-    faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
-    faLink.integrity = 'sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==';
-    faLink.crossOrigin = 'anonymous';
-    document.head.appendChild(faLink);
+  // Create and inject the Font Awesome stylesheet link
+  const faLink = document.createElement("link");
+  faLink.rel = "stylesheet";
+  // Using a reliable CDN for Font Awesome. The brand icons are available in the free version.
+  faLink.href =
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css";
+  faLink.integrity =
+    "sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==";
+  faLink.crossOrigin = "anonymous";
+  document.head.appendChild(faLink);
 
-    // Create and inject the blocker's own internal styles
-    const styleTag = document.createElement('style');
-    styleTag.innerHTML = blockerCSS;
-    document.head.appendChild(styleTag);
+  // Create and inject the blocker's own internal styles
+  const styleTag = document.createElement("style");
+  styleTag.innerHTML = blockerCSS;
+  document.head.appendChild(styleTag);
 
-    // Write the blocker HTML directly into the document
-    document.write(blockerHTML);
+  // Write the blocker HTML directly into the document
+  document.write(blockerHTML);
 
-    // Stop the rest of the page from loading
-    setTimeout(() => {
-        try {
-            window.stop();
-        } catch (e) {
-            console.error("Could not stop window loading:", e);
-        }
-    }, 100);
+  // Stop the rest of the page from loading
+  setTimeout(() => {
+    try {
+      window.stop();
+    } catch (e) {
+      console.error("Could not stop window loading:", e);
+    }
+  }, 100);
 })();

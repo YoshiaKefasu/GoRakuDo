@@ -1,0 +1,318 @@
+/* Import Tailwind CSS v4 */
+@import "tailwindcss";
+
+/* Define theme for Tailwind v4 - Complete Homepage Design System */
+:root {
+  /* Colors - Matching original CSS variables */
+  --color-background: #0a0a0a;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #cccccc;
+  --color-text-muted: #aaaaaa;
+
+  /* Accent colors - Original design */
+  --color-accent-purple: #8b5dff;
+  --color-accent-purple-dark: #7b4def;
+  --color-accent-purple-rgb: 139, 93, 255;
+  --color-accent-purple-glow-faint: rgba(139, 93, 255, 0.05);
+  --color-accent-purple-glow-medium: rgba(139, 93, 255, 0.25);
+  --color-accent-purple-glow-strong: rgba(139, 93, 255, 0.5);
+  --color-accent-shadow: rgba(139, 93, 255, 0.4);
+
+  /* Gold colors */
+  --color-gold-light: #ffefb8;
+  --color-gold-dark: #e4b43b;
+
+  /* Paper theme colors for modal */
+  --color-paper-bg: #f7f4f1;
+  --color-paper-text-primary: #3c3c3c;
+  --color-paper-text-secondary: #555555;
+  --color-paper-border: #e0dcd8;
+  --color-paper-lines: #dcd9d5;
+
+  /* Default theme colors */
+  --color-foreground: #ffffff;
+  --color-card: #1a1a1a;
+  --color-card-foreground: #ffffff;
+  --color-popover: #1a1a1a;
+  --color-popover-foreground: #ffffff;
+  --color-primary: #ffffff;
+  --color-primary-foreground: #030213;
+  --color-secondary: #262626;
+  --color-secondary-foreground: #ffffff;
+  --color-muted: #262626;
+  --color-muted-foreground: #a3a3a3;
+  --color-accent: #262626;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #404040;
+  --color-input: #404040;
+  --color-ring: #737373;
+
+  /* Spacing - Original design values */
+  --spacing-section-y: clamp(5rem, 10vw, 7.5rem);
+  --section-padding-y: clamp(80px, 10vw, 120px);
+
+  /* Spacing & Borders */
+  --border-radius-pill: 35px;
+  --border-radius-card: 20px;
+  --border-radius-btn-small: 25px;
+
+  /* Animation speeds */
+  --animate-duration-fast: 150ms;
+  --animate-duration-normal: 300ms;
+  --animate-duration-slow: 500ms;
+  --transition-speed: 0.3s;
+
+  /* --- Backwards-compatible aliases (keeps older code working) --- */
+  --clr-accent: var(--color-accent-purple);
+  --clr-accent-dark: var(--color-accent-purple-dark);
+  --clr-accent-shadow: var(--color-accent-shadow);
+  --clr-accent-glow-medium: var(--color-accent-purple-glow-medium);
+  --clr-text-primary: var(--color-text-primary);
+  --border-radius-pill: var(--radius-pill);
+}
+
+/* ========== Component layer (Tailwind @apply + custom rules) ========== */
+@layer components {
+  /* ---------- Modal & responsive helpers (from your snippet) ---------- */
+  .modal-content {
+    /* Desktop rules */
+    @apply lg:max-h-none lg:[overflow-y:visible];
+
+    /* Tablet/Mobile ≤768px */
+    @apply [@media(max-width:768px)]:px-[25px]
+           [@media(max-width:768px)]:py-[30px];
+  }
+
+  .modal-overlay {
+    @apply [@media(max-width:768px)]:items-start;
+  }
+
+  .modal-japanese-title {
+    @apply [@media(max-width:768px)]:text-[3.5rem];
+  }
+
+  /* ---------- Hero buttons container (base + mobile overrides) ---------- */
+  .hero-buttons {
+    /* Base */
+    @apply mt-6 flex flex-wrap items-center justify-center gap-5;
+    /* gap-5 = 1.25rem ≈ 20px (matches original) */
+
+    /* Tablet/Mobile ≤768px: make them stack & limit width */
+    @apply [@media(max-width:768px)]:mx-auto
+           [@media(max-width:768px)]:flex
+           [@media(max-width:768px)]:max-w-[350px]
+           [@media(max-width:768px)]:flex-col
+           [@media(max-width:768px)]:items-stretch;
+  }
+
+  /* Center button contents on small screens */
+  .primary-button,
+  .secondary-button {
+    @apply [@media(max-width:768px)]:justify-center;
+  }
+
+  /* ---------- Primary button (gradient pill) ---------- */
+  .primary-button {
+    /* Layout */
+    @apply px-[32px]! py-[16px]! inline-flex cursor-pointer select-none items-center justify-center gap-2 border-0 text-[16px] font-medium;
+    /* Visuals: keep gradient via custom property for exact control */
+    background-image: linear-gradient(
+      135deg,
+      var(--clr-accent) 0%,
+      var(--clr-accent-dark) 100%
+    );
+    color: var(--clr-text-primary);
+    border-radius: var(--border-radius-pill);
+    transition:
+      box-shadow 0.18s ease,
+      transform 0.12s ease,
+      opacity 0.12s ease;
+  }
+
+  /* ensure svg icon size and prevent shrinking */
+  .primary-button svg {
+    @apply h-4 w-4 flex-shrink-0; /* w-4 = 1rem */
+  }
+
+  .primary-button:hover {
+    box-shadow: 0 12px 35px var(--clr-accent-shadow);
+    transform: translateY(-1px);
+  }
+  .primary-button:active {
+    transform: translateY(0);
+    opacity: 0.98;
+  }
+
+  /* ---------- Secondary button (outlined pill) ---------- */
+  .secondary-button {
+    @apply px-[32px]! py-[14px]! inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full border-3! bg-transparent text-[16px] font-medium;
+    @apply border;
+    border-color: var(--clr-accent-glow-medium);
+    border-radius: var(--border-radius-pill);
+    transition:
+      background-color 0.12s ease,
+      border-color 0.12s ease,
+      transform 0.08s ease;
+  }
+
+  .secondary-button:hover {
+    border-color: var(--clr-accent);
+    background: var(--clr-accent-glow-medium);
+  }
+
+  /* ---------- Focus / accessibility ---------- */
+  .primary-button:focus-visible,
+  .secondary-button:focus-visible {
+    @apply outline-none;
+    /* keep the two-layer shadow you had */
+    box-shadow:
+      0 0 0 4px var(--color-accent-purple-glow-medium),
+      0 12px 35px var(--clr-accent-shadow);
+  }
+
+  /* ---------- Small-screen adjustments (optional) ---------- */
+  @media (max-width: 480px) {
+    .primary-button {
+      @apply px-[24px] py-[12px] text-sm;
+    }
+    .secondary-button {
+      @apply px-[24px] py-[10px] text-sm;
+    }
+  }
+
+  /* ---------- Section paddings (your snippet) ---------- */
+  .mission-section,
+  .features-section,
+  .docs-preview-section {
+    @apply [@media(max-width:768px)]:px-[20px];
+  }
+
+  /* ---------- Navbar component ---------- */
+  .navbar {
+    @apply fixed top-0 left-0 right-0 z-[1000] py-2! pb-1!;
+    background: linear-gradient(
+      to top,
+      rgba(10, 10, 10, 0) 0%,
+      rgba(10, 10, 10, 0.15) 2%,
+      rgba(10, 10, 10, 0.45) 5%,
+      rgba(10, 10, 10, 0.65) 7%,
+      rgba(10, 10, 10, 0.95) 10%
+    ) !important;
+    transition: background 0.3s ease;
+    border: none;
+  }
+  .nav-container {
+    @apply max-w-[1200px] mx-auto! flex justify-between items-center px-5;
+    background: transparent !important;
+  }
+  .nav-left,
+  .nav-right {
+    @apply flex-1 flex items-center gap-8;
+  }
+  .nav-right {
+    @apply justify-end;
+  }
+  .nav-item {
+  @apply text-sm cursor-pointer;
+  color: var(--clr-text-secondary);
+  transition: color 0.12s ease;
+  }
+  .nav-item:hover {
+    color: var(--clr-accent);
+  }
+
+  /* ---------- Get Started Button ---------- */
+  .get-started-btn {
+    @apply bg-[var(--clr-accent)] text-[var(--clr-text-primary)] border-none px-6! py-2.5! text-sm font-medium cursor-pointer;
+    border-radius: var(--border-radius-btn-small);
+    transition: background-color 0.12s ease;
+  }
+
+  .get-started-btn:hover {
+    @apply bg-[var(--clr-accent-dark)];
+  }
+
+  /* ---------- Mobile Menu Button ---------- */
+  .mobile-menu-btn {
+    @apply hidden;
+  }
+
+  /* Mobile responsive adjustments for navbar */
+  @media (max-width: 768px) {
+    .navbar {
+      @apply py-3!; /* Reduce padding on mobile for more space */
+    }
+  }
+
+  /* ---------- Mobile Menu Button (Responsive) - Tailwind v4 @media syntax ---------- */
+  .nav-left,
+  .nav-right {
+    @apply [@media(max-width:1024px)]:hidden;
+  }
+  
+  .mobile-menu-btn {
+    @apply [@media(max-width:1024px)]:block 
+           [@media(max-width:1024px)]:bg-[var(--clr-accent)]
+           [@media(max-width:1024px)]:text-[var(--clr-text-primary)]
+           [@media(max-width:1024px)]:border-none
+           [@media(max-width:1024px)]:px-4
+           [@media(max-width:1024px)]:py-2
+           [@media(max-width:1024px)]:rounded-[20px]
+           [@media(max-width:1024px)]:text-sm
+           [@media(max-width:1024px)]:font-medium
+           [@media(max-width:1024px)]:cursor-pointer;
+    transition: background-color 0.12s ease;
+  }
+  
+  .mobile-menu-btn:hover {
+    @apply [@media(max-width:1024px)]:bg-[var(--clr-accent-dark)];
+  }
+  
+  .logo-japanese {
+    @apply [@media(max-width:1024px)]:text-2xl;
+  }
+
+    /* ---------- Logo Japanese Component ---------- */
+  .logo-japanese {
+    @apply text-[28px] cursor-pointer leading-none no-underline;
+    font-family: "Yuji Syuku", serif;
+    color: var(--color-text-primary);
+  }
+
+  .logo-japanese rt {
+    @apply text-[0.4em] font-semibold mb-[-15px]!;
+    font-family: "Inter", sans-serif;
+    color: #999;
+  }
+
+  /* Make mobile override explicit — use only if you want smaller mobile buttons */
+  @media (max-width: 768px) {
+    .hero-buttons .primary-button,
+    .hero-buttons .btn-primary {
+      padding: 14px 28px;
+      font-size: 15px;
+      min-width: auto;
+    }
+  }
+}
+
+@layer utilities {
+  .gold-marker {
+    @apply mb-2 block text-[var(--color-gold-dark)] [text-shadow:1px_1px_5px_rgba(0,0,0,0.1)];
+    background-image: linear-gradient(
+      135deg,
+      var(--color-gold-light) 0%,
+      var(--color-gold-dark) 70%
+    );
+    -webkit-text-fill-color: transparent;
+    background-clip: text; /* modern */
+    -webkit-background-clip: text; /* legacy Safari still honors bg-clip via webkit */
+  }
+  @supports (background-clip: text) {
+    .gold-marker {
+      @apply bg-clip-text text-transparent;
+    }
+  }
+}

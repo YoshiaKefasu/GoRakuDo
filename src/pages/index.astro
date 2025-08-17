@@ -4,8 +4,8 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
 import BaseLayout from "../layouts/BaseLayout.astro";
 // Vueコンポーネントをインポート
 import Navbar from "../components/Navbar.vue";
-
 import InvitationModalIsland from "../components/InvitationModalIsland.vue";
+import '../styles/global.css';
 ---
 
 <!doctype html>
@@ -63,7 +63,7 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
           <p class="hero-description">
             Kami ingin kamu mencapai titik di mana bahasa Jepang tidak lagi
             diterjemahkan di kepala, tetapi dipahami secara instan seperti
-            bahasa ibu. Dan membuat-mu “hidup” dalam bahasa Jepang 🔥
+            bahasa ibu. Dan membuat-mu "hidup" dalam bahasa Jepang 🔥
           </p>
           <div class="hero-buttons">
             <button
@@ -96,6 +96,7 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
           </div>
         </div>
       </section>
+      
       <!-- Mount Vue island  -->
       <InvitationModalIsland client:load />
 
@@ -131,7 +132,7 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
                 dan konten Jepang yang sesuai level-mu.
               </p>
               <p>
-                🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu “hidup” dalam bahasa
+                🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu "hidup" dalam bahasa
                 Jepang, bukan sekadar mempelajarinya. Kami ingin kamu mencapai titik
                 di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi
                 ⚡ dipahami secara instan seperti bahasa ibu. Dengan immersion, kamu
@@ -176,6 +177,11 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
           </h2>
           <div class="features-grid" role="list">
             <article class="feature-card" role="listitem">
+              <div class="feature-icon" aria-hidden="true">👥</div>
+              <h3>Belajar Bersama Komunitas</h3>
+              <p>Bergabunglah dengan sesama pembelajar dan penutur asli dalam lingkungan komunitas yang mendukung.</p>
+            </article>
+            <article class="feature-card" role="listitem">
               <div class="feature-icon" aria-hidden="true">🎯</div>
               <h3>Belajar Alami</h3>
               <p>
@@ -201,12 +207,17 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
               </p>
             </article>
             <article class="feature-card" role="listitem">
-              <div class="feature-icon" aria-hidden="true">🎌</div>
+              <div class="feature-icon" aria-hidden="true">🌍</div>
               <h3>Koneksi Budaya</h3>
               <p>
                 Bangun pemahaman mendalam tentang budaya, pola pikir, dan
                 ekspresi Jepang melalui konten autentik.
               </p>
+            </article>
+            <article class="feature-card" role="listitem">
+              <div class="feature-icon" aria-hidden="true">⚡</div>
+              <h3>Adaptive Learning</h3>
+              <p>Rekomendasi yang didukung oleh Metodologi SLA (Ilmu Pembelajaran Bahasa ke-2) terbaru yang menyesuaikan dengan gaya belajar dan kecepatan Anda untuk hasil optimal.</p>
             </article>
           </div>
         </div>
@@ -245,69 +256,6 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
         </div>
       </section>
     </main>
-    <div class="modal-content">
-      <button
-        class="modal-close"
-        onclick="closeInvitationModal()"
-        aria-label="Tutup modal">×</button
-      >
-
-      <div class="modal-header">
-        <ruby class="modal-japanese-title" id="modal-title">
-          語<rt>ご</rt>楽<rt>らく</rt>道<rt>どう</rt>
-        </ruby>
-      </div>
-
-      <div class="modal-body">
-        <p>
-          Kami bukan komunitas biasa. Kita adalah rumah bagi para pembelajar
-          otodidak yang terjun langsung ke <strong>🌊 Metode IMMERSION</strong
-          >—sebuah cara belajar yang seru, alami, dan terbukti secara ilmiah
-          oleh 🎓 Prof. Stephen Krashen.
-        </p>
-
-        <p><strong>Siapa yang kami cari?</strong></p>
-        <ul class="modal-list" role="list">
-          <li role="listitem">
-            ✅ <strong>Otaku & Anime Lovers:</strong> Ubah hobimu jadi skill!
-          </li>
-          <li role="listitem">
-            ✅ <strong>Pembelajar Serius:</strong> Temukan cara belajar paling efektif.
-          </li>
-        </ul>
-
-        <p class="modal-final-pitch">
-          Semua 100% GRATIS. Yang kamu butuhkan hanya NIAT.<br />Ayo bergabung!
-          👍
-        </p>
-      </div>
-
-      <a
-        href="https://discord.gg/j8qmYPAGQh"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="discord-link"
-        aria-label="Bergabung dengan server Discord GoRakuDo"
-      >
-        <div class="discord-header">Alamat Komunitas Digital Kami:</div>
-        <div class="discord-url">
-          discord.gg/j8qmYPAGQh<span class="arrow">→</span>
-        </div>
-      </a>
-
-      <div class="modal-signature">
-        <img
-          src="/img/Logo%20Discord%2080px.png"
-          alt="Logo Gorakudou"
-          class="logo-stamp"
-        />
-        <div class="signature-text">
-          <div class="signature-title">Hormat kami,</div>
-          <p class="signature-name">Tim GoRakuDo</p>
-        </div>
-      </div>
-    </div>
-    -->
 
     <script is:inline src="/scripts/hompage-script.js"></script>
 
@@ -316,7 +264,7 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
       // Preload the documentation page to make navigation feel faster
       const linkPrefetch = document.createElement("link");
       linkPrefetch.rel = "prefetch";
-      linkPrefetch.href = "/docs/posts"; // This should be the URL of your documentation page
+      linkPrefetch.href = "/docs/posts";
       document.head.appendChild(linkPrefetch);
 
       // Optional: Track page performance metrics in the browser console
@@ -331,7 +279,7 @@ import InvitationModalIsland from "../components/InvitationModalIsland.vue";
       });
 
       // Define global function untuk membuka modal melalui bridge InvitationModalIsland
-      window.openInvitationModal = function () {
+      (window as any).openInvitationModal = function () {
         window.dispatchEvent(new CustomEvent("open-invitation-modal"));
       };
     </script>
