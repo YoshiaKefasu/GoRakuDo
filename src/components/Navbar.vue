@@ -71,18 +71,8 @@ function scrollToMission() {
 }
 
 function openInvitationModal() {
-  const modal = document.getElementById("invitationModal");
-  if (modal) {
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-    setTimeout(() => {
-      modal.style.opacity = "1";
-      const modalContent = modal.querySelector(".modal-content");
-      if (modalContent) {
-        modalContent.style.transform = "scale(1)";
-      }
-    }, 10);
-  }
+  // Use the same event-based system as the homepage
+  window.dispatchEvent(new CustomEvent("open-invitation-modal"));
 }
 
 // Navbarのスクロール効果 - Dynamic transparency based on scroll
