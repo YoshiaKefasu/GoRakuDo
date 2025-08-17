@@ -83,22 +83,10 @@ const {
 
   // Open modal
   function openInvitationModal() {
-    try {
-      const modal = document.getElementById(INVITATION_MODAL_ID);
-      if (!modal) {
-        console.warn('Invitation modal not found (id=' + INVITATION_MODAL_ID + ')');
-        return;
+  try {
+      if (typeof window.openInvitationModal === "function") {
+        window.openInvitationModal();
       }
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => {
-        modal.style.opacity = '1';
-        const modalContent = modal.querySelector('.modal-content');
-        if (modalContent) modalContent.style.transform = 'scale(1)';
-        // Accessibility: try to focus first focusable element
-        const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        if (focusable) focusable.focus();
-      });
     } catch (err) {
       console.error('openInvitationModal error:', err);
     }
@@ -152,6 +140,18 @@ const {
     if (action === 'open-invitation') openInvitationModal();
     else if (action === 'scroll-to-mission') scrollToMission();
   });
+
+  // Register listener
+  window.addEventListener("open-invitation-modal", openInvitationModal);
+  window.addEventListener("close-invitation-modal", closeInvitationModal);
+
+  // Expose to global
+  window.openInvitationModal = () => {
+    window.dispatchEvent(new CustomEvent("open-invitation-modal"));
+  };
+  window.closeInvitationModal = () => {
+    window.dispatchEvent(new CustomEvent("close-invitation-modal"));
+  };
 
   // Expose global API to support legacy inline onclicks:
   window.openInvitationModal = openInvitationModal;

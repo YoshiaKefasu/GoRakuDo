@@ -24,19 +24,9 @@ function scrollToMission() {
   }
 }
 
+// Update function to custom event for open modal component
 function openInvitationModal() {
-  const modal = document.getElementById("invitationModal");
-  if (modal) {
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-    setTimeout(() => {
-      modal.style.opacity = "1";
-      const modalContent = modal.querySelector(".modal-content");
-      if (modalContent) {
-        modalContent.style.transform = "scale(1)";
-      }
-    }, 10);
-  }
+  window.dispatchEvent(new CustomEvent("open-invitation-modal"));
 }
 
 // Navbarのスクロール効果

@@ -6,6 +6,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 // Vueコンポーネントをインポート
 import Navbar from '../components/Navbar.vue';
 import '../styles/global.css';
+import InvitationModal from '../components/InvitationModal.vue';
 ---
 
 <!DOCTYPE html>
@@ -76,15 +77,15 @@ import '../styles/global.css';
                     data-action="open-invitation"
                     aria-label="Bergabung dengan komunitas GoRakuDo"
                     >
-                        Gabung Komunitas Kami
-                        <svg width="20" height="20" viewBox="0 0 24 24" ... aria-hidden="true">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                    Gabung Komunitas Kami
+                    <svg width="20" height="20" viewBox="0 0 24 24" ... aria-hidden="true">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </button>
                 </div>
             </div>
         </section>
-
+        
         <!-- Features Section -->
         <section class="features-section" aria-labelledby="features-title">
             <div class="features-container">
@@ -132,9 +133,10 @@ import '../styles/global.css';
             </div>
         </section>
     </main>
-
+    
     <!-- Invitation Modal -->
-    <div id="invitationModal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <InvitationModal client:load />
+    <!-- <div id="invitationModal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="modal-title" aria-modal="true">
         <div class="modal-content">
             <button class="modal-close" onclick="closeInvitationModal()" aria-label="Tutup modal">×</button>
             
@@ -175,7 +177,7 @@ import '../styles/global.css';
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <script is:inline src="/scripts/hompage-script.js"></script>
     
