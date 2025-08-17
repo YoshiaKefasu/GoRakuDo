@@ -145,14 +145,6 @@ const {
   window.addEventListener("open-invitation-modal", openInvitationModal);
   window.addEventListener("close-invitation-modal", closeInvitationModal);
 
-  // Expose to global
-  window.openInvitationModal = () => {
-    window.dispatchEvent(new CustomEvent("open-invitation-modal"));
-  };
-  window.closeInvitationModal = () => {
-    window.dispatchEvent(new CustomEvent("close-invitation-modal"));
-  };
-
   // Expose global API to support legacy inline onclicks:
   window.openInvitationModal = openInvitationModal;
   window.closeInvitationModal = closeInvitationModal;
