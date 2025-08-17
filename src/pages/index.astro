@@ -5,8 +5,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 // Vueコンポーネントをインポート
 import Navbar from "../components/Navbar.vue";
 import Hero from "../components/homepage/hero.astro";
-import InvitationModalIsland from "../components/InvitationModalIsland.vue";
 import '../styles/global.css';
+import InvitationModal from '../components/InvitationModal.vue';
 ---
 
 <!doctype html>
@@ -57,132 +57,71 @@ import '../styles/global.css';
         titleLine1="Belajar Secara Alami,"
         titleLine2="Kuasai Layaknya Penutur Asli."
       />
-      
-      <!-- Mount Vue island  -->
-      <InvitationModalIsland client:load />
 
-      <!-- Mission Section -->
-      <section
-        id="mission"
-        class="mission-section smooth-edge-bottom"
-        aria-labelledby="mission-title"
-      >
-        <div class="mission-container">
-          <h2 class="mission-title" id="mission-title">Misi Kami</h2>
-          <div class="mission-content">
-            <div class="mission-text">
-              <p>
-                🌊✨ <b>Misi kami adalah memberi jalur yang menyenangkan</b>,
-                dan <i>terbukti secara ilmiah</i> oleh 🎓 Prof. Stephen Krashen bagi
-                siapa pun yang mulai dari <b>nol</b> untuk menguasai bahasa Jepang
-                secara alami 🌱 dan berkelanjutan.
-              </p>
-              <p>
-                Kami yakin belajar bahasa itu bukan sekadar menghafal aturan 📖
-                atau kosakata, tapi membentuk kemampuan berpikir, 🤔 memahami,
-                dan berkomunikasi seperti penutur asli. Dengan immersion, kamu
-                langsung terjun dalam bahasa Jepang sejak hari
-                pertama—mendengar, membaca, dan ⚡ langsung memahaminya di
-                konteks aslinya.
-              </p>
-              <p>
-                🚀 Kami hadir untuk menghapus rasa takut dan kebingungan pemula.
-                🗺️ Roadmap kami memecah perjalanan menjadi tahap sederhana—dari
-                huruf dasar (kana) hingga memahami novel, percakapan, dan media
-                kompleks—dengan dukungan tools seperti Anki, kamus monolingual,
-                dan konten Jepang yang sesuai level-mu.
-              </p>
-              <p>
-                🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu "hidup" dalam bahasa
-                Jepang, bukan sekadar mempelajarinya. Kami ingin kamu mencapai titik
-                di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi
-                ⚡ dipahami secara instan seperti bahasa ibu. Dengan immersion, kamu
-                tidak hanya mempelajari aturan, tetapi membangun hubungan yang mendalam
-                dengan 🎎 budaya, pola pikir, dan ekspresi unik orang Jepang. Ini
-                adalah perjalanan menuju <i>Nativeness</i> 💫, bukan sekadar <i
-                  >Fluency</i
-                >—dan kami akan menemani setiap langkahmu 👣.
-              </p>
+        <!-- Mission Section -->
+        <section id="mission" class="mission-section smooth-edge-bottom" aria-labelledby="mission-title">
+            <div class="mission-container">
+                <h2 class="mission-title" id="mission-title">Misi Kami</h2>
+                <div class="mission-content">
+                    <div class="mission-text">
+                        <p>
+    🌊✨ <b>Misi kami adalah memberi jalur yang menyenangkan</b>, dan <i>terbukti secara ilmiah</i> oleh 🎓 Prof. Stephen Krashen bagi siapa pun yang mulai dari <b>nol</b> untuk menguasai bahasa Jepang secara alami 🌱 dan berkelanjutan. 
+</p>
+<p>
+    Kami yakin belajar bahasa itu bukan sekadar menghafal aturan 📖 atau kosakata, tapi membentuk kemampuan berpikir, 🤔 memahami, dan berkomunikasi seperti penutur asli. Dengan immersion, kamu langsung terjun dalam bahasa Jepang sejak hari pertama—mendengar, membaca, dan ⚡ langsung memahaminya di konteks aslinya.
+</p>
+<p>
+    🚀 Kami hadir untuk menghapus rasa takut dan kebingungan pemula. 🗺️ Roadmap kami memecah perjalanan menjadi tahap sederhana—dari huruf dasar (kana) hingga memahami novel, percakapan, dan media kompleks—dengan dukungan tools seperti Anki, kamus monolingual, dan konten Jepang yang sesuai level-mu.
+</p>
+<p>
+    🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu “hidup” dalam bahasa Jepang, bukan sekadar mempelajarinya. Kami ingin kamu mencapai titik di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi ⚡ dipahami secara instan seperti bahasa ibu. Dengan immersion, kamu tidak hanya mempelajari aturan, tetapi membangun hubungan yang mendalam dengan 🎎 budaya, pola pikir, dan ekspresi unik orang Jepang. Ini adalah perjalanan menuju <i>Nativeness</i> 💫, bukan sekadar <i>Fluency</i>—dan kami akan menemani setiap langkahmu 👣.
+</p>
+                    </div>
+                </div>
+                <div class="mission-cta">
+                    <button
+                    type="button"
+                    class="cta-button"
+                    data-action="open-invitation"
+                    aria-label="Bergabung dengan komunitas GoRakuDo"
+                    >
+                    Gabung Komunitas Kami
+                    <svg width="20" height="20" viewBox="0 0 24 24" ... aria-hidden="true">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
-          </div>
-          <div class="mission-cta">
-            <button
-              class="cta-button"
-              onclick="openInvitationModal()"
-              aria-label="Bergabung dengan komunitas GoRakuDo"
-            >
-              Gabung Komunitas Kami
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Features Section -->
-      <section class="features-section" aria-labelledby="features-title">
-        <div class="features-container">
-          <h2 class="features-title" id="features-title">
-            Pendekatan Immersion
-          </h2>
-          <div class="features-grid" role="list">
-            <article class="feature-card" role="listitem">
-              <div class="feature-icon" aria-hidden="true">👥</div>
-              <h3>Belajar Bersama Komunitas</h3>
-              <p>Bergabunglah dengan sesama pembelajar dan penutur asli dalam lingkungan komunitas yang mendukung.</p>
-            </article>
-            <article class="feature-card" role="listitem">
-              <div class="feature-icon" aria-hidden="true">🎯</div>
-              <h3>Belajar Alami</h3>
-              <p>
-                Pelajari bahasa Jepang sesuai cara otak dirancang untuk
-                memperoleh bahasa—melalui paparan bermakna, bukan hafalan.
-              </p>
-            </article>
-            <article class="feature-card" role="listitem">
-              <div class="feature-icon" aria-hidden="true">📚</div>
-              <h3>Peta Jalan Terstruktur</h3>
-              <p>
-                Tahapan yang jelas dan dapat dicapai dari kana dasar hingga
-                media kompleks. Setiap langkah dibangun secara alami dari yang
-                sebelumnya.
-              </p>
-            </article>
-            <article class="feature-card" role="listitem">
-              <div class="feature-icon" aria-hidden="true">🧠</div>
-              <h3>Berpikir dalam Jepang</h3>
-              <p>
-                Melampaui terjemahan. Kembangkan kemampuan untuk memahami dan
-                merasakan bahasa Jepang secara instan, seperti penutur asli.
-              </p>
-            </article>
-            <article class="feature-card" role="listitem">
-              <div class="feature-icon" aria-hidden="true">🌍</div>
-              <h3>Koneksi Budaya</h3>
-              <p>
-                Bangun pemahaman mendalam tentang budaya, pola pikir, dan
-                ekspresi Jepang melalui konten autentik.
-              </p>
-            </article>
-            <article class="feature-card" role="listitem">
-              <div class="feature-icon" aria-hidden="true">⚡</div>
-              <h3>Adaptive Learning</h3>
-              <p>Rekomendasi yang didukung oleh Metodologi SLA (Ilmu Pembelajaran Bahasa ke-2) terbaru yang menyesuaikan dengan gaya belajar dan kecepatan Anda untuk hasil optimal.</p>
-            </article>
-          </div>
-        </div>
-      </section>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="features-section" aria-labelledby="features-title">
+            <div class="features-container">
+                <h2 class="features-title" id="features-title">Pendekatan Immersion</h2>
+                <div class="features-grid" role="list">
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">🎯</div>
+                        <h3>Belajar Alami</h3>
+                        <p>Pelajari bahasa Jepang sesuai cara otak dirancang untuk memperoleh bahasa—melalui paparan bermakna, bukan hafalan.</p>
+                    </article>
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">📚</div>
+                        <h3>Peta Jalan Terstruktur</h3>
+                        <p>Tahapan yang jelas dan dapat dicapai dari kana dasar hingga media kompleks. Setiap langkah dibangun secara alami dari yang sebelumnya.</p>
+                    </article>
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">🧠</div>
+                        <h3>Berpikir dalam Jepang</h3>
+                        <p>Melampaui terjemahan. Kembangkan kemampuan untuk memahami dan merasakan bahasa Jepang secara instan, seperti penutur asli.</p>
+                    </article>
+                    <article class="feature-card" role="listitem">
+                        <div class="feature-icon" aria-hidden="true">🎌</div>
+                        <h3>Koneksi Budaya</h3>
+                        <p>Bangun pemahaman mendalam tentang budaya, pola pikir, dan ekspresi Jepang melalui konten autentik.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
 
       <!-- Documentation Preview Section -->
       <section class="docs-preview-section" aria-labelledby="docs-title">
@@ -217,6 +156,9 @@ import '../styles/global.css';
         </div>
       </section>
     </main>
+    
+    <!-- Invitation Modal -->
+    <InvitationModal client:load />
 
     <script is:inline src="/scripts/hompage-script.js"></script>
 
@@ -238,11 +180,6 @@ import '../styles/global.css';
           );
         }
       });
-
-      // Define global function untuk membuka modal melalui bridge InvitationModalIsland
-      (window as any).openInvitationModal = function () {
-        window.dispatchEvent(new CustomEvent("open-invitation-modal"));
-      };
     </script>
   </body>
 </html>
