@@ -14,8 +14,8 @@
   --color-accent-purple-dark: #7b4def;
   --color-accent-purple-rgb: 139, 93, 255;
   --color-accent-purple-glow-faint: rgba(139, 93, 255, 0.05);
-  --color-accent-purple-glow-medium: rgba(139, 93, 255, 0.1);
-  --color-accent-purple-glow-strong: rgba(139, 93, 255, 0.2);
+  --color-accent-purple-glow-medium: rgba(139, 93, 255, 0.25);
+  --color-accent-purple-glow-strong: rgba(139, 93, 255, 0.5);
   --color-accent-shadow: rgba(139, 93, 255, 0.4);
 
   /* Gold colors */
@@ -52,6 +52,11 @@
   /* Spacing - Original design values */
   --spacing-section-y: clamp(5rem, 10vw, 7.5rem);
   --section-padding-y: clamp(80px, 10vw, 120px);
+
+  /* Spacing & Borders */
+  --border-radius-pill: 35px;
+  --border-radius-card: 20px;
+  --border-radius-btn-small: 25px;
 
   /* Animation speeds */
   --animate-duration-fast: 150ms;
@@ -142,7 +147,7 @@
 
   /* ---------- Secondary button (outlined pill) ---------- */
   .secondary-button {
-    @apply px-[32px]! py-[14px]! inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full border-2 bg-transparent text-[16px] font-medium;
+    @apply px-[32px]! py-[14px]! inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full border-3! bg-transparent text-[16px] font-medium;
     @apply border;
     border-color: var(--clr-accent-glow-medium);
     border-radius: var(--border-radius-pill);
@@ -182,6 +187,104 @@
   .features-section,
   .docs-preview-section {
     @apply [@media(max-width:768px)]:px-[20px];
+  }
+
+  /* ---------- Navbar component ---------- */
+  .navbar {
+    @apply fixed top-0 left-0 right-0 z-[1000] py-2! pb-1!;
+    background: linear-gradient(
+      to top,
+      rgba(10, 10, 10, 0) 0%,
+      rgba(10, 10, 10, 0.15) 2%,
+      rgba(10, 10, 10, 0.45) 5%,
+      rgba(10, 10, 10, 0.65) 7%,
+      rgba(10, 10, 10, 0.95) 10%
+    ) !important;
+    transition: background 0.3s ease;
+    border: none;
+  }
+  .nav-container {
+    @apply max-w-[1200px] mx-auto! flex justify-between items-center px-5;
+    background: transparent !important;
+  }
+  .nav-left,
+  .nav-right {
+    @apply flex-1 flex items-center gap-8;
+  }
+  .nav-right {
+    @apply justify-end;
+  }
+  .nav-item {
+  @apply text-sm cursor-pointer;
+  color: var(--clr-text-secondary);
+  transition: color 0.12s ease;
+  }
+  .nav-item:hover {
+    color: var(--clr-accent);
+  }
+
+  /* ---------- Get Started Button ---------- */
+  .get-started-btn {
+    @apply bg-[var(--clr-accent)] text-[var(--clr-text-primary)] border-none px-6! py-2.5! text-sm font-medium cursor-pointer;
+    border-radius: var(--border-radius-btn-small);
+    transition: background-color 0.12s ease;
+  }
+
+  .get-started-btn:hover {
+    @apply bg-[var(--clr-accent-dark)];
+  }
+
+  /* ---------- Mobile Menu Button ---------- */
+  .mobile-menu-btn {
+    @apply hidden;
+  }
+
+  /* Mobile responsive adjustments for navbar */
+  @media (max-width: 768px) {
+    .navbar {
+      @apply py-3!; /* Reduce padding on mobile for more space */
+    }
+  }
+
+  /* ---------- Mobile Menu Button (Responsive) - Tailwind v4 @media syntax ---------- */
+  .nav-left,
+  .nav-right {
+    @apply [@media(max-width:1024px)]:hidden;
+  }
+  
+  .mobile-menu-btn {
+    @apply [@media(max-width:1024px)]:block 
+           [@media(max-width:1024px)]:bg-[var(--clr-accent)]
+           [@media(max-width:1024px)]:text-[var(--clr-text-primary)]
+           [@media(max-width:1024px)]:border-none
+           [@media(max-width:1024px)]:px-4
+           [@media(max-width:1024px)]:py-2
+           [@media(max-width:1024px)]:rounded-[20px]
+           [@media(max-width:1024px)]:text-sm
+           [@media(max-width:1024px)]:font-medium
+           [@media(max-width:1024px)]:cursor-pointer;
+    transition: background-color 0.12s ease;
+  }
+  
+  .mobile-menu-btn:hover {
+    @apply [@media(max-width:1024px)]:bg-[var(--clr-accent-dark)];
+  }
+  
+  .logo-japanese {
+    @apply [@media(max-width:1024px)]:text-2xl;
+  }
+
+    /* ---------- Logo Japanese Component ---------- */
+  .logo-japanese {
+    @apply text-[28px] cursor-pointer leading-none no-underline;
+    font-family: "Yuji Syuku", serif;
+    color: var(--color-text-primary);
+  }
+
+  .logo-japanese rt {
+    @apply text-[0.4em] font-semibold mb-[-15px]!;
+    font-family: "Inter", sans-serif;
+    color: #999;
   }
 
   /* Make mobile override explicit — use only if you want smaller mobile buttons */

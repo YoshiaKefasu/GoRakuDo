@@ -22,23 +22,23 @@ const {
 >
   <div
     id="hero-content"
-    class="flex flex-col items-center justify-center min-h-screen w-full max-w-5xl px-4 text-center z-20 opacity-0 translate-y-16 scale-80 blur-md transition-all duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] space-y-6 lg:space-y-8"
+    class="flex flex-col items-center justify-center min-h-screen w-full max-w-5xl px-4 text-center z-20 opacity-0 translate-y-16 scale-80 blur-md transition-all duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
   >
     <div class="text-[clamp(16px,calc((100vw-15px)*0.03),18px)] sm:text-[clamp(16px,3.5vw,18px)] text-[var(--color-accent-purple)] font-medium italic tracking-[0.02em] opacity-65 leading-[1.1]">
       {kicker}
     </div>
 
-    <h1 id="hero-title" class="w-full text-[clamp(48px,calc((100vw-15px)*0.12),56px)] sm:text-[clamp(48px,6vw,68px)] font-semibold leading-[1.15] !mb-10 max-w-[48ch] mx-auto px-2">
-      <span class="gold-marker block text-[clamp(32px,5vw,48px)] sm:text-[clamp(32px,6vw,50px)] mb-6">{marker}</span>
-      <span class="white-gradient-text block sm:inline text-[clamp(36px,7.5vw,48px)] font-extrabold mb-6">{titleLine1}</span>
-      <span class="white-gradient-text block sm:inline text-[clamp(36px,7.5vw,48px)] font-extrabold mb-12">{titleLine2}</span>
+    <h1 id="hero-title" class="w-full text-[clamp(48px,calc((100vw-15px)*0.12),56px)] sm:text-[clamp(48px,6vw,68px)] font-semibold leading-[1.15] max-w-[48ch] mx-auto mb-3.5">
+      <span class="gold-marker block text-[clamp(32px,5vw,48px)] sm:text-[clamp(32px,6vw,50px)]">{marker}</span>
+      <span class="white-gradient-text block sm:inline text-[clamp(36px,7.5vw,48px)] font-extrabold">{titleLine1}</span>
+      <span class="white-gradient-text block sm:inline text-[clamp(36px,7.5vw,48px)] font-extrabold">{titleLine2}</span>
     </h1>
 
-    <p class="mb-6 max-w-[650px] text-[clamp(17px,1.5vw,19px)] leading-[1.5] text-[var(--color-text-muted)] mx-auto px-2">
+    <p class="mb-6 max-w-[650px] text-[clamp(17px,1.5vw,19px)] leading-[1.5] text-[var(--color-text-muted)] mx-auto px-1">
       {description}
     </p>
 
-    <div class="hero-buttons flex flex-col md:flex-row items-center justify-center gap-10 !mt-6">
+    <div class="hero-buttons flex flex-col md:flex-row items-center justify-center gap-7.5 mt-3">
       <button
         type="button"
         class="primary-button"

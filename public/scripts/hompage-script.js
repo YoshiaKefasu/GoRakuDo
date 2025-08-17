@@ -441,7 +441,6 @@ document.addEventListener("DOMContentLoaded", function () {
   setupFeatureCardEffects();
   setupKeyboardNavigation();
   setupNavigationHandlers();
-  setupHeroAnimation();
   setupButtonEffects();
   setupLogoEffects();
 
