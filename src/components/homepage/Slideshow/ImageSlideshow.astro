@@ -63,13 +63,6 @@ import { slides, slideshowConfig } from './slides.config';
         {slideshowConfig.longPress.indicatorText}
       </div>
     </div>
-    
-    <!-- Debug indicator (for mobile testing) -->
-    <div class="debug-indicator absolute top-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-75">
-      <div>Status: <span id="debug-status">Ready</span></div>
-      <div>Interval: <span id="debug-interval">Active</span></div>
-      <div>Progress: <span id="debug-progress">0%</span></div>
-    </div>
   </div>
 </div>
 
@@ -107,11 +100,6 @@ import { slides, slideshowConfig } from './slides.config';
     private pausedProgress!: number;
     private resumeDelay!: number;
     
-    // Debug elements
-    private debugStatus!: HTMLElement | null;
-    private debugInterval!: HTMLElement | null;
-    private debugProgress!: HTMLElement | null;
-
     constructor() {
       this.container = document.querySelector('.slideshow-container');
       if (!this.container) return;
@@ -120,9 +108,6 @@ import { slides, slideshowConfig } from './slides.config';
       this.dots = this.container.querySelectorAll('.dot');
       this.progressBar = this.container.querySelector('.progress-bar');
       this.longPressIndicator = this.container.querySelector('.long-press-indicator');
-      this.debugStatus = document.getElementById('debug-status');
-      this.debugInterval = document.getElementById('debug-interval');
-      this.debugProgress = document.getElementById('debug-progress');
       this.currentIndex = 0;
       this.intervalDuration = parseInt(this.container.dataset.intervalDuration || '5000');
       this.interval = null;
@@ -140,7 +125,7 @@ import { slides, slideshowConfig } from './slides.config';
       // Progress tracking initialization
       this.pausedProgress = 0;
       this.resumeDelay = parseInt(this.container.dataset.longPressResumeDelay || '500');
-      
+
       this.init();
     }
     
@@ -167,11 +152,6 @@ import { slides, slideshowConfig } from './slides.config';
       // Pause on hover (desktop only)
       this.container?.addEventListener('mouseenter', this.pauseAutoplay.bind(this));
       this.container?.addEventListener('mouseleave', this.startAutoplay.bind(this));
-      
-      // Initialize debug display
-      this.updateDebugStatus('Ready');
-      this.updateDebugInterval(true);
-      this.updateDebugProgress(0);
     }
     
     addTouchEventListeners(): void {
@@ -199,10 +179,15 @@ import { slides, slideshowConfig } from './slides.config';
       this.isLongPressing = false;
       this.hasMoved = false;
       
+      // Clear any existing timer
+      if (this.longPressTimer) {
+        clearTimeout(this.longPressTimer);
+        this.longPressTimer = null;
+      }
+      
       // Start long-press timer
       this.longPressTimer = window.setTimeout(() => {
-        this.updateDebugStatus('Long press timer fired');
-        if (!this.hasMoved) {
+        if (!this.hasMoved && !this.isLongPressing) {
           this.handleLongPress();
         }
       }, this.longPressThreshold);
@@ -228,26 +213,20 @@ import { slides, slideshowConfig } from './slides.config';
       const touchEndTime = Date.now();
       const touchDuration = touchEndTime - this.touchStartTime;
       
-      this.updateDebugStatus(`Touch end: ${touchDuration}ms, Long: ${this.isLongPressing}, Moved: ${this.hasMoved}`);
-      
-      // If it was a long-press, prevent the click and resume autoplay
+      // Always call endLongPress if we were long-pressing
       if (this.isLongPressing) {
-        this.updateDebugStatus('Long press detected in touch end');
-        event.preventDefault();
-        event.stopPropagation();
         this.endLongPress();
         return;
-      } else if (touchDuration < this.longPressThreshold && !this.hasMoved) {
-        // Short touch without movement - allow normal click behavior
+      }
+      
+      // Handle other touch scenarios
+      if (touchDuration < this.longPressThreshold && !this.hasMoved) {
         this.cancelLongPress();
-        // Ensure autoplay is running for short touches
         if (!this.interval) {
           this.startAutoplay();
         }
       } else {
-        // Touch was too long or moved - prevent click
         this.cancelLongPress();
-        // Ensure autoplay is running for other cases
         if (!this.interval) {
           this.startAutoplay();
         }
@@ -261,21 +240,22 @@ import { slides, slideshowConfig } from './slides.config';
     }
     
     handleLongPress(): void {
-      this.updateDebugStatus('Long press detected');
       this.isLongPressing = true;
       this.pauseAutoplay();
       this.showLongPressIndicator();
     }
     
     endLongPress(): void {
-      this.updateDebugStatus('End long press called');
       this.isLongPressing = false;
       this.hideLongPressIndicator();
       
+      // Immediately reset touch state
+      this.resetTouchState();
+      
       // Add delay before resuming
       setTimeout(() => {
-        this.updateDebugStatus(`Resuming after ${this.resumeDelay}ms delay`);
         this.startAutoplay();
+        this.pausedProgress = 0;
       }, this.resumeDelay);
     }
     
@@ -286,7 +266,16 @@ import { slides, slideshowConfig } from './slides.config';
       }
       this.isLongPressing = false;
       this.hideLongPressIndicator();
-      // Don't restart autoplay here - let the calling method handle it
+    }
+    
+    resetTouchState(): void {
+      this.isLongPressing = false;
+      this.hasMoved = false;
+      this.touchStartTime = 0;
+      if (this.longPressTimer) {
+        clearTimeout(this.longPressTimer);
+        this.longPressTimer = null;
+      }
     }
     
     showLongPressIndicator(): void {
@@ -323,7 +312,7 @@ import { slides, slideshowConfig } from './slides.config';
       // Hide current slide
       this.slides[this.currentIndex].classList.remove('opacity-100');
       this.slides[this.currentIndex].classList.add('opacity-0');
-      this.dots[this.currentIndex].classList.remove('active-dot'); // Remove active class
+      this.dots[this.currentIndex].classList.remove('active-dot');
       
       // Remove emoji from current active dot
       const currentDotContainer = this.dots[this.currentIndex].parentElement;
@@ -336,7 +325,7 @@ import { slides, slideshowConfig } from './slides.config';
       this.currentIndex = index;
       this.slides[this.currentIndex].classList.remove('opacity-0');
       this.slides[this.currentIndex].classList.add('opacity-100');
-      this.dots[this.currentIndex].classList.add('active-dot'); // Add active class
+      this.dots[this.currentIndex].classList.add('active-dot');
       
       // Add emoji to new active dot
       const newDotContainer = this.dots[this.currentIndex].parentElement;
@@ -357,34 +346,22 @@ import { slides, slideshowConfig } from './slides.config';
     }
     
     startAutoplay(): void {
-      this.updateDebugStatus(`Start autoplay: ${this.intervalDuration}ms`);
-      this.pauseAutoplay(); // Clear any existing intervals
+      this.pauseAutoplay();
       
       // Start progress animation
       this.startProgress();
       
       // Start slide interval
       this.interval = window.setInterval(() => {
-        this.updateDebugStatus('Auto-advancing slide');
         this.nextSlide();
       }, this.intervalDuration);
-      
-      this.updateDebugInterval(true);
-      this.updateDebugStatus(`Autoplay started: ${this.intervalDuration}ms`);
-      
-      // Test if interval is working
-      setTimeout(() => {
-        this.updateDebugStatus(`2s later - interval: ${this.interval !== null ? 'Active' : 'Dead'}`);
-      }, 2000);
     }
     
     pauseAutoplay(): void {
-      this.updateDebugStatus('Pausing autoplay');
       // Store current progress before pausing
       if (this.progressBar) {
         const currentWidth = this.progressBar.style.width;
         this.pausedProgress = parseInt(currentWidth) || 0;
-        this.updateDebugProgress(this.pausedProgress);
       }
       
       if (this.interval) {
@@ -395,19 +372,16 @@ import { slides, slideshowConfig } from './slides.config';
         clearInterval(this.progressInterval);
         this.progressInterval = null;
       }
-      
-      this.updateDebugInterval(false);
     }
     
     startProgress(): void {
       if (!this.progressBar) return;
       
-      let progress = this.pausedProgress; // Start from paused progress
-      const increment = 100 / (this.intervalDuration / 50); // Update every 50ms
+      let progress = this.pausedProgress;
+      const increment = 100 / (this.intervalDuration / 50);
       
       // Set initial progress
       this.progressBar.style.width = progress + '%';
-      this.updateDebugProgress(progress);
       
       this.progressInterval = window.setInterval(() => {
         progress += increment;
@@ -419,7 +393,6 @@ import { slides, slideshowConfig } from './slides.config';
         }
         if (this.progressBar) {
           this.progressBar.style.width = progress + '%';
-          this.updateDebugProgress(Math.round(progress));
         }
       }, 50);
     }
@@ -427,26 +400,7 @@ import { slides, slideshowConfig } from './slides.config';
     resetProgress(): void {
       if (this.progressBar) {
         this.progressBar.style.width = '0%';
-        this.pausedProgress = 0; // Reset paused progress when manually changing slides
-      }
-    }
-    
-    updateDebugStatus(status: string): void {
-      if (this.debugStatus) {
-        this.debugStatus.textContent = status;
-      }
-    }
-    
-    updateDebugInterval(active: boolean): void {
-      if (this.debugInterval) {
-        this.debugInterval.textContent = active ? 'Active' : 'Paused';
-        this.debugInterval.style.color = active ? '#10b981' : '#ef4444';
-      }
-    }
-    
-    updateDebugProgress(progress: number): void {
-      if (this.debugProgress) {
-        this.debugProgress.textContent = progress + '%';
+        this.pausedProgress = 0;
       }
     }
   }
