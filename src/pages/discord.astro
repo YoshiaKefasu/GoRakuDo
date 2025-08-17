@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script is:inline src="/scripts/favicon.js" defer></script>
     <title>Undangan</title>
-        <!-- Memuat skrip pengelola judul -->
-        <script is:inline src="/scripts/webname-manager.js"></script>
-        <!-- Menjalankan fungsi dengan judul spesifik untuk halaman ini -->
-        <script>setPageTitle("Undangan");</script>
+        <!-- Set page title directly -->
+        <script>
+            document.title = "Undangan";
+        </script>
     <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet">
     <style>
         * {
@@ -332,24 +332,27 @@
             // Animate the content elements
             const elements = document.querySelectorAll('.content p, .member-list li');
             elements.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                const element = el as HTMLElement;
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 
                 setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
                 }, (index + 1) * 100);
             });
 
             // Add hover effect to discord link
-            const discordLink = document.querySelector('.discord-link');
-            discordLink.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.02)';
-            });
-            discordLink.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
-            });
+            const discordLink = document.querySelector('.discord-link') as HTMLElement;
+            if (discordLink) {
+                discordLink.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                });
+                discordLink.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            }
         });
 
         // Keyboard navigation
