@@ -309,6 +309,13 @@ import { slides, slideshowConfig } from './slides.config';
     }
     
     goToSlide(index: number): void {
+      // Force resume slideshow if it was paused by long-press
+      if (this.isLongPressing) {
+        this.isLongPressing = false;
+        this.hideLongPressIndicator();
+        this.resetTouchState();
+      }
+      
       // Hide current slide
       this.slides[this.currentIndex].classList.remove('opacity-100');
       this.slides[this.currentIndex].classList.add('opacity-0');
@@ -336,8 +343,11 @@ import { slides, slideshowConfig } from './slides.config';
         newDotContainer.appendChild(emoji);
       }
       
-      // Reset progress
+      // Reset progress and ensure autoplay is running
       this.resetProgress();
+      if (!this.interval) {
+        this.startAutoplay();
+      }
     }
     
     nextSlide(): void {

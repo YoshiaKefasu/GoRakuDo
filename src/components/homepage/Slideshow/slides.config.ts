@@ -4,37 +4,37 @@
 export const slides = [
   {
     id: 1,
-    imageUrl: "/img/SlideshowHomepage/Slide-post-0.png",
+    imageUrl: "/img/SlideshowHomepage/Slide-post-0.webp",
     link: "https://discord.com/channels/1075777026482520114/1300411111002079232/1394432156066906112",
     alt: "Ferdi28"
   },
   {
     id: 2,
-    imageUrl: "/img/SlideshowHomepage/Slide-post-1.png",
+    imageUrl: "/img/SlideshowHomepage/Slide-post-1.webp",
     link: "https://discord.com/channels/1075777026482520114/1300411111002079232/1405530417188307114",
     alt: "fadel2023",
   },
   {
     id: 3,
-    imageUrl: "/img/SlideshowHomepage/Slide-post-2.png",
+    imageUrl: "/img/SlideshowHomepage/Slide-post-2.webp",
     link: "https://discord.com/channels/1075777026482520114/1300411111002079232/1324969312099893279",
     alt: "destipus23",
   },
   {
     id: 4,
-    imageUrl: "/img/SlideshowHomepage/Slide-post-3.png",
+    imageUrl: "/img/SlideshowHomepage/Slide-post-3.webp",
     link: "https://discord.com/channels/1075777026482520114/1300411111002079232/1345340270522142720",
     alt: "matthewkormasela",
   },
   {
     id: 5,
-    imageUrl: "/img/SlideshowHomepage/Slide-post-4.png",
+    imageUrl: "/img/SlideshowHomepage/Slide-post-4.webp",
     link: "https://discord.com/channels/1075777026482520114/1300411111002079232/1383799506419716097",
     alt: "insky7519_Insky",
   },
   {
     id: 6,
-    imageUrl: "/img/SlideshowHomepage/Slide-post-5.png",
+    imageUrl: "/img/SlideshowHomepage/Slide-post-5.webp",
     link: "https://discord.com/channels/1075777026482520114/1355063064159846431/1389971394812706847",
     alt: "bas00292_Baskun",
   }
