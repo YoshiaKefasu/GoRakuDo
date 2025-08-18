@@ -43,6 +43,8 @@ import { Image } from 'astro:assets';
         data-link={slide.link}
       >
         <Image 
+          loading="lazy"
+          fetchpriority="auto"
           src={slide.imageUrl} 
           alt={slide.alt}
           class="w-full h-full object-cover"

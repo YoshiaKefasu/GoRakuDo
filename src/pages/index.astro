@@ -28,52 +28,18 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       publishedDate="2025/08/10"
       lang="id"
     />
-    <!-- DNS Prefetch for "CeritaImmersio" -->
-    <link
-      rel="preload"
-      href="/img/SlideshowHomepage/Slide-post-0.webp"
-      as="image"
-      type="image/webp"
-    />
-    <link
-      rel="preload"
-      href="/img/SlideshowHomepage/Slide-post-1.webp"
-      as="image"
-      type="image/webp"
-    />
-    <link
-      rel="preload"
-      href="/img/SlideshowHomepage/Slide-post-2.webp"
-      as="image"
-      type="image/webp"
-    />
-    <link
-      rel="preload"
-      href="/img/SlideshowHomepage/Slide-post-3.webp"
-      as="image"
-      type="image/webp"
-    />
-    <link
-      rel="preload"
-      href="/img/SlideshowHomepage/Slide-post-4.webp"
-      as="image"
-      type="image/webp"
-    />
-    <link
-      rel="preload"
-      href="/img/SlideshowHomepage/Slide-post-5.webp"
-      as="image"
-      type="image/webp"
-    />
-
     <!-- Prefetch non-critical resources (Enhanced) -->
-    <link rel="prefetch" href="/docs/posts" />
-    <link rel="prefetch" href="/discord" />
-    <link rel="prefetch" href="/docs/post" />
+    <link fetchpriority="low" rel="prefetch" href="/docs/posts" />
+    <link fetchpriority="low" rel="prefetch" href="/discord" />
+    <link fetchpriority="low" rel="prefetch" href="/docs/post" />
   </head>
   <body>
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/css/homepage-styles.css" />
+    <link
+      fetchpriority="auto"
+      rel="stylesheet"
+      href="/css/homepage-styles.css"
+    />
     <!-- Wave Animation Background (Hidden from screen readers) -->
     <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
 
@@ -148,13 +114,6 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
                 langsung terjun dalam bahasa Jepang sejak hari
                 pertama—mendengar, membaca, dan ⚡ langsung memahaminya di
                 konteks aslinya.
-              </p>
-              <p>
-                🚀 Kami hadir untuk menghapus rasa takut dan kebingungan pemula.
-                🗺️ Roadmap kami memecah perjalanan menjadi tahap sederhana—dari
-                huruf dasar (kana) hingga memahami novel, percakapan, dan media
-                kompleks—dengan dukungan tools seperti Anki, kamus monolingual,
-                dan konten Jepang yang sesuai level-mu.
               </p>
               <p>
                 🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu "hidup" dalam bahasa
@@ -311,7 +270,8 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
     <!-- Invitation Modal - Load only when needed -->
     <InvitationModal client:idle />
 
-    <script is:inline src="/scripts/hompage-script.js"></script>
+    <script fetchpriority="auto" is:inline src="/scripts/hompage-script.js"
+    ></script>
 
     <!-- Bundle Splitting: Load performance monitoring as separate chunk -->
     <script>
