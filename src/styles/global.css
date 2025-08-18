@@ -240,7 +240,7 @@
   }
 
   .secondary-button:hover {
-    border-color: var(--clr-accent);
+    border-color: var(--color-gold-dark);
     background: var(--clr-accent-glow-medium);
   }
 
