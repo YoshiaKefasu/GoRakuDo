@@ -2,6 +2,7 @@
 import Head from "../components/HeadSEO.astro";
 import CeritaImmersion from "../components/homepage/Slideshow/ImageSlideshow.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { ViewTransitions } from "astro:transitions";
 
 // Vueコンポーネントをインポート
 import Navbar from "../components/Navbar.vue";
@@ -11,6 +12,7 @@ import InvitationModal from "../components/InvitationModal.vue";
 // CSSをインポート
 import "../styles/global.css";
 import "../styles/homepage/ImageSlideshow.css";
+import "../styles/homepage/index.css";
 
 // 画像をインポート
 import homepageOgImage from "../assets/images/Logo Discord.png";
@@ -18,16 +20,17 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
 
 <!doctype html>
 <html lang="id">
-  <head
-    ><Head
+  <head>
+    <Head
       title="Komunitas Immersion Terbesar JP-Indonesia"
       description="Komunitas immersion bahasa Jepang terbesar Indonesia. Belajar alami, kuasai seperti penutur asli."
       ogImage={homepageOgImage}
       pageType="website"
       publishedDate="2025/08/10"
       lang="id"
-    /></head
-  >
+    />
+    <ViewTransitions />
+  </head>
   <body>
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/css/homepage-styles.css" />
@@ -53,10 +56,10 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
     </div>
 
     <!-- Navigation -->
-    <Navbar client:load />
+    <Navbar client:visible />
 
     <!-- Main Content -->
-    <main class="main-content" role="main">
+    <main class="main-content" role="main" transition:name="main-content">
       <!-- Hero Section -->
       <Hero
         missionId="mission"
@@ -67,7 +70,9 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
 
       <!-- Add the ImageSlideshow component here -->
       <div
-        class="mb-8 flex flex-col items-center justify-center min-h-auto w-full"
+        class="mb-8 flex flex-col items-center justify-center min-h-auto w-full loading"
+        transition:name="slideshow-section"
+        data-lazy
       >
         <CeritaImmersion />
       </div>
@@ -75,11 +80,19 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       <!-- Mission Section -->
       <section
         id="mission"
-        class="mission-section smooth-edge-bottom"
+        class="mission-section smooth-edge-bottom loading"
         aria-labelledby="mission-title"
+        transition:name="mission-section"
+        data-lazy
       >
         <div class="mission-container">
-          <h2 class="mission-title" id="mission-title">Misi Kami</h2>
+          <h2
+            class="mission-title"
+            id="mission-title"
+            transition:name="mission-title"
+          >
+            Misi Kami
+          </h2>
           <div class="mission-content">
             <div class="mission-text">
               <p>
@@ -121,6 +134,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
               class="cta-button"
               onclick="openInvitationModal()"
               aria-label="Bergabung dengan komunitas GoRakuDo"
+              transition:name="cta-button"
             >
               Gabung Komunitas Kami
               <svg
@@ -142,13 +156,26 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       </section>
 
       <!-- Features Section -->
-      <section class="features-section" aria-labelledby="features-title">
+      <section
+        class="features-section loading"
+        aria-labelledby="features-title"
+        transition:name="features-section"
+        data-lazy
+      >
         <div class="features-container">
-          <h2 class="features-title" id="features-title">
+          <h2
+            class="features-title"
+            id="features-title"
+            transition:name="features-title"
+          >
             Pendekatan Immersion
           </h2>
           <div class="features-grid" role="list">
-            <article class="feature-card" role="listitem">
+            <article
+              class="feature-card"
+              role="listitem"
+              transition:name="feature-card-1"
+            >
               <div class="feature-icon" aria-hidden="true">⚡</div>
               <h3>Adaptive Learning</h3>
               <p>
@@ -158,7 +185,11 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
                 hafalan.
               </p>
             </article>
-            <article class="feature-card" role="listitem">
+            <article
+              class="feature-card"
+              role="listitem"
+              transition:name="feature-card-2"
+            >
               <div class="feature-icon" aria-hidden="true">👥</div>
               <h3>Belajar Bersama Komunitas</h3>
               <p>
@@ -166,7 +197,11 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
                 lingkungan komunitas yang mendukung.
               </p>
             </article>
-            <article class="feature-card" role="listitem">
+            <article
+              class="feature-card"
+              role="listitem"
+              transition:name="feature-card-3"
+            >
               <div class="feature-icon" aria-hidden="true">📚</div>
               <h3>Peta Jalan Terstruktur</h3>
               <p>
@@ -175,7 +210,11 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
                 sebelumnya.
               </p>
             </article>
-            <article class="feature-card" role="listitem">
+            <article
+              class="feature-card"
+              role="listitem"
+              transition:name="feature-card-4"
+            >
               <div class="feature-icon" aria-hidden="true">🧠</div>
               <h3>Berpikir dalam Jepang</h3>
               <p>
@@ -188,9 +227,16 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       </section>
 
       <!-- Documentation Preview Section -->
-      <section class="docs-preview-section" aria-labelledby="docs-title">
+      <section
+        class="docs-preview-section loading"
+        aria-labelledby="docs-title"
+        transition:name="docs-section"
+        data-lazy
+      >
         <div class="docs-container">
-          <h2 class="docs-title" id="docs-title">Panduan & Dokumentasi</h2>
+          <h2 class="docs-title" id="docs-title" transition:name="docs-title">
+            Panduan & Dokumentasi
+          </h2>
           <p class="docs-description">
             Akses panduan lengkap, metodologi immersion, dan sumber daya
             pembelajaran yang telah terbukti efektif.
@@ -200,6 +246,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
               class="docs-button"
               onclick="goToPosts()"
               aria-label="Lihat semua dokumentasi dan panduan"
+              transition:name="docs-button"
             >
               Lihat Dokumentasi
               <svg
@@ -221,29 +268,84 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       </section>
     </main>
 
-    <!-- Invitation Modal -->
-    <InvitationModal client:load />
+    <!-- Invitation Modal - Load only when needed -->
+    <InvitationModal client:idle />
 
     <script is:inline src="/scripts/hompage-script.js"></script>
 
-    <!-- Performance and Analytics Script -->
+    <!-- Bundle Splitting: Load performance monitoring as separate chunk -->
     <script>
-      // Preload the documentation page to make navigation feel faster
-      const linkPrefetch = document.createElement("link");
-      linkPrefetch.rel = "prefetch";
-      linkPrefetch.href = "/docs/posts";
-      document.head.appendChild(linkPrefetch);
-
-      // Optional: Track page performance metrics in the browser console
-      window.addEventListener("load", function () {
-        if (performance) {
-          console.log(
-            "🏆 Homepage fully loaded in",
-            performance.now().toFixed(2),
-            "ms"
-          );
-        }
+      // Load performance monitoring after page load for better performance
+      window.addEventListener("load", () => {
+        // Dynamic import for performance monitoring (separate chunk)
+        import("../utils/performance-monitor.js")
+          .then((module) => {
+            module.initPerformanceMonitoring();
+          })
+          .catch((error) => {
+            console.log(
+              "📊 Performance monitoring failed to load:",
+              error.message
+            );
+          });
       });
+
+      // Intersection Observer for lazy loading optimization
+      const lazyElements = document.querySelectorAll("[data-lazy]");
+      const lazyObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("loaded");
+            lazyObserver.unobserve(entry.target);
+          }
+        });
+      });
+
+      lazyElements.forEach((el) => lazyObserver.observe(el));
+
+      // Service Worker registration for caching (if available)
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          // Opt-in only: enable by setting localStorage.setItem('enable-sw','true')
+          const enableSW = localStorage.getItem("enable-sw") === "true";
+
+          if (enableSW) {
+            navigator.serviceWorker
+              .register("/sw.js")
+              .then((registration) => {
+                console.log(
+                  "🔧 Service Worker registered:",
+                  registration.scope
+                );
+
+                // Check for updates
+                registration.addEventListener("updatefound", () => {
+                  const installing = registration.installing;
+                  if (!installing) return;
+                  installing.addEventListener("statechange", () => {
+                    if (
+                      installing.state === "installed" &&
+                      navigator.serviceWorker.controller
+                    ) {
+                      console.log("🔄 New Service Worker available");
+                    }
+                  });
+                });
+              })
+              .catch((error) => {
+                console.log(
+                  "⚠️ Service Worker registration failed:",
+                  error?.message || error
+                );
+              });
+          } else {
+            // Disabled by default to avoid GH Pages cache/stale-content issues
+            console.log(
+              "🔧 Service Worker disabled (enable via localStorage 'enable-sw' = 'true')"
+            );
+          }
+        });
+      }
     </script>
   </body>
 </html>

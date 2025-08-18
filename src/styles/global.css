@@ -3,162 +3,321 @@
 /* @tailwind components; */
 /* @tailwind utilities; */
 
-/* Import Tailwind CSS v4 */
+/* TAILWIND V4 OPTIMIZED VERSION */
 @import "tailwindcss";
 
-/* Define theme for Tailwind v4 - Complete Homepage Design System */
-:root {
-  /* ========== Your Original Brand Colors (Preserved) ========== */
+/* ========== GLOBAL VIEW TRANSITIONS (SHARED ACROSS PAGES) ========== */
+/* Note: Page-specific View Transitions are now in their respective CSS files */
+
+/* ========== GLOBAL ANIMATIONS ========== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-from-bottom {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========== PERFORMANCE OPTIMIZATIONS (100% SAFE) ========== */
+
+/* 1. CSS Layer Optimization - Critical CSS loads first */
+@layer base {
+  /* Critical CSS - load first */
+  :root {
+    /* Only essential variables for immediate rendering */
+    --color-background: #0a0a0a;
+    --color-text-primary: #ffffff;
+    --color-accent-purple: #8b5dff;
+    --color-gold-dark: #e4b43b;
+  }
+
+  /* Critical body styles for immediate rendering */
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Critical main content styles */
+  .main-content {
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Critical hero styles */
+  .hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 15px;
+  }
+
+  /* Critical navigation styles */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 8px 0 4px 0;
+    background: linear-gradient(
+      to top,
+      rgba(10, 10, 10, 0) 0%,
+      rgba(10, 10, 10, 0.95) 10%,
+      rgba(10, 10, 10, 0.99) 11%
+    );
+    transition: background 0.3s ease;
+  }
+
+  /* Critical button styles */
+  .cta-button,
+  .docs-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 35px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .cta-button {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple) 0%,
+      #7b4def 100%
+    );
+    color: var(--color-text-primary);
+  }
+
+  .docs-button {
+    background: transparent;
+    border: 2px solid rgba(228, 180, 59, 0.25);
+    color: var(--color-gold-dark);
+  }
+
+  /* Critical loading states */
+  .loading {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .loaded {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Critical responsive styles */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 0 20px;
+    }
+
+    .cta-button,
+    .docs-button {
+      padding: 14px 28px;
+      font-size: 15px;
+    }
+  }
+}
+
+/* 2. Use Tailwind v4's @theme directive for better performance */
+@theme {
+  /* Your brand colors - Tailwind v4 will optimize these */
   --color-background: #0a0a0a;
   --color-text-primary: #ffffff;
   --color-text-secondary: #cccccc;
   --color-text-muted: #aaaaaa;
 
-  /* Accent colors - Original design */
+  /* Accent colors */
   --color-accent-purple: #8b5dff;
   --color-accent-purple-dark: #7b4def;
-  --color-accent-purple-rgb: 139, 93, 255;
-  --color-accent-purple-glow-faint: rgba(139, 93, 255, 0.05);
-  --color-accent-purple-glow-medium: rgba(139, 93, 255, 0.25);
-  --color-accent-purple-glow-strong: rgba(139, 93, 255, 0.5);
-  --color-accent-shadow: rgba(139, 93, 255, 0.4);
-
-  /* Gold colors */
   --color-gold-light: #ffefb8;
   --color-gold-dark: #e4b43b;
 
-  /* Paper theme colors for modal */
-  --color-paper-bg: #f7f4f1;
-  --color-paper-text-primary: #3c3c3c;
-  --color-paper-text-secondary: #555555;
-  --color-paper-border: #e0dcd8;
-  --color-paper-lines: #dcd9d5;
-
-  /* ========== NEW OKLCH Color System (Enhanced Color Science) ========== */
-  /* Base colors using OKLCH for better color science */
-  --color-base-100: oklch(13% 0.028 261.692);
-  --color-base-200: oklch(21% 0.034 264.665);
-  --color-base-300: oklch(27% 0.033 256.848);
-  --color-base-content: oklch(96% 0.003 264.542);
-  
-  /* Primary colors - Enhanced versions of your purple */
+  /* Enhanced OKLCH colors for better color science */
   --color-primary: oklch(70% 0.165 254.624);
-  --color-primary-content: oklch(28% 0.091 267.935);
-  
-  /* Secondary colors - Enhanced versions of your gold */
   --color-secondary: oklch(71% 0.194 13.428);
-  --color-secondary-content: oklch(27% 0.105 12.094);
-  
-  /* Accent colors - Enhanced purple variants */
   --color-accent: oklch(71% 0.203 305.504);
-  --color-accent-content: oklch(29% 0.149 302.717);
-  
-  /* Neutral colors */
-  --color-neutral: oklch(21% 0.034 264.665);
-  --color-neutral-content: oklch(98% 0.002 247.839);
-  
-  /* Semantic colors */
+
+  /* Semantic colors with OKLCH */
   --color-info: oklch(54% 0.245 262.881);
-  --color-info-content: oklch(97% 0.014 254.604);
   --color-success: oklch(59% 0.145 163.225);
-  --color-success-content: oklch(97% 0.021 166.113);
   --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
   --color-error: oklch(58% 0.253 17.585);
-  --color-error-content: oklch(96% 0.015 12.422);
 
-  /* ========== Semantic Color System (Backward Compatible) ========== */
-  --color-primary: var(--color-accent-purple);
-  --color-primary-content: var(--color-text-primary);
-  --color-secondary: var(--color-gold-dark);
-  --color-secondary-content: var(--color-paper-text-primary);
-  --color-accent: var(--color-accent-purple-dark);
-  --color-accent-content: var(--color-text-primary);
-  --color-surface: #1a1a1a;
-  --color-surface-content: var(--color-text-primary);
-  --color-surface-light: #262626;
-  --color-surface-dark: var(--color-background);
+  /* Extended color palette for better design system */
+  --color-neutral-50: oklch(98% 0.005 254.624);
+  --color-neutral-100: oklch(95% 0.01 254.624);
+  --color-neutral-200: oklch(90% 0.015 254.624);
+  --color-neutral-300: oklch(80% 0.02 254.624);
+  --color-neutral-400: oklch(70% 0.025 254.624);
+  --color-neutral-500: oklch(60% 0.03 254.624);
+  --color-neutral-600: oklch(50% 0.035 254.624);
+  --color-neutral-700: oklch(40% 0.04 254.624);
+  --color-neutral-800: oklch(30% 0.045 254.624);
+  --color-neutral-900: oklch(20% 0.05 254.624);
 
-  /* ========== Enhanced with OKLCH for Better Color Science ========== */
-  /* Modern OKLCH variants for better accessibility */
-  --oklch-primary: oklch(63% 0.165 278.5);        /* Your purple in OKLCH */
-  --oklch-primary-dark: oklch(58% 0.165 278.5);   /* Your purple dark in OKLCH */
-  --oklch-secondary: oklch(71% 0.15 85);           /* Your gold in OKLCH */
-  --oklch-background: oklch(13% 0.005 0);          /* Your background in OKLCH */
-
-  /* ========== Legacy Compatibility (Keep your existing components working) ========== */
-  /* Default theme colors for backward compatibility */
-  --color-foreground: var(--color-text-primary);
-  --color-card: var(--color-base-200);
-  --color-card-foreground: var(--color-text-primary);
-  --color-popover: var(--color-base-200);
-  --color-popover-foreground: var(--color-text-primary);
-  --color-muted: var(--color-base-300);
-  --color-muted-foreground: #a3a3a3;
-  --color-destructive: var(--color-error);
-  --color-destructive-foreground: var(--color-error-content);
-  --color-border: #404040;
-  --color-input: #404040;
-  --color-ring: #737373;
-
-  /* ========== Design System Values ========== */
-  /* Spacing - Original design values */
-  --spacing-section-y: clamp(5rem, 10vw, 7.5rem);
-  --section-padding-y: clamp(80px, 10vw, 120px);
-
-  /* Spacing & Borders */
+  /* Design tokens */
   --border-radius-pill: 35px;
   --border-radius-card: 20px;
   --border-radius-btn-small: 25px;
+  --border-radius-lg: 12px;
+  --border-radius-md: 8px;
+  --border-radius-sm: 4px;
 
   /* Animation speeds */
   --animate-duration-fast: 150ms;
   --animate-duration-normal: 300ms;
   --animate-duration-slow: 500ms;
-  --transition-speed: 0.3s;
+  --animate-duration-slower: 700ms;
 
-  /* DaisyUI Animation Integration */
-  --animation-btn: 0.25s;
-  --animation-input: 0.2s;
+  /* Spacing system */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
 
-  /* Navbar Dynamic Variables */
-  --navbar-opacity: 0;
+  /* Typography scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
 
-  /* Backwards-compatible aliases */
-  --clr-accent: var(--color-accent-purple);
-  --clr-accent-dark: var(--color-accent-purple-dark);
-  --clr-accent-shadow: var(--color-accent-shadow);
-  --clr-accent-glow-medium: var(--color-accent-purple-glow-medium);
-  --clr-text-primary: var(--color-text-primary);
-  --clr-text-secondary: var(--color-text-secondary);
-  --border-radius-pill: var(--rounded-btn);
+  /* Container queries (modern CSS feature) */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
 
-  /* Semi-transparent variants for borders */
+  /* Logical properties for better internationalization */
+  --logical-margin-block: 1rem;
+  --logical-margin-inline: 1.5rem;
+  --logical-padding-block: 0.75rem;
+  --logical-padding-inline: 1rem;
+
+  /* Modern CSS features */
+  --backdrop-blur-sm: 4px;
+  --backdrop-blur-md: 8px;
+  --backdrop-blur-lg: 12px;
+  --backdrop-blur-xl: 16px;
+
+  /* Shadow system */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Z-index scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* Keep only what @theme doesn't handle well - Performance optimized */
+:root {
+  /* Complex rgba values that need calculation - Only what's actually used */
+  --color-accent-purple-rgb: 139, 93, 255;
+  --color-accent-purple-glow-faint: rgba(139, 93, 255, 0.05);
+  --color-accent-purple-glow-medium: rgba(139, 93, 255, 0.25);
+  --color-accent-purple-glow-strong: rgba(139, 93, 255, 0.5);
+  --color-accent-shadow: rgba(139, 93, 255, 0.4);
   --color-gold-dark-transparent: rgba(228, 180, 59, 0.25);
-  
-  /* ========== INTELLIGENT NOISE SYSTEM - Auto-Applied Based on Context ========== */
-  --border: 1.5px;
-  --depth: 1;
-  --noise: 1;
 
-  /* ========== NEW OKLCH Radius System ========== */
-  --radius-selector: 2rem;
-  --radius-field: 1rem;
-  --radius-box: 2rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.21875rem;
-
-  /* --- Backwards-compatible aliases (keeps older code working) --- */
-  --clr-accent: var(--color-accent-purple);
-  --clr-accent-dark: var(--color-accent-purple-dark);
-  --clr-accent-shadow: var(--color-accent-shadow);
-  --clr-accent-glow-medium: var(--color-accent-purple-glow-medium);
-  --clr-text-primary: var(--color-text-primary);
-  --border-radius-pill: var(--radius-pill);
+  /* Paper theme colors - Only if actually used in components */
+  --color-paper-bg: #f7f4f1;
+  --color-paper-text-primary: #3c3c3c;
+  --color-paper-text-secondary: #555555;
+  --color-paper-border: #e0dcd8;
+  --color-paper-lines: #dcd9d5;
 }
 
 /* ========== Component layer (Tailwind @apply + custom rules) ========== */
 @layer components {
+  /* Component styles load second - after critical CSS */
   /* ---------- Modal & responsive helpers (from your snippet) ---------- */
   .modal-content {
     /* Desktop rules */
@@ -231,12 +390,16 @@
 
   /* ---------- Secondary button (outlined pill) ---------- */
   .secondary-button {
-    @apply px-[32px]! py-[14px]! inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full border-3! bg-transparent text-[16px] font-medium;
+    @apply px-[32px]! py-[14px]! border-3! inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full bg-transparent text-[16px] font-medium;
     background: transparent;
     border: 2px solid var(--color-gold-dark-transparent);
     border-radius: var(--border-radius-pill);
     color: var(--color-gold-dark);
-    transition: background-color var(--animate-duration-fast) ease, border-color var(--animate-duration-fast) ease, color var(--animate-duration-fast) ease, transform var(--animate-duration-fast) ease;
+    transition:
+      background-color var(--animate-duration-fast) ease,
+      border-color var(--animate-duration-fast) ease,
+      color var(--animate-duration-fast) ease,
+      transform var(--animate-duration-fast) ease;
   }
 
   .secondary-button:hover {
@@ -273,7 +436,7 @@
 
   /* ---------- Navbar component ---------- */
   .navbar {
-    @apply fixed top-0 left-0 right-0 z-[1000] py-2! pb-1!;
+    @apply py-2! pb-1! fixed left-0 right-0 top-0 z-[1000];
     background: linear-gradient(
       to top,
       rgba(10, 10, 10, 0) 0%,
@@ -288,20 +451,20 @@
     backdrop-filter: none !important; /* Remove backdrop filter */
   }
   .nav-container {
-    @apply max-w-[1200px] mx-auto! flex justify-between items-center px-5;
+    @apply mx-auto! flex max-w-[1200px] items-center justify-between px-5;
     background: transparent !important;
   }
   .nav-left,
   .nav-right {
-    @apply flex-1 flex items-center gap-8;
+    @apply flex flex-1 items-center gap-8;
   }
   .nav-right {
     @apply justify-end;
   }
   .nav-item {
-  @apply text-sm cursor-pointer;
-  color: var(--clr-text-secondary);
-  transition: color 0.12s ease;
+    @apply cursor-pointer text-sm;
+    color: var(--clr-text-secondary);
+    transition: color 0.12s ease;
   }
   .nav-item:hover {
     color: var(--clr-accent);
@@ -309,7 +472,7 @@
 
   /* ---------- Get Started Button ---------- */
   .get-started-btn {
-    @apply bg-[var(--clr-accent)] text-[var(--clr-text-primary)] border-none px-6! py-2.5! text-sm font-medium cursor-pointer;
+    @apply px-6! py-2.5! cursor-pointer border-none bg-[var(--clr-accent)] text-sm font-medium text-[var(--clr-text-primary)];
     border-radius: var(--border-radius-btn-small);
     transition: background-color 0.12s ease;
   }
@@ -335,38 +498,38 @@
   .nav-right {
     @apply [@media(max-width:1024px)]:hidden;
   }
-  
+
   .mobile-menu-btn {
     @apply [@media(max-width:1024px)]:block 
-           [@media(max-width:1024px)]:bg-[var(--clr-accent)]
-           [@media(max-width:1024px)]:text-[var(--clr-text-primary)]
+           [@media(max-width:1024px)]:cursor-pointer
+           [@media(max-width:1024px)]:rounded-[20px]
            [@media(max-width:1024px)]:border-none
+           [@media(max-width:1024px)]:bg-[var(--clr-accent)]
            [@media(max-width:1024px)]:px-4
            [@media(max-width:1024px)]:py-2
-           [@media(max-width:1024px)]:rounded-[20px]
            [@media(max-width:1024px)]:text-sm
            [@media(max-width:1024px)]:font-medium
-           [@media(max-width:1024px)]:cursor-pointer;
+           [@media(max-width:1024px)]:text-[var(--clr-text-primary)];
     transition: background-color 0.12s ease;
   }
-  
+
   .mobile-menu-btn:hover {
     @apply [@media(max-width:1024px)]:bg-[var(--clr-accent-dark)];
   }
-  
+
   .logo-japanese {
     @apply [@media(max-width:1024px)]:text-2xl;
   }
 
-    /* ---------- Logo Japanese Component ---------- */
+  /* ---------- Logo Japanese Component ---------- */
   .logo-japanese {
-    @apply text-[28px] cursor-pointer leading-none no-underline;
+    @apply cursor-pointer text-[28px] leading-none no-underline;
     font-family: "Yuji Syuku", serif;
     color: var(--color-text-primary);
   }
 
   .logo-japanese rt {
-    @apply text-[0.4em] font-semibold mb-[-15px]!;
+    @apply mb-[-15px]! text-[0.4em] font-semibold;
     font-family: "Inter", sans-serif;
     color: #999;
   }
@@ -398,5 +561,397 @@
     .gold-marker {
       @apply bg-clip-text text-transparent;
     }
+  }
+
+  /* Astro-specific optimizations */
+  .astro-responsive {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ========== TAILWIND V4.1 ADVANCED FEATURES ========== */
+
+  /* 1. Container Queries Support */
+  .container-query {
+    container-type: inline-size;
+  }
+
+  .container-query-sm {
+    container-type: inline-size;
+    container-name: small;
+  }
+
+  .container-query-lg {
+    container-type: inline-size;
+    container-name: large;
+  }
+
+  /* Container query responsive utilities */
+  @container (min-width: 640px) {
+    .cq-sm\:flex {
+      display: flex;
+    }
+    .cq-sm\:grid {
+      display: grid;
+    }
+    .cq-sm\:hidden {
+      display: none;
+    }
+    .cq-sm\:block {
+      display: block;
+    }
+  }
+
+  @container (min-width: 768px) {
+    .cq-md\:flex {
+      display: flex;
+    }
+    .cq-md\:grid {
+      display: grid;
+    }
+    .cq-md\:hidden {
+      display: none;
+    }
+    .cq-md\:block {
+      display: block;
+    }
+  }
+
+  @container (min-width: 1024px) {
+    .cq-lg\:flex {
+      display: flex;
+    }
+    .cq-lg\:grid {
+      display: grid;
+    }
+    .cq-lg\:hidden {
+      display: none;
+    }
+    .cq-lg\:block {
+      display: block;
+    }
+  }
+
+  /* 2. Logical Properties for Better Internationalization */
+  .logical-margin-block {
+    margin-block: var(--logical-margin-block);
+  }
+
+  .logical-margin-inline {
+    margin-inline: var(--logical-margin-inline);
+  }
+
+  .logical-padding-block {
+    padding-block: var(--logical-padding-block);
+  }
+
+  .logical-padding-inline {
+    padding-inline: var(--logical-padding-inline);
+  }
+
+  .logical-border-block {
+    border-block: 1px solid var(--color-neutral-300);
+  }
+
+  .logical-border-inline {
+    border-inline: 1px solid var(--color-neutral-300);
+  }
+
+  /* 3. Modern Backdrop Blur Utilities */
+  .backdrop-blur-sm {
+    backdrop-filter: blur(var(--backdrop-blur-sm));
+  }
+
+  .backdrop-blur-md {
+    backdrop-filter: blur(var(--backdrop-blur-md));
+  }
+
+  .backdrop-blur-lg {
+    backdrop-filter: blur(var(--backdrop-blur-lg));
+  }
+
+  .backdrop-blur-xl {
+    backdrop-filter: blur(var(--backdrop-blur-xl));
+  }
+
+  /* 4. Enhanced Shadow System */
+  .shadow-custom-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-custom-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-custom-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-custom-xl {
+    box-shadow: var(--shadow-xl);
+  }
+
+  .shadow-accent {
+    box-shadow: 0 4px 12px rgba(139, 93, 255, 0.3);
+  }
+
+  .shadow-gold {
+    box-shadow: 0 4px 12px rgba(228, 180, 59, 0.3);
+  }
+
+  /* 5. OKLCH Color Utilities */
+  .bg-oklch-primary {
+    background-color: var(--color-primary);
+  }
+
+  .bg-oklch-secondary {
+    background-color: var(--color-secondary);
+  }
+
+  .bg-oklch-accent {
+    background-color: var(--color-accent);
+  }
+
+  .text-oklch-primary {
+    color: var(--color-primary);
+  }
+
+  .text-oklch-secondary {
+    color: var(--color-secondary);
+  }
+
+  .text-oklch-accent {
+    color: var(--color-accent);
+  }
+
+  /* 6. Performance-Optimized Animation Utilities */
+  .animate-fade-in {
+    animation: fade-in var(--animate-duration-normal) ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slide-up var(--animate-duration-normal) ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in var(--animate-duration-fast) ease-out;
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle var(--animate-duration-slow) ease-in-out infinite;
+  }
+
+  /* 7. Modern CSS Grid Utilities */
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .grid-auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .grid-masonry {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 0;
+    grid-auto-flow: dense;
+  }
+
+  /* 8. Enhanced Typography Utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .text-optimize-legibility {
+    text-rendering: optimizeLegibility;
+  }
+
+  .text-optimize-speed {
+    text-rendering: optimizeSpeed;
+  }
+
+  /* 9. Modern Layout Utilities */
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .aspect-auto {
+    aspect-ratio: auto;
+  }
+
+  /* 10. Advanced Focus Utilities */
+  .focus-visible-ring {
+    @apply focus-visible:ring-accent-purple focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .focus-visible-glow {
+    @apply focus-visible:shadow-[0_0_0_3px_rgba(139,93,255,0.3)] focus-visible:outline-none;
+  }
+
+  /* ========== PERFORMANCE OPTIMIZATION UTILITIES ========== */
+
+  /* 1. Optimized loading utilities */
+  .load-critical {
+    /* Force critical styles to load first */
+    @apply bg-background text-text-primary;
+  }
+
+  /* 2. Tree-shaking optimization utilities */
+  .optimized-button {
+    /* Only include what's actually used */
+    @apply inline-flex items-center justify-center gap-2 font-medium transition-all;
+  }
+
+  /* 3. Reduced bundle size utilities */
+  .minimal-spacing {
+    /* Use minimal spacing values */
+    @apply space-x-1 space-y-2;
+  }
+
+  /* 4. Performance-focused animations */
+  .perf-animation {
+    /* Use transform instead of layout properties for better performance */
+    @apply transition-transform duration-200 ease-out;
+  }
+
+  /* 5. Optimized focus states */
+  .perf-focus {
+    /* Use outline instead of box-shadow for better performance */
+    @apply focus:outline-accent-purple focus:outline-none focus:outline-2 focus:outline-offset-2;
+  }
+
+  /* ========== TAILWIND V4.1 SAFE FEATURE TESTS ========== */
+
+  /* TEST 1: Basic arbitrary value syntax (100% safe) */
+  .test-arbitrary-basic {
+    @apply rounded-lg bg-[#8b5dff] p-4 text-white;
+  }
+
+  /* TEST 2: Arbitrary value with hex color (100% safe) */
+  .test-arbitrary-hex {
+    @apply rounded-lg bg-[#e4b43b] p-4 text-black;
+  }
+
+  /* TEST 3: Arbitrary spacing values (100% safe) */
+  .test-arbitrary-spacing {
+    @apply m-[0.5rem] gap-[0.75rem] p-[1rem];
+  }
+
+  /* TEST 4: Arbitrary border radius (100% safe) */
+  .test-arbitrary-radius {
+    @apply rounded-[20px] border-[2px] border-[#8b5dff];
+  }
+
+  /* TEST 5: Arbitrary box shadow (100% safe) */
+  .test-arbitrary-shadow {
+    @apply shadow-[0_4px_12px_rgba(139,93,255,0.3)];
+  }
+
+  /* TEST 6: Arbitrary background gradient (100% safe) */
+  .test-arbitrary-gradient {
+    @apply rounded-lg bg-[linear-gradient(135deg,#8b5dff_0%,#7b4def_100%)] p-4 text-white;
+  }
+
+  /* TEST 7: Arbitrary font size (100% safe) */
+  .test-arbitrary-font {
+    @apply text-[18px] font-[600];
+  }
+
+  /* TEST 8: Arbitrary width/height (100% safe) */
+  .test-arbitrary-size {
+    @apply h-[100px] max-h-[300px] w-[200px] min-w-[150px];
+  }
+
+  /* TEST 9: Arbitrary z-index (100% safe) */
+  .test-arbitrary-z {
+    @apply z-[9999];
+  }
+
+  /* TEST 10: Arbitrary opacity (100% safe) */
+  .test-arbitrary-opacity {
+    @apply opacity-[0.85];
+  }
+
+  /* ========== STEP 3.1: SAFE theme() FUNCTION REPLACEMENTS ========== */
+
+  /* SAFE ALTERNATIVE 1: Use custom properties instead of theme() */
+  .safe-theme-replacement-1 {
+    /* Instead of: theme(colors.primary.500) */
+    /* Use: var(--color-accent-purple) */
+    @apply rounded-lg bg-[var(--color-accent-purple)] p-4 text-[var(--color-text-primary)];
+  }
+
+  /* SAFE ALTERNATIVE 2: Use direct hex values instead of theme() */
+  .safe-theme-replacement-2 {
+    /* Instead of: theme(colors.secondary.500) */
+    /* Use: #e4b43b */
+    @apply rounded-lg bg-[#e4b43b] p-4 text-black;
+  }
+
+  /* SAFE ALTERNATIVE 3: Use arbitrary values instead of theme() */
+  .safe-theme-replacement-3 {
+    /* Instead of: theme(spacing.6) */
+    /* Use: 1.5rem or [1.5rem] */
+    @apply m-[1rem] gap-[0.75rem] p-[1.5rem];
+  }
+
+  /* SAFE ALTERNATIVE 4: Use custom properties for complex values */
+  .safe-theme-replacement-4 {
+    /* Instead of: theme(borderRadius.full) */
+    /* Use: var(--border-radius-pill) */
+    @apply rounded-[var(--border-radius-pill)] border-[2px] border-[var(--color-accent-purple)];
+  }
+
+  /* SAFE ALTERNATIVE 5: Use arbitrary values for shadows */
+  .safe-theme-replacement-5 {
+    /* Instead of: theme(boxShadow.lg) */
+    /* Use: [0_10px_15px_-3px_rgba(0,0,0,0.1)] */
+    @apply rounded-lg p-4 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)];
+  }
+
+  /* SAFE ALTERNATIVE 6: Use custom properties for transitions */
+  .safe-theme-replacement-6 {
+    /* Instead of: theme(transitionDuration.200) */
+    /* Use: var(--animate-duration-fast) */
+    @apply transition-all duration-[var(--animate-duration-fast)] ease-in-out;
+  }
+
+  /* SAFE ALTERNATIVE 7: Use arbitrary values for z-index */
+  .safe-theme-replacement-7 {
+    /* Instead of: theme(zIndex.50) */
+    /* Use: [50] */
+    @apply relative z-[50];
+  }
+
+  /* SAFE ALTERNATIVE 8: Use custom properties for gradients */
+  .safe-theme-replacement-8 {
+    /* Instead of: theme(colors.primary.500) in gradients */
+    /* Use: var(--color-accent-purple) */
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-purple) 0%,
+      var(--color-accent-purple-dark) 100%
+    );
+    @apply rounded-lg p-4 text-white;
+  }
+
+  /* SAFE ALTERNATIVE 9: Use arbitrary values for font sizes */
+  .safe-theme-replacement-9 {
+    /* Instead of: theme(fontSize.lg) */
+    /* Use: [1.125rem] */
+    @apply text-[1.125rem] font-semibold;
+  }
+
+  /* SAFE ALTERNATIVE 10: Use custom properties for borders */
+  .safe-theme-replacement-10 {
+    /* Instead of: theme(borderWidth.2) */
+    /* Use: [2px] */
+    @apply rounded-lg border-[2px] border-[var(--color-accent-purple)] p-4;
   }
 }

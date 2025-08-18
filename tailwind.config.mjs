@@ -27,6 +27,34 @@ export default {
           dark: "#E4B43B",
         },
 
+        // ADD THIS: Primary color scale for theme() function
+        primary: {
+          50: "#f3f0ff",
+          100: "#e5dbff",
+          200: "#d1bfff",
+          300: "#b794ff",
+          400: "#9f75ff",
+          500: "#8b5dff", // Your main purple
+          600: "#7b4def",
+          700: "#6b3de0",
+          800: "#5a2fc8",
+          900: "#4c2ba3",
+          950: "#2e1b5e",
+        },
+        // ADD THIS: Secondary color scale
+        secondary: {
+          50: "#fefce8",
+          100: "#fef9c3",
+          200: "#fef08a",
+          300: "#fde047",
+          400: "#facc15",
+          500: "#e4b43b", // Your main gold
+          600: "#ca8a04",
+          700: "#a16207",
+          800: "#854d0e",
+          900: "#713f12",
+          950: "#422006",
+        },
         paper: {
           bg: "#F7F4F1",
           border: "#E0DCD8",

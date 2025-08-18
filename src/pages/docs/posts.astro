@@ -1,89 +1,114 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dokumentasi & Panduan | GoRakuDo</title>
-    <link is:inline rel="stylesheet" href="/css/post-styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet">
+    <link is:inline rel="stylesheet" href="/css/post-styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Wave Animation Background -->
     <canvas id="waveCanvas" class="wave-canvas"></canvas>
-    
+
     <!-- Stars Background -->
     <div class="stars">
-        <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
-        <div class="star" style="top: 20%; right: 20%; animation-delay: 1s;"></div>
-        <div class="star" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
-        <div class="star" style="bottom: 30%; left: 10%; animation-delay: 1.5s;"></div>
-        <div class="star" style="bottom: 20%; right: 30%; animation-delay: 0.5s;"></div>
-        <div class="star" style="top: 60%; left: 15%; animation-delay: 2.5s;"></div>
-        <div class="star" style="top: 80%; right: 20%; animation-delay: 1.8s;"></div>
-        <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
+      <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+      <div class="star" style="top: 20%; right: 20%; animation-delay: 1s;">
+      </div>
+      <div class="star" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
+      <div class="star" style="bottom: 30%; left: 10%; animation-delay: 1.5s;">
+      </div>
+      <div class="star" style="bottom: 20%; right: 30%; animation-delay: 0.5s;">
+      </div>
+      <div class="star" style="top: 60%; left: 15%; animation-delay: 2.5s;">
+      </div>
+      <div class="star" style="top: 80%; right: 20%; animation-delay: 1.8s;">
+      </div>
+      <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;">
+      </div>
     </div>
 
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-left">
-                <span class="nav-item" onclick="goHome()">Beranda</span>
-                <span class="nav-item">Metodologi</span>
-                <span class="nav-item">Sumber Daya</span>
-                <span class="nav-item">Komunitas</span>
-            </div>
-            <div class="nav-center">
-                <ruby class="logo-japanese" onclick="goHome()">
-                    語<rt>ご</rt>楽<rt>らく</rt>道<rt>どう</rt>
-                </ruby>
-            </div>
-            <div class="nav-right">
-                <span class="nav-item">Panduan</span>
-                <span class="nav-item">Tools</span>
-                <span class="nav-item" onclick="goToInvitation()">Gabung Discord</span>
-                <button class="get-started-btn" onclick="goHome()">Kembali ke Beranda</button>
-            </div>
-            <!-- Mobile menu button -->
-            <button class="mobile-menu-btn" onclick="goToInvitation()">Join</button>
+      <div class="nav-container">
+        <div class="nav-left">
+          <span class="nav-item" onclick="goHome()">Beranda</span>
+          <span class="nav-item">Metodologi</span>
+          <span class="nav-item">Sumber Daya</span>
+          <span class="nav-item">Komunitas</span>
         </div>
+        <div class="nav-center">
+          <ruby class="logo-japanese" onclick="goHome()">
+            語<rt>ご</rt>楽<rt>らく</rt>道<rt>どう</rt>
+          </ruby>
+        </div>
+        <div class="nav-right">
+          <span class="nav-item">Panduan</span>
+          <span class="nav-item">Tools</span>
+          <span class="nav-item" onclick="goToInvitation()">Gabung Discord</span
+          >
+          <button class="get-started-btn" onclick="goHome()"
+            >Kembali ke Beranda</button
+          >
+        </div>
+        <!-- Mobile menu button -->
+        <button class="mobile-menu-btn" onclick="goToInvitation()">Join</button>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <main class="posts-page">
-        <div class="posts-container">
-            <div class="posts-header">
-                <h1>Dokumentasi & Panduan</h1>
-                <p>Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.</p>
-            </div>
-
-            <div class="posts-grid" id="postsGrid">
-                <!-- Posts will be dynamically loaded here -->
-            </div>
-
-            <!-- Back to home -->
-            <div style="text-align: center; margin-top: 60px;">
-                <button class="cta-button" onclick="goHome()">
-                    Kembali ke Beranda
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </button>
-            </div>
+      <div class="posts-container">
+        <div class="posts-header">
+          <h1>Dokumentasi & Panduan</h1>
+          <p>
+            Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang
+            Anda. Dari langkah pertama hingga tingkat lanjut.
+          </p>
         </div>
+
+        <div class="posts-grid" id="postsGrid">
+          <!-- Posts will be dynamically loaded here -->
+        </div>
+
+        <!-- Back to home -->
+        <div style="text-align: center; margin-top: 60px;">
+          <button class="cta-button" onclick="goHome()">
+            Kembali ke Beranda
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
     </main>
 
     <script is:inline src="/scripts/post-script.js"></script>
     <script>
-        // Sample posts data - In a real implementation, this would come from your GitHub repository
-        const posts = [
-            {
-                id: 'getting-started',
-                title: 'Memulai Perjalanan Immersion',
-                description: 'Panduan langkah demi langkah untuk memulai immersion bahasa Jepang dari nol.',
-                date: '2024-01-15',
-                readTime: '10 min read',
-                content: `# Memulai Perjalanan Immersion
+      // Sample posts data - In a real implementation, this would come from your GitHub repository
+      const posts = [
+        {
+          id: "getting-started",
+          title: "Memulai Perjalanan Immersion",
+          description:
+            "Panduan langkah demi langkah untuk memulai immersion bahasa Jepang dari nol.",
+          date: "2024-01-15",
+          readTime: "10 min read",
+          content: `# Memulai Perjalanan Immersion
 
 ## Apa itu Immersion?
 
@@ -133,15 +158,16 @@ Cari konten yang:
 
 ---
 
-*Selamat memulai perjalanan Anda! Ingat, setiap penutur asli pernah menjadi pemula.*`
-            },
-            {
-                id: 'choosing-content',
-                title: 'Memilih Konten yang Tepat',
-                description: 'Cara memilih anime, manga, dan media Jepang yang sesuai dengan level Anda.',
-                date: '2024-01-20',
-                readTime: '8 min read',
-                content: `# Memilih Konten yang Tepat
+*Selamat memulai perjalanan Anda! Ingat, setiap penutur asli pernah menjadi pemula.*`,
+        },
+        {
+          id: "choosing-content",
+          title: "Memilih Konten yang Tepat",
+          description:
+            "Cara memilih anime, manga, dan media Jepang yang sesuai dengan level Anda.",
+          date: "2024-01-20",
+          readTime: "8 min read",
+          content: `# Memilih Konten yang Tepat
 
 ## Prinsip i+1
 
@@ -192,15 +218,16 @@ Stephen Krashen memperkenalkan konsep **i+1**, di mana 'i' adalah level pemahama
 
 ---
 
-*Remember: The best content is the content you actually consume!*`
-            },
-            {
-                id: 'anki-guide',
-                title: 'Panduan Menggunakan Anki',
-                description: 'Setup dan strategi optimal untuk menggunakan Anki dalam pembelajaran bahasa Jepang.',
-                date: '2024-01-25',
-                readTime: '12 min read',
-                content: `# Panduan Menggunakan Anki
+*Remember: The best content is the content you actually consume!*`,
+        },
+        {
+          id: "anki-guide",
+          title: "Panduan Menggunakan Anki",
+          description:
+            "Setup dan strategi optimal untuk menggunakan Anki dalam pembelajaran bahasa Jepang.",
+          date: "2024-01-25",
+          readTime: "12 min read",
+          content: `# Panduan Menggunakan Anki
 
 ## Apa itu Anki?
 
@@ -275,30 +302,30 @@ Translation: The weather is nice today.
 
 ---
 
-*Anki is a tool, not a goal. Use it to support your immersion, not replace it.*`
-            }
-        ];
+*Anki is a tool, not a goal. Use it to support your immersion, not replace it.*`,
+        },
+      ];
 
-        // Function to go back to home
-        function goHome() {
-            window.location.href = '/';
-        }
+      // Function to go back to home
+      function goHome() {
+        window.location.href = "/";
+      }
 
-        // Function to go to invitation
-        function goToInvitation() {
-            window.location.href = '/discord';
-        }
+      // Function to go to invitation
+      function goToInvitation() {
+        window.location.href = "/discord";
+      }
 
-        // Function to render posts list
-        function renderPosts() {
-            const postsGrid = document.getElementById('postsGrid');
-            
-            posts.forEach(post => {
-                const postCard = document.createElement('div');
-                postCard.className = 'post-card';
-                postCard.onclick = () => viewPost(post.id);
-                
-                postCard.innerHTML = `
+      // Function to render posts list
+      function renderPosts() {
+        const postsGrid = document.getElementById("postsGrid");
+
+        posts.forEach((post) => {
+          const postCard = document.createElement("div");
+          postCard.className = "post-card";
+          postCard.onclick = () => viewPost(post.id);
+
+          postCard.innerHTML = `
                     <h3>${post.title}</h3>
                     <p>${post.description}</p>
                     <div class="post-meta">
@@ -306,32 +333,32 @@ Translation: The weather is nice today.
                         <span>${post.readTime}</span>
                     </div>
                 `;
-                
-                postsGrid.appendChild(postCard);
-            });
-        }
 
-        // Function to view individual post
-        function viewPost(postId) {
-            const post = posts.find(p => p.id === postId);
-            if (post) {
-                // Store post data in sessionStorage
-                sessionStorage.setItem('currentPost', JSON.stringify(post));
-                // Navigate to post view
-                window.location.href = `/docs/post?id=${postId}`;
-            }
-        }
-
-        // Function to format date
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('id-ID', options);
-        }
-
-        // Initialize posts when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            renderPosts();
+          postsGrid.appendChild(postCard);
         });
+      }
+
+      // Function to view individual post
+      function viewPost(postId) {
+        const post = posts.find((p) => p.id === postId);
+        if (post) {
+          // Store post data in sessionStorage
+          sessionStorage.setItem("currentPost", JSON.stringify(post));
+          // Navigate to post view
+          window.location.href = `/docs/post?id=${postId}`;
+        }
+      }
+
+      // Function to format date
+      function formatDate(dateString) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString("id-ID", options);
+      }
+
+      // Initialize posts when page loads
+      document.addEventListener("DOMContentLoaded", function () {
+        renderPosts();
+      });
     </script>
-</body>
+  </body>
 </html>

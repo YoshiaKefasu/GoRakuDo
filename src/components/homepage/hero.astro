@@ -20,13 +20,16 @@ const {
   data-mission-id={missionId}
   data-invitation-modal-id={invitationModalId}
   data-navbar-selector={navbarSelector}
+  transition:name="hero-section"
 >
   <div
     id="hero-content"
     class="flex flex-col items-center justify-center min-h-screen w-full max-w-5xl px-4 text-center z-20 opacity-0 translate-y-16 scale-80 blur-md transition-all duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+    transition:name="hero-content"
   >
     <div
       class="text-[clamp(16px,calc((100vw-15px)*0.03),18px)] sm:text-[clamp(16px,3.5vw,18px)] text-[var(--color-accent-purple)] font-medium italic tracking-[0.02em] opacity-65 leading-[1.1]"
+      transition:name="hero-kicker"
     >
       {kicker}
     </div>
@@ -34,35 +37,39 @@ const {
     <h1
       id="hero-title"
       class="w-full text-[clamp(48px,calc((100vw-15px)*0.12),56px)] sm:text-[clamp(48px,6vw,68px)] font-semibold leading-[1.15] max-w-[48ch] mx-auto mb-3.5"
+      transition:name="hero-title"
     >
       <span
         class="gold-marker block text-[clamp(32px,5vw,48px)] sm:text-[clamp(32px,6vw,50px)]"
-        >{marker}</span
+        transition:name="hero-marker">{marker}</span
       >
       <span
         class="white-gradient-text block sm:inline text-[clamp(36px,7.5vw,48px)] font-extrabold"
-        >{titleLine1}</span
+        transition:name="hero-title-line-1">{titleLine1}</span
       >
       <span
         class="white-gradient-text block sm:inline text-[clamp(36px,7.5vw,48px)] font-extrabold"
-        >{titleLine2}</span
+        transition:name="hero-title-line-2">{titleLine2}</span
       >
     </h1>
 
     <p
       class="mb-6 max-w-[650px] text-[clamp(12px,1.5vw,18px)] leading-[1.5] text-[var(--color-text-muted)] italic mx-auto px-auto"
+      transition:name="hero-description"
     >
       {description}
     </p>
 
     <div
       class="hero-buttons flex flex-col md:flex-row items-center justify-center gap-7.5 mt-3"
+      transition:name="hero-buttons"
     >
       <button
         type="button"
         class="primary-button"
         data-action="scroll-to-mission"
         aria-label="Mulai perjalanan belajar immersion"
+        transition:name="hero-primary-button"
       >
         {ctaPrimary}
         <svg
@@ -85,6 +92,7 @@ const {
         class="secondary-button"
         data-action="open-invitation"
         aria-label="Bergabung dengan komunitas Discord"
+        transition:name="hero-secondary-button"
       >
         {ctaSecondary}
       </button>
