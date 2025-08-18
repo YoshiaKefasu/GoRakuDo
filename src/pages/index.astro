@@ -1,6 +1,6 @@
 ---
 import Head from "../components/HeadSEO.astro";
-import CeritaImmersion from "../components/homepage/Slideshow/ImageSlideshow.astro"
+import CeritaImmersion from "../components/homepage/Slideshow/ImageSlideshow.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Vueコンポーネントをインポート
@@ -9,8 +9,8 @@ import Hero from "../components/homepage/hero.astro";
 import InvitationModal from "../components/InvitationModal.vue";
 
 // CSSをインポート
-import '../styles/global.css';
-import '../styles/homepage/ImageSlideshow.css';
+import "../styles/global.css";
+import "../styles/homepage/ImageSlideshow.css";
 
 // 画像をインポート
 import homepageOgImage from "../assets/images/Logo Discord.png";
@@ -58,16 +58,18 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
     <!-- Main Content -->
     <main class="main-content" role="main">
       <!-- Hero Section -->
-      <Hero client:load
+      <Hero
         missionId="mission"
         invitationModalId="invitationModal"
         titleLine1="Belajar Secara Alami,"
         titleLine2="Kuasai Layaknya Penutur Asli."
       />
-      
-    <!-- Add the ImageSlideshow component here -->
-    <div class="mb-8 flex flex-col items-center justify-center min-h-auto w-full">
-        <CeritaImmersion client:load />
+
+      <!-- Add the ImageSlideshow component here -->
+      <div
+        class="mb-8 flex flex-col items-center justify-center min-h-auto w-full"
+      >
+        <CeritaImmersion />
       </div>
 
       <!-- Mission Section -->
@@ -149,13 +151,20 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
             <article class="feature-card" role="listitem">
               <div class="feature-icon" aria-hidden="true">⚡</div>
               <h3>Adaptive Learning</h3>
-              <p>Rekomendasi yang didukung oleh Metodologi SLA (Ilmu Pembelajaran Bahasa ke-2) terbaru yang sesuai cara otak dirancang untuk
-                memperoleh bahasa—melalui paparan bermakna, bukan sekedar hafalan.</p>
+              <p>
+                Rekomendasi yang didukung oleh Metodologi SLA (Ilmu Pembelajaran
+                Bahasa ke-2) terbaru yang sesuai cara otak dirancang untuk
+                memperoleh bahasa—melalui paparan bermakna, bukan sekedar
+                hafalan.
+              </p>
             </article>
             <article class="feature-card" role="listitem">
               <div class="feature-icon" aria-hidden="true">👥</div>
               <h3>Belajar Bersama Komunitas</h3>
-              <p>Bergabunglah dengan sesama pembelajar dan penutur asli dalam lingkungan komunitas yang mendukung.</p>
+              <p>
+                Bergabunglah dengan sesama pembelajar dan penutur asli dalam
+                lingkungan komunitas yang mendukung.
+              </p>
             </article>
             <article class="feature-card" role="listitem">
               <div class="feature-icon" aria-hidden="true">📚</div>
@@ -211,7 +220,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
         </div>
       </section>
     </main>
-    
+
     <!-- Invitation Modal -->
     <InvitationModal client:load />
 

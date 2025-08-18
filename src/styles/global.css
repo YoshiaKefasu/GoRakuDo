@@ -1,9 +1,14 @@
+/* stylelint-disable at-rule-no-unknown */
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
+
 /* Import Tailwind CSS v4 */
 @import "tailwindcss";
 
 /* Define theme for Tailwind v4 - Complete Homepage Design System */
 :root {
-  /* Colors - Matching original CSS variables */
+  /* ========== Your Original Brand Colors (Preserved) ========== */
   --color-background: #0a0a0a;
   --color-text-primary: #ffffff;
   --color-text-secondary: #cccccc;
@@ -29,26 +34,74 @@
   --color-paper-border: #e0dcd8;
   --color-paper-lines: #dcd9d5;
 
-  /* Default theme colors */
-  --color-foreground: #ffffff;
-  --color-card: #1a1a1a;
-  --color-card-foreground: #ffffff;
-  --color-popover: #1a1a1a;
-  --color-popover-foreground: #ffffff;
-  --color-primary: #ffffff;
-  --color-primary-foreground: #030213;
-  --color-secondary: #262626;
-  --color-secondary-foreground: #ffffff;
-  --color-muted: #262626;
+  /* ========== NEW OKLCH Color System (Enhanced Color Science) ========== */
+  /* Base colors using OKLCH for better color science */
+  --color-base-100: oklch(13% 0.028 261.692);
+  --color-base-200: oklch(21% 0.034 264.665);
+  --color-base-300: oklch(27% 0.033 256.848);
+  --color-base-content: oklch(96% 0.003 264.542);
+  
+  /* Primary colors - Enhanced versions of your purple */
+  --color-primary: oklch(70% 0.165 254.624);
+  --color-primary-content: oklch(28% 0.091 267.935);
+  
+  /* Secondary colors - Enhanced versions of your gold */
+  --color-secondary: oklch(71% 0.194 13.428);
+  --color-secondary-content: oklch(27% 0.105 12.094);
+  
+  /* Accent colors - Enhanced purple variants */
+  --color-accent: oklch(71% 0.203 305.504);
+  --color-accent-content: oklch(29% 0.149 302.717);
+  
+  /* Neutral colors */
+  --color-neutral: oklch(21% 0.034 264.665);
+  --color-neutral-content: oklch(98% 0.002 247.839);
+  
+  /* Semantic colors */
+  --color-info: oklch(54% 0.245 262.881);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(59% 0.145 163.225);
+  --color-success-content: oklch(97% 0.021 166.113);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+
+  /* ========== Semantic Color System (Backward Compatible) ========== */
+  --color-primary: var(--color-accent-purple);
+  --color-primary-content: var(--color-text-primary);
+  --color-secondary: var(--color-gold-dark);
+  --color-secondary-content: var(--color-paper-text-primary);
+  --color-accent: var(--color-accent-purple-dark);
+  --color-accent-content: var(--color-text-primary);
+  --color-surface: #1a1a1a;
+  --color-surface-content: var(--color-text-primary);
+  --color-surface-light: #262626;
+  --color-surface-dark: var(--color-background);
+
+  /* ========== Enhanced with OKLCH for Better Color Science ========== */
+  /* Modern OKLCH variants for better accessibility */
+  --oklch-primary: oklch(63% 0.165 278.5);        /* Your purple in OKLCH */
+  --oklch-primary-dark: oklch(58% 0.165 278.5);   /* Your purple dark in OKLCH */
+  --oklch-secondary: oklch(71% 0.15 85);           /* Your gold in OKLCH */
+  --oklch-background: oklch(13% 0.005 0);          /* Your background in OKLCH */
+
+  /* ========== Legacy Compatibility (Keep your existing components working) ========== */
+  /* Default theme colors for backward compatibility */
+  --color-foreground: var(--color-text-primary);
+  --color-card: var(--color-base-200);
+  --color-card-foreground: var(--color-text-primary);
+  --color-popover: var(--color-base-200);
+  --color-popover-foreground: var(--color-text-primary);
+  --color-muted: var(--color-base-300);
   --color-muted-foreground: #a3a3a3;
-  --color-accent: #262626;
-  --color-accent-foreground: #ffffff;
-  --color-destructive: #dc2626;
-  --color-destructive-foreground: #ffffff;
+  --color-destructive: var(--color-error);
+  --color-destructive-foreground: var(--color-error-content);
   --color-border: #404040;
   --color-input: #404040;
   --color-ring: #737373;
 
+  /* ========== Design System Values ========== */
   /* Spacing - Original design values */
   --spacing-section-y: clamp(5rem, 10vw, 7.5rem);
   --section-padding-y: clamp(80px, 10vw, 120px);
@@ -63,6 +116,37 @@
   --animate-duration-normal: 300ms;
   --animate-duration-slow: 500ms;
   --transition-speed: 0.3s;
+
+  /* DaisyUI Animation Integration */
+  --animation-btn: 0.25s;
+  --animation-input: 0.2s;
+
+  /* Navbar Dynamic Variables */
+  --navbar-opacity: 0;
+
+  /* Backwards-compatible aliases */
+  --clr-accent: var(--color-accent-purple);
+  --clr-accent-dark: var(--color-accent-purple-dark);
+  --clr-accent-shadow: var(--color-accent-shadow);
+  --clr-accent-glow-medium: var(--color-accent-purple-glow-medium);
+  --clr-text-primary: var(--color-text-primary);
+  --clr-text-secondary: var(--color-text-secondary);
+  --border-radius-pill: var(--rounded-btn);
+
+  /* Semi-transparent variants for borders */
+  --color-gold-dark-transparent: rgba(228, 180, 59, 0.25);
+  
+  /* ========== INTELLIGENT NOISE SYSTEM - Auto-Applied Based on Context ========== */
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 1;
+
+  /* ========== NEW OKLCH Radius System ========== */
+  --radius-selector: 2rem;
+  --radius-field: 1rem;
+  --radius-box: 2rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.21875rem;
 
   /* --- Backwards-compatible aliases (keeps older code working) --- */
   --clr-accent: var(--color-accent-purple);
@@ -148,13 +232,11 @@
   /* ---------- Secondary button (outlined pill) ---------- */
   .secondary-button {
     @apply px-[32px]! py-[14px]! inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full border-3! bg-transparent text-[16px] font-medium;
-    @apply border;
-    border-color: var(--clr-accent-glow-medium);
+    background: transparent;
+    border: 2px solid var(--color-gold-dark-transparent);
     border-radius: var(--border-radius-pill);
-    transition:
-      background-color 0.12s ease,
-      border-color 0.12s ease,
-      transform 0.08s ease;
+    color: var(--color-gold-dark);
+    transition: background-color var(--animate-duration-fast) ease, border-color var(--animate-duration-fast) ease, color var(--animate-duration-fast) ease, transform var(--animate-duration-fast) ease;
   }
 
   .secondary-button:hover {
@@ -198,7 +280,8 @@
       rgba(10, 10, 10, 0.15) 2%,
       rgba(10, 10, 10, 0.45) 5%,
       rgba(10, 10, 10, 0.65) 7%,
-      rgba(10, 10, 10, 0.95) 10%
+      rgba(10, 10, 10, 0.95) 10%,
+      rgba(10, 10, 10, 0.99) 11%
     ) !important;
     transition: background 0.3s ease;
     border: none;

@@ -43,24 +43,52 @@
   transition: opacity 0.5s ease-in-out;
 }
 
+/* ========== PROGRESS BAR - ALWAYS VISIBLE ========== */
+.progress-bar {
+  /* FIXED: Always visible with smooth animation */
+  opacity: 1 !important; /* Always visible */
+  transition: width 0.1s linear;
+  background-color: var(--color-accent-purple) !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+  transform-origin: left center;
+}
+
+/* Enhanced progress bar container */
+.slideshow-container .progress-bar {
+  opacity: 0.8; /* Slightly transparent but always visible */
+  transition: opacity 0.3s ease, width 0.1s linear;
+}
+
+/* Hover enhancement - makes progress bar more prominent but doesn't hide it */
+@media (hover: hover) {
+  .slideshow-container:hover .progress-bar {
+    opacity: 1; /* Full opacity on hover, but still visible otherwise */
+  }
+}
+
+/* Mobile progress bar - always fully visible */
+@media (hover: none) and (pointer: coarse) {
+  .slideshow-container .progress-bar {
+    opacity: 1 !important; /* Always fully visible on mobile */
+  }
+}
+
 /* Base dot styles */
 .dot {
   transition: all 0.3s ease;
   opacity: 1 !important; /* Ensure dots are always visible */
   background-color: rgba(139, 93, 255, 0.4) !important; /* Semi-transparent purple for inactive dots */
   transform: scale(0.5); /* Default scale */
+  border: none !important; /* Remove white border */
 }
 
 /* Active dot styles - matches the 'active-dot' class from Astro */
 .dot.active-dot {
   background-color: var(--color-accent-purple) !important; /* Active dot uses bright purple */
   box-shadow: 0 4px 12px var(--clr-accent-shadow);
-  border-color: var(--color-accent-purple);
+  border: none !important; /* Remove white border */
   transform: scale(1.1); /* Active dot is larger */
-}
-
-.progress-bar {
-  transition: width 0.1s linear;
 }
 
 /* Long-press indicator styles */
@@ -119,10 +147,6 @@
 
 /* Hover effects - only on desktop */
 @media (hover: hover) {
-  .slideshow-container:hover .progress-bar {
-    opacity: 0.75;
-  }
-  
   .dot:hover {
     transform: scale(1.15);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
@@ -139,10 +163,6 @@
 
 /* Fallback for browsers that don't support @media (hover: hover) */
 @media (min-width: 1024px) {
-  .slideshow-container:hover .progress-bar {
-    opacity: 0.75;
-  }
-  
   .dot:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
@@ -162,4 +182,27 @@
     min-height: 0.75rem;
     opacity: 1 !important;
   }
+}
+
+/* ========== ADDITIONAL VISUAL ENHANCEMENTS ========== */
+
+/* Progress bar container styling */
+.slideshow-container .progress-bar {
+  box-shadow: 0 0 8px rgba(139, 93, 255, 0.3);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Smooth animation for progress bar */
+@keyframes progressAnimation {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Animation class for smoother progress */
+.progress-bar.animating {
+  animation: progressAnimation var(--animation-duration, 5s) linear;
 }

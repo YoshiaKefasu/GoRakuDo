@@ -57,5 +57,15 @@ export const slideshowConfig = {
     showIndicator: true, // Show visual indicator when long-press is active
     indicatorText: "Slideshow paused - Release to resume in 0.5s", // Customize indicator text
     resumeDelay: 500 // Delay in milliseconds before resuming after long-press release
+  },
+  
+  // ENHANCED: Progress bar configuration
+  progressBar: {
+    alwaysVisible: true, // Always show progress bar
+    opacity: 0.8, // Default opacity (0-1)
+    hoverOpacity: 1.0, // Opacity on hover
+    height: '6px', // Progress bar height
+    smoothAnimation: true, // Enable smooth 50ms interval updates
+    showGradient: true // Use gradient background
   }
 };

@@ -54,9 +54,12 @@ import { Image } from 'astro:assets';
       </div>
     ))}
     
-    <!-- Progress bar -->
-    <div class="absolute bottom-0 left-0 w-full h-1 bg-black/20">
-      <div class="progress-bar h-full bg-primary transition-all duration-100 ease-linear" style="width: 0%"></div>
+    <!-- ENHANCED Progress bar - Always visible with better styling -->
+    <div class="absolute bottom-0 left-0 w-full h-1.5 bg-black/30 backdrop-blur-sm">
+      <div 
+        class="progress-bar h-full transition-all duration-100 ease-linear" 
+        style="width: 0%; background: linear-gradient(90deg, var(--color-accent-purple) 0%, var(--color-accent-purple-dark) 100%);"
+      ></div>
     </div>
     
     <!-- Long-press indicator (hidden by default) -->
@@ -101,6 +104,7 @@ import { Image } from 'astro:assets';
     // Progress tracking for pause/resume
     private pausedProgress!: number;
     private resumeDelay!: number;
+    private progressStartTime!: number;
     
     constructor() {
       this.container = document.querySelector('.slideshow-container');
@@ -127,6 +131,7 @@ import { Image } from 'astro:assets';
       // Progress tracking initialization
       this.pausedProgress = 0;
       this.resumeDelay = parseInt(this.container.dataset.longPressResumeDelay || '500');
+      this.progressStartTime = 0;
 
       this.init();
     }
@@ -360,7 +365,7 @@ import { Image } from 'astro:assets';
     startAutoplay(): void {
       this.pauseAutoplay();
       
-      // Start progress animation
+      // Start progress animation immediately
       this.startProgress();
       
       // Start slide interval
@@ -373,7 +378,7 @@ import { Image } from 'astro:assets';
       // Store current progress before pausing
       if (this.progressBar) {
         const currentWidth = this.progressBar.style.width;
-        this.pausedProgress = parseInt(currentWidth) || 0;
+        this.pausedProgress = parseFloat(currentWidth) || 0;
       }
       
       if (this.interval) {
@@ -389,11 +394,18 @@ import { Image } from 'astro:assets';
     startProgress(): void {
       if (!this.progressBar) return;
       
+      // ENHANCED: Always start fresh progress animation
+      this.progressStartTime = Date.now();
       let progress = this.pausedProgress;
-      const increment = 100 / (this.intervalDuration / 50);
+      const increment = 100 / (this.intervalDuration / 50); // Update every 50ms
       
       // Set initial progress
       this.progressBar.style.width = progress + '%';
+      
+      // Clear any existing progress interval
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+      }
       
       this.progressInterval = window.setInterval(() => {
         progress += increment;
@@ -401,6 +413,7 @@ import { Image } from 'astro:assets';
           progress = 100;
           if (this.progressInterval) {
             clearInterval(this.progressInterval);
+            this.progressInterval = null;
           }
         }
         if (this.progressBar) {
@@ -413,6 +426,10 @@ import { Image } from 'astro:assets';
       if (this.progressBar) {
         this.progressBar.style.width = '0%';
         this.pausedProgress = 0;
+      }
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+        this.progressInterval = null;
       }
     }
   }
