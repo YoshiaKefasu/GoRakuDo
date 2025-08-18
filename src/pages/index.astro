@@ -2,7 +2,6 @@
 import Head from "../components/HeadSEO.astro";
 import CeritaImmersion from "../components/homepage/Slideshow/ImageSlideshow.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { ViewTransitions } from "astro:transitions";
 
 // Vueコンポーネントをインポート
 import Navbar from "../components/Navbar.vue";
@@ -29,7 +28,48 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       publishedDate="2025/08/10"
       lang="id"
     />
-    <ViewTransitions />
+    <!-- DNS Prefetch for "CeritaImmersio" -->
+    <link
+      rel="preload"
+      href="/img/SlideshowHomepage/Slide-post-0.webp"
+      as="image"
+      type="image/webp"
+    />
+    <link
+      rel="preload"
+      href="/img/SlideshowHomepage/Slide-post-1.webp"
+      as="image"
+      type="image/webp"
+    />
+    <link
+      rel="preload"
+      href="/img/SlideshowHomepage/Slide-post-2.webp"
+      as="image"
+      type="image/webp"
+    />
+    <link
+      rel="preload"
+      href="/img/SlideshowHomepage/Slide-post-3.webp"
+      as="image"
+      type="image/webp"
+    />
+    <link
+      rel="preload"
+      href="/img/SlideshowHomepage/Slide-post-4.webp"
+      as="image"
+      type="image/webp"
+    />
+    <link
+      rel="preload"
+      href="/img/SlideshowHomepage/Slide-post-5.webp"
+      as="image"
+      type="image/webp"
+    />
+
+    <!-- Prefetch non-critical resources (Enhanced) -->
+    <link rel="prefetch" href="/docs/posts" />
+    <link rel="prefetch" href="/discord" />
+    <link rel="prefetch" href="/docs/post" />
   </head>
   <body>
     <!-- Stylesheet -->
