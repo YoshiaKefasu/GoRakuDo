@@ -143,75 +143,6 @@ RULES FOR MODIFICATION:
 }
 
 /* --- Background Elements --- */
-.wave-canvas,
-.stars {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-.stars {
-  z-index: 10;
-}
-.wave-canvas {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(139, 93, 255, 0.03) 0%,
-    rgba(10, 10, 10, 1) 70%
-  );
-}
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--clr-accent);
-  border-radius: 50%;
-  opacity: 0.7;
-  animation: twinkle 3s infinite;
-}
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-/* --- Hero Section --- */
-.hero-section {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding-inline: 20px;
-}
-.hero-content {
-  transition:
-    opacity 1.2s ease,
-    transform 1.2s ease;
-  position: relative;
-  z-index: 20;
-  max-width: 850px;
-}
-.hero-subtitle {
-  font-size: 16px;
-  color: var(--clr-accent);
-  font-weight: 500;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.hero-title {
-  font-size: clamp(34px, 5vw, 58px);
-  font-weight: 600;
-  line-height: 1.15;
-  margin-bottom: 32px;
-}
 
 /*
 ================================================================================
@@ -448,13 +379,65 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
   margin-bottom: 1.2em;
 }
 .modal-list {
+  /* REASONING: Update to follow Google Material Design 3 standards for consistency */
   list-style: none;
   padding: 0;
-  margin: 25px 0;
+  margin: 1rem 0 1rem 1rem; /* Google standard 16px left margin */
+  position: relative;
 }
+
 .modal-list li {
+  /* REASONING: Google standard line height and spacing for optimal readability */
+  position: relative;
+  padding-left: 1.5rem; /* Space for custom bullet */
+  margin-bottom: 0.5rem; /* Consistent spacing between list items */
+  line-height: 1.6; /* Google Material Design standard line height */
   font-family: var(--font-primary);
-  margin-bottom: 10px;
+  color: var(--clr-paper-text-primary);
+  font-size: 1rem; /* 16px base font size */
+}
+
+.modal-list li::before {
+  /* REASONING: Custom bullet using CSS pseudo-element for consistent rendering */
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75rem; /* Align with first line of text */
+  width: 0.375rem; /* 6px - Google Material Design bullet size */
+  height: 0.375rem; /* 6px - Perfect circle */
+  background-color: var(--clr-accent); /* Use brand purple for consistency */
+  border-radius: 50%; /* Perfect circle */
+  transform: translateY(-50%); /* Center vertically */
+}
+
+/* REASONING: Ensure member-list follows same Google standards */
+.member-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1rem 1rem; /* Google standard 16px left margin */
+  position: relative;
+}
+
+.member-list li {
+  position: relative;
+  padding-left: 1.5rem; /* Space for custom bullet */
+  margin-bottom: 0.5rem; /* Consistent spacing between list items */
+  line-height: 1.6; /* Google Material Design standard line height */
+  font-family: var(--font-primary);
+  color: var(--clr-paper-text-primary);
+  font-size: 1rem; /* 16px base font size */
+}
+
+.member-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75rem; /* Align with first line of text */
+  width: 0.375rem; /* 6px - Google Material Design bullet size */
+  height: 0.375rem; /* 6px - Perfect circle */
+  background-color: var(--clr-accent); /* Use brand purple for consistency */
+  border-radius: 50%; /* Perfect circle */
+  transform: translateY(-50%); /* Center vertically */
 }
 .modal-final-pitch {
   text-align: center;

@@ -1,0 +1,171 @@
+﻿{
+    "tests":  [
+                  {
+                      "message":  "All search engine initialization components found",
+                      "details":  {
+                                      "requiredComponents":  5,
+                                      "foundComponents":  5
+                                  },
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "Search Engine Initialization",
+                      "success":  true,
+                      "category":  "CoreEngine",
+                      "critical":  true
+                  },
+                  {
+                      "message":  "Tokenization failed for some test cases",
+                      "details":  {
+                                      "results":  [
+                                                      {
+                                                          "success":  true,
+                                                          "expectedTokens":  [
+                                                                                 "pembelajaran",
+                                                                                 "bahasa",
+                                                                                 "jepang",
+                                                                                 "metode",
+                                                                                 "immersion",
+                                                                                 "efektif",
+                                                                                 "teori",
+                                                                                 "krashen"
+                                                                             ],
+                                                          "inputLength":  88,
+                                                          "extractedTokens":  [
+                                                                                  "pembelajaran",
+                                                                                  "bahasa",
+                                                                                  "jepang",
+                                                                                  "metode",
+                                                                                  "immersion",
+                                                                                  "sangat",
+                                                                                  "efektif",
+                                                                                  "menurut",
+                                                                                  "teori",
+                                                                                  "krashen"
+                                                                              ]
+                                                      },
+                                                      {
+                                                          "success":  false,
+                                                          "expectedTokens":  [
+                                                                                 "populer",
+                                                                                 "rekomendasi",
+                                                                                 "pemula",
+                                                                                 "anki",
+                                                                                 "flashcard",
+                                                                                 "sistem"
+                                                                             ],
+                                                          "inputLength":  79,
+                                                          "extractedTokens":  [
+                                                                                  "populer",
+                                                                                  "rekomendasi",
+                                                                                  "pemula",
+                                                                                  "menggunakan",
+                                                                                  "anki",
+                                                                                  "flashcard",
+                                                                                  "system"
+                                                                              ]
+                                                      }
+                                                  ]
+                                  },
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "Indonesian Tokenization",
+                      "success":  false,
+                      "category":  "CoreEngine",
+                      "critical":  true
+                  },
+                  {
+                      "message":  "Fuzzy matching test failed: [System.Object[]] に \u0027op_Subtraction\u0027 という名前のメソッドが含まれないため、メソッドの呼び出しに失敗しました。",
+                      "details":  null,
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "Fuzzy Matching",
+                      "success":  false,
+                      "category":  "CoreEngine",
+                      "critical":  true
+                  },
+                  {
+                      "message":  "Performance caching (LRU) working correctly",
+                      "details":  {
+                                      "maxCacheSize":  100,
+                                      "newestEntryPresent":  true,
+                                      "finalCacheSize":  100,
+                                      "oldestEntryRemoved":  true
+                                  },
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "Performance Caching",
+                      "success":  true,
+                      "category":  "Performance",
+                      "critical":  false
+                  },
+                  {
+                      "message":  "All stress tests passed",
+                      "details":  {
+                                      "largeContentTime":  5.1213000000000006,
+                                      "searchLoadTime":  1.0173,
+                                      "tokenizationTime":  49.9101,
+                                      "results":  {
+                                                      "massiveTokenization":  true,
+                                                      "heavySearchLoad":  true,
+                                                      "largeContentProcessing":  true
+                                                  }
+                                  },
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "Stress Testing",
+                      "success":  true,
+                      "category":  "StressTests",
+                      "critical":  false
+                  },
+                  {
+                      "message":  "All DOM manipulation functions found",
+                      "details":  {
+                                      "foundFunctions":  8,
+                                      "requiredFunctions":  8
+                                  },
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "DOM Manipulation",
+                      "success":  true,
+                      "category":  "UIComponents",
+                      "critical":  true
+                  },
+                  {
+                      "message":  "Component integration working correctly",
+                      "details":  {
+                                      "requiredIntegrations":  7,
+                                      "foundComponents":  [
+                                                              "DocsPagination",
+                                                              "DocsSkeletonLoader",
+                                                              "SearchLoadingManager",
+                                                              "handleSearchStateChange",
+                                                              "notifySearchModeChange",
+                                                              "notifyDOMUpdated",
+                                                              "progressiveLoading"
+                                                          ],
+                                      "foundIntegrations":  7
+                                  },
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "Component Integration",
+                      "success":  true,
+                      "category":  "Integration",
+                      "critical":  true
+                  },
+                  {
+                      "message":  "All global functions properly exposed",
+                      "details":  {
+                                      "foundGlobals":  5,
+                                      "requiredGlobals":  5
+                                  },
+                      "timestamp":  "2025-08-23 18:21:17",
+                      "testName":  "Global Functions",
+                      "success":  true,
+                      "category":  "GlobalFunctions",
+                      "critical":  true
+                  }
+              ],
+    "timestamp":  "2025-08-23 18:21:17",
+    "summary":  {
+                    "passedTests":  6,
+                    "performanceIssues":  0,
+                    "totalTests":  8,
+                    "failedTests":  2,
+                    "criticalFailures":  2,
+                    "successRate":  75
+                },
+    "testPhase":  "Enhanced 2nd QA - Complete Search Functions Testing"
+}

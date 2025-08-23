@@ -86,7 +86,7 @@
 /* Active dot styles - matches the 'active-dot' class from Astro */
 .dot.active-dot {
   background-color: var(--color-accent-purple) !important; /* Active dot uses bright purple */
-  box-shadow: 0 4px 12px var(--clr-accent-shadow);
+  box-shadow: 0 4px 12px var(--color-accent-shadow);
   border: none !important; /* Remove white border */
   transform: scale(1.1); /* Active dot is larger */
 }
@@ -156,7 +156,7 @@
   /* Active dot hover effect */
   .dot.active-dot:hover {
     background-color: var(--color-accent-purple) !important; /* Active dot stays bright purple */
-    box-shadow: 0 6px 16px var(--clr-accent-shadow);
+    box-shadow: 0 6px 16px var(--color-accent-shadow);
     transform: scale(1.1); /* Slightly larger on hover */
   }
 }
@@ -170,7 +170,7 @@
   
   .dot.active-dot:hover {
     background-color: var(--color-accent-purple) !important;
-    box-shadow: 0 6px 16px var(--clr-accent-shadow);
+    box-shadow: 0 6px 16px var(--color-accent-shadow);
     transform: scale(1.1);
   }
 }

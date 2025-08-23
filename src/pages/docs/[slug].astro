@@ -1,0 +1,470 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Head from "../../components/public-components/HeadSEO.astro";
+import Breadcrumb from "../../components/public-components/Breadcrumb.astro";
+import Navbar from "../../components/public-components/Navbar.vue";
+import { AIRecommendations } from "../../components/docs/ai-recommendations";
+import {
+  getRelatedContent,
+  getContentWithSimpleAIMetadata,
+  loadAndEnhanceRecommendations,
+  convertPostsToPostInfo,
+  processPostWithOptimization,
+} from "../../utils/ai-content";
+import {
+  generateInternalLinks,
+  insertInternalLinks,
+  analyzeContent,
+} from "../../utils/ai-content";
+import {
+  loadMetadata,
+  getSEOFromMetadata,
+  getRecommendationsFromMetadata,
+} from "../../utils/metadata-loader";
+
+// Import global CSS with essential variables and base styles
+import "../../styles/global.css";
+// Import post-specific styles with Tailwind v4 optimization
+import "../../styles/docs/[slug].css";
+import HeadSEO from "../../components/public-components/HeadSEO.astro";
+
+// Generate static paths for all blog posts
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+// Get the post from props with explicit type casting
+const { post } = Astro.props as { post: CollectionEntry<"blog"> };
+
+// SEO data with proper optional prop handling
+const seoData = {
+  title: post ? post.data.title : "Post Not Found",
+  description: post
+    ? String(post.data.description)
+    : "The requested post could not be found.",
+  canonicalUrl: post
+    ? `https://gorakudo.org/docs/${post.slug}`
+    : "https://gorakudo.org/docs",
+  pageType: (post ? "article" : "website") as "website" | "article",
+  authorName: post ? String(post.data.author) : "Tim GoRakuDo",
+  // Only include publishedDate if it exists
+  ...(post && { publishedDate: String(post.data.publishedDate) }),
+};
+
+// Helper function to format date
+function formatDate(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return new Date(dateString).toLocaleDateString("id-ID", options);
+}
+
+// Prepare post data for script section
+const postData = post
+  ? {
+      title: post.data.title,
+      description: post.data.description,
+      publishedDate: post.data.publishedDate,
+      author: post.data.author,
+      readTime: post.data.readTime,
+      difficulty: post.data.difficulty,
+      body: post.body,
+      slug: post.slug,
+    }
+  : null;
+
+// Generate optimized recommendations for this post (checks for existing metadata first)
+let relatedContent: any = null;
+let internalLinks: any = null;
+let enhancedContent: string = post.body;
+
+try {
+  // Use optimized post processor that checks for existing metadata
+  const result = await processPostWithOptimization(post);
+
+  relatedContent = result.relatedContent;
+  internalLinks = result.internalLinks;
+  enhancedContent = result.enhancedContent;
+
+  if (result.usedExistingMetadata) {
+    console.log(
+      `⏭️  Used existing metadata for "${post.slug}" (${result.processingTime}ms)`
+    );
+  } else {
+    console.log(
+      `🤖 Generated new recommendations for "${post.slug}" (${result.processingTime}ms)`
+    );
+  }
+} catch (error) {
+  console.warn(`⚠️ Failed to process post "${post.slug}":`, error);
+}
+
+// Smart error handling - redirect to docs listing if post not found
+if (!post) {
+  return Astro.redirect("/docs?error=post-not-found");
+}
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <Head {...seoData} aiPageType="post" enableAIOptimizations={true} />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Core: Always load marked for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <Navbar client:visible />
+
+    <!-- Wave Animation Background (Simplified like index.astro) -->
+    <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+
+    <!-- Stars Background (Simplified like index.astro) -->
+    <div class="stars" aria-hidden="true">
+      <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+      <div class="star" style="top: 20%; right: 20%; animation-delay: 1s;">
+      </div>
+      <div class="star" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
+      <div class="star" style="bottom: 30%; left: 10%; animation-delay: 1.5s;">
+      </div>
+      <div class="star" style="bottom: 20%; right: 30%; animation-delay: 0.5s;">
+      </div>
+      <div class="star" style="top: 60%; left: 15%; animation-delay: 2.5s;">
+      </div>
+      <div class="star" style="top: 80%; right: 20%; animation-delay: 1.8s;">
+      </div>
+      <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;">
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="post-page">
+      <div class="post-container">
+        <!-- Back to docs button -->
+        <div>
+          <a href="/docs" class="back-to-docs">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Kembali ke Dokumentasi
+          </a>
+        </div>
+
+        <!-- Breadcrumb Navigation -->
+        <div>
+          <Breadcrumb post={post} showMindMap={true} />
+        </div>
+        <div class="post-header">
+          <h1>{post.data.title}</h1>
+          <div class="post-meta">
+            <span class="post-date">{formatDate(post.data.publishedDate)}</span>
+            <span class="post-author">by {post.data.author}</span>
+            <!-- <span class="post-read-time">{post.data.readTime} min read</span> -->
+          </div>
+          <div class="post-tags">
+            <span class="difficulty-badge difficulty-{post.data.difficulty}">
+              {post.data.difficulty}
+            </span>
+          </div>
+        </div>
+
+        <div class="post-content" id="postContent">
+          <!-- Content will be rendered here -->
+        </div>
+
+        <!-- Post navigation -->
+        <div class="post-navigation">
+          <button class="nav-btn" onclick="goToDocs()">
+            ← Kembali ke Dokumentasi
+          </button>
+          <div class="share-buttons">
+            <button class="share-btn" onclick="sharePost()">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                <polyline points="16,6 12,2 8,6"></polyline>
+                <line x1="12" y1="2" x2="12" y2="15"></line>
+              </svg>
+              Bagikan
+            </button>
+          </div>
+        </div>
+
+        {/* AI-Powered Content Recommendations Section */}
+        {
+          relatedContent && (
+            <AIRecommendations
+              relatedContent={relatedContent}
+              maxRecommendations={3}
+              showHeader={true}
+              className=""
+              showFallback={true}
+            />
+          )
+        }
+      </div>
+      &nbsp;
+    </main>
+
+    <script is:inline src="/src/scripts/core/post-script.js"></script>
+    <script define:vars={{ postData, enhancedContent }}>
+      // Make enhanced content available globally
+      if (enhancedContent) {
+        window.enhancedContent = enhancedContent;
+        console.log("🤖 Enhanced content with internal links loaded");
+      }
+
+      // Share functionality
+      function sharePost() {
+        if (navigator.share) {
+          navigator.share({
+            title: postData?.title || "GoRakuDo Post",
+            text: postData?.description || "Check out this post from GoRakuDo",
+            url: window.location.href,
+          });
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            alert("Link berhasil disalin ke clipboard!");
+          });
+        }
+      }
+
+      // Enhanced hybrid enhancement loading with browser detection and Discord error reporting
+      async function loadEnhancements() {
+        try {
+          console.log("⚡ AGGRESSIVE LOADING: Enhanced loading initialized");
+
+          // ⚡ AGGRESSIVE: Load all enhancements immediately
+          addReadingProgress();
+
+          // ⚡ AGGRESSIVE: Immediate error handling setup
+          window.addEventListener("error", function (e) {
+            console.error("Content load error:", e.error);
+          });
+
+          window.addEventListener("unhandledrejection", function (e) {
+            console.error("Unhandled promise rejection:", e.reason);
+          });
+
+          // ⚡ AGGRESSIVE: Additional performance optimizations
+          if ("requestIdleCallback" in window) {
+            requestIdleCallback(() => {
+              console.log("⚡ AGGRESSIVE: Idle time optimizations applied");
+            });
+          }
+
+          // ⚡ AGGRESSIVE: Preload critical resources
+          const criticalResources = [
+            "/css/homepage-styles.css", // Design tokens and base styles (public root)
+            "/src/scripts/core/post-script.js",
+          ];
+
+          // ⚡ AGGRESSIVE: Preload built CSS files dynamically
+          const builtCSSFiles = document.querySelectorAll(
+            'link[rel="stylesheet"]'
+          );
+          builtCSSFiles.forEach((link) => {
+            if (link.href.includes("global") || link.href.includes("_astro")) {
+              const preloadLink = document.createElement("link");
+              preloadLink.rel = "preload";
+              preloadLink.href = link.href;
+              preloadLink.as = "style";
+              document.head.appendChild(preloadLink);
+            }
+          });
+
+          criticalResources.forEach((resource) => {
+            const link = document.createElement("link");
+            link.rel = "preload";
+            link.href = resource;
+            link.as = resource.endsWith(".css") ? "style" : "script";
+            document.head.appendChild(link);
+          });
+
+          console.log(
+            "✅ AGGRESSIVE LOADING: All enhancements loaded immediately"
+          );
+        } catch (error) {
+          console.error("Failed to load aggressive enhancements:", error);
+        }
+      }
+
+      // Helper function to load scripts dynamically
+      function loadScript(src) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = src;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      // Helper function to load stylesheets dynamically
+      function loadStylesheet(href) {
+        return new Promise((resolve, reject) => {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = href;
+          link.onload = resolve;
+          link.onerror = reject;
+          document.head.appendChild(link);
+        });
+      }
+
+      // Reading progress indicator
+      function addReadingProgress() {
+        const progressBar = document.createElement("div");
+        progressBar.className = "reading-progress";
+        progressBar.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 0%;
+          height: 3px;
+          background: linear-gradient(90deg, #8b5dff, #7b4def);
+          z-index: 1000;
+          transition: width 0.1s ease;
+        `;
+        document.body.appendChild(progressBar);
+
+        window.addEventListener("scroll", () => {
+          const scrollTop = window.pageYOffset;
+          const docHeight = document.body.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          progressBar.style.width = scrollPercent + "%";
+        });
+      }
+
+      // ⚡ AGGRESSIVE: Set default preferences on page load
+      if (typeof localStorage !== "undefined") {
+        // Set aggressive loading as default if not already set
+        if (!localStorage.getItem("setting_aggressiveLoading")) {
+          localStorage.setItem("setting_aggressiveLoading", "true");
+          console.log("⚡ AGGRESSIVE: Default aggressive loading enabled");
+        }
+
+        // Set aggressive thresholds as defaults
+        if (!localStorage.getItem("threshold_syntaxHighlighting")) {
+          localStorage.setItem("threshold_syntaxHighlighting", "500");
+        }
+        if (!localStorage.getItem("threshold_readingProgress")) {
+          localStorage.setItem("threshold_readingProgress", "300");
+        }
+        if (!localStorage.getItem("threshold_errorHandling")) {
+          localStorage.setItem("threshold_errorHandling", "1000");
+        }
+      }
+
+      // Render post content if post exists
+      if (postData) {
+        document.addEventListener("DOMContentLoaded", function () {
+          // Use enhanced content with internal links if available
+          const content = window.enhancedContent || postData.body;
+          const postContent = document.getElementById("postContent");
+
+          if (postContent) {
+            // Show skeleton loading initially
+            showPostSkeleton(postContent);
+
+            // Configure marked for better markdown rendering
+            marked.setOptions({
+              highlight: function (code, lang) {
+                // Basic syntax highlighting without Prism (fallback)
+                return `<pre><code class="language-${lang}">${code}</code></pre>`;
+              },
+              breaks: true,
+              gfm: true,
+            });
+
+            // ⚡ AGGRESSIVE: Render content immediately with minimal skeleton delay
+            setTimeout(() => {
+              postContent.innerHTML = marked.parse(content);
+              hidePostSkeleton(postContent);
+
+              // ⚡ AGGRESSIVE: Load enhancements immediately
+              loadEnhancements();
+            }, 100); // ⚡ AGGRESSIVE: Reduced from 500ms to 100ms for faster loading
+          }
+        });
+      }
+
+      // Skeleton loading functions
+      function showPostSkeleton(container) {
+        if (!container) return;
+
+        container.innerHTML = `
+          <div class="post-content skeleton-content">
+            <div class="skeleton-content-header">
+              <div class="skeleton-content-title"></div>
+              <div class="skeleton-content-meta">
+                <div class="skeleton-content-author"></div>
+                <div class="skeleton-content-date"></div>
+                <div class="skeleton-content-read-time"></div>
+              </div>
+            </div>
+            <div class="skeleton-content-body">
+              <div class="skeleton-paragraph"></div>
+              <div class="skeleton-paragraph"></div>
+              <div class="skeleton-paragraph"></div>
+              <div class="skeleton-paragraph"></div>
+              <div class="skeleton-paragraph short"></div>
+              <div class="skeleton-paragraph"></div>
+              <div class="skeleton-paragraph"></div>
+              <div class="skeleton-paragraph short"></div>
+            </div>
+            <div class="skeleton-content-tags">
+              <div class="skeleton-content-tag"></div>
+              <div class="skeleton-content-tag"></div>
+              <div class="skeleton-content-tag"></div>
+            </div>
+          </div>
+        `;
+        container.classList.add("skeleton-loading");
+        console.log("✅ Post skeleton shown");
+      }
+
+      function hidePostSkeleton(container) {
+        if (!container) return;
+
+        container.classList.remove("skeleton-loading");
+        container.classList.add("skeleton-fade-in");
+
+        setTimeout(() => {
+          container.classList.remove("skeleton-fade-in");
+        }, 500);
+
+        console.log("✅ Post skeleton hidden");
+      }
+    </script>
+    <script src="/src/scripts/ui/post-skeleton-loader.js" is:inline></script>
+    &nbsp
+  </body>
+</html>

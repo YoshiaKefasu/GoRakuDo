@@ -36,11 +36,12 @@ const {
 
     <h1
       id="hero-title"
-      class="w-full text-[clamp(48px,calc((100vw-15px)*0.12),56px)] sm:text-[clamp(48px,6vw,68px)] font-semibold leading-[1.15] max-w-[48ch] mx-auto mb-3.5"
+      class="w-full text-[clamp(48px,calc((100vw-15px)*0.12),56px)] sm:text-[clamp(48px,6vw,68px)] font-semibold leading-[1.15] max-w-[48ch] mx-auto"
+      style="margin-bottom: 1.5rem;"
       transition:name="hero-title"
     >
       <span
-        class="gold-marker block text-[clamp(32px,5vw,48px)] sm:text-[clamp(32px,6vw,50px)]"
+        class="gold-marker block text-[clamp(32px,5vw,48px)] sm:text-[clamp(32px,6vw,50px)] mb-2"
         transition:name="hero-marker">{marker}</span
       >
       <span
@@ -54,7 +55,8 @@ const {
     </h1>
 
     <p
-      class="mb-6 max-w-[650px] text-[clamp(12px,1.5vw,18px)] leading-[1.5] text-[var(--color-text-muted)] italic mx-auto px-auto"
+      class="max-w-[650px] text-[clamp(12px,1.5vw,18px)] leading-[1.5] text-[var(--color-text-muted)] italic mx-auto px-auto"
+      style="margin-bottom: 1.5rem;"
       transition:name="hero-description"
     >
       {description}
@@ -202,3 +204,205 @@ const {
     }
   })();
 </script>
+
+<style>
+  @layer base {
+    /* Critical hero styles */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 0 15px;
+    }
+  }
+
+  @layer components {
+    /* ---------- Hero buttons container (base + mobile overrides) ---------- */
+    .hero-buttons {
+      /* Base */
+      margin-top: 1.5rem; /* mt-6 equivalent */
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem; /* gap-5 equivalent */
+
+      /* Tablet/Mobile ≤768px: make them stack & limit width */
+      @media (max-width: 768px) {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        max-width: 350px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* Center button contents on small screens */
+    .primary-button,
+    .secondary-button {
+      @media (max-width: 768px) {
+        justify-content: center;
+      }
+    }
+
+    /* ---------- Primary button (gradient pill) ---------- */
+    .primary-button {
+      /* Layout */
+      padding-left: 32px !important;
+      padding-right: 32px !important;
+      padding-top: 16px !important;
+      padding-bottom: 16px !important;
+      display: inline-flex;
+      cursor: pointer;
+      user-select: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem; /* gap-2 equivalent */
+      border: 0;
+      font-size: 16px;
+      font-weight: 500; /* font-medium equivalent */
+      /* Visuals: keep gradient via custom property for exact control */
+      background-image: linear-gradient(
+        135deg,
+        var(--color-accent-purple) 0%,
+        var(--color-accent-dark) 100%
+      );
+      color: var(--color-text-primary);
+      border-radius: var(--border-radius-pill);
+      transition:
+        box-shadow var(--animate-duration-normal) ease,
+        transform var(--animate-duration-fast) ease,
+        opacity var(--animate-duration-fast) ease;
+    }
+
+    /* ensure svg icon size and prevent shrinking */
+    .primary-button svg {
+      height: 1rem; /* h-4 equivalent */
+      width: 1rem; /* w-4 equivalent */
+      flex-shrink: 0; /* flex-shrink-0 equivalent */
+    }
+
+    .primary-button:hover {
+      box-shadow: 0 12px 35px var(--color-accent-shadow);
+      transform: translateY(-1px);
+    }
+    .primary-button:active {
+      transform: translateY(0);
+      opacity: 0.98;
+    }
+
+    /* ---------- Secondary button (outlined pill) ---------- */
+    .secondary-button {
+      padding-left: 32px !important;
+      padding-right: 32px !important;
+      padding-top: 14px !important;
+      padding-bottom: 14px !important;
+      border-width: 3px !important;
+      display: inline-flex;
+      cursor: pointer;
+      user-select: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem; /* gap-2 equivalent */
+      border-radius: 9999px; /* rounded-full equivalent */
+      background: transparent;
+      font-size: 16px;
+      font-weight: 500; /* font-medium equivalent */
+      background: transparent;
+      border: 2px solid var(--color-gold-dark-transparent);
+      border-radius: var(--border-radius-pill);
+      color: var(--color-gold-dark);
+      transition:
+        background-color var(--animate-duration-fast) ease,
+        border-color var(--animate-duration-fast) ease,
+        color var(--animate-duration-fast) ease,
+        transform var(--animate-duration-fast) ease;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--color-gold-dark);
+      background: var(--color-accent-glow-medium);
+    }
+
+    /* ---------- Focus / accessibility ---------- */
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible {
+      outline: none; /* outline-none equivalent */
+      /* keep the two-layer shadow you had */
+      box-shadow:
+        0 0 0 4px var(--color-accent-purple-glow-medium),
+        0 12px 35px var(--color-accent-shadow);
+    }
+
+    /* ---------- Small-screen adjustments (optional) ---------- */
+    @media (max-width: 480px) {
+      .primary-button {
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        font-size: 0.875rem; /* text-sm equivalent */
+      }
+      .secondary-button {
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 0.875rem; /* text-sm equivalent */
+      }
+    }
+
+    /* ---------- Section paddings (your snippet) ---------- */
+    .mission-section,
+    .features-section,
+    .docs-preview-section {
+      @media (max-width: 768px) {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+
+    /* Navbar component styles moved to Navbar.vue component for better component isolation */
+
+    /* Make mobile override explicit — use only if you want smaller mobile buttons */
+    @media (max-width: 768px) {
+      .hero-buttons .primary-button,
+      .hero-buttons .btn-primary {
+        padding: 14px 28px;
+        font-size: 15px;
+        min-width: auto;
+      }
+    }
+  }
+
+  @layer utilities {
+    .gold-marker {
+      margin-bottom: 0.5rem; /* mb-2 equivalent */
+      display: block;
+      color: var(--color-gold-dark);
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+      background-image: linear-gradient(
+        135deg,
+        var(--color-gold-light) 0%,
+        var(--color-gold-dark) 70%
+      );
+      -webkit-text-fill-color: transparent;
+      background-clip: text; /* modern */
+      -webkit-background-clip: text; /* legacy Safari still honors bg-clip via webkit */
+    }
+    @supports (background-clip: text) {
+      .gold-marker {
+        background-clip: text; /* bg-clip-text equivalent */
+        color: transparent; /* text-transparent equivalent */
+      }
+    }
+  }
+
+  @layer base {
+    .hero-section {
+      padding: 0 20px;
+    }
+  }
+</style>

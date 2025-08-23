@@ -1,8 +1,10 @@
 {
+  "typescript.validate.enable": true,
+  "typescript.preferences.includePackageJsonAutoImports": "off",
   "files.associations": {
-    "*.css": "tailwindcss"
+    "*.astro": "astro"
   },
-  "css.validate": false,
-  "less.validate": false,
-  "scss.validate": false
+  "astro.language-server.enable": true,
+  "astro.language-server.diagnostics.enable": true,
+  "astro.language-server.diagnostics.typescript.enable": false
 }

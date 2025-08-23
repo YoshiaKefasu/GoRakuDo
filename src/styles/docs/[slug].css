@@ -1,0 +1,1178 @@
+/* POST PAGE STYLES - Tailwind v4 Unified */
+/* Enhanced with unified design system and Tailwind v4 integration */
+/* 
+ * NOTE: AI-Recommendations component styles have been externalized to:
+ * src/components/docs/AI-Recommendations.css
+ * This file now only contains post-specific styles for better modularity.
+ */
+@import "tailwindcss";
+
+/* ========== FONT LOADING OPTIMIZATION ========== */
+/* Optimize font loading for better performance */
+@font-face {
+  font-family: "Inter";
+  font-display: swap;
+}
+
+/* ========== TAILWIND V4 THEME INTEGRATION ========== */
+@theme {
+  /* Article-specific design tokens - Enhanced with globals.css integration */
+  --color-post-background: rgba(25, 25, 25, 0.75);
+  --color-post-title: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* ENHANCED: Better contrast for titles */
+  --color-post-h1-h5: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* ENHANCED: Better contrast for headings */
+  --color-post-content: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* ENHANCED: Better contrast for content */
+  --color-post-meta: rgba(
+    255,
+    255,
+    255,
+    0.65
+  ); /* NEW: Dedicated meta text color with good contrast */
+  --color-post-border: var(--color-border); /* Use global border color */
+  --color-post-glow: rgba(139, 93, 255, 0.015);
+  --color-post-card: var(--color-card); /* Integrate with global card color */
+  --color-post-accent: var(--color-accent-purple); /* Use global accent */
+
+  /* Enhanced spacing system - Preserved original values with global integration */
+  --post-padding-x-small: 1.5rem;
+  --post-padding-x-medium: 2.5rem;
+  --post-padding-x-large: 4rem;
+  --post-max-width-small: 100%;
+  --post-max-width-medium: 95%;
+  --post-max-width-large: 900px;
+  --post-header-spacing: clamp(
+    0.75rem,
+    2.5vw,
+    1.25rem
+  ); /* REDUCED BY HALF: From clamp(1.5rem, 5vw, 2.5rem) for more compact layout */
+
+  /* Golden ratio container sizing - Preserved mathematical precision */
+  --golden-ratio: 1.618;
+  --golden-ratio-left: calc(100vw * 0.236);
+  --golden-ratio-content: calc(100vw * 0.382);
+  --golden-ratio-right: calc(100vw * 0.236);
+
+  /* Readability-optimized spacing - Enhanced with accessibility focus */
+  --readability-padding-large: 4rem;
+  --readability-padding-xl: 5rem;
+  --readability-margin-adjustment: 0.05;
+
+  /* Animation timing - Aligned with global animation system */
+  --post-fade-duration: 0.6s;
+  --post-slide-duration: 0.8s;
+  --post-transition-fast: var(--animate-duration-fast);
+  --post-transition-normal: var(--animate-duration-normal);
+  --post-transition-slow: var(--animate-duration-slow);
+
+  /* Enhanced Z-index system */
+  --z-post-background: 0;
+  --z-post-content: 1;
+  --z-post-progress: 50;
+  --z-post-modal: 100;
+
+  /* Add compact spacing options for better control */
+  --spacing-compact-xs: 0.25rem; /* 4px */
+  --spacing-compact-sm: 0.5rem; /* 8px */
+  --spacing-compact-md: 0.75rem; /* 12px */
+  --spacing-compact-lg: 1rem; /* 16px */
+  --spacing-compact-xl: 1.25rem; /* 20px */
+}
+
+/* ========== POST PAGE SPECIFIC STYLES ========== */
+/* Note: Base styles and reset are handled by global.css */
+
+/* Background Elements - Simplified like index.astro */
+
+/* ========== POST PAGE LAYOUT & CONTENT ========== */
+
+/* ========== INTERNAL LINK STYLES ========== */
+.internal-link {
+  display: inline-block;
+  color: var(--color-primary);
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--color-accent-purple-glow-faint), transparent);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-accent-purple-glow-medium);
+  margin: 1rem 0;
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.internal-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+  transform: scaleX(0);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.internal-link:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent-purple-glow-medium);
+  background: var(--color-accent-purple-glow-faint);
+}
+
+.internal-link:hover::before {
+  transform: scaleX(1);
+}
+
+.internal-link:active {
+  transform: translateY(0);
+}
+
+/* Internal link container styling */
+.markdown-content p:has(.internal-link) {
+  margin: 1.5rem 0;
+  padding: 0;
+}
+
+/* Internal link text styling */
+.internal-link strong {
+  color: inherit;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ========== POST PAGE SPECIFIC STYLES ========== */
+
+/* Post Page Container - Enhanced with unified design system */
+.post-page {
+  min-height: 100vh;
+  background: var(--color-post-background);
+  color: var(--color-foreground);
+  padding-top: 80px; /* Fixed: Reduced from 100px to account for navbar height */
+  position: relative;
+  z-index: var(--z-docked);
+  /* Enhanced content layout */
+  display: flex;
+  flex-direction: column;
+  /* Enhanced performance */
+  contain: layout style paint;
+  will-change: transform;
+  /* Enable hardware acceleration */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.post-container {
+  /* Responsive max-width with proper constraints - FIXED for better readability */
+  width: 100%;
+  max-width: 100%; /* Edge-to-edge on small screens */
+  margin: 0 auto;
+  padding: 0 var(--post-padding-x-small); /* Use custom variable for better control */
+  background: transparent;
+  /* Enhanced layout positioning */
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 80px); /* Account for navbar */
+  /* Improved content alignment */
+  justify-content: flex-start;
+  align-items: stretch;
+  /* Enhanced performance */
+  contain: layout style paint;
+  will-change: transform;
+  /* Enhanced content optimization */
+  container-type: inline-size;
+  position: relative;
+  /* Enable hardware acceleration */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Responsive container sizing - FIXED for better readability */
+@media (min-width: 480px) {
+  .post-container {
+    padding: 0 var(--post-padding-x-small); /* Consistent with custom variable */
+    max-width: var(--post-max-width-small); /* 100% for small screens */
+  }
+}
+
+@media (min-width: 680px) {
+  .post-container {
+    padding: 0 var(--post-padding-x-medium); /* Use custom variable for better spacing */
+    max-width: var(
+      --post-max-width-medium
+    ); /* 95% instead of 90% for less restriction */
+  }
+}
+
+@media (min-width: 768px) {
+  .post-container {
+    padding: 0 var(--post-padding-x-medium); /* Use custom variable for better spacing */
+    max-width: 92%; /* INCREASED from 85% for less restriction */
+  }
+}
+
+@media (min-width: 1024px) {
+  .post-container {
+    /* SIMPLIFIED Golden Ratio - More Readable and Less Restrictive */
+    max-width: min(
+      85%,
+      var(--post-max-width-large)
+    ); /* Use min() for better control */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 var(--post-padding-x-large); /* Use custom variable for optimal spacing */
+  }
+}
+
+@media (min-width: 1280px) {
+  .post-container {
+    /* FIXED max-width with readability optimization - Less Restrictive */
+    max-width: min(
+      80%,
+      1024px
+    ); /* Use min() for better control, increased from container-xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 var(--post-padding-x-large); /* Use custom variable for optimal spacing */
+  }
+}
+
+@media (min-width: 1536px) {
+  .post-container {
+    /* Ultra-wide screen optimization */
+    max-width: min(
+      75%,
+      1200px
+    ); /* Even less restrictive for ultra-wide screens */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 var(--post-padding-x-large);
+  }
+}
+
+/* Back to Docs Button - Enhanced with SEGMENT 4 improvements */
+.back-to-docs {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm); /* 12px → 0.75rem for responsive spacing */
+  color: var(--color-primary);
+  transition: all var(--post-transition-normal) var(--ease-out); /* Enhanced transition */
+  margin-bottom: var(
+    --spacing-xs
+  ); /* REDUCED: From var(--spacing-lg) to var(--spacing-xs) for ultra compact layout */
+  font-size: var(
+    --font-size-sm
+  ); /* 14px → 0.875rem for responsive typography */
+  font-weight: var(--font-weight-medium);
+  /* Enhanced accessibility - SEGMENT 4 */
+  outline: none; /* Remove default outline */
+}
+
+.back-to-docs:hover {
+  color: var(--color-accent-purple-dark);
+  transform: translateY(-1px); /* Subtle lift effect - SEGMENT 4 */
+  transition: all var(--post-transition-normal) var(--ease-out);
+}
+
+.back-to-docs:focus-visible {
+  outline: 2px solid #8b5dff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
+}
+
+/* Post Header - Enhanced with unified design system */
+.post-header {
+  margin-bottom: var(
+    --post-header-spacing
+  ); /* Use custom variable for better spacing */
+  text-align: center;
+  /* Improved header layout */
+  width: 100%;
+  position: relative;
+  /* Better header positioning */
+  display: block;
+}
+
+.post-header h1 {
+  /* Responsive font sizing with proper breakpoints - INCREASED for better readability */
+  font-size: var(
+    --font-size-3xl
+  ); /* INCREASED base size for better hierarchy */
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(
+    --spacing-lg
+  ); /* INCREASED spacing for better separation */
+  color: var(--color-post-title);
+  line-height: 1.75;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Responsive breakpoints for post title */
+@media (min-width: 480px) {
+  .post-header h1 {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+@media (min-width: 680px) {
+  .post-header h1 {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .post-header h1 {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .post-header h1 {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl); /* 20px → 1.25rem for responsive spacing */
+  margin-bottom: var(
+    --spacing-md
+  ); /* REDUCED: From var(--spacing-2xl) to var(--spacing-md) for more compact spacing */
+  font-size: var(
+    --font-size-sm
+  ); /* 14px → 0.875rem for responsive typography */
+  color: var(--color-post-meta); /* ENHANCED: Better contrast for meta text */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+/* Responsive post meta */
+@media (min-width: 480px) {
+  .post-meta {
+    gap: var(--spacing-sm); /* 12px → 0.75rem for responsive spacing */
+    font-size: var(
+      --font-size-xs
+    ); /* 12px → 0.75rem for responsive typography */
+  }
+}
+
+@media (min-width: 680px) {
+  .post-meta {
+    gap: var(--spacing-xl); /* 24px → 1.5rem for responsive spacing */
+    font-size: var(
+      --font-size-sm
+    ); /* 14px → 0.875rem for responsive typography */
+  }
+}
+
+.post-date,
+.post-author,
+.post-read-time {
+  color: var(
+    --color-post-meta
+  ); /* ENHANCED: Better contrast for meta elements */
+}
+
+.post-tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm); /* 12px → 0.75rem for responsive spacing */
+}
+
+.difficulty-badge {
+  padding: var(--spacing-xs) var(--spacing-sm); /* 6px 12px → 0.375rem 0.75rem for responsive spacing */
+  border-radius: var(--radius-pill); /* Keep PX for precise border radius */
+  font-size: var(--font-size-xs); /* 12px → 0.75rem for responsive typography */
+  font-weight: var(--font-weight-medium);
+}
+
+.difficulty-badge.difficulty-beginner {
+  background: var(--color-success);
+  color: var(--color-foreground);
+}
+
+.difficulty-badge.difficulty-intermediate {
+  background: var(--color-warning);
+  color: var(--color-foreground);
+}
+
+.difficulty-badge.difficulty-advanced {
+  background: var(--color-error);
+  color: var(--color-foreground);
+}
+
+/* Post Content - Enhanced layout */
+.post-content {
+  max-width: none;
+  /* Enhanced content layout */
+  flex: 1;
+  margin: var(--spacing-xl) 0; /* INCREASED from 3xl to xl for better spacing */
+  line-height: 1.75;
+  /* Improved content positioning */
+  width: 100%;
+  position: relative;
+  /* Better content flow */
+  display: block;
+  /* Enhanced reading performance */
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1,
+    "calt" 1;
+  text-rendering: optimizeLegibility;
+}
+
+.post-content h1 {
+  /* Responsive content heading */
+  font-size: var(--font-size-xl); /* 24px → 1.5rem for responsive typography */
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-xl); /* 20px → 1.25rem for responsive spacing */
+  color: var(--color-post-h1-h5);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.post-content h2 {
+  /* Responsive content subheading */
+  font-size: var(--font-size-lg); /* 20px → 1.25rem for responsive typography */
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-md); /* 20px → 1.25rem for responsive spacing */
+  color: var(--color-post-h1-h5);
+  position: relative;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Responsive content headings */
+@media (min-width: 480px) {
+  .post-content h1 {
+    font-size: var(
+      --font-size-xl
+    ); /* 28px → 1.75rem for responsive typography */
+  }
+  .post-content h2 {
+    font-size: var(
+      --font-size-lg
+    ); /* 24px → 1.5rem for responsive typography */
+  }
+  .post-content h4 {
+    font-size: var(
+      --font-size-lg
+    ); /* 20px → 1.25rem for responsive typography */
+  }
+  .post-content h5 {
+    font-size: var(
+      --font-size-base
+    ); /* 16px → 1rem for responsive typography */
+  }
+}
+
+@media (min-width: 680px) {
+  .post-content h1 {
+    font-size: var(--font-size-xl); /* 32px → 2rem for responsive typography */
+  }
+  .post-content h2 {
+    font-size: var(
+      --font-size-lg
+    ); /* 28px → 1.75rem for responsive typography */
+  }
+  .post-content h4 {
+    font-size: var(
+      --font-size-lg
+    ); /* 22px → 1.375rem for responsive typography */
+  }
+  .post-content h5 {
+    font-size: var(
+      --font-size-base
+    ); /* 18px → 1.125rem for responsive typography */
+  }
+}
+
+@media (min-width: 768px) {
+  .post-content h1 {
+    font-size: var(
+      --font-size-xl
+    ); /* 36px → 2.25rem for responsive typography */
+  }
+  .post-content h2 {
+    font-size: var(--font-size-lg); /* 32px → 2rem for responsive typography */
+  }
+  .post-content h4 {
+    font-size: var(
+      --font-size-lg
+    ); /* 24px → 1.5rem for responsive typography */
+  }
+  .post-content h5 {
+    font-size: var(
+      --font-size-base
+    ); /* 20px → 1.25rem for responsive typography */
+  }
+}
+
+@media (min-width: 1024px) {
+  .post-content h1 {
+    font-size: var(
+      --font-size-xl
+    ); /* 40px → 2.5rem for responsive typography */
+  }
+  .post-content h2 {
+    font-size: var(
+      --font-size-lg
+    ); /* 36px → 2.25rem for responsive typography */
+  }
+  .post-content h4 {
+    font-size: var(
+      --font-size-lg
+    ); /* 26px → 1.625rem for responsive typography */
+  }
+  .post-content h5 {
+    font-size: var(
+      --font-size-base
+    ); /* 22px → 1.375rem for responsive typography */
+  }
+}
+
+.post-content h2:before {
+  content: "";
+  position: absolute;
+  left: calc(
+    -0.5 * var(--spacing-lg)
+  ); /* -20px → -1.25rem for responsive positioning */
+  top: 50%;
+  width: 4px; /* Keep PX for precise border width */
+  height: var(--spacing-lg); /* 20px → 1.25rem for responsive sizing */
+  border-radius: 2px; /* Keep PX for precise border radius */
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+  transform: translateY(-50%);
+}
+
+.post-content h3 {
+  font-size: var(--font-size-xl); /* 24px → 1.5rem for responsive typography */
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-post-h1-h5);
+}
+
+/* H4 Styling - Enhanced with unified design system */
+.post-content h4 {
+  font-size: var(--font-size-lg); /* 20px → 1.25rem for responsive typography */
+  font-weight: var(--font-weight-semibold);
+  margin-top: var(--spacing-xl); /* 20px → 1.25rem for responsive spacing */
+  margin-bottom: var(
+    --spacing-xs
+  ); /* 15px → 0.9375rem for responsive spacing */
+  color: var(--color-post-h1-h5);
+  position: relative;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* Enhanced visual hierarchy */
+  border-bottom: 1px solid var(--color-accent-purple-glow-faint);
+  padding-bottom: var(--spacing-sm); /* 8px → 0.5rem for responsive spacing */
+}
+
+/* H5 Styling - Enhanced with unified design system */
+.post-content h5 {
+  font-size: var(--font-size-base); /* 16px → 1rem for responsive typography */
+  font-weight: var(--font-weight-semibold);
+  margin-top: var(--spacing-lg); /* 16px → 1rem for responsive spacing */
+  margin-bottom: var(--spacing-sm); /* 8px → 0.5rem for responsive spacing */
+  color: var(--color-post-h1-h5);
+  position: relative;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* Enhanced visual hierarchy with subtle accent */
+  padding-left: var(--spacing-md); /* 12px → 0.75rem for responsive spacing */
+  border-left: 3px solid var(--color-accent-purple-glow-medium);
+}
+
+.post-content p {
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-post-content);
+  font-size: var(--font-size-base); /* 16px → 1rem for responsive typography */
+  /* ENHANCED: Google Team readability standards */
+  line-height: 1.75; /* Improved line height for better readability */
+  text-rendering: optimizeLegibility; /* Enhanced text rendering */
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1,
+    "calt" 1; /* Better typography */
+}
+
+.post-content ul,
+.post-content ol {
+  margin-bottom: var(--spacing-xl); /* 20px → 1.25rem for responsive spacing */
+  padding-left: var(--spacing-2xl); /* 30px → 1.875rem for responsive spacing */
+  color: var(
+    --color-post-content
+  ); /* ENHANCED: Better contrast for list text */
+}
+
+.post-content li {
+  margin-top: var(--spacing-sm); /* 8px → 0.5rem for responsive spacing */
+  margin-bottom: var(--spacing-sm); /* 8px → 0.5rem for responsive spacing */
+  position: relative;
+  /* ENHANCED: Google Team readability standards */
+  line-height: 1.75; /* Improved line height for list items */
+  color: var(--color-post-content); /* Ensure consistent color */
+}
+
+/* ========== HIGH CONTRAST MODE SUPPORT ========== */
+/* REASONING: Google Team accessibility standards require high contrast mode support */
+@media (prefers-contrast: high) {
+  .post-content {
+    /* ENHANCED: High contrast mode for better accessibility */
+    --color-post-title: rgba(
+      255,
+      255,
+      255,
+      1
+    ); /* Full white for maximum contrast */
+    --color-post-h1-h5: rgba(
+      255,
+      255,
+      255,
+      1
+    ); /* Full white for maximum contrast */
+    --color-post-content: rgba(
+      255,
+      255,
+      255,
+      1
+    ); /* Full white for maximum contrast */
+    --color-post-meta: rgba(255, 255, 255, 0.95); /* High contrast meta text */
+  }
+
+  .post-content h1,
+  .post-content h2,
+  .post-content h3,
+  .post-content h4,
+  .post-content h5 {
+    color: rgba(255, 255, 255, 1); /* Full white for maximum contrast */
+    text-shadow: none; /* Remove any text shadows in high contrast */
+  }
+
+  .post-content p,
+  .post-content li,
+  .post-content blockquote {
+    color: rgba(255, 255, 255, 1); /* Full white for maximum contrast */
+  }
+
+  .post-meta,
+  .post-date,
+  .post-author,
+  .post-read-time {
+    color: rgba(255, 255, 255, 0.95); /* High contrast meta text */
+  }
+
+  .back-to-docs {
+    color: #ffff00; /* High contrast yellow for links */
+    text-decoration: underline; /* Always underline in high contrast */
+  }
+
+  .back-to-docs:hover {
+    color: #ffffff; /* Full white on hover */
+    background-color: #000000; /* Black background on hover */
+  }
+}
+
+/* ========== REDUCED MOTION SUPPORT ========== */
+/* REASONING: Google Team accessibility standards require reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .post-page,
+  .post-container,
+  .back-to-docs,
+  .nav-btn,
+  .share-btn {
+    /* ENHANCED: Disable animations for users who prefer reduced motion */
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .reading-progress {
+    /* ENHANCED: Disable reading progress animation */
+    transition: none !important;
+  }
+}
+
+.post-content ul li:before {
+  content: "〆";
+  color: var(--color-primary);
+  font-weight: 900; /* Make arrow bolder than standard bold */
+  position: absolute;
+  left: calc(
+    -1 * var(--spacing-xl)
+  ); /* -20px → -1.25rem for responsive positioning */
+}
+
+/* ========== MOBILE LIST SPACING OPTIMIZATION ========== */
+/* 
+ * REASONING: Current list padding (var(--spacing-2xl) = 30px) is excessive on mobile screens
+ * SOLUTION: Progressive spacing reduction for different mobile screen sizes
+ * BENEFIT: Improved readability and visual alignment on small screens
+ * APPROACH: Maintain visual hierarchy while optimizing for mobile constraints
+ */
+
+/* Tablet and Small Desktop List Spacing */
+@media (min-width: 768px) {
+  .post-content ul,
+  .post-content ol {
+    padding-left: var(--spacing-xl); /* Reduce from 2xl (30px) to lg (24px) */
+    margin-bottom: var(
+      --spacing-xl
+    ); /* Slightly reduce bottom margin for consistency */
+  }
+
+  .post-content li {
+    margin-top: var(--spacing-sm); /* Reduce spacing between items for mobile */
+    margin-bottom: var(
+      --spacing-sm
+    ); /* Reduce spacing between items for mobile */
+  }
+
+  .post-content ul li:before {
+    left: calc(
+      -1 * var(--spacing-xl)
+    ); /* Adjust arrow position to match new padding */
+  }
+}
+
+/* Medium Mobile Screen List Spacing */
+@media (min-width: 480px) {
+  .post-content ul,
+  .post-content ol {
+    padding-left: var(
+      --spacing-lg
+    ); /* Further reduce to md (16px) for medium mobile */
+  }
+
+  .post-content ul li:before {
+    left: calc(
+      -1 * var(--spacing-lg)
+    ); /* Adjust arrow position proportionally */
+  }
+}
+
+/* Small Mobile Screen List Spacing */
+@media (min-width: 360px) {
+  .post-content ul li:before {
+    left: calc(
+      -1 * var(--spacing-md)
+    ); /* Adjust arrow position for minimal spacing */
+  }
+}
+
+/* Ultra Small Screen List Spacing */
+@media (min-width: 320px) {
+  .post-content ul,
+  .post-content ol {
+    padding-left: var(
+      --spacing-sm
+    ); /* Ultra minimal padding (8px) for smallest screens */
+  }
+
+  .post-content ul li:before {
+    left: calc(
+      -1 * var(--spacing-sm)
+    ); /* Adjust arrow position for ultra minimal spacing */
+  }
+}
+
+.post-content blockquote {
+  position: relative;
+  background: rgba(139, 93, 255, 0.05);
+  border-left: 4px solid var(--color-accent-purple);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: var(
+    --color-post-content
+  ); /* ENHANCED: Better contrast for blockquote text */
+}
+
+.post-content blockquote::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(
+    180deg,
+    var(--color-accent-purple) 0%,
+    var(--color-accent-cyan) 100%
+  );
+  box-shadow: 0 0 12px rgba(139, 93, 255, 0.4);
+  border-radius: 2px;
+}
+
+.post-content code {
+  font-size: 0.9em;
+  background: rgba(139, 93, 255, 0.05);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm);
+  font-family:
+    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New",
+    monospace;
+  color: var(--color-accent-cyan);
+}
+
+.post-content pre {
+  position: relative;
+  overflow-x: auto;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+}
+
+.post-content pre::before {
+  content: "CODE";
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: var(--font-size-xs);
+  color: var(--color-muted-foreground);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.1em;
+}
+
+.post-content pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--color-accent-cyan);
+}
+
+.post-content a {
+  color: var(--color-primary);
+  transition: color var(--duration-normal) var(--ease-out);
+}
+
+.post-content a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* Post Navigation - Enhanced with SEGMENT 4 improvements */
+.post-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(
+    --spacing-xl
+  ); /* REDUCED: From var(--spacing-3xl) to var(--spacing-xl) for more compact layout */
+  padding-top: var(
+    --spacing-lg
+  ); /* REDUCED: From var(--spacing-2xl) to var(--spacing-lg) for more compact layout */
+  border-top: 1px solid var(--color-accent-purple-glow-faint); /* Keep PX for precise border width */
+  /* Enhanced focus-within support - SEGMENT 4 */
+  transition: box-shadow var(--post-transition-normal) var(--ease-out);
+}
+
+.post-navigation:focus-within {
+  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.5);
+}
+
+.post-meta:focus-within {
+  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.5);
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem; /* Consistent spacing - SEGMENT 4 */
+  color: var(--color-primary);
+  transition: all var(--post-transition-normal) var(--ease-out); /* Enhanced transition */
+  font-size: var(
+    --font-size-sm
+  ); /* 14px → 0.875rem for responsive typography */
+  font-weight: var(--font-weight-medium); /* Enhanced font weight - SEGMENT 4 */
+  /* Enhanced accessibility - SEGMENT 4 */
+  outline: none; /* Remove default outline */
+}
+
+.nav-btn:hover {
+  color: var(--color-accent-purple-dark);
+  transform: translateY(-1px); /* Subtle lift effect - SEGMENT 4 */
+  transition: all var(--post-transition-normal) var(--ease-out);
+}
+
+.nav-btn:focus-visible {
+  outline: 2px solid #8b5dff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
+}
+
+.share-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Consistent spacing - SEGMENT 4 */
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem; /* Consistent spacing - SEGMENT 4 */
+  background: var(--color-accent-purple-glow-faint);
+  color: var(--color-primary);
+  padding: var(--spacing-sm) var(--spacing-md); /* 8px 16px → 0.5rem 1rem for responsive spacing */
+  border-radius: var(--radius-pill); /* Keep PX for precise border radius */
+  transition: all var(--post-transition-normal) var(--ease-out); /* Enhanced transition */
+  font-size: var(
+    --font-size-sm
+  ); /* 14px → 0.875rem for responsive typography */
+  font-weight: var(--font-weight-medium); /* Enhanced font weight - SEGMENT 4 */
+  /* Enhanced accessibility - SEGMENT 4 */
+  outline: none; /* Remove default outline */
+  border: 1px solid transparent; /* Add transparent border - SEGMENT 4 */
+}
+
+.share-btn:hover {
+  background: rgba(139, 93, 255, 0.1);
+  border-color: var(
+    --color-accent-purple
+  ); /* Enhanced border color - SEGMENT 4 */
+  transform: translateY(-1px); /* Subtle lift effect - SEGMENT 4 */
+}
+
+.share-btn:focus-visible {
+  outline: 2px solid #8b5dff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
+}
+
+/* Skeleton Loading Styles - Enhanced Performance & Visual Effects */
+.skeleton-content {
+  opacity: 0.7;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  margin-bottom: 1.875rem;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+
+  /* Enhanced performance - isolate layout changes for better rendering */
+  contain: layout;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.skeleton-content-title {
+  height: 2rem;
+  border-radius: 6px;
+  margin-bottom: 0.9375rem;
+  width: 90%;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 93, 255, 0.05) 25%,
+    rgba(139, 93, 255, 0.1) 50%,
+    rgba(139, 93, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s infinite;
+}
+
+.skeleton-content-meta {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.5625rem;
+}
+
+.skeleton-content-author,
+.skeleton-content-date,
+.skeleton-content-read-time {
+  height: 1.125rem;
+  border-radius: var(--radius-sm);
+  width: 5rem;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 93, 255, 0.05) 25%,
+    rgba(139, 93, 255, 0.1) 50%,
+    rgba(139, 93, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s infinite;
+}
+
+.skeleton-paragraph {
+  height: 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 93, 255, 0.05) 25%,
+    rgba(139, 93, 255, 0.1) 50%,
+    rgba(139, 93, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s infinite;
+}
+
+.skeleton-paragraph.short {
+  width: 70%;
+}
+
+.skeleton-content-tags {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.skeleton-content-tag {
+  height: 1.25rem;
+  border-radius: 10px;
+  width: 3.125rem;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 93, 255, 0.05) 25%,
+    rgba(139, 93, 255, 0.1) 50%,
+    rgba(139, 93, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-loading {
+  pointer-events: none;
+  user-select: none;
+}
+
+.skeleton-fade-in {
+  animation: skeleton-fade-in 0.5s ease-in-out;
+}
+
+@keyframes skeleton-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced accessibility for skeleton loading */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-content-title,
+  .skeleton-content-author,
+  .skeleton-content-date,
+  .skeleton-content-read-time,
+  .skeleton-paragraph,
+  .skeleton-content-tag {
+    animation: none;
+  }
+}
+
+/* ========== ENHANCED RESPONSIVE DESIGN - SEGMENT 7 ========== */
+
+/* Enhanced Mobile Breakpoints - Improved spacing and typography */
+@media (min-width: 768px) {
+  .post-container {
+    padding: 0 1.25rem; /* Enhanced spacing */
+  }
+
+  .post-header {
+    margin-bottom: var(
+      --spacing-sm
+    ); /* FURTHER REDUCE: From var(--post-header-spacing) to var(--spacing-md) for mobile compactness */
+  }
+
+  .post-header h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  .post-meta {
+    flex-direction: row;
+    gap: 0.625rem; /* Improved spacing */
+  }
+
+  .post-navigation {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+}
+
+/* Reading Progress Bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px; /* Keep PX for precise progress bar height */
+  z-index: var(--z-dropdown);
+  transition: width 0.1s ease;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
+}
+
+/* ========== GOOGLE-STANDARD LIST STYLING - ENHANCED ACCESSIBILITY & CONSISTENCY ========== */
+/* 
+ * REASONING: Implementing Google Material Design 3 list standards for consistent rendering
+ * CHANGE: Adding comprehensive list styling that works across all browsers and devices
+ * BENEFIT: Improved readability, accessibility, and visual consistency
+ */
+
+/* ===== LIST STYLING - USING GLOBAL STYLES ONLY ===== */
+/* REASONING: All list styling is now handled by global.css with custom bullets */
+/* Global styles apply to all lists including .post-content lists */
+@media print {
+  .post-content ul,
+  .post-content ol {
+    /* REASONING: Ensure lists print correctly */
+    margin: 0.5rem 0 0.5rem 1rem; /* Reduced margins for print */
+    page-break-inside: avoid; /* Prevent list breaking across pages */
+  }
+
+  .post-content li {
+    /* REASONING: Ensure list items print clearly */
+    page-break-inside: avoid; /* Prevent item breaking across pages */
+    orphans: 2; /* Minimum 2 lines before page break */
+    widows: 2; /* Minimum 2 lines after page break */
+  }
+}

@@ -14,62 +14,54 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-      
-      - name: Install dependencies with clean slate
-        run: |
-          # Remove any existing node_modules and lock files
-          rm -rf node_modules package-lock.json
-          # Clear npm cache
-          npm cache clean --force
-          # Install dependencies fresh
-          npm install
-          # Force rebuild native modules
-          npm rebuild
-      
-      - name: Build the site
-        run: npm run build
-      
-      - name: Upload to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-      
-      - name: Send Discord notification
-        uses: sarisia/actions-status-discord@v1.15.3
-        if: always()
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: ${{ job.status }}
-          content: "Hey <@209310690643673088>"
-          title: "Build"
-          description: |
-            Build to GitHub Pages.
-            Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
-          color: 0x2fa64d
-          url: "https://github.com/sarisia/actions-status-discord"
-          username: GitHub Actions Deployer
-
-  deploy:
-    needs: build
+  build-and-deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install dependencies with clean slate
+        run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+          npm install
+          npm rebuild
+      - name: Build the site with secure environment
+        env:
+          NODE_ENV: production
+          GITHUB_ACTIONS: true
+          BUILD_ENVIRONMENT: github-actions
+          ENABLE_AI_PROCESSING: false
+          GOOGLE_API_KEY: ""
+          GOOGLE_MODEL: ""
+          GOOGLE_RATE_LIMIT_RPD: 0
+          GOOGLE_RATE_LIMIT_RPM: 0
+          SITE_URL: https://gorakudo.org
+          SITE_TITLE: GoRakuDo - Komunitas Immersion Bahasa Jepang
+          SITE_DESCRIPTION: Komunitas immersion bahasa Jepang terbesar Indonesia
+        run: |
+          echo "🔒 Building in secure GitHub Actions environment..."
+          echo "🔒 AI processing disabled for security"
+          echo "🔒 Using pre-processed data files only"
+          npm run build
+          echo "✅ Build completed securely"
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy to GitHub Pages - ${{ github.sha }}'
       - name: Send Discord notification
         uses: sarisia/actions-status-discord@v1.15.3
         if: always()
@@ -77,10 +69,12 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           content: "Hey <@209310690643673088>"
-          title: "Deploy"
+          title: "Deploy to GitHub Pages"
           description: |
-            Deploy to GitHub Pages.
+            Secure deployment completed.
             Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
+            Environment: GitHub Actions (AI processing disabled for security)
           color: 0x2fa64d
           url: "https://github.com/sarisia/actions-status-discord"
-          username: GitHub Actions Builder
+          username: GitHub Actions Deployer
+

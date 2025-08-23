@@ -1,12 +1,12 @@
 ---
-import Head from "../components/HeadSEO.astro";
+import Head from "../components/public-components/HeadSEO.astro";
 import CeritaImmersion from "../components/homepage/Slideshow/ImageSlideshow.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Vueコンポーネントをインポート
-import Navbar from "../components/Navbar.vue";
+import Navbar from "../components/public-components/Navbar.vue";
 import Hero from "../components/homepage/hero.astro";
-import InvitationModal from "../components/InvitationModal.vue";
+import InvitationModal from "../components/public-components/InvitationModal.vue";
 
 // CSSをインポート
 import "../styles/global.css";
@@ -27,11 +27,12 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       pageType="website"
       publishedDate="2025/08/10"
       lang="id"
+      aiPageType="home"
+      enableAIOptimizations={true}
     />
     <!-- Prefetch non-critical resources (Enhanced) -->
-    <link fetchpriority="low" rel="prefetch" href="/docs/posts" />
+    <link fetchpriority="low" rel="prefetch" href="/docs" />
     <link fetchpriority="low" rel="prefetch" href="/discord" />
-    <link fetchpriority="low" rel="prefetch" href="/docs/post" />
   </head>
   <body>
     <!-- Stylesheet -->
@@ -78,8 +79,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
       <div
         class="mb-8 flex flex-col items-center justify-center min-h-auto w-full loading"
         transition:name="slideshow-section"
-        data-lazy
-      >
+        data-lazy>
         <CeritaImmersion />
       </div>
 
@@ -89,14 +89,12 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
         class="mission-section smooth-edge-bottom loading"
         aria-labelledby="mission-title"
         transition:name="mission-section"
-        data-lazy
-      >
+        data-lazy>
         <div class="mission-container">
           <h2
             class="mission-title"
             id="mission-title"
-            transition:name="mission-title"
-          >
+            transition:name="mission-title">
             Misi Kami
           </h2>
           <div class="mission-content">
@@ -133,8 +131,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
               class="cta-button"
               onclick="openInvitationModal()"
               aria-label="Bergabung dengan komunitas GoRakuDo"
-              transition:name="cta-button"
-            >
+              transition:name="cta-button">
               Gabung Komunitas Kami
               <svg
                 width="20"
@@ -145,8 +142,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                aria-hidden="true"
-              >
+                aria-hidden="true">
                 <path d="M5 12h14M12 5l7 7-7 7"></path>
               </svg>
             </button>
@@ -159,22 +155,19 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
         class="features-section loading"
         aria-labelledby="features-title"
         transition:name="features-section"
-        data-lazy
-      >
+        data-lazy>
         <div class="features-container">
           <h2
             class="features-title"
             id="features-title"
-            transition:name="features-title"
-          >
+            transition:name="features-title">
             Pendekatan Immersion
           </h2>
           <div class="features-grid" role="list">
             <article
               class="feature-card"
               role="listitem"
-              transition:name="feature-card-1"
-            >
+              transition:name="feature-card-1">
               <div class="feature-icon" aria-hidden="true">⚡</div>
               <h3>Adaptive Learning</h3>
               <p>
@@ -187,8 +180,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
             <article
               class="feature-card"
               role="listitem"
-              transition:name="feature-card-2"
-            >
+              transition:name="feature-card-2">
               <div class="feature-icon" aria-hidden="true">👥</div>
               <h3>Belajar Bersama Komunitas</h3>
               <p>
@@ -199,8 +191,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
             <article
               class="feature-card"
               role="listitem"
-              transition:name="feature-card-3"
-            >
+              transition:name="feature-card-3">
               <div class="feature-icon" aria-hidden="true">📚</div>
               <h3>Peta Jalan Terstruktur</h3>
               <p>
@@ -212,8 +203,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
             <article
               class="feature-card"
               role="listitem"
-              transition:name="feature-card-4"
-            >
+              transition:name="feature-card-4">
               <div class="feature-icon" aria-hidden="true">🧠</div>
               <h3>Berpikir dalam Jepang</h3>
               <p>
@@ -230,8 +220,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
         class="docs-preview-section loading"
         aria-labelledby="docs-title"
         transition:name="docs-section"
-        data-lazy
-      >
+        data-lazy>
         <div class="docs-container">
           <h2 class="docs-title" id="docs-title" transition:name="docs-title">
             Panduan & Dokumentasi
@@ -245,8 +234,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
               class="docs-button"
               onclick="goToPosts()"
               aria-label="Lihat semua dokumentasi dan panduan"
-              transition:name="docs-button"
-            >
+              transition:name="docs-button">
               Lihat Dokumentasi
               <svg
                 width="20"
@@ -257,8 +245,7 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                aria-hidden="true"
-              >
+                aria-hidden="true">
                 <path d="M5 12h14M12 5l7 7-7 7"></path>
               </svg>
             </button>
@@ -270,15 +257,17 @@ import homepageOgImage from "../assets/images/Logo Discord.png";
     <!-- Invitation Modal - Load only when needed -->
     <InvitationModal client:idle />
 
-    <script fetchpriority="auto" is:inline src="/scripts/hompage-script.js"
-    ></script>
+    <script
+      fetchpriority="auto"
+      is:inline
+      src="/src/scripts/core/hompage-script.js"></script>
 
     <!-- Bundle Splitting: Load performance monitoring as separate chunk -->
     <script>
       // Load performance monitoring after page load for better performance
       window.addEventListener("load", () => {
         // Dynamic import for performance monitoring (separate chunk)
-        import("../utils/performance-monitor.js")
+        import("../utils/performance/performance-monitor.js")
           .then((module) => {
             module.initPerformanceMonitoring();
           })

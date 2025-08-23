@@ -1,18 +1,20 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import HeadSEO from "../components/public-components/HeadSEO.astro";
 ---
 
 <!doctype html>
 <html lang="id">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script is:inline src="/scripts/favicon.js" defer></script>
-    <title>Undangan</title>
-    <!-- Set page title directly -->
-    <script>
-      document.title = "Undangan";
-    </script>
+    <HeadSEO
+      title="Undangan Discord GoRakuDo"
+      description="Bergabung dengan komunitas immersion bahasa Jepang terbesar Indonesia di Discord"
+      pageType="website"
+      lang="id"
+      aiPageType="discord"
+      enableAIOptimizations={true}
+    />
+    <!-- Favicon script removed - file not found -->
     <link
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
       rel="stylesheet"
@@ -319,8 +321,7 @@ import { ViewTransitions } from "astro:transitions";
         href="https://discord.gg/j8qmYPAGQh"
         target="_blank"
         rel="noopener noreferrer"
-        class="discord-link"
-      >
+        class="discord-link">
         <div class="discord-header">Alamat Komunitas Digital Kami:</div>
         <div class="discord-url">
           discord.gg/j8qmYPAGQh <span class="arrow">→</span>
@@ -343,26 +344,22 @@ import { ViewTransitions } from "astro:transitions";
     <!-- Floating background elements -->
     <div
       class="floating-particle"
-      style="top: 10%; left: 10%; animation: float 6s ease-in-out infinite;"
-    >
+      style="top: 10%; left: 10%; animation: float 6s ease-in-out infinite;">
       🌸
     </div>
     <div
       class="floating-particle"
-      style="top: 20%; right: 10%; animation: float 8s ease-in-out infinite 2s;"
-    >
+      style="top: 20%; right: 10%; animation: float 8s ease-in-out infinite 2s;">
       ⭐
     </div>
     <div
       class="floating-particle"
-      style="bottom: 20%; left: 20%; animation: float 7s ease-in-out infinite 1s;"
-    >
+      style="bottom: 20%; left: 20%; animation: float 7s ease-in-out infinite 1s;">
       🎌
     </div>
     <div
       class="floating-particle"
-      style="bottom: 30%; right: 20%; animation: float 9s ease-in-out infinite 3s;"
-    >
+      style="bottom: 30%; right: 20%; animation: float 9s ease-in-out infinite 3s;">
       🌊
     </div>
 

@@ -1,0 +1,1121 @@
+---
+// Modern Breadcrumb Component with Mind Map Structure Integration
+// Redesigned with Tailwind v4.1 principles for modern, pill-shaped design
+// Priority 4: Enhanced breadcrumb navigation leveraging mind map structure
+// 100% safe implementation with graceful fallbacks
+
+import type { CollectionEntry } from "astro:content";
+import {
+  getMindMapBranch,
+  getUnderstandingLevel,
+  getLearningStage,
+  generateBreadcrumbPath,
+  type MindMapBranch,
+  type UnderstandingLevel,
+  type LearningStage,
+} from "../../utils/content-structure";
+
+export interface Props {
+  post?: CollectionEntry<"blog">;
+  currentPath?: string;
+  showHome?: boolean;
+  showMindMap?: boolean;
+  className?: string;
+}
+
+const {
+  post,
+  currentPath = "",
+  showHome = true,
+  showMindMap = true,
+  className = "",
+} = Astro.props;
+
+// Generate breadcrumb items based on mind map structure
+let breadcrumbItems: Array<{
+  title: string;
+  url: string;
+  icon: string;
+  color: string;
+  isActive: boolean;
+}> = [];
+
+try {
+  if (post && showMindMap) {
+    // Mind map structure breadcrumbs
+    const mindMapBranch = getMindMapBranch(post.data.mindMapBranch);
+    const understandingLevel = getUnderstandingLevel(
+      post.data.understandingLevel
+    );
+    const learningStage = getLearningStage(post.data.learningStage);
+
+    if (mindMapBranch) {
+      breadcrumbItems.push({
+        title: mindMapBranch.title,
+        url: `/docs?branch=${mindMapBranch.id}`,
+        icon: mindMapBranch.icon,
+        color: mindMapBranch.color,
+        isActive: false,
+      });
+    }
+
+    if (understandingLevel) {
+      breadcrumbItems.push({
+        title: understandingLevel.title,
+        url: `/docs?level=${understandingLevel.id}`,
+        icon: understandingLevel.icon,
+        color: understandingLevel.color,
+        isActive: false,
+      });
+    }
+
+    if (learningStage) {
+      breadcrumbItems.push({
+        title: learningStage.title,
+        url: `/docs?stage=${learningStage.id}`,
+        icon: learningStage.icon,
+        color: learningStage.color,
+        isActive: false,
+      });
+    }
+
+    // Add current post as active item
+    breadcrumbItems.push({
+      title: post.data.title,
+      url: `/docs/${post.slug}`,
+      icon: "📄",
+      color: "var(--color-muted-foreground)",
+      isActive: true,
+    });
+  } else {
+    // Simple breadcrumbs for non-post pages
+    const pathSegments = currentPath.split("/").filter(Boolean);
+
+    if (showHome) {
+      breadcrumbItems.push({
+        title: "Beranda",
+        url: "/",
+        icon: "🏠",
+        color: "var(--color-primary)",
+        isActive: false,
+      });
+    }
+
+    let currentUrl = "";
+    pathSegments.forEach((segment, index) => {
+      currentUrl += `/${segment}`;
+      const isLast = index === pathSegments.length - 1;
+
+      // Convert segment to readable title
+      let title = segment;
+      if (segment === "docs") title = "Dokumentasi";
+      else if (segment === "discord") title = "Discord";
+
+      breadcrumbItems.push({
+        title,
+        url: currentUrl,
+        icon: segment === "docs" ? "📚" : segment === "discord" ? "💬" : "📄",
+        color: isLast
+          ? "var(--color-muted-foreground)"
+          : "var(--color-primary)",
+        isActive: isLast,
+      });
+    });
+  }
+} catch (error) {
+  console.warn("⚠️ Breadcrumb generation failed:", error);
+  // Fallback to simple breadcrumbs
+  breadcrumbItems = [
+    {
+      title: "Beranda",
+      url: "/",
+      icon: "🏠",
+      color: "var(--color-primary)",
+      isActive: false,
+    },
+    {
+      title: "Dokumentasi",
+      url: "/docs",
+      icon: "📚",
+      color: "var(--color-muted-foreground)",
+      isActive: true,
+    },
+  ];
+}
+
+// Generate structured data for SEO
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbItems.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.title,
+    item: `${Astro.site}${item.url}`,
+  })),
+};
+---
+
+<!-- Modern Breadcrumb Navigation with Pill Design -->
+<nav
+  class={`modern-breadcrumb-nav ${className}`}
+  aria-label="Breadcrumb navigation - swipe horizontally to view all items"
+  data-component="breadcrumb"
+  role="navigation">
+  <!-- Main breadcrumb container with responsive overflow handling -->
+  <div class="breadcrumb-container" aria-describedby="scroll-instructions">
+    <div class="breadcrumb-list" role="list" tabindex="0">
+      {
+        breadcrumbItems.map((item, index) => (
+          <div class="breadcrumb-item" data-item-index={index}>
+            {/* Subtle chevron separator (only for non-first items) */}
+            {index > 0 && (
+              <div class="breadcrumb-separator" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="chevron-icon">
+                  <path
+                    d="M9 18L15 12L9 6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            )}
+
+            {/* Pill-shaped breadcrumb item */}
+            {item.isActive ? (
+              <span
+                class="breadcrumb-pill breadcrumb-current"
+                style={`--item-color: ${item.color}`}
+                aria-current="page"
+                data-active="true">
+                <span class="breadcrumb-icon" role="img" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span class="breadcrumb-text" title={item.title}>
+                  {item.title}
+                </span>
+              </span>
+            ) : (
+              <a
+                href={item.url}
+                class="breadcrumb-pill breadcrumb-link"
+                style={`--item-color: ${item.color}`}
+                data-active="false">
+                <span class="breadcrumb-icon" role="img" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span class="breadcrumb-text" title={item.title}>
+                  {item.title}
+                </span>
+              </a>
+            )}
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Mobile overflow indicator (shows when breadcrumbs are truncated) -->
+    <div class="mobile-overflow-indicator" aria-hidden="true">
+      <span class="overflow-dots">...</span>
+    </div>
+
+    <!-- Scroll direction indicators -->
+    <div
+      class="scroll-indicator scroll-indicator-left"
+      aria-hidden="true"
+      aria-label="Scroll left to see more breadcrumb items">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M15 18L9 12L15 6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <div
+      class="scroll-indicator scroll-indicator-right"
+      aria-hidden="true"
+      aria-label="Scroll right to see more breadcrumb items">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M9 18L15 12L9 6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </div>
+
+    <!-- Hidden instructions for screen readers -->
+    <div id="scroll-instructions" class="sr-only">
+      This breadcrumb navigation can be scrolled horizontally. Use swipe
+      gestures on touch devices or arrow keys on keyboard to navigate through
+      all items.
+    </div>
+  </div>
+</nav>
+
+<!-- SEO structured data -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+<!-- Scroll detection and indicator management -->
+<script>
+  // Breadcrumb scroll detection and indicator management
+  class BreadcrumbScrollManager {
+    private container: HTMLElement | null;
+    private list: HTMLElement | null;
+    private leftIndicator: HTMLElement | null;
+    private rightIndicator: HTMLElement | null;
+    private hasShownHint: boolean = false;
+
+    constructor() {
+      this.container = document.querySelector(".breadcrumb-container");
+      this.list = document.querySelector(".breadcrumb-list");
+      this.leftIndicator = document.querySelector(".scroll-indicator-left");
+      this.rightIndicator = document.querySelector(".scroll-indicator-right");
+
+      if (!this.container || !this.list) return;
+
+      this.init();
+    }
+
+    init() {
+      if (!this.container || !this.list) return;
+
+      // Check overflow on load
+      this.checkOverflow();
+
+      // Listen for scroll events
+      this.list.addEventListener("scroll", () => {
+        this.checkOverflow();
+      });
+
+      // Listen for resize events
+      window.addEventListener("resize", () => {
+        this.checkOverflow();
+      });
+
+      // Listen for orientation change
+      window.addEventListener("orientationchange", () => {
+        setTimeout(() => this.checkOverflow(), 100);
+      });
+
+      // Add touch feedback
+      this.addTouchFeedback();
+    }
+
+    checkOverflow() {
+      if (!this.container || !this.list) return;
+
+      const scrollLeft = this.list.scrollLeft;
+      const scrollWidth = this.list.scrollWidth;
+      const clientWidth = this.list.clientWidth;
+      const maxScrollLeft = scrollWidth - clientWidth;
+
+      // Check if content overflows
+      const hasOverflow = scrollWidth > clientWidth;
+
+      // Check scroll position
+      const canScrollLeft = scrollLeft > 0;
+      const canScrollRight = scrollLeft < maxScrollLeft;
+
+      // Update container classes
+      this.container.classList.toggle("has-overflow-left", canScrollLeft);
+      this.container.classList.toggle("has-overflow-right", canScrollRight);
+
+      // Add subtle animation for first-time users
+      if (hasOverflow && !this.hasShownHint) {
+        this.showScrollHint();
+      }
+    }
+
+    showScrollHint() {
+      if (!this.container) return;
+
+      // Add a subtle bounce animation to indicate scrollability
+      this.container.style.animation = "scroll-hint-bounce 2s ease-in-out";
+      this.hasShownHint = true;
+
+      // Remove animation after completion
+      setTimeout(() => {
+        if (this.container) {
+          this.container.style.animation = "";
+        }
+      }, 2000);
+    }
+
+    addTouchFeedback() {
+      if (!this.container || !this.list) return;
+
+      let startX = 0;
+      let startY = 0;
+      let isScrolling = false;
+
+      this.list.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isScrolling = false;
+      });
+
+      this.list.addEventListener("touchmove", (e) => {
+        if (!isScrolling) {
+          const deltaX = Math.abs(e.touches[0].clientX - startX);
+          const deltaY = Math.abs(e.touches[0].clientY - startY);
+
+          if (deltaX > deltaY && deltaX > 10) {
+            isScrolling = true;
+            // Add visual feedback for horizontal scrolling
+            this.container?.classList.add("is-scrolling");
+          }
+        }
+      });
+
+      this.list.addEventListener("touchend", () => {
+        setTimeout(() => {
+          this.container?.classList.remove("is-scrolling");
+        }, 300);
+      });
+    }
+  }
+
+  // Initialize when DOM is ready
+  document.addEventListener("DOMContentLoaded", () => {
+    new BreadcrumbScrollManager();
+  });
+</script>
+
+<style>
+  /* ========== MODERN BREADCRUMB STYLES WITH TAILWIND V4.1 PRINCIPLES ========== */
+
+  /* Main navigation container */
+  .modern-breadcrumb-nav {
+    /* Using logical margin properties for better internationalization */
+    margin-block: 1rem;
+    padding-block: 0.75rem;
+    position: relative;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    place-self: center;
+  }
+
+  /* Breadcrumb container with responsive overflow handling */
+  .breadcrumb-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+
+    /* Visual scroll indicators - fade edges when content overflows */
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2rem; /* 32px fade width */
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Left fade edge - indicates content to the left */
+    &::before {
+      left: 0;
+      background: linear-gradient(
+        to right,
+        var(rgba(25, 25, 25, 0.75)) 0%,
+        transparent 100%
+      );
+    }
+
+    /* Right fade edge - indicates content to the right */
+    &::after {
+      right: 0;
+      background: linear-gradient(
+        to left,
+        var(rgba(25, 25, 25, 0.75)) 0%,
+        transparent 100%
+      );
+    }
+
+    /* Show fade edges when content overflows */
+    &.has-overflow-left::before {
+      opacity: 1;
+    }
+
+    &.has-overflow-right::after {
+      opacity: 1;
+    }
+  }
+
+  /* Main breadcrumb list - horizontal flex layout */
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(0.25rem, 1vw, 0.5rem); /* Responsive gap: 4px to 8px */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.875rem; /* 14px base from globals.css */
+    line-height: 1.5;
+    width: 100%;
+
+    /* Enhanced smooth scrolling for mobile overflow */
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+
+    /* Enhanced smooth scroll behavior */
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity; /* Changed from mandatory for better UX */
+    scroll-padding: 0.5rem; /* Add padding for better scroll positioning */
+
+    /* Touch-friendly scrolling */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain; /* Prevent overscroll on mobile */
+  }
+
+  /* Hide scrollbar for Webkit browsers */
+  .breadcrumb-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Individual breadcrumb item container */
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.25rem, 1vw, 0.5rem); /* Responsive gap: 4px to 8px */
+    flex-shrink: 0;
+    min-width: 0;
+    scroll-snap-align: start;
+
+    /* Enhanced touch target for mobile accessibility */
+    min-height: 2.75rem; /* 44px - minimum touch target for accessibility */
+
+    /* Entrance animation with staggered delay */
+    animation: breadcrumb-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  }
+
+  /* Staggered animation delays for each item */
+  .breadcrumb-item:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .breadcrumb-item:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .breadcrumb-item:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  .breadcrumb-item:nth-child(4) {
+    animation-delay: 0.2s;
+  }
+  .breadcrumb-item:nth-child(5) {
+    animation-delay: 0.25s;
+  }
+
+  /* ========== PILL-SHAPED BREADCRUMB ITEMS ========== */
+
+  /* Base pill styles for both links and current page */
+  .breadcrumb-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(0.375rem, 1.5vw, 0.625rem); /* Responsive gap: 6px to 10px */
+    padding: 0.5rem clamp(0.75rem, 2vw, 1.25rem); /* Responsive padding: 12px to 20px */
+    border-radius: 9999px; /* Full pill shape */
+    text-decoration: none;
+    font-weight: 500; /* Medium weight from globals.css */
+    font-size: 0.875rem;
+    line-height: 1.25;
+
+    /* Modern backdrop blur effect */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    /* Smooth transitions for all interactive properties */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Prevent text selection and ensure proper cursor */
+    user-select: none;
+    -webkit-user-select: none;
+
+    /* Modern box model */
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+
+    /* Ensure minimum touch target size (44px) for accessibility */
+    min-height: 2.75rem; /* 44px */
+
+    /* Prevent shrinking */
+    flex-shrink: 0;
+  }
+
+  /* Interactive breadcrumb links */
+  .breadcrumb-link {
+    /* Use CSS custom properties for dynamic theming */
+    color: color-mix(in srgb, var(--item-color) 85%, var(--color-foreground));
+    background-color: color-mix(in srgb, var(--color-muted) 40%, transparent);
+    border: 1px solid color-mix(in srgb, var(--item-color) 20%, transparent);
+
+    /* Modern focus-visible styles */
+    outline: none;
+
+    /* Subtle shadow for depth */
+    box-shadow:
+      0 1px 3px color-mix(in srgb, var(--item-color) 10%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
+  }
+
+  /* Enhanced hover state for links */
+  .breadcrumb-link:hover {
+    /* Lift effect with stronger shadow */
+    transform: translateY(-1px) scale(1.02);
+
+    /* Enhanced background and border */
+    background-color: color-mix(
+      in srgb,
+      var(--item-color) 15%,
+      var(--color-card)
+    );
+    border-color: color-mix(in srgb, var(--item-color) 40%, transparent);
+
+    /* Glowing shadow effect */
+    box-shadow:
+      0 4px 12px color-mix(in srgb, var(--item-color) 25%, transparent),
+      0 2px 4px color-mix(in srgb, var(--item-color) 15%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 15%, transparent);
+
+    /* Slightly brighter text */
+    color: var(--item-color);
+  }
+
+  /* Active/pressed state for links */
+  .breadcrumb-link:active {
+    transform: translateY(0) scale(1);
+    transition-duration: 0.1s;
+  }
+
+  /* Current page indicator (non-interactive) */
+  .breadcrumb-current {
+    color: var(--color-foreground);
+    background-color: color-mix(
+      in srgb,
+      var(--item-color) 10%,
+      var(--color-accent)
+    );
+    border: 1px solid
+      color-mix(in srgb, var(--item-color) 30%, var(--color-border));
+
+    /* Distinct styling to show it's current */
+    font-weight: 600; /* Semibold for emphasis */
+
+    /* Subtle glow effect */
+    box-shadow:
+      0 2px 8px color-mix(in srgb, var(--item-color) 20%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
+
+    /* Prevent any interaction */
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ========== CHEVRON SEPARATORS ========== */
+
+  .breadcrumb-separator {
+    display: flex;
+    align-items: center;
+    color: var(--color-muted-foreground);
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    margin: 0 0.125rem; /* 2px horizontal margin */
+  }
+
+  /* Hover effect on separator when hovering breadcrumb item */
+  .breadcrumb-item:hover .breadcrumb-separator {
+    opacity: 0.8;
+    transform: translateX(2px);
+    color: color-mix(
+      in srgb,
+      var(--item-color) 70%,
+      var(--color-muted-foreground)
+    );
+  }
+
+  .chevron-icon {
+    width: 0.875rem; /* 14px */
+    height: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  /* ========== ICON AND TEXT STYLING ========== */
+
+  .breadcrumb-icon {
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+
+    /* Subtle animation on hover */
+    transition: transform 0.2s ease;
+  }
+
+  /* Icon bounce effect on hover */
+  .breadcrumb-link:hover .breadcrumb-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .breadcrumb-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: clamp(
+      8rem,
+      20vw,
+      20rem
+    ); /* Fluid responsive width: 128px to 320px */
+
+    /* Smooth text transition */
+    transition: max-width 0.3s ease;
+  }
+
+  /* Show full text on hover for better accessibility */
+  .breadcrumb-link:hover .breadcrumb-text,
+  .breadcrumb-current:hover .breadcrumb-text {
+    max-width: none;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  /* ========== FOCUS STATES FOR ACCESSIBILITY ========== */
+
+  .breadcrumb-link:focus-visible {
+    /* Modern focus ring using CSS custom properties */
+    outline: 2px solid var(--item-color);
+    outline-offset: 2px;
+
+    /* Enhanced focus shadow */
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--item-color) 25%, transparent),
+      0 4px 12px color-mix(in srgb, var(--item-color) 30%, transparent);
+  }
+
+  /* ========== RESPONSIVE DESIGN ========== */
+
+  /* Tablet styles (768px and below) */
+  @media (max-width: 768px) {
+    .modern-breadcrumb-nav {
+      margin-block: 0.5rem;
+      padding-block: 0.5rem;
+    }
+
+    .breadcrumb-list {
+      gap: 0.25rem; /* Tighter spacing on mobile */
+      font-size: 0.8125rem; /* 13px */
+    }
+
+    .breadcrumb-pill {
+      padding: 0.375rem clamp(0.625rem, 3vw, 1rem); /* Responsive padding: 10px to 16px */
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      min-height: 2.5rem; /* 40px - smaller touch target acceptable on mobile */
+    }
+
+    .breadcrumb-text {
+      max-width: clamp(
+        10rem,
+        25vw,
+        16rem
+      ); /* Fluid responsive width: 160px to 256px */
+    }
+
+    .chevron-icon {
+      width: 0.75rem; /* 12px */
+      height: 0.75rem;
+    }
+  }
+
+  /* Mobile styles (480px and below) */
+  @media (max-width: 480px) {
+    .breadcrumb-list {
+      gap: 0.25rem; /* 4px - slightly increased for better touch targets */
+    }
+
+    .breadcrumb-pill {
+      padding: 0.375rem clamp(0.5rem, 4vw, 0.875rem); /* Responsive padding: 8px to 14px */
+      gap: 0.375rem;
+      font-size: 0.8125rem; /* 13px - slightly larger for better readability */
+      min-height: 2.75rem; /* 44px - improved touch target for accessibility */
+    }
+
+    .breadcrumb-text {
+      max-width: clamp(
+        8rem,
+        30vw,
+        12rem
+      ); /* Fluid responsive width: 128px to 192px */
+    }
+
+    .breadcrumb-icon {
+      font-size: 0.9375rem; /* 15px - slightly larger for better visibility */
+    }
+
+    /* Smart truncation for very long breadcrumbs - show more items */
+    .breadcrumb-item:nth-child(n + 5) {
+      display: none; /* Show 4 items instead of 3 */
+    }
+
+    /* Show overflow indicator when items are hidden */
+    .breadcrumb-item:nth-child(4) ~ .mobile-overflow-indicator {
+      display: flex;
+    }
+  }
+
+  /* Extra small screens (360px and below) */
+  @media (max-width: 360px) {
+    .breadcrumb-list {
+      gap: 0.1875rem; /* 3px - tight spacing for very small screens */
+    }
+
+    .breadcrumb-pill {
+      padding: 0.3125rem clamp(0.375rem, 5vw, 0.75rem); /* Responsive padding: 6px to 12px */
+      gap: 0.3125rem;
+      font-size: 0.78125rem; /* 12.5px - maintain readability */
+      min-height: 2.625rem; /* 42px - still good touch target */
+    }
+
+    .breadcrumb-text {
+      max-width: clamp(
+        6rem,
+        35vw,
+        10rem
+      ); /* Fluid responsive width: 96px to 160px */
+    }
+
+    .breadcrumb-icon {
+      font-size: 0.875rem; /* 14px - maintain icon visibility */
+    }
+
+    /* Progressive truncation - show 3 items on very small screens */
+    .breadcrumb-item:nth-child(n + 4) {
+      display: none;
+    }
+
+    .breadcrumb-item:nth-child(3) ~ .mobile-overflow-indicator {
+      display: flex;
+    }
+  }
+
+  /* Ultra small screens (320px and below) */
+  @media (max-width: 320px) {
+    .breadcrumb-pill {
+      padding: 0.25rem clamp(0.25rem, 6vw, 0.625rem); /* Responsive padding: 4px to 10px */
+      gap: 0.25rem;
+      font-size: 0.75rem; /* 12px - maintain minimum readability */
+      min-height: 2.5rem; /* 40px - minimum acceptable touch target */
+    }
+
+    .breadcrumb-text {
+      max-width: clamp(
+        5rem,
+        40vw,
+        8rem
+      ); /* Fluid responsive width: 80px to 128px */
+    }
+
+    .breadcrumb-icon {
+      font-size: 0.8125rem; /* 13px - maintain icon visibility */
+    }
+
+    /* Show 2 items on ultra small screens */
+    .breadcrumb-item:nth-child(n + 3) {
+      display: none;
+    }
+
+    .breadcrumb-item:nth-child(2) ~ .mobile-overflow-indicator {
+      display: flex;
+    }
+  }
+
+  /* ========== MOBILE OVERFLOW INDICATOR ========== */
+
+  .mobile-overflow-indicator {
+    display: none; /* Hidden by default, shown via media queries */
+    align-items: center;
+    padding: 0.375rem 0.75rem; /* 6px 12px - increased for better visibility */
+    color: var(--color-muted-foreground);
+    font-size: 0.8125rem; /* 13px - increased for better readability */
+    font-weight: 500;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--color-background) 30%,
+      var(--color-background) 100%
+    );
+    pointer-events: none;
+    border-radius: 0.375rem; /* 6px - rounded corners for consistency */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* ========== SCROLL DIRECTION INDICATORS ========== */
+
+  .scroll-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem; /* 32px */
+    height: 2rem; /* 32px */
+    background: color-mix(in srgb, var(--color-background) 90%, transparent);
+    border-radius: 50%;
+    color: var(--color-muted-foreground);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 15;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px
+      color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  }
+
+  .scroll-indicator-left {
+    left: 0.5rem; /* 8px from left edge */
+  }
+
+  .scroll-indicator-right {
+    right: 0.5rem; /* 8px from right edge */
+  }
+
+  /* Show indicators when content overflows */
+  .breadcrumb-container.has-overflow-left .scroll-indicator-left {
+    opacity: 0.8;
+  }
+
+  .breadcrumb-container.has-overflow-right .scroll-indicator-right {
+    opacity: 0.8;
+  }
+
+  /* Hover effect for better visibility */
+  .scroll-indicator:hover {
+    opacity: 1 !important;
+    transform: translateY(-50%) scale(1.1);
+    color: var(--color-foreground);
+  }
+
+  .overflow-dots {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+  }
+
+  /* Enhanced overflow indicator for different screen sizes */
+  @media (max-width: 480px) {
+    .mobile-overflow-indicator {
+      padding: 0.3125rem 0.625rem; /* 5px 10px */
+      font-size: 0.78125rem; /* 12.5px */
+    }
+  }
+
+  @media (max-width: 360px) {
+    .mobile-overflow-indicator {
+      padding: 0.25rem 0.5rem; /* 4px 8px */
+      font-size: 0.75rem; /* 12px */
+    }
+  }
+
+  @media (max-width: 320px) {
+    .mobile-overflow-indicator {
+      padding: 0.1875rem 0.375rem; /* 3px 6px */
+      font-size: 0.6875rem; /* 11px */
+    }
+  }
+
+  /* ========== ANIMATIONS ========== */
+
+  @keyframes breadcrumb-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Scroll hint animation for first-time users */
+  @keyframes scroll-hint-bounce {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  /* Touch feedback animation */
+  .breadcrumb-container.is-scrolling {
+    transform: scale(0.98);
+    transition: transform 0.2s ease;
+  }
+
+  /* Scroll indicator pulse animation */
+  @keyframes scroll-indicator-pulse {
+    0%,
+    100% {
+      opacity: 0.8;
+      transform: translateY(-50%) scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+  }
+
+  /* Apply pulse animation to indicators on first load */
+  .breadcrumb-container.has-overflow-right .scroll-indicator-right {
+    animation: scroll-indicator-pulse 2s ease-in-out 1s;
+  }
+
+  /* ========== DARK MODE ENHANCEMENTS ========== */
+
+  @media (prefers-color-scheme: dark) {
+    .breadcrumb-link {
+      /* Enhanced contrast in dark mode */
+      background-color: color-mix(in srgb, var(--color-card) 60%, transparent);
+      box-shadow:
+        0 1px 3px color-mix(in srgb, black 20%, transparent),
+        inset 0 1px 0 color-mix(in srgb, white 5%, transparent);
+    }
+
+    .breadcrumb-link:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--item-color) 12%,
+        var(--color-card)
+      );
+      box-shadow:
+        0 4px 12px color-mix(in srgb, var(--item-color) 30%, transparent),
+        0 2px 4px color-mix(in srgb, black 25%, transparent),
+        inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
+    }
+
+    .breadcrumb-current {
+      background-color: color-mix(
+        in srgb,
+        var(--item-color) 8%,
+        var(--color-accent)
+      );
+      box-shadow:
+        0 2px 8px color-mix(in srgb, var(--item-color) 25%, transparent),
+        inset 0 1px 0 color-mix(in srgb, white 5%, transparent);
+    }
+  }
+
+  /* ========== REDUCED MOTION SUPPORT ========== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .breadcrumb-item,
+    .breadcrumb-pill,
+    .breadcrumb-separator,
+    .breadcrumb-icon {
+      animation: none;
+      transition-duration: 0.01s;
+    }
+
+    .breadcrumb-link:hover {
+      transform: none;
+    }
+
+    .breadcrumb-link:hover .breadcrumb-icon {
+      transform: none;
+    }
+  }
+
+  /* ========== HIGH CONTRAST MODE SUPPORT ========== */
+
+  @media (prefers-contrast: high) {
+    .breadcrumb-pill {
+      border-width: 2px;
+    }
+
+    .breadcrumb-link {
+      border-color: var(--item-color);
+    }
+
+    .breadcrumb-current {
+      border-color: var(--color-foreground);
+      background-color: var(--color-background);
+    }
+
+    .scroll-indicator {
+      border: 2px solid var(--color-foreground);
+      background-color: var(--color-background);
+    }
+  }
+
+  /* ========== SCREEN READER ONLY ========== */
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ========== PRINT STYLES ========== */
+
+  @media print {
+    .modern-breadcrumb-nav {
+      background: none !important;
+      box-shadow: none !important;
+    }
+
+    .breadcrumb-pill {
+      background: none !important;
+      border: 1px solid #ccc !important;
+      box-shadow: none !important;
+    }
+
+    .breadcrumb-link:hover {
+      transform: none !important;
+    }
+  }
+</style>
