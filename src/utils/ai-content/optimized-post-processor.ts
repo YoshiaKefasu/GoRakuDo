@@ -16,7 +16,7 @@ import {
 
 // Post processing result interface
 export interface PostProcessingResult {
-  post: CollectionEntry<"blog">;
+  post: CollectionEntry<"docs">;
   enhanced: boolean;
   processingTime: number;
   errors: string[];
@@ -49,7 +49,7 @@ export class OptimizedPostProcessor {
    * Process a single post with optimization
    */
   async processPost(
-    post: CollectionEntry<"blog">,
+    post: CollectionEntry<"docs">,
   ): Promise<PostProcessingResult> {
     const startTime = Date.now();
     this.reset();
@@ -95,7 +95,7 @@ export class OptimizedPostProcessor {
    * Process multiple posts with optimization
    */
   async processMultiplePosts(
-    posts: CollectionEntry<"blog">[],
+    posts: CollectionEntry<"docs">[],
   ): Promise<PostProcessingResult[]> {
     const results: PostProcessingResult[] = [];
 
@@ -127,11 +127,11 @@ export class OptimizedPostProcessor {
    * Enhance a single post with internal links
    */
   private async enhancePost(
-    post: CollectionEntry<"blog">,
-  ): Promise<CollectionEntry<"blog">> {
+    post: CollectionEntry<"docs">,
+  ): Promise<CollectionEntry<"docs">> {
     try {
       // Get all posts for internal link generation
-      const allPosts = await getCollection("blog");
+      const allPosts = await getCollection("docs");
 
       console.log(`🔍 Starting post enhancement for "${post.slug}"`);
       console.log(`📊 Total posts available for linking: ${allPosts.length}`);
@@ -294,7 +294,7 @@ export class OptimizedPostProcessor {
   /**
    * Analyze post metadata
    */
-  private analyzePostMetadata(post: CollectionEntry<"blog">) {
+  private analyzePostMetadata(post: CollectionEntry<"docs">) {
     const content = post.body || "";
     const wordCount = content.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
@@ -349,11 +349,11 @@ export class OptimizedPostProcessor {
    * Generate related content for AI recommendations
    */
   private async generateRelatedContent(
-    post: CollectionEntry<"blog">,
+    post: CollectionEntry<"docs">,
   ): Promise<RelatedContent> {
     try {
       // Get all posts for comparison
-      const allPosts = await getCollection("blog");
+      const allPosts = await getCollection("docs");
 
       // Get semantic relationships
       const relationships = getRelatedContent(post, allPosts);
@@ -422,7 +422,7 @@ export class OptimizedPostProcessor {
   /**
    * Extract internal links from post content
    */
-  private extractInternalLinks(post: CollectionEntry<"blog">): Array<{
+  private extractInternalLinks(post: CollectionEntry<"docs">): Array<{
     slug: string;
     title: string;
     anchor?: string;
@@ -451,7 +451,7 @@ export class OptimizedPostProcessor {
  * Convenience function for single post processing
  */
 export async function processPostWithOptimization(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
 ): Promise<PostProcessingResult> {
   const processor = new OptimizedPostProcessor();
   return await processor.processPost(post);
@@ -462,7 +462,7 @@ export async function processPostWithOptimization(
  * Convenience function for batch processing
  */
 export async function processMultiplePostsWithOptimization(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
 ): Promise<PostProcessingResult[]> {
   const processor = new OptimizedPostProcessor();
   return await processor.processMultiplePosts(posts);

@@ -7,6 +7,7 @@
 import type { AIRecommendationsProps } from "./types";
 // import { MindMapIntegrationUtils } from "../../../utils/ai-content/mind-map-integration";
 import "./AI-Recommendations.css";
+import { resolveContentPath, getCollectionMetadata } from "../../../utils/content-path-resolver";
 
 interface Props extends AIRecommendationsProps {
   sourcePost?: any; // Add source post for mind map integration
@@ -87,7 +88,26 @@ const processRecommendations = () => {
   }
 };
 
-const processedRecommendations = processRecommendations();
+// Enhance recommendations with dynamic path resolution
+const enhancedRecommendations = processRecommendations().map((rec: any) => {
+  try {
+    const resolvedPath = resolveContentPath({ slug: rec.targetSlug } as any)
+    return {
+      ...rec,
+      resolvedPath: resolvedPath.path,
+      collectionMetadata: getCollectionMetadata("blog")
+    }
+  } catch (error) {
+    console.warn(`Failed to resolve path for ${rec.targetSlug}:`, error)
+    return {
+      ...rec,
+      resolvedPath: `/docs/${rec.targetSlug}`,
+      collectionMetadata: getCollectionMetadata("blog")
+    }
+  }
+})
+
+const processedRecommendations = enhancedRecommendations;
 const hasRecommendations = processedRecommendations.length > 0;
 const shouldShowFallback =
   showFallback &&
@@ -136,7 +156,7 @@ const shouldShowFallback =
           <div class="ai-recommendations-grid">
             {processedRecommendations.map((rel: any) => (
               <a
-                href={`/docs/${rel.targetSlug}`}
+                href={rel.resolvedPath || `/docs/${rel.targetSlug}`}
                 class={`ai-recommendation-card ${rel.cardClass}`}>
                 <div class="ai-card-header">
                   <div class="ai-card-icon" set:html={rel.processedIcon} />

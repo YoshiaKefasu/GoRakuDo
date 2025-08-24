@@ -12,18 +12,23 @@ const seoData = {
   authorName: "Tim GoRakuDo",
 };
 
-// Redirect mapping for old URLs
+// Redirect mapping for old URLs with dynamic path support
+import { getCollectionMetadata } from "../utils/content-path-resolver";
+
+const collectionMetadata = getCollectionMetadata("blog")
+const defaultPath = collectionMetadata.basePath
+
 const redirectMap = {
-  "/docs/posts": "/docs",
-  "/docs/post": "/docs",
-  "/posts": "/docs",
-  "/post": "/docs",
-  "/blog": "/docs",
-  "/articles": "/docs",
-  "/guide": "/docs",
-  "/guides": "/docs",
-  "/tutorial": "/docs",
-  "/tutorials": "/docs",
+  "/docs/posts": defaultPath,
+  "/docs/post": defaultPath,
+  "/posts": defaultPath,
+  "/post": defaultPath,
+  "/blog": defaultPath,
+  "/articles": defaultPath,
+  "/guide": defaultPath,
+  "/guides": defaultPath,
+  "/tutorial": defaultPath,
+  "/tutorials": defaultPath,
 };
 
 // Get current path for potential redirect

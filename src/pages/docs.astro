@@ -1,76 +1,75 @@
 ---
-import { getCollection } from "astro:content";
-import HeadSEO from "../components/public-components/HeadSEO.astro";
-import Breadcrumb from "../components/public-components/Breadcrumb.astro";
-import Navbar from "../components/public-components/Navbar.vue";
-import "../styles/global.css";
-import "../styles/docs/docs.css";
+import { getCollection } from "astro:content"
+import HeadSEO from "../components/public-components/HeadSEO.astro"
+import Breadcrumb from "../components/public-components/Breadcrumb.astro"
+import Navbar from "../components/public-components/Navbar.vue"
+import "../styles/global.css"
+import "../styles/docs/docs.css"
+import { resolveContentPath, getCollectionMetadata } from "../utils/content-path-resolver"
 import {
   getContentWithAIMetadata,
   getContentByLearningStageWithAI,
   getContentByTypeWithAI,
   getContentRecommendationsWithAI,
-} from "../utils/ai-content";
-import { triggerAIBuildProcessing, testAIFunctionality } from "../utils/ai";
+} from "../utils/ai-content"
+import { triggerAIBuildProcessing, testAIFunctionality } from "../utils/ai"
 import {
   runOptimizedBuildProcessing,
   shouldEnableOptimizedProcessing,
-} from "../utils/ai-content";
+} from "../utils/ai-content"
 import {
   getPostsWithSemanticRelationships,
   getLearningPathRecommendations,
-} from "../utils/ai-content";
-import { searchDataGenerator } from "../utils/content/search-data-generator";
+} from "../utils/ai-content"
+import { searchDataGenerator } from "../utils/content/search-data-generator"
+import { CONTENT_CONFIG, ContentConfigUtils } from "../utils/content-config"
 
 // Get all blog posts with error handling
-let posts: any[] = [];
-let error: string | null = null;
+let posts: any[] = []
+let error: string | null = null
 
 try {
-  posts = await getCollection("blog");
-  console.log("✅ Posts loaded:", posts.length);
+  posts = await getCollection("docs")
+  console.log("✅ Posts loaded:", posts.length)
 } catch (err: any) {
-  console.error("❌ Error loading posts:", err);
-  error = err.message;
+  console.error("❌ Error loading posts:", err)
+  error = err.message
 }
 
 // Sort posts by published date (newest first)
 const sortedPosts = posts.sort(
   (a, b) =>
-    new Date(b.data.publishedDate).getTime() -
-    new Date(a.data.publishedDate).getTime()
-);
+    new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime()
+)
 
 // Pagination configuration
-const POSTS_PER_PAGE = 6; // Show 6 posts per page
-const totalPosts = sortedPosts.length;
-const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+const POSTS_PER_PAGE = 6 // Show 6 posts per page
+const totalPosts = sortedPosts.length
+const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
 
 // Get current page from URL or default to 1
-const currentPage = 1; // For static generation, we'll handle pagination client-side
+const currentPage = 1 // For static generation, we'll handle pagination client-side
 
 // Calculate pagination info
-const startIndex = 0;
-const endIndex = Math.min(POSTS_PER_PAGE, totalPosts);
-const currentPosts = sortedPosts.slice(startIndex, endIndex);
+const startIndex = 0
+const endIndex = Math.min(POSTS_PER_PAGE, totalPosts)
+const currentPosts = sortedPosts.slice(startIndex, endIndex)
 
-console.log("📄 Pagination Info:");
-console.log("- Total posts:", totalPosts);
-console.log("- Posts per page:", POSTS_PER_PAGE);
-console.log("- Total pages:", totalPages);
-console.log("- Current page:", currentPage);
-console.log("- Showing posts:", startIndex + 1, "to", endIndex);
+console.log("📄 Pagination Info:")
+console.log("- Total posts:", totalPosts)
+console.log("- Posts per page:", POSTS_PER_PAGE)
+console.log("- Total pages:", totalPages)
+console.log("- Current page:", currentPage)
+console.log("- Showing posts:", startIndex + 1, "to", endIndex)
 
 // Demonstrate automatic AI metadata generation (using all posts for metadata)
 // AI metadata generation started - temporarily disabled for build stability
-const postsWithAI = sortedPosts; // Use regular posts for now
+const postsWithAI = sortedPosts // Use regular posts for now
 // Posts with AI metadata: ${postsWithAI.length}
 
 const beginnerContent = sortedPosts.filter(
-  (post) =>
-    post.data.learningStage === "pemanasan" ||
-    post.data.difficulty === "beginner"
-);
+  (post) => post.data.learningStage === "pemanasan" || post.data.difficulty === "beginner"
+)
 // Beginner content found: ${beginnerContent.length}
 
 // Use the working content analysis system instead
@@ -80,16 +79,16 @@ const toolContent = sortedPosts.filter((post) => {
     post.data.category === "tools" ||
     post.data.title.toLowerCase().includes("anki") ||
     post.data.description.toLowerCase().includes("anki") ||
-    post.data.tags.some((tag) => tag.toLowerCase().includes("tool"));
-  return isTool;
-});
+    post.data.tags.some((tag) => tag.toLowerCase().includes("tool"))
+  return isTool
+})
 // Tool content found: ${toolContent.length}
 
 // Example recommendations - simplified for now
-const recommendations = sortedPosts.slice(0, 3);
+const recommendations = sortedPosts.slice(0, 3)
 
 // Fallback: If no recommendations, use all posts with AI metadata
-const finalRecommendations = recommendations;
+const finalRecommendations = recommendations
 
 // Generate semantic relationships (using all posts for relationships)
 const aiMetadataMap = new Map(
@@ -97,15 +96,25 @@ const aiMetadataMap = new Map(
     post.slug,
     { contentType: "guide", learningStage: "alphabet" },
   ])
-);
+)
+
+// Dynamic content path resolution for all posts
+const postsWithDynamicPaths = sortedPosts.map((post) => {
+  const resolvedPath = resolveContentPath(post)
+  return {
+    ...post,
+    resolvedPath: resolvedPath.path,
+    collectionMetadata: getCollectionMetadata("blog"),
+  }
+})
 const postsWithRelationships = getPostsWithSemanticRelationships(
   sortedPosts[0], // Pass first post as current post
   sortedPosts // Pass the actual posts array
-);
+)
 const learningPathRecommendations = getLearningPathRecommendations(
   sortedPosts[0], // Pass first post as current post
   sortedPosts // Pass the actual posts array
-);
+)
 
 // AI Metadata Generated Automatically
 
@@ -118,30 +127,29 @@ const learningPathRecommendations = getLearningPathRecommendations(
 
 // Indonesian-focused article content processing for comprehensive search
 function processArticleContent(content) {
-  if (!content)
-    return { cleanedText: "", sections: [], codeBlocks: [], images: [] };
+  if (!content) return { cleanedText: "", sections: [], codeBlocks: [], images: [] }
 
   // Extract different content types for specialized search
-  const codeBlocks = [];
-  const images = [];
-  const sections = [];
+  const codeBlocks = []
+  const images = []
+  const sections = []
 
   // Extract code blocks (focus on text content, not code)
-  const codeBlockRegex = /```[\s\S]*?```/g;
-  let codeMatch;
+  const codeBlockRegex = /```[\s\S]*?```/g
+  let codeMatch
   while ((codeMatch = codeBlockRegex.exec(content)) !== null) {
     codeBlocks.push({
       content: codeMatch[0],
       type: "code",
       position: codeMatch.index,
-    });
+    })
   }
 
   // Extract images with Indonesian alt text (prioritize Indonesian content)
-  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
-  let imageMatch;
+  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g
+  let imageMatch
   while ((imageMatch = imageRegex.exec(content)) !== null) {
-    const altText = imageMatch[1];
+    const altText = imageMatch[1]
     // Prioritize Indonesian alt text for search
     if (
       altText &&
@@ -155,7 +163,7 @@ function processArticleContent(content) {
         type: "image",
         position: imageMatch.index,
         priority: "high", // Indonesian alt text gets higher priority
-      });
+      })
     } else {
       images.push({
         alt: altText,
@@ -163,15 +171,15 @@ function processArticleContent(content) {
         type: "image",
         position: imageMatch.index,
         priority: "normal",
-      });
+      })
     }
   }
 
   // Extract sections (headers) with Indonesian content focus
-  const sectionRegex = /^(#{1,6})\s+(.+)$/gm;
-  let sectionMatch;
+  const sectionRegex = /^(#{1,6})\s+(.+)$/gm
+  let sectionMatch
   while ((sectionMatch = sectionRegex.exec(content)) !== null) {
-    const title = sectionMatch[2];
+    const title = sectionMatch[2]
     sections.push({
       level: sectionMatch[1].length,
       title: title,
@@ -179,7 +187,7 @@ function processArticleContent(content) {
       position: sectionMatch.index,
       // Prioritize Indonesian section titles
       isIndonesian: /[a-z]/.test(title) && !/[a-z]{3,}/.test(title), // Simple Indonesian detection
-    });
+    })
   }
 
   // Clean text for search (focus on text content and images, remove markdown)
@@ -194,7 +202,7 @@ function processArticleContent(content) {
     .replace(/`([^`]+)`/g, "$1") // Remove inline code formatting
     .replace(/\n+/g, " ") // Replace newlines with spaces
     .replace(/\s+/g, " ") // Normalize spaces
-    .trim();
+    .trim()
 
   return {
     cleanedText,
@@ -208,14 +216,14 @@ function processArticleContent(content) {
     indonesianContentRatio: calculateIndonesianContentRatio(cleanedText),
     hasIndonesianImages: images.some((img) => img.priority === "high"),
     hasIndonesianSections: sections.some((sec) => sec.isIndonesian),
-  };
+  }
 }
 
 // Calculate Indonesian content ratio for better search prioritization
 function calculateIndonesianContentRatio(text) {
-  if (!text) return 0;
+  if (!text) return 0
 
-  const words = text.toLowerCase().split(/\s+/);
+  const words = text.toLowerCase().split(/\s+/)
   const indonesianWords = words.filter(
     (word) =>
       // Common Indonesian words and patterns
@@ -230,19 +238,19 @@ function calculateIndonesianContentRatio(text) {
       /^(hiragana|katakana|kanji|nihongo|japanese|anime|manga|srs|anki|immersion|grammar|vocabulary|reading|writing|listening|speaking)$/.test(
         word
       )
-  );
+  )
 
-  return indonesianWords.length / words.length;
+  return indonesianWords.length / words.length
 }
 
 // Generate comprehensive search data at build time
 // Full article parsing with robust Indonesian-focused search capabilities
 const enhancedSearchData = sortedPosts.map((post) => {
   // Extract FULL article content for comprehensive search (no character limit)
-  const fullContent = post.body || "";
+  const fullContent = post.body || ""
 
   // Process full article content for comprehensive search
-  const processedContent = processArticleContent(fullContent);
+  const processedContent = processArticleContent(fullContent)
 
   // Extract comprehensive metadata for Indonesian-focused search
   const searchMetadata = {
@@ -309,17 +317,14 @@ const enhancedSearchData = sortedPosts.map((post) => {
     // Content analysis metadata
     isRecommended: post.data.aiMetadata?.isRecommended || false,
     isBeginner:
-      post.data.difficulty === "beginner" ||
-      post.data.learningStage === "pemanasan",
+      post.data.difficulty === "beginner" || post.data.learningStage === "pemanasan",
     isTool:
-      post.data.category === "tools" ||
-      post.data.title.toLowerCase().includes("anki"),
+      post.data.category === "tools" || post.data.title.toLowerCase().includes("anki"),
     hasCodeBlocks: processedContent.hasCode,
     hasImages: processedContent.hasImages,
     hasSections: processedContent.hasSections,
-    wordCount: processedContent.cleanedText
-      .split(/\s+/)
-      .filter((word) => word.length > 0).length,
+    wordCount: processedContent.cleanedText.split(/\s+/).filter((word) => word.length > 0)
+      .length,
 
     // Processed content for advanced search
     processedContent: {
@@ -330,39 +335,35 @@ const enhancedSearchData = sortedPosts.map((post) => {
       hasImages: processedContent.hasImages,
       hasSections: processedContent.hasSections,
     },
-  };
+  }
 
   return {
     slug: post.slug,
-    url: `/docs/${post.slug}`,
+    url: post.resolvedPath || `/docs/${post.slug}`,
     publishedDate: post.data.publishedDate,
     readTime: post.data.readTime,
     emoji: post.data.emoji,
     ...searchMetadata,
-  };
-});
+  }
+})
 
-console.log(
-  "🔍 Enhanced search data generated for",
-  enhancedSearchData.length,
-  "posts"
-);
+console.log("🔍 Enhanced search data generated for", enhancedSearchData.length, "posts")
 
 // Automated content extraction started
-const searchData = await searchDataGenerator.generateSearchData();
-const clientSearchData = searchDataGenerator.exportForClient();
+const searchData = await searchDataGenerator.generateSearchData()
+const clientSearchData = searchDataGenerator.exportForClient()
 // Automated content extraction completed
 
 // Trigger optimized AI processing during build
 if (shouldEnableOptimizedProcessing()) {
-  console.log("🚀 Running optimized build processing...");
-  const result = await runOptimizedBuildProcessing(sortedPosts);
+  console.log("🚀 Running optimized build processing...")
+  const result = await runOptimizedBuildProcessing(sortedPosts)
   console.log(
     `✅ Optimized processing completed: ${result.stats.processedPosts} posts processed, ${result.stats.skippedPosts} posts skipped`
-  );
+  )
 } else {
-  console.log("🔒 Optimized processing disabled - using fallback");
-  await triggerAIBuildProcessing();
+  console.log("🔒 Optimized processing disabled - using fallback")
+  await triggerAIBuildProcessing()
 }
 
 // SEO data with proper HeadSEO props
@@ -373,18 +374,18 @@ const seoData = {
   canonicalUrl: "https://gorakudo.org/docs",
   pageType: "website" as const,
   authorName: "Tim GoRakuDo",
-};
+}
 
 // Helper function to format numbers with K, M, B suffixes
 function formatNumber(num: number): string {
   if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(1) + "B";
+    return (num / 1000000000).toFixed(1) + "B"
   } else if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + "M";
+    return (num / 1000000).toFixed(1) + "M"
   } else if (num >= 1000) {
-    return (num / 1000).toFixed(1) + "K";
+    return (num / 1000).toFixed(1) + "K"
   }
-  return num.toString();
+  return num.toString()
 }
 
 // Helper function to format date - FIXED (Option A: Strict Type Safety)
@@ -393,25 +394,25 @@ function formatDate(dateString: string): string {
     year: "numeric",
     month: "long",
     day: "numeric",
-  };
+  }
 
   // Validate input
   if (!dateString || typeof dateString !== "string") {
-    console.warn("Invalid date string provided:", dateString);
-    return "Invalid Date";
+    console.warn("Invalid date string provided:", dateString)
+    return "Invalid Date"
   }
 
   try {
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     if (isNaN(date.getTime())) {
-      console.warn("Invalid date format:", dateString);
-      return "Invalid Date";
+      console.warn("Invalid date format:", dateString)
+      return "Invalid Date"
     }
 
-    return date.toLocaleDateString("id-ID", options);
+    return date.toLocaleDateString("id-ID", options)
   } catch (error) {
-    console.error("Date formatting error:", error);
-    return "Invalid Date";
+    console.error("Date formatting error:", error)
+    return "Invalid Date"
   }
 }
 ---
@@ -426,8 +427,7 @@ function formatDate(dateString: string): string {
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0/dist/fuse.min.js"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0/dist/fuse.min.js"></script>
     <style>
       /* Page-specific styles only - reusable styles moved to docs.css */
       /* Critical inline styles and page-specific overrides remain here */
@@ -569,8 +569,8 @@ function formatDate(dateString: string): string {
           <div class="posts-header">
             <h1>Dokumentasi & Panduan</h1>
             <p>
-              Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang
-              Anda. Dari langkah pertama hingga tingkat lanjut.
+              Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari
+              langkah pertama hingga tingkat lanjut.
             </p>
           </div>
 
@@ -596,11 +596,9 @@ function formatDate(dateString: string): string {
               />
               <div class="search-loading-indicator" id="searchLoadingIndicator">
                 <!-- Compact Google 2025 Loading Spinner -->
-                <div
-                  class="relative inline-flex items-center justify-center size-2.5">
+                <div class="relative inline-flex items-center justify-center size-2.5">
                   <!-- Outer ring with subtle gradient -->
-                  <div
-                    class="absolute inset-0 rounded-full border border-primary-200/20">
+                  <div class="absolute inset-0 rounded-full border border-primary-200/20">
                   </div>
                   <!-- Spinning inner ring -->
                   <div
@@ -611,60 +609,41 @@ function formatDate(dateString: string): string {
             </div>
 
             <div class="search-filters">
-              <button
-                class="filter-button filter-button-loading active"
-                data-filter="all">Semua ({formatNumber(totalPosts)})</button
+              {/* "Semua" button - always present */}
+              <button class="filter-button filter-button-loading active" data-filter="all"
+                >Semua ({formatNumber(totalPosts)})</button
               >
-              <button
-                class="filter-button filter-button-loading"
-                data-filter="beginner"
-                >Dokumentasi Pemula ({
-                  formatNumber(beginnerContent.length)
-                })</button
-              >
-              <button
-                class="filter-button filter-button-loading"
-                data-filter="getting-started">Memulai</button
-              >
-              <button
-                class="filter-button filter-button-loading"
-                data-filter="methodology">Metodologi</button
-              >
-              <button
-                class="filter-button filter-button-loading"
-                data-filter="tools"
-                >Tools ({formatNumber(toolContent.length)})</button
-              >
-              <button
-                class="filter-button filter-button-loading"
-                data-filter="advanced">Lanjutan</button
-              >
-              <button
-                class="filter-button filter-button-loading"
-                data-filter="recommendations"
-                >Rekomendasi AI ({
-                  formatNumber(finalRecommendations.length)
-                })</button
-              >
+
+              {/* Automatically generated filter buttons from content config */}
+              {
+                ContentConfigUtils.getSortedFilters()
+                  .filter((filter) => filter.id !== "all") // Exclude "all" button as it's handled above
+                  .map((filter) => {
+                    const count = ContentConfigUtils.getFilterCount(sortedPosts, filter)
+                    return (
+                      <button
+                        class="filter-button filter-button-loading"
+                        data-filter={filter.name}
+                        data-filter-type={filter.type}
+                        data-filter-target={filter.target}
+                        title={filter.description}>
+                        {filter.icon} {filter.displayName}
+                        {count > 0 && ` (${formatNumber(count)})`}
+                      </button>
+                    )
+                  })
+              }
             </div>
 
-            <div
-              class="search-suggestions"
-              id="searchSuggestions"
-              style="display: none;">
+            <div class="search-suggestions" id="searchSuggestions" style="display: none;">
               <div class="suggestions-title">Saran Pencarian:</div>
-              <span class="suggestion-tag" data-suggestion="immersion"
-                >immersion</span
-              >
-              <span class="suggestion-tag" data-suggestion="anki">anki</span>
-              <span class="suggestion-tag" data-suggestion="manga">manga</span>
-              <span class="suggestion-tag" data-suggestion="anime">anime</span>
-              <span class="suggestion-tag" data-suggestion="grammar"
-                >grammar</span
-              >
-              <span class="suggestion-tag" data-suggestion="vocabulary"
-                >vocabulary</span
-              >
+              {
+                ContentConfigUtils.getSearchSuggestions().map((suggestion) => (
+                  <span class="suggestion-tag" data-suggestion={suggestion}>
+                    {suggestion}
+                  </span>
+                ))
+              }
             </div>
           </div>
 
@@ -675,10 +654,7 @@ function formatDate(dateString: string): string {
           </div>
 
           <!-- Loading State -->
-          <div
-            id="loadingState"
-            class="loading-container"
-            style="display: none;">
+          <div id="loadingState" class="loading-container" style="display: none;">
             <div class="skeleton-grid">
               {
                 Array.from({ length: 3 }).map(() => (
@@ -703,9 +679,7 @@ function formatDate(dateString: string): string {
                   <h2>❌ Error Loading Posts</h2>
                   <p>{error}</p>
                   <div class="error-actions">
-                    <button
-                      onclick="window.location.reload()"
-                      class="docs-button">
+                    <button onclick="window.location.reload()" class="docs-button">
                       🔄 Coba Lagi
                     </button>
                     <button onclick="goHome()" class="docs-button secondary">
@@ -717,10 +691,7 @@ function formatDate(dateString: string): string {
                 <div class="no-results">
                   <div class="no-results-icon">📚</div>
                   <h3>Belum Ada Dokumentasi</h3>
-                  <p>
-                    Dokumentasi akan segera tersedia. Tetap pantau untuk
-                    pembaruan!
-                  </p>
+                  <p>Dokumentasi akan segera tersedia. Tetap pantau untuk pembaruan!</p>
                 </div>
               ) : (
                 currentPosts.map((post, index) => (
@@ -747,13 +718,13 @@ function formatDate(dateString: string): string {
                         : "false"
                     }>
                     {/* Emoji Display */}
-                    {post.data.emoji && (
-                      <div class="post-emoji">{post.data.emoji}</div>
-                    )}
+                    {post.data.emoji && <div class="post-emoji">{post.data.emoji}</div>}
                     <div class="post-card-container">
                       <div class="post-header">
                         <h2 class="post-title">
-                          <a href={`/docs/${post.slug}`}>{post.data.title}</a>
+                          <a href={post.resolvedPath || `/docs/${post.slug}`}>
+                            {post.data.title}
+                          </a>
                         </h2>
                         <div class="post-meta">
                           <span class="post-date">
@@ -776,7 +747,9 @@ function formatDate(dateString: string): string {
                           </span>
                         )}
                       </div>
-                      <a href={`/docs/${post.slug}`} class="read-more-btn">
+                      <a
+                        href={post.resolvedPath || `/docs/${post.slug}`}
+                        class="read-more-btn">
                         Baca Selengkapnya →
                       </a>
                     </div>
@@ -792,8 +765,7 @@ function formatDate(dateString: string): string {
               <div class="pagination-container" id="paginationContainer">
                 <div class="pagination-info">
                   <span class="pagination-stats">
-                    Menampilkan {startIndex + 1}-{endIndex} dari {totalPosts}{" "}
-                    dokumentasi
+                    Menampilkan {startIndex + 1}-{endIndex} dari {totalPosts} dokumentasi
                   </span>
                 </div>
                 <div class="pagination-controls">
@@ -839,94 +811,89 @@ function formatDate(dateString: string): string {
       // Search Engine Loading State Management
       class SearchLoadingManager {
         // Property declarations for TypeScript
-        searchInput: HTMLInputElement | null;
-        filterButtons: NodeListOf<HTMLButtonElement>;
-        loadingIndicator: HTMLElement | null;
-        isReady: boolean;
+        searchInput: HTMLInputElement | null
+        filterButtons: NodeListOf<HTMLButtonElement>
+        loadingIndicator: HTMLElement | null
+        isReady: boolean
 
         constructor() {
-          this.searchInput = null;
+          this.searchInput = null
           this.filterButtons = document.querySelectorAll(
             ".filter-button"
-          ) as NodeListOf<HTMLButtonElement>;
-          this.loadingIndicator = null;
-          this.isReady = false;
-          this.init();
+          ) as NodeListOf<HTMLButtonElement>
+          this.loadingIndicator = null
+          this.isReady = false
+          this.init()
         }
 
         init() {
           // Get DOM elements
-          this.searchInput = document.getElementById(
-            "searchInput"
-          ) as HTMLInputElement;
+          this.searchInput = document.getElementById("searchInput") as HTMLInputElement
           this.filterButtons = document.querySelectorAll(
             ".filter-button"
-          ) as NodeListOf<HTMLButtonElement>;
-          this.loadingIndicator = document.getElementById(
-            "searchLoadingIndicator"
-          );
+          ) as NodeListOf<HTMLButtonElement>
+          this.loadingIndicator = document.getElementById("searchLoadingIndicator")
 
           // Ensure initial loading state
-          this.setLoadingState();
+          this.setLoadingState()
         }
 
         setLoadingState() {
           if (this.searchInput) {
-            this.searchInput.disabled = true;
-            this.searchInput.classList.add("search-input-loading");
-            this.searchInput.classList.remove("search-input-ready");
-            this.searchInput.placeholder = "Memuat sistem pencarian...";
+            this.searchInput.disabled = true
+            this.searchInput.classList.add("search-input-loading")
+            this.searchInput.classList.remove("search-input-ready")
+            this.searchInput.placeholder = "Memuat sistem pencarian..."
           }
 
           // Disable filter buttons
           this.filterButtons.forEach((button) => {
-            button.disabled = true;
-            button.classList.add("filter-button-loading");
-          });
+            button.disabled = true
+            button.classList.add("filter-button-loading")
+          })
 
           // Show loading indicator
           if (this.loadingIndicator) {
-            this.loadingIndicator.style.display = "flex";
+            this.loadingIndicator.style.display = "flex"
           }
         }
 
         setReadyState() {
           if (this.searchInput) {
-            this.searchInput.disabled = false;
-            this.searchInput.classList.remove("search-input-loading");
-            this.searchInput.classList.add("search-input-ready");
-            this.searchInput.placeholder =
-              "Cari konten Indonesian (min 2 karakter)";
+            this.searchInput.disabled = false
+            this.searchInput.classList.remove("search-input-loading")
+            this.searchInput.classList.add("search-input-ready")
+            this.searchInput.placeholder = "Cari konten Indonesian (min 2 karakter)"
           }
 
           // Enable filter buttons
           this.filterButtons.forEach((button) => {
-            button.disabled = false;
-            button.classList.remove("filter-button-loading");
-          });
+            button.disabled = false
+            button.classList.remove("filter-button-loading")
+          })
 
           // Hide loading indicator
           if (this.loadingIndicator) {
-            this.loadingIndicator.style.display = "none";
+            this.loadingIndicator.style.display = "none"
           }
 
-          this.isReady = true;
-          console.log("✅ Search engine ready for use");
+          this.isReady = true
+          console.log("✅ Search engine ready for use")
         }
 
         setErrorState(errorMessage = "Search temporarily unavailable") {
           if (this.searchInput) {
-            this.searchInput.disabled = true;
-            this.searchInput.classList.add("search-input-loading");
-            this.searchInput.classList.remove("search-input-ready");
-            this.searchInput.placeholder = errorMessage;
+            this.searchInput.disabled = true
+            this.searchInput.classList.add("search-input-loading")
+            this.searchInput.classList.remove("search-input-ready")
+            this.searchInput.placeholder = errorMessage
           }
 
           // Keep filter buttons disabled
           this.filterButtons.forEach((button) => {
-            button.disabled = true;
-            button.classList.add("filter-button-loading");
-          });
+            button.disabled = true
+            button.classList.add("filter-button-loading")
+          })
 
           // Update loading indicator to show error
           if (this.loadingIndicator) {
@@ -936,22 +903,20 @@ function formatDate(dateString: string): string {
                 <div class="absolute inset-0 rounded-full border border-transparent border-t-red-500 animate-spin"></div>
               </div>
               <span class="loading-text text-xs font-normal tracking-normal" style="color: #ef4444;">${errorMessage}</span>
-            `;
+            `
           }
         }
       }
 
       // Initialize loading manager
-      const searchLoadingManager = new SearchLoadingManager();
+      const searchLoadingManager = new SearchLoadingManager()
 
       // Import the externalized search engine with loading state management
       // Temporarily disabled for build stability
-      console.log(
-        "✅ Docs Search Engine module loading disabled for build stability"
-      );
-      searchLoadingManager.setReadyState();
+      console.log("✅ Docs Search Engine module loading disabled for build stability")
+      searchLoadingManager.setReadyState()
 
-      console.log("🚀 Loading Enhanced Search Engine...");
+      console.log("🚀 Loading Enhanced Search Engine...")
     </script>
 
     <!-- Enhanced Search Engine Implementation -->
@@ -963,81 +928,79 @@ function formatDate(dateString: string): string {
       // TypeScript declarations for global objects
       declare global {
         interface Window {
-          Fuse?: any;
-          searchLoadingManager?: any;
-          searchEngine?: any;
+          Fuse?: any
+          searchLoadingManager?: any
+          searchEngine?: any
+          contentConfig?: any
+          allPosts?: any[]
         }
       }
 
       // Fuse.js will be available globally from the script tag
-      let Fuse: any = null;
+      let Fuse: any = null
 
       class ModernSearchEngine {
-        private fuse: any = null;
-        private searchData: any[] = [];
-        private searchCache = new Map();
-        private maxCacheSize = 100;
+        private fuse: any = null
+        private searchData: any[] = []
+        private searchCache = new Map()
+        private maxCacheSize = 100
         private performanceMetrics = {
           searchCount: 0,
           cacheHits: 0,
           avgSearchTime: 0,
           totalSearchTime: 0,
-        };
+        }
 
         constructor() {
-          this.initialize();
+          this.initialize()
         }
 
         async initialize() {
           try {
-            console.log("🔍 Initializing Modern Search Engine with Fuse.js...");
+            console.log("🔍 Initializing Modern Search Engine with Fuse.js...")
 
             // Load search data from search.json.js endpoint
-            await this.loadSearchData();
+            await this.loadSearchData()
 
             // Initialize Fuse.js with search data
-            await this.initializeFuse();
+            await this.initializeFuse()
 
             // Set up event listeners
-            this.setupEventListeners();
+            this.setupEventListeners()
 
-            console.log("✅ Modern search engine ready!");
-            console.log(`📊 Loaded ${this.searchData.length} posts for search`);
+            console.log("✅ Modern search engine ready!")
+            console.log(`📊 Loaded ${this.searchData.length} posts for search`)
 
             // Notify loading manager that search is ready
             if (window.searchLoadingManager) {
-              window.searchLoadingManager.setReadyState();
+              window.searchLoadingManager.setReadyState()
             }
 
-            return true;
+            return true
           } catch (error) {
-            console.error("❌ Failed to initialize search engine:", error);
+            console.error("❌ Failed to initialize search engine:", error)
 
             // Set error state
             if (window.searchLoadingManager) {
-              window.searchLoadingManager.setErrorState(
-                "Sistem pencarian gagal dimuat"
-              );
+              window.searchLoadingManager.setErrorState("Sistem pencarian gagal dimuat")
             }
 
-            return false;
+            return false
           }
         }
 
         async loadSearchData() {
           try {
-            console.log("🔍 Loading search data from /search.json...");
+            console.log("🔍 Loading search data from /search.json...")
 
             // Fetch search data from the JSON endpoint
-            const response = await fetch("/search.json");
+            const response = await fetch("/search.json")
             if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
+              throw new Error(`HTTP error! status: ${response.status}`)
             }
 
-            this.searchData = await response.json();
-            console.log(
-              `✅ Loaded ${this.searchData.length} posts from search.json`
-            );
+            this.searchData = await response.json()
+            console.log(`✅ Loaded ${this.searchData.length} posts from search.json`)
 
             // Debug: Check if "Keyword" content is in the search data
             const krashenPosts = this.searchData.filter(
@@ -1045,15 +1008,15 @@ function formatDate(dateString: string): string {
                 post.content?.toLowerCase().includes("krashen") ||
                 post.title?.toLowerCase().includes("krashen") ||
                 post.description?.toLowerCase().includes("krashen")
-            );
+            )
 
             console.log(
               `🔍 Found ${krashenPosts.length} posts containing "Krashen":`,
               krashenPosts.map((p) => p.title)
-            );
+            )
           } catch (error) {
-            console.error("❌ Error loading search data:", error);
-            throw error;
+            console.error("❌ Error loading search data:", error)
+            throw error
           }
         }
 
@@ -1061,7 +1024,7 @@ function formatDate(dateString: string): string {
           try {
             // Use global Fuse.js from script tag
             if (typeof window !== "undefined" && window.Fuse) {
-              const Fuse = window.Fuse;
+              const Fuse = window.Fuse
 
               // Configure Fuse.js for optimal search
               const fuseOptions = {
@@ -1079,105 +1042,99 @@ function formatDate(dateString: string): string {
                 useExtendedSearch: false,
                 ignoreLocation: true,
                 distance: 100,
-              };
+              }
 
-              this.fuse = new Fuse(this.searchData, fuseOptions);
-              console.log("✅ Fuse.js initialized with search data");
+              this.fuse = new Fuse(this.searchData, fuseOptions)
+              console.log("✅ Fuse.js initialized with search data")
             } else {
-              console.warn(
-                "⚠️ Fuse.js not available, using simple search fallback"
-              );
-              this.fuse = null;
+              console.warn("⚠️ Fuse.js not available, using simple search fallback")
+              this.fuse = null
             }
           } catch (error) {
-            console.error("❌ Error initializing Fuse.js:", error);
-            console.warn("⚠️ Falling back to simple search");
-            this.fuse = null;
+            console.error("❌ Error initializing Fuse.js:", error)
+            console.warn("⚠️ Falling back to simple search")
+            this.fuse = null
           }
         }
 
         setupEventListeners() {
           // Search input event listener
-          const searchInput = document.getElementById(
-            "searchInput"
-          ) as HTMLInputElement;
+          const searchInput = document.getElementById("searchInput") as HTMLInputElement
           if (searchInput) {
             searchInput.addEventListener("input", (e) => {
-              const query = (e.target as HTMLInputElement).value;
-              this.performSearch(query);
-            });
+              const query = (e.target as HTMLInputElement).value
+              this.performSearch(query)
+            })
 
             searchInput.addEventListener("keydown", (e) => {
               if (e.key === "Enter") {
-                const query = (e.target as HTMLInputElement).value;
-                this.performSearch(query);
+                const query = (e.target as HTMLInputElement).value
+                this.performSearch(query)
               }
-            });
+            })
           }
 
           // Filter buttons event listeners
-          const filterButtons = document.querySelectorAll(".filter-btn");
+          const filterButtons = document.querySelectorAll(".filter-button")
           filterButtons.forEach((button) => {
             button.addEventListener("click", (e) => {
-              const filterType = (e.target as HTMLElement).getAttribute(
-                "data-filter"
-              );
-              this.handleFilter(filterType);
-            });
-          });
+              const filterType = (e.target as HTMLElement).getAttribute("data-filter")
+              this.handleFilter(filterType)
+            })
+          })
 
           // Clear search button - Use event delegation for dynamically created buttons
           document.addEventListener("click", (e) => {
-            const target = e.target as HTMLElement;
+            const target = e.target as HTMLElement
             if (target && target.closest('[data-action="clear-search"]')) {
-              console.log("🔍 Clear search button clicked");
-              this.clearSearch();
+              console.log("🔍 Clear search button clicked")
+              this.clearSearch()
             }
-          });
+          })
         }
 
         async performSearch(query: string) {
-          const startTime = performance.now();
+          const startTime = performance.now()
 
           if (!query || query.trim().length < 2) {
-            this.displayAllPosts();
-            return;
+            this.displayAllPosts()
+            return
           }
 
           try {
-            console.log(`🔍 Searching for: "${query}"`);
+            console.log(`🔍 Searching for: "${query}"`)
 
             // Check cache first
-            const cacheKey = query.toLowerCase();
+            const cacheKey = query.toLowerCase()
             if (this.searchCache.has(cacheKey)) {
-              this.performanceMetrics.cacheHits++;
-              const cachedResults = this.searchCache.get(cacheKey);
-              this.displaySearchResults(cachedResults);
-              return;
+              this.performanceMetrics.cacheHits++
+              const cachedResults = this.searchCache.get(cacheKey)
+              this.displaySearchResults(cachedResults)
+              return
             }
 
-            let results: any[] = [];
-            let searchStrategy = "simple";
+            let results: any[] = []
+            let searchStrategy = "simple"
 
             // Perform search with Fuse.js if available, otherwise use simple search
             if (this.fuse) {
               try {
-                const fuseResults = this.fuse.search(query);
+                const fuseResults = this.fuse.search(query)
                 results = fuseResults.slice(0, 20).map((result) => ({
                   ...result.item,
                   score: result.score,
                   relevancePercentage: Math.round((1 - result.score) * 100),
-                }));
-                searchStrategy = "fuzzy";
+                }))
+                searchStrategy = "fuzzy"
               } catch (fuseError) {
                 console.warn(
                   "⚠️ Fuse.js search failed, falling back to simple search:",
                   fuseError
-                );
-                results = this.simpleSearch(query);
+                )
+                results = this.simpleSearch(query)
               }
             } else {
-              results = this.simpleSearch(query);
+              results = this.simpleSearch(query)
             }
 
             const searchResult = {
@@ -1185,99 +1142,95 @@ function formatDate(dateString: string): string {
               total: results.length,
               query: query,
               searchStrategy: searchStrategy,
-            };
+            }
 
             // Cache the result
-            this.cacheResult(cacheKey, searchResult);
+            this.cacheResult(cacheKey, searchResult)
 
             // Update performance metrics
-            const searchTime = performance.now() - startTime;
-            this.performanceMetrics.searchCount++;
-            this.performanceMetrics.totalSearchTime += searchTime;
+            const searchTime = performance.now() - startTime
+            this.performanceMetrics.searchCount++
+            this.performanceMetrics.totalSearchTime += searchTime
             this.performanceMetrics.avgSearchTime =
               this.performanceMetrics.totalSearchTime /
-              this.performanceMetrics.searchCount;
+              this.performanceMetrics.searchCount
 
-            console.log(`✅ Search completed in ${searchTime.toFixed(2)}ms`);
+            console.log(`✅ Search completed in ${searchTime.toFixed(2)}ms`)
             console.log(
               `📊 Found ${results.length} results for "${query}" using ${searchStrategy} search`
-            );
+            )
 
             // Display results
-            this.displaySearchResults(searchResult);
+            this.displaySearchResults(searchResult)
           } catch (error) {
-            console.error("❌ Search error:", error);
-            this.displayError("Terjadi kesalahan dalam pencarian");
+            console.error("❌ Search error:", error)
+            this.displayError("Terjadi kesalahan dalam pencarian")
           }
         }
 
         // Simple search fallback when Fuse.js is not available
         simpleSearch(query: string): any[] {
-          const searchQuery = query.toLowerCase();
-          const results: any[] = [];
+          const searchQuery = query.toLowerCase()
+          const results: any[] = []
 
           this.searchData.forEach((post) => {
-            let score = 0;
-            let relevancePercentage = 0;
+            let score = 0
+            let relevancePercentage = 0
 
             // Search in title (highest priority)
             if (post.title?.toLowerCase().includes(searchQuery)) {
-              score += 100;
+              score += 100
             }
 
             // Search in description
             if (post.description?.toLowerCase().includes(searchQuery)) {
-              score += 50;
+              score += 50
             }
 
             // Search in content
             if (post.content?.toLowerCase().includes(searchQuery)) {
-              score += 25;
+              score += 25
             }
 
             // Search in tags
             if (
-              post.tags?.some((tag: string) =>
-                tag.toLowerCase().includes(searchQuery)
-              )
+              post.tags?.some((tag: string) => tag.toLowerCase().includes(searchQuery))
             ) {
-              score += 30;
+              score += 30
             }
 
             if (score > 0) {
-              relevancePercentage = Math.min(score, 100);
+              relevancePercentage = Math.min(score, 100)
               results.push({
                 ...post,
                 score: 1 - relevancePercentage / 100,
                 relevancePercentage: relevancePercentage,
-              });
+              })
             }
-          });
+          })
 
           // Sort by relevance and return top 20
           return results
             .sort((a, b) => b.relevancePercentage - a.relevancePercentage)
-            .slice(0, 20);
+            .slice(0, 20)
         }
 
         displaySearchResults(searchResult: any) {
-          const searchResults = document.getElementById("searchResults");
-          const searchStats = document.getElementById("searchStats");
-          const searchResultsContent = document.getElementById(
-            "searchResultsContent"
-          );
-          const contentState = document.getElementById("contentState");
+          const searchResults = document.getElementById("searchResults")
+          const searchStats = document.getElementById("searchStats")
+          const searchResultsContent = document.getElementById("searchResultsContent")
+          const contentState = document.getElementById("contentState")
 
           if (!searchResults || !searchStats || !searchResultsContent) {
-            console.error("❌ Search results elements not found");
-            return;
+            console.error("❌ Search results elements not found")
+            return
           }
 
           // Hide main content and show search results
           if (contentState) {
-            contentState.classList.add("hidden");
+            contentState.classList.add("hidden")
           }
-          searchResults.classList.remove("hidden");
+          searchResults.classList.remove("hidden")
 
           if (searchResult.total === 0) {
             // No results found
@@ -1288,7 +1241,7 @@ function formatDate(dateString: string): string {
               <button class="clear-search-btn" data-action="clear-search">
                 ✕ Hapus Pencarian
               </button>
-            `;
+            `
 
             searchResultsContent.innerHTML = `
               <div class="search-no-results">
@@ -1304,7 +1257,7 @@ function formatDate(dateString: string): string {
                   </ul>
                 </div>
               </div>
-            `;
+            `
           } else {
             // Results found
             searchStats.innerHTML = `
@@ -1314,33 +1267,31 @@ function formatDate(dateString: string): string {
               <button class="clear-search-btn" data-action="clear-search">
                 ✕ Hapus Pencarian
               </button>
-            `;
+            `
 
             // Generate search results HTML using same structure as main cards
             const resultsHTML = searchResult.results
               .map((result: any, index: number) => {
-                const title = result.title || "Untitled";
-                const description = result.description || "";
-                const url = result.url || `/docs/${result.slug}`;
-                const relevance = result.relevancePercentage || 0;
-                const pubDate = result.pubDate
-                  ? new Date(result.pubDate)
-                  : null;
+                const title = result.title || "Untitled"
+                const description = result.description || ""
+                const url = result.url || result.resolvedPath || `/docs/${result.slug}`
+                const relevance = result.relevancePercentage || 0
+                const pubDate = result.pubDate ? new Date(result.pubDate) : null
                 const formattedDate = pubDate
                   ? pubDate.toLocaleDateString("id-ID", {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                     })
-                  : "";
+                  : ""
 
                 // Get emoji from search data or use default
-                const emoji = "🔍"; // Always use search emoji for search results
+                const emoji = "🔍" // Always use search emoji for search results
 
                 // Get tags for display
-                const tags = result.tags || [];
-                const displayTags = tags.slice(0, 3);
-                const remainingTags = tags.length > 3 ? tags.length - 3 : 0;
+                const tags = result.tags || []
+                const displayTags = tags.slice(0, 3)
+                const remainingTags = tags.length > 3 ? tags.length - 3 : 0
 
                 return `
                   <article class="post-card post-card-${index % 4}" data-post-slug="${result.slug}" data-learning-stage data-content-type data-is-recommended="true" data-is-beginner="true" data-is-tool="false">
@@ -1365,92 +1316,228 @@ function formatDate(dateString: string): string {
                       </a>
                     </div>
                   </article>
-                `;
+                `
               })
-              .join("");
+              .join("")
 
             searchResultsContent.innerHTML = `
               <div class="posts-grid">
                 ${resultsHTML}
               </div>
-            `;
+            `
           }
         }
 
         displayAllPosts() {
-          const searchResults = document.getElementById("searchResults");
-          const contentState = document.getElementById("contentState");
+          const searchResults = document.getElementById("searchResults")
+          const contentState = document.getElementById("contentState")
 
           if (searchResults) {
-            searchResults.classList.add("hidden");
+            searchResults.classList.add("hidden")
           }
           if (contentState) {
-            contentState.classList.remove("hidden");
+            contentState.classList.remove("hidden")
           }
         }
 
         clearSearch() {
-          console.log("🧹 Clearing search...");
+          console.log("🧹 Clearing search...")
 
           // Clear search input
-          const searchInput = document.getElementById(
-            "searchInput"
-          ) as HTMLInputElement;
+          const searchInput = document.getElementById("searchInput") as HTMLInputElement
           if (searchInput) {
-            searchInput.value = "";
+            searchInput.value = ""
             // Trigger input event to ensure search is cleared
-            searchInput.dispatchEvent(new Event("input"));
+            searchInput.dispatchEvent(new Event("input"))
           }
 
           // Show all posts
-          this.displayAllPosts();
+          this.displayAllPosts()
 
           // Provide user feedback
-          console.log("✅ Search cleared successfully");
+          console.log("✅ Search cleared successfully")
         }
 
         handleFilter(filterType: string | null) {
-          // Update active filter button
-          const filterButtons = document.querySelectorAll(".filter-btn");
-          filterButtons.forEach((btn) => btn.classList.remove("active"));
+          console.log(`🔍 Filter applied: ${filterType}`)
 
-          const activeButton = document.querySelector(
-            `[data-filter="${filterType}"]`
-          );
+          // Update active filter button
+          const filterButtons = document.querySelectorAll(".filter-button")
+          filterButtons.forEach((btn) => btn.classList.remove("active"))
+
+          const activeButton = document.querySelector(`[data-filter="${filterType}"]`)
           if (activeButton) {
-            activeButton.classList.add("active");
+            activeButton.classList.add("active")
           }
 
-          // Apply filter logic here if needed
-          console.log(`🔍 Filter applied: ${filterType}`);
+          // Get filter configuration from content config
+          const filterConfig = this.getFilterConfig(filterType)
+          if (!filterConfig) {
+            console.warn(`⚠️ No filter configuration found for: ${filterType}`)
+            return
+          }
+
+          // Apply filter based on configuration
+          this.applyContentFilter(filterConfig)
+        }
+
+        getFilterConfig(filterType: string | null) {
+          if (!filterType || filterType === "all") {
+            return { type: "custom", target: "all" }
+          }
+
+          // Find filter in content configuration
+          const filters = (window as any).contentConfig?.filters || {}
+          const filter = Object.values(filters).find((f: any) => f.name === filterType)
+
+          if (filter) {
+            return filter
+          }
+
+          // Check mind map filters
+          const mindMapFilters =
+            (window as any).contentConfig?.mindMap?.customFilters || []
+          const mindMapFilter = mindMapFilters.find((f: any) => f.name === filterType)
+
+          return mindMapFilter || null
+        }
+
+        applyContentFilter(filterConfig: any) {
+          const posts = (window as any).allPosts || []
+          let filteredPosts = []
+
+          switch (filterConfig.type) {
+            case "category":
+              filteredPosts = this.filterByCategory(posts, filterConfig.target)
+              break
+            case "tag":
+              filteredPosts = this.filterByTag(posts, filterConfig.target)
+              break
+            case "mind-map":
+              filteredPosts = this.filterByMindMap(posts, filterConfig.target)
+              break
+            case "custom":
+              if (filterConfig.target === "all") {
+                filteredPosts = posts
+              }
+              break
+            default:
+              filteredPosts = posts
+          }
+
+          this.displayFilteredPosts(filteredPosts, filterConfig)
+        }
+
+        filterByCategory(posts: any[], categoryId: string) {
+          const category = (window as any).contentConfig?.categories?.[categoryId]
+          if (!category) return posts
+
+          return posts.filter((post) => {
+            return category.keywords.some(
+              (keyword) =>
+                post.data.title?.toLowerCase().includes(keyword.toLowerCase()) ||
+                post.data.description?.toLowerCase().includes(keyword.toLowerCase()) ||
+                post.data.category === category.name ||
+                post.data.learningStage === category.name
+            )
+          })
+        }
+
+        filterByTag(posts: any[], tagId: string) {
+          const tag = (window as any).contentConfig?.tags?.[tagId]
+          if (!tag) return posts
+
+          return posts.filter((post) => {
+            return (
+              post.data.tags?.some(
+                (postTag: string) => postTag.toLowerCase() === tag.name.toLowerCase()
+              ) || false
+            )
+          })
+        }
+
+        filterByMindMap(posts: any[], branchId: string) {
+          // Placeholder for mind map filtering
+          // This would integrate with your mind map system
+          return posts.slice(0, Math.floor(posts.length / 2))
+        }
+
+        displayFilteredPosts(posts: any[], filterConfig: any) {
+          const contentState = document.getElementById("contentState")
+          if (!contentState) return
+
+          if (posts.length === 0) {
+            contentState.innerHTML = `
+              <div class="no-results">
+                <div class="no-results-icon">📚</div>
+                <h3>Tidak Ada Konten</h3>
+                <p>Tidak ada konten yang ditemukan untuk filter "${filterConfig.displayName || filterConfig.name}".</p>
+              </div>
+            `
+            return
+          }
+
+          // Display filtered posts
+          const postsHTML = posts
+            .map(
+              (post, index) => `
+            <article class="post-card post-card-${index % 4}" data-post-slug="${post.slug}">
+              ${post.data.emoji ? `<div class="post-emoji">${post.data.emoji}</div>` : ""}
+              <div class="post-card-container">
+                <div class="post-header">
+                  <h2 class="post-title">
+                    <a href="${post.resolvedPath || `/docs/${post.slug}`}">${post.data.title}</a>
+                  </h2>
+                  <div class="post-meta">
+                    <span class="post-date">${new Date(post.data.publishedDate).toLocaleDateString("id-ID")}</span>
+                    <span class="post-readtime">${post.data.readTime || "5 min read"}</span>
+                  </div>
+                </div>
+                <p class="post-description">${post.data.description}</p>
+                <div class="post-tags">
+                  ${(post.data.tags || [])
+                    .slice(0, 3)
+                    .map((tag) => `<span class="post-tag">${tag}</span>`)
+                    .join("")}
+                  ${
+                    (post.data.tags || []).length > 3
+                      ? `<span class="post-tag-more">+${(post.data.tags || []).length - 3}</span>`
+                      : ""
+                  }
+                </div>
+              </div>
+            </article>
+          `
+            )
+            .join("")
+
+          contentState.innerHTML = postsHTML
         }
 
         displayError(message: string) {
-          const searchResults = document.getElementById("searchResults");
-          const searchStats = document.getElementById("searchStats");
-          const searchResultsContent = document.getElementById(
-            "searchResultsContent"
-          );
+          const searchResults = document.getElementById("searchResults")
+          const searchStats = document.getElementById("searchStats")
+          const searchResultsContent = document.getElementById("searchResultsContent")
 
           if (searchResults && searchStats && searchResultsContent) {
-            searchResults.classList.remove("hidden");
-            searchStats.innerHTML = `<span class="search-results-count">Error</span>`;
+            searchResults.classList.remove("hidden")
+            searchStats.innerHTML = `<span class="search-results-count">Error</span>`
             searchResultsContent.innerHTML = `
               <div class="search-no-results">
                 <div class="no-results-icon">⚠️</div>
                 <h3>Terjadi Kesalahan</h3>
                 <p>${message}</p>
               </div>
-            `;
+            `
           }
         }
 
         cacheResult(key: string, result: any) {
           if (this.searchCache.size >= this.maxCacheSize) {
-            const firstKey = this.searchCache.keys().next().value;
-            this.searchCache.delete(firstKey);
+            const firstKey = this.searchCache.keys().next().value
+            this.searchCache.delete(firstKey)
           }
-          this.searchCache.set(key, result);
+          this.searchCache.set(key, result)
         }
 
         getPerformanceReport() {
@@ -1458,46 +1545,69 @@ function formatDate(dateString: string): string {
             ...this.performanceMetrics,
             cacheSize: this.searchCache.size,
             searchDataSize: this.searchData.length,
-          };
+          }
         }
       }
 
       // Initialize the modern search engine
-      const searchEngine = new ModernSearchEngine();
+      const searchEngine = new ModernSearchEngine()
 
       // Make search engine available globally for debugging
-      window.searchEngine = searchEngine;
+      window.searchEngine = searchEngine
 
+      // Make content configuration available globally for filtering
+      window.contentConfig = {
+        categories: JSON.parse("${JSON.stringify(CONTENT_CONFIG.categories)}"),
+        tags: JSON.parse("${JSON.stringify(CONTENT_CONFIG.tags)}"),
+        filters: JSON.parse("${JSON.stringify(CONTENT_CONFIG.filters)}"),
+        mindMap: JSON.parse("${JSON.stringify(CONTENT_CONFIG.mindMap)}"),
+        search: JSON.parse("${JSON.stringify(CONTENT_CONFIG.search)}"),
+      }
+
+      // Make all posts available globally for filtering
+      window.allPosts = JSON.parse("${JSON.stringify(sortedPosts)}")
+
+      console.log("🚀 Modern Search Engine initialized with Fuse.js integration")
+      console.log("📋 Content configuration loaded for dynamic filtering")
       console.log(
-        "🚀 Modern Search Engine initialized with Fuse.js integration"
-      );
+        "📊 Available filters:",
+        Object.keys((window as any).contentConfig.filters).length
+      )
+      console.log(
+        "📊 Available categories:",
+        Object.keys((window as any).contentConfig.categories).length
+      )
+      console.log(
+        "📊 Available tags:",
+        Object.keys((window as any).contentConfig.tags).length
+      )
     </script>
 
     <script>
       // 🌊 DOCS PAGE WAVE ANIMATION INITIALIZATION
       // Google Engineering Team 2025: Performance-optimized wave animation for docs page
 
-      let waveAnimation: { cleanup: () => void } | null = null;
-      let starsContainer: HTMLElement | null = null;
+      let waveAnimation: { cleanup: () => void } | null = null
+      let starsContainer: HTMLElement | null = null
 
       // Initialize wave animation for docs page
       function initializeDocsWaveAnimation(): (() => void) | undefined {
-        console.log("🌊 Initializing docs page wave animation...");
+        console.log("🌊 Initializing docs page wave animation...")
 
-        const canvas = document.getElementById("waveCanvas");
+        const canvas = document.getElementById("waveCanvas")
         if (!canvas) {
-          console.warn("Wave canvas not found for docs page");
-          return undefined;
+          console.warn("Wave canvas not found for docs page")
+          return undefined
         }
 
-        const ctx = (canvas as HTMLCanvasElement)?.getContext("2d");
+        const ctx = (canvas as HTMLCanvasElement)?.getContext("2d")
         if (!ctx) {
-          console.warn("Canvas context not available for docs page");
-          return undefined;
+          console.warn("Canvas context not available for docs page")
+          return undefined
         }
 
-        let animationId: number | null = null;
-        let time = 0;
+        let animationId: number | null = null
+        let time = 0
 
         // Docs-specific wave configuration (optimized for content pages)
         const waves = [
@@ -1528,29 +1638,29 @@ function formatDate(dateString: string): string {
             y: 0.85,
             yPos: 0, // Will be set in resizeCanvas
           },
-        ];
+        ]
 
         function resizeCanvas() {
-          const width = window.innerWidth;
-          const height = window.innerHeight;
-          (canvas as HTMLCanvasElement).width = width;
-          (canvas as HTMLCanvasElement).height = height;
+          const width = window.innerWidth
+          const height = window.innerHeight
+          ;(canvas as HTMLCanvasElement).width = width
+          ;(canvas as HTMLCanvasElement).height = height
 
           // Update wave y positions based on new height
           waves.forEach((wave) => {
-            wave.yPos = height * wave.y;
-          });
+            wave.yPos = height * wave.y
+          })
         }
 
         function animate() {
-          if (!ctx) return;
+          if (!ctx) return
 
           ctx.clearRect(
             0,
             0,
             (canvas as HTMLCanvasElement).width,
             (canvas as HTMLCanvasElement).height
-          );
+          )
 
           // Create gradient background (docs-specific)
           const gradient = ctx.createLinearGradient(
@@ -1558,37 +1668,33 @@ function formatDate(dateString: string): string {
             0,
             0,
             (canvas as HTMLCanvasElement).height
-          );
-          gradient.addColorStop(0, "rgba(10, 10, 10, 1)");
-          gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)");
-          gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)");
-          ctx.fillStyle = gradient;
+          )
+          gradient.addColorStop(0, "rgba(10, 10, 10, 1)")
+          gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)")
+          gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)")
+          ctx.fillStyle = gradient
           ctx.fillRect(
             0,
             0,
             (canvas as HTMLCanvasElement).width,
             (canvas as HTMLCanvasElement).height
-          );
+          )
 
           // Draw waves
           waves.forEach((wave) => {
-            ctx.beginPath();
+            ctx.beginPath()
 
             // Create wave path
-            for (
-              let x = 0;
-              x <= (canvas as HTMLCanvasElement).width + 10;
-              x += 2
-            ) {
+            for (let x = 0; x <= (canvas as HTMLCanvasElement).width + 10; x += 2) {
               const y =
                 wave.yPos +
                 Math.sin(x * wave.frequency + time * wave.speed + wave.offset) *
-                  wave.amplitude;
+                  wave.amplitude
 
               if (x === 0) {
-                ctx.moveTo(x, y);
+                ctx.moveTo(x, y)
               } else {
-                ctx.lineTo(x, y);
+                ctx.lineTo(x, y)
               }
             }
 
@@ -1596,40 +1702,40 @@ function formatDate(dateString: string): string {
             ctx.lineTo(
               (canvas as HTMLCanvasElement).width,
               (canvas as HTMLCanvasElement).height
-            );
-            ctx.lineTo(0, (canvas as HTMLCanvasElement).height);
-            ctx.closePath();
+            )
+            ctx.lineTo(0, (canvas as HTMLCanvasElement).height)
+            ctx.closePath()
 
-            ctx.fillStyle = wave.color;
-            ctx.fill();
+            ctx.fillStyle = wave.color
+            ctx.fill()
 
             // Add subtle stroke for more definition
-            ctx.strokeStyle = "rgba(139, 93, 255, 0.08)";
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          });
+            ctx.strokeStyle = "rgba(139, 93, 255, 0.08)"
+            ctx.lineWidth = 0.5
+            ctx.stroke()
+          })
 
-          time += 0.5;
-          animationId = requestAnimationFrame(animate);
+          time += 0.5
+          animationId = requestAnimationFrame(animate)
         }
 
         // Initialize
-        resizeCanvas();
-        animate();
+        resizeCanvas()
+        animate()
 
         // Handle window resize
         const handleResize = () => {
-          resizeCanvas();
-        };
-        window.addEventListener("resize", handleResize);
+          resizeCanvas()
+        }
+        window.addEventListener("resize", handleResize)
 
         // Return cleanup function
         return () => {
           if (animationId) {
-            cancelAnimationFrame(animationId);
+            cancelAnimationFrame(animationId)
           }
-          window.removeEventListener("resize", handleResize);
-        };
+          window.removeEventListener("resize", handleResize)
+        }
       }
 
       // Initialize wave animation when DOM is ready
@@ -1637,207 +1743,205 @@ function formatDate(dateString: string): string {
         try {
           waveAnimation = {
             cleanup: initializeDocsWaveAnimation() || (() => {}),
-          };
-          console.log("✅ Docs page wave animation initialized successfully");
+          }
+          console.log("✅ Docs page wave animation initialized successfully")
         } catch (error) {
-          console.error("Error initializing docs page wave animation:", error);
+          console.error("Error initializing docs page wave animation:", error)
         }
-      });
+      })
 
       // Cleanup on page unload
       window.addEventListener("beforeunload", function () {
         if (waveAnimation) {
-          waveAnimation.cleanup();
+          waveAnimation.cleanup()
         }
-      });
+      })
 
       // Initialize stars background
       function initializeStars() {
-        console.log("⭐ Initializing stars background for docs page...");
+        console.log("⭐ Initializing stars background for docs page...")
 
-        const container = document.getElementById("starsContainer");
+        const container = document.getElementById("starsContainer")
         if (!container) {
-          console.warn("Stars container not found for docs page");
-          return;
+          console.warn("Stars container not found for docs page")
+          return
         }
 
         // Create stars (optimized for docs page)
-        const starCount = 25; // Reduced for better performance
+        const starCount = 25 // Reduced for better performance
         for (let i = 0; i < starCount; i++) {
-          const star = document.createElement("div");
-          star.className = "star";
-          star.style.left = Math.random() * 100 + "%";
-          star.style.top = Math.random() * 100 + "%";
-          star.style.animationDelay = Math.random() * 3 + "s";
-          star.style.animationDuration = 2 + Math.random() * 2 + "s";
-          container.appendChild(star);
+          const star = document.createElement("div")
+          star.className = "star"
+          star.style.left = Math.random() * 100 + "%"
+          star.style.top = Math.random() * 100 + "%"
+          star.style.animationDelay = Math.random() * 3 + "s"
+          star.style.animationDuration = 2 + Math.random() * 2 + "s"
+          container.appendChild(star)
         }
 
-        console.log("✅ Stars background initialized");
+        console.log("✅ Stars background initialized")
       }
 
       // Navigation functions for docs page
-      (window as any).goHome = function () {
-        console.log("🏠 Navigating to home...");
-        window.location.href = "/";
-      };
-
-      (window as any).goToPosts = function () {
-        console.log("📚 Already on docs page...");
-        window.location.reload();
-      };
-
-      (window as any).goToInvitation = function () {
-        console.log("💬 Navigating to Discord...");
-        window.location.href = "/discord";
-      };
+      ;(window as any).goHome = function () {
+        console.log("🏠 Navigating to home...")
+        window.location.href = "/"
+      }
+      ;(window as any).goToPosts = function () {
+        console.log("📚 Already on docs page...")
+        window.location.reload()
+      }
+      ;(window as any).goToInvitation = function () {
+        console.log("💬 Navigating to Discord...")
+        window.location.href = "/discord"
+      }
 
       // Google UI/UX 2025: Tag Popup Functionality
       function initializeTagPopups() {
-        console.log("🏷️ Initializing minimalist tag popups...");
+        console.log("🏷️ Initializing minimalist tag popups...")
 
-        const tagContainers = document.querySelectorAll(".post-tags");
+        const tagContainers = document.querySelectorAll(".post-tags")
 
         tagContainers.forEach((container) => {
-          const moreButton = container.querySelector(".post-tag-more");
-          if (!moreButton) return;
+          const moreButton = container.querySelector(".post-tag-more")
+          if (!moreButton) return
 
           // Type-safe dataset access
-          const containerElement = container as HTMLElement;
-          const allTags = JSON.parse(containerElement.dataset.allTags || "[]");
-          const hiddenTags = allTags.slice(3);
+          const containerElement = container as HTMLElement
+          const allTags = JSON.parse(containerElement.dataset.allTags || "[]")
+          const hiddenTags = allTags.slice(3)
 
-          if (hiddenTags.length === 0) return;
+          if (hiddenTags.length === 0) return
 
-          let popup: HTMLElement | null = null;
+          let popup: HTMLElement | null = null
 
           // Create popup element
           function createPopup(): void {
-            popup = document.createElement("div");
-            popup.className = "tag-popup";
+            popup = document.createElement("div")
+            popup.className = "tag-popup"
 
-            const header = document.createElement("div");
-            header.className = "tag-popup-header";
-            header.textContent = "Tag Lain-nya:";
+            const header = document.createElement("div")
+            header.className = "tag-popup-header"
+            header.textContent = "Tag Lain-nya:"
 
-            const content = document.createElement("div");
-            content.className = "tag-popup-content";
+            const content = document.createElement("div")
+            content.className = "tag-popup-content"
 
             hiddenTags.forEach((tag: string) => {
-              const tagElement = document.createElement("span");
-              tagElement.className = "tag-popup-tag";
-              tagElement.textContent = tag;
-              content.appendChild(tagElement);
-            });
+              const tagElement = document.createElement("span")
+              tagElement.className = "tag-popup-tag"
+              tagElement.textContent = tag
+              content.appendChild(tagElement)
+            })
 
-            popup.appendChild(header);
-            popup.appendChild(content);
-            container.appendChild(popup);
+            popup.appendChild(header)
+            popup.appendChild(content)
+            container.appendChild(popup)
           }
 
           // Show popup with accessibility
           function showPopup(): void {
-            if (!popup) createPopup();
+            if (!popup) createPopup()
             if (popup) {
-              popup.classList.add("show");
-              popup.setAttribute("aria-hidden", "false");
-              moreButton?.setAttribute("aria-expanded", "true");
+              popup.classList.add("show")
+              popup.setAttribute("aria-hidden", "false")
+              moreButton?.setAttribute("aria-expanded", "true")
             }
           }
 
           // Hide popup
           function hidePopup(): void {
             if (popup) {
-              popup.classList.remove("show");
-              popup.setAttribute("aria-hidden", "true");
-              moreButton?.setAttribute("aria-expanded", "false");
+              popup.classList.remove("show")
+              popup.setAttribute("aria-hidden", "true")
+              moreButton?.setAttribute("aria-expanded", "false")
             }
           }
 
           // Event listeners
-          moreButton?.addEventListener("mouseenter", showPopup);
-          moreButton?.addEventListener("mouseleave", hidePopup);
+          moreButton?.addEventListener("mouseenter", showPopup)
+          moreButton?.addEventListener("mouseleave", hidePopup)
 
           // Touch support for mobile
           moreButton?.addEventListener("touchstart", (e) => {
-            e.preventDefault();
+            e.preventDefault()
             if (popup && popup.classList.contains("show")) {
-              hidePopup();
+              hidePopup()
             } else {
-              showPopup();
+              showPopup()
             }
-          });
+          })
 
           // Accessibility - keyboard support
           moreButton?.addEventListener("keydown", (e) => {
-            const keyEvent = e as KeyboardEvent;
+            const keyEvent = e as KeyboardEvent
             if (keyEvent.key === "Enter" || keyEvent.key === " ") {
-              e.preventDefault();
+              e.preventDefault()
               if (popup && popup.classList.contains("show")) {
-                hidePopup();
+                hidePopup()
               } else {
-                showPopup();
+                showPopup()
               }
             }
             if ((e as KeyboardEvent).key === "Escape") {
-              hidePopup();
+              hidePopup()
             }
-          });
+          })
 
           // Set ARIA attributes
-          moreButton.setAttribute("role", "button");
-          moreButton.setAttribute("aria-expanded", "false");
-          moreButton.setAttribute("aria-haspopup", "true");
-          moreButton.setAttribute("tabindex", "0");
+          moreButton.setAttribute("role", "button")
+          moreButton.setAttribute("aria-expanded", "false")
+          moreButton.setAttribute("aria-haspopup", "true")
+          moreButton.setAttribute("tabindex", "0")
           moreButton.setAttribute(
             "aria-label",
             `Tampilkan ${hiddenTags.length} tag lainnya`
-          );
-        });
+          )
+        })
 
-        console.log("✅ Tag popups initialized");
+        console.log("✅ Tag popups initialized")
       }
 
       // Initialize everything when DOM is loaded
       document.addEventListener("DOMContentLoaded", function () {
-        console.log("📚 GoRakuDo Docs Page Loading...");
+        console.log("📚 GoRakuDo Docs Page Loading...")
 
         // Initialize wave animation
         try {
-          const cleanupWave = initializeDocsWaveAnimation();
+          const cleanupWave = initializeDocsWaveAnimation()
           if (cleanupWave) {
-            waveAnimation = { cleanup: cleanupWave };
-            console.log("✅ Wave animation initialized for docs page");
+            waveAnimation = { cleanup: cleanupWave }
+            console.log("✅ Wave animation initialized for docs page")
           }
         } catch (error) {
-          console.error("❌ Wave animation failed for docs page:", error);
+          console.error("❌ Wave animation failed for docs page:", error)
         }
 
         // Initialize stars
         try {
-          initializeStars();
-          console.log("✅ Stars background initialized for docs page");
+          initializeStars()
+          console.log("✅ Stars background initialized for docs page")
         } catch (error) {
-          console.error("❌ Stars background failed for docs page:", error);
+          console.error("❌ Stars background failed for docs page:", error)
         }
 
         // Initialize tag popups
         try {
-          initializeTagPopups();
-          console.log("✅ Tag popups initialized for docs page");
+          initializeTagPopups()
+          console.log("✅ Tag popups initialized for docs page")
         } catch (error) {
-          console.error("❌ Tag popups failed for docs page:", error);
+          console.error("❌ Tag popups failed for docs page:", error)
         }
 
         // Cleanup on page unload
         window.addEventListener("beforeunload", function () {
           if (waveAnimation && waveAnimation.cleanup) {
-            waveAnimation.cleanup();
+            waveAnimation.cleanup()
           }
-        });
+        })
 
-        console.log("✨ Docs Page Loaded Successfully!");
-      });
+        console.log("✨ Docs Page Loaded Successfully!")
+      })
     </script>
   </body>
 </html>

@@ -242,6 +242,6 @@ const templatesCollection = defineCollection({
 
 // Export the collections
 export const collections = {
-  blog: blogCollection,
+  docs: blogCollection,
   templates: templatesCollection,
 };

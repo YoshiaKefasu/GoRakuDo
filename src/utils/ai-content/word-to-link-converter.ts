@@ -23,6 +23,10 @@ import {
   analyzeContent,
   type InternalLinkSuggestion,
 } from "./content-analysis";
+import {
+  resolveContentPath,
+  getCollectionMetadata,
+} from "../content-path-resolver";
 
 // ========== PERFORMANCE CACHING ==========
 
@@ -386,15 +390,15 @@ export interface WordMatch {
  * them into internal links that look like normal text but provide navigation.
  *
  * @param content - Original content to process
- * @param currentPost - Current blog post entry
- * @param allPosts - All blog posts for link generation
+ * @param currentPost - Current docs post entry
+ * @param allPosts - All docs posts for link generation
  * @param config - Configuration options
  * @returns Enhanced content with word-to-link conversions
  */
 export async function convertWordsToInternalLinks(
   content: string,
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
   config: Partial<WordToLinkConfig> = {},
 ): Promise<WordToLinkResult> {
   const startTime = performance.now();
@@ -605,8 +609,8 @@ export async function convertWordsToInternalLinks(
  */
 export async function convertWordsToInternalLinksInHTML(
   htmlContent: string,
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
   config: Partial<WordToLinkConfig> = {},
 ): Promise<WordToLinkResult> {
   const startTime = performance.now();
@@ -735,7 +739,19 @@ async function processHTMLNodes(
 
         // Create the link element
         const link = document.createElement("a");
-        link.href = `/docs/${match.targetLink.targetSlug}`;
+        // Use dynamic path resolution
+        try {
+          const resolvedPath = resolveContentPath({
+            slug: match.targetLink.targetSlug,
+          } as any);
+          link.href = resolvedPath.path;
+        } catch (error) {
+          console.warn(
+            `Failed to resolve path for ${match.targetLink.targetSlug}:`,
+            error,
+          );
+          link.href = `/docs/${match.targetLink.targetSlug}`;
+        }
         link.className = "word-internal-link word-link-invisible";
         link.title = cleanTooltipText(match.targetLink.targetTitle);
         link.textContent = match.word;
@@ -1605,7 +1621,17 @@ function generateWordLinkHTML(
   targetLink: InternalLinkSuggestion,
   config: WordToLinkConfig,
 ): string {
-  const linkUrl = `/docs/${targetLink.targetSlug}`;
+  // Use dynamic path resolution
+  let linkUrl: string;
+  try {
+    const resolvedPath = resolveContentPath({
+      slug: targetLink.targetSlug,
+    } as any);
+    linkUrl = resolvedPath.path;
+  } catch (error) {
+    console.warn(`Failed to resolve path for ${targetLink.targetSlug}:`, error);
+    linkUrl = `/docs/${targetLink.targetSlug}`;
+  }
 
   // NEW: Clean tooltip text to show only the post title
   const tooltipText = cleanTooltipText(targetLink.targetTitle);
@@ -1728,8 +1754,8 @@ function createEmptyResult(
  */
 export async function convertWords(
   content: string,
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
 ): Promise<string> {
   const result = await convertWordsToInternalLinks(
     content,

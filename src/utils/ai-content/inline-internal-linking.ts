@@ -23,6 +23,10 @@ import {
   type InternalLinkSuggestion,
   type ContentAnalysisResult,
 } from "./content-analysis";
+import {
+  resolveContentPath,
+  getCollectionMetadata,
+} from "../content-path-resolver";
 
 // ========== CONFIGURATION INTERFACES ==========
 
@@ -170,8 +174,8 @@ export interface InlineLinkingResult {
  */
 export async function injectInlineInternalLinks(
   content: string,
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
   config: Partial<InlineLinkingConfig> = {},
 ): Promise<InlineLinkingResult> {
   const startTime = performance.now();
@@ -943,7 +947,15 @@ function generateInlineLinkHTML(
   link: InternalLinkSuggestion,
   config: InlineLinkingConfig,
 ): string {
-  const linkUrl = `/docs/${link.targetSlug}`;
+  // Use dynamic path resolution
+  let linkUrl: string;
+  try {
+    const resolvedPath = resolveContentPath({ slug: link.targetSlug } as any);
+    linkUrl = resolvedPath.path;
+  } catch (error) {
+    console.warn(`Failed to resolve path for ${link.targetSlug}:`, error);
+    linkUrl = `/docs/${link.targetSlug}`;
+  }
   const linkTitle = link.targetTitle;
   const linkReason = link.reason;
 
@@ -981,8 +993,8 @@ function generateInlineLinkHTML(
  */
 export async function addInlineLinks(
   content: string,
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
 ): Promise<string> {
   const result = await injectInlineInternalLinks(
     content,

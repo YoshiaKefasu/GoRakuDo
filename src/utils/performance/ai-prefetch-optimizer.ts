@@ -168,6 +168,7 @@ export function generatePageSpecificAIOptimizations(
       break;
 
     case "docs":
+      // Use hardcoded paths for performance optimization (can be updated later)
       baseResult.resourceHints.push(
         { rel: "prefetch", href: "/docs/getting-started" },
         { rel: "prefetch", href: "/docs/immersion-philosophy" },

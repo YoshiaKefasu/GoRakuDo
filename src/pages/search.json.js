@@ -1,13 +1,17 @@
 // Google Engineering Team 2025: Search Data JSON Endpoint
 // Provides comprehensive search data for client-side Fuse.js search
 import { getCollection } from "astro:content";
+import {
+  resolveContentPath,
+  getCollectionMetadata,
+} from "../utils/content-path-resolver";
 
 export async function GET() {
   try {
     console.log("🔍 Generating search data JSON endpoint...");
 
     // Get all blog posts
-    const posts = await getCollection("blog");
+    const posts = await getCollection("docs");
     console.log(`📚 Found ${posts.length} posts for search indexing`);
 
     // Process posts for search data
@@ -93,8 +97,16 @@ export async function GET() {
         hasCodeBlocks: fullContent.includes("```"),
         hasImages: fullContent.includes("![") || fullContent.includes("!["),
 
-        // URL for navigation
-        url: `/docs/${post.slug}`,
+        // URL for navigation with dynamic path resolution
+        url: (() => {
+          try {
+            const resolvedPath = resolveContentPath(post);
+            return resolvedPath.path;
+          } catch (error) {
+            console.warn(`Failed to resolve path for ${post.slug}:`, error);
+            return `/docs/${post.slug}`;
+          }
+        })(),
       };
 
       return searchItem;

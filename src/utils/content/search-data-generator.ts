@@ -37,7 +37,7 @@ export class SearchDataGenerator {
 
     try {
       // Get all blog posts from Astro content collection
-      const posts = await getCollection("blog");
+      const posts = await getCollection("docs");
 
       // Extract content from all posts
       const extractedPosts = contentExtractor.processAllPosts(posts);

@@ -347,7 +347,7 @@ class DocsSearch {
             <article class="post-card" data-post-slug="${post.slug}">
               <div class="post-header">
                 <h2 class="post-title">
-                  <a href="/docs/${post.slug}">${highlightedTitle}</a>
+                  <a href="${post.url || `/docs/${post.slug}`}">${highlightedTitle}</a>
                 </h2>
                 <div class="post-meta">
                   <span class="post-date">📅 ${this.getPostDate(post.element)}</span>
@@ -357,7 +357,7 @@ class DocsSearch {
               <div class="post-tags">
                 ${post.tags.map((tag) => `<span class="post-tag">${tag}</span>`).join("")}
               </div>
-              <a href="/docs/${post.slug}" class="read-more-btn">Baca Selengkapnya →</a>
+              <a href="${post.url || `/docs/${post.slug}`}" class="read-more-btn">Baca Selengkapnya →</a>
             </article>
           `;
           })

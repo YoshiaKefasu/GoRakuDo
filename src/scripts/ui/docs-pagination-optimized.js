@@ -428,7 +428,7 @@ class DocsPagination {
     article.innerHTML = `
       <div class="post-header">
         <h2 class="post-title">
-          <a href="/docs/${post.slug}">${post.title}</a>
+          <a href="${post.url || `/docs/${post.slug}`}">${post.title}</a>
         </h2>
         <div class="post-meta">
           <span class="post-date">${post.date}</span>
@@ -439,7 +439,7 @@ class DocsPagination {
       <div class="post-tags">
         ${post.tags.map((tag) => `<span class="post-tag">${tag}</span>`).join("")}
       </div>
-      <a href="/docs/${post.slug}" class="read-more-btn">Baca Selengkapnya ↁE/a>
+      <a href="${post.url || `/docs/${post.slug}`}" class="read-more-btn">Baca Selengkapnya →
     `;
 
     return article;

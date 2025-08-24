@@ -16,9 +16,9 @@ dotenv.config();
 
 async function generateMetadataSilent(postSlug = null) {
   try {
-    // Get all blog posts
-    const blogDir = path.join("src", "content", "blog");
-    const files = await fsPromises.readdir(blogDir);
+    // Get all docs posts
+    const docsDir = path.join("src", "content", "docs");
+    const files = await fsPromises.readdir(docsDir);
     const mdFiles = files.filter((file) => file.endsWith(".md"));
 
     let generatedCount = 0;
@@ -31,14 +31,14 @@ async function generateMetadataSilent(postSlug = null) {
         throw new Error(`Post with slug "${postSlug}" not found.`);
       }
       const result = await generateMetadataForFileSilent(
-        path.join(blogDir, targetFile),
+        path.join(docsDir, targetFile),
       );
       if (result === "generated") generatedCount++;
       else if (result === "skipped") skippedCount++;
     } else {
       // Generate for all posts
       for (const file of mdFiles) {
-        const filePath = path.join(blogDir, file);
+        const filePath = path.join(docsDir, file);
         const result = await generateMetadataForFileSilent(filePath);
         if (result === "generated") generatedCount++;
         else if (result === "skipped") skippedCount++;
@@ -197,15 +197,15 @@ async function generateAIRecommendationsSilent(
   currentTags,
 ) {
   try {
-    const blogDir = path.join("src", "content", "blog");
-    const files = await fsPromises.readdir(blogDir);
+    const docsDir = path.join("src", "content", "docs");
+    const files = await fsPromises.readdir(docsDir);
     const mdFiles = files.filter((file) => file.endsWith(".md"));
 
     const availablePosts = [];
     for (const file of mdFiles) {
       if (file === `${currentSlug}.md`) continue;
 
-      const filePath = path.join(blogDir, file);
+      const filePath = path.join(docsDir, file);
       const content = await fsPromises.readFile(filePath, "utf-8");
       const {
         title,

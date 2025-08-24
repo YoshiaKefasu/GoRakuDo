@@ -24,9 +24,9 @@ async function generateMetadataForPost(postSlug = null) {
     console.log("🔧 Testing environment...");
     execSync("node test-node-env.js", { stdio: "inherit" });
 
-    // Get all blog posts
-    const blogDir = path.join("src", "content", "blog");
-    const files = await fsPromises.readdir(blogDir);
+    // Get all docs posts
+    const docsDir = path.join("src", "content", "docs");
+    const files = await fsPromises.readdir(docsDir);
     const mdFiles = files.filter((file) => file.endsWith(".md"));
 
     if (postSlug) {
@@ -35,13 +35,13 @@ async function generateMetadataForPost(postSlug = null) {
       if (!targetFile) {
         throw new Error(`Post with slug "${postSlug}" not found.`);
       }
-      await generateMetadataForFile(path.join(blogDir, targetFile));
+      await generateMetadataForFile(path.join(docsDir, targetFile));
     } else {
       // Generate for all posts
-      console.log(`Found ${mdFiles.length} blog posts to process...`);
+      console.log(`Found ${mdFiles.length} docs posts to process...`);
 
       for (const file of mdFiles) {
-        const filePath = path.join(blogDir, file);
+        const filePath = path.join(docsDir, file);
         await generateMetadataForFile(filePath);
       }
 
@@ -219,15 +219,15 @@ async function generateAIRecommendations(
 ) {
   try {
     // Get all available posts for recommendations
-    const blogDir = path.join("src", "content", "blog");
-    const files = await fsPromises.readdir(blogDir);
+    const docsDir = path.join("src", "content", "docs");
+    const files = await fsPromises.readdir(docsDir);
     const mdFiles = files.filter((file) => file.endsWith(".md"));
 
     const availablePosts = [];
     for (const file of mdFiles) {
       if (file === `${currentSlug}.md`) continue; // Skip current post
 
-      const filePath = path.join(blogDir, file);
+      const filePath = path.join(docsDir, file);
       const content = await fsPromises.readFile(filePath, "utf-8");
       const {
         title,
