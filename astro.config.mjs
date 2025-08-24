@@ -61,7 +61,7 @@ export default defineConfig({
             ],
             "scripts-ui": [
               "./src/scripts/ui/docs-pagination.js",
-              "./src/scripts/ui/docs-search.js",
+              // "./src/scripts/ui/docs-search.js", // Removed - search handled inline in docs.astro
             ],
             "scripts-core": [
               "./src/scripts/core/hompage-script.js",
@@ -96,29 +96,16 @@ export default defineConfig({
       include: ["vue"], // Pre-bundle Vue for faster loading
       exclude: [], // Don't exclude anything for localhost
     },
-    // Reduce bundle size for performance
+    // Simplified chunking for development stability
     build: {
-      chunkSizeWarningLimit: 300, // Reduced from 500KB for stricter optimization
+      chunkSizeWarningLimit: 500, // Increased for development stability
       rollupOptions: {
         output: {
-          // Optimize for performance
+          // Simplified chunking to prevent dev toolbar conflicts
           manualChunks: (id) => {
-            // Critical chunks for performance
-            if (id.includes("vue") && id.includes("runtime")) {
-              return "vue-runtime-critical";
-            }
-            if (id.includes("vue") && !id.includes("runtime")) {
-              return "vue-core";
-            }
-            // Non-critical chunks for performance
-            if (id.includes("settings") || id.includes("admin")) {
-              return "settings-chunk";
-            }
-            if (id.includes("discord") || id.includes("error")) {
-              return "error-handling-chunk";
-            }
-            if (id.includes("slideshow") || id.includes("image")) {
-              return "media-chunk";
+            // Basic Vue chunking
+            if (id.includes("vue")) {
+              return "vue";
             }
             // Default chunking
             return "vendor";
@@ -126,15 +113,15 @@ export default defineConfig({
         },
       },
     },
-    // Performance-specific optimizations
+    // Development server configuration for stability
     server: {
-      // Optimize development server for performance
+      // Enable error overlay for better debugging
       hmr: {
-        overlay: false, // Disable error overlay for faster performance
+        overlay: true, // Enable error overlay for development
       },
-      // Enable faster development
+      // Standard file watching
       watch: {
-        usePolling: false, // Use native file watching for performance
+        usePolling: false, // Use native file watching
       },
     },
     // Optimize for performance
@@ -148,8 +135,8 @@ export default defineConfig({
     vue({
       // Enhanced Vue configuration for better performance
       include: ["**/*.vue"],
-      // Enable experimental features for better performance
-      experimentalReactivityTransform: true,
+      // Disable experimental features to prevent conflicts
+      experimentalReactivityTransform: false,
     }),
     // Enable View Transitions API for smooth page transitions
     {

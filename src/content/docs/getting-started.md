@@ -9,9 +9,8 @@ difficulty: "beginner"
 category: "getting-started"
 tags: ["immersion", "beginner", "hiragana", "katakana", "kanji"]
 featured: true
-mindMapBranch: "landasan-filosofi"
-understandingLevel: "tingkat-0"
-learningStage: "pemanasan"
+mindMapBranch: "A"
+contentType: "tutorial"
 ---
 
 # Memulai Perjalanan Immersion

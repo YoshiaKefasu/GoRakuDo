@@ -185,7 +185,9 @@ export class IndonesianDocsSearch {
           tags: Array.from(tagsElements).map((tag) => tag.textContent || ""),
           date: dateElement?.textContent || "",
           slug: card.getAttribute("data-post-slug") || "",
-          url: card.getAttribute("data-resolved-url") || `/docs/${card.getAttribute("data-post-slug")}`,
+          url:
+            card.getAttribute("data-resolved-url") ||
+            `/docs/${card.getAttribute("data-post-slug")}`,
           learningStage: card.getAttribute("data-learning-stage") || "",
           contentType: card.getAttribute("data-content-type") || "",
           isRecommended: card.getAttribute("data-is-recommended") === "true",

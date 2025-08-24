@@ -134,8 +134,8 @@ export async function generateAIMetadata(
  * Get content with enhanced AI metadata
  */
 export async function getContentWithAIMetadata(
-  posts: CollectionEntry<"blog">[],
-): Promise<(CollectionEntry<"blog"> & { aiMetadata: EnhancedAIMetadata })[]> {
+  posts: CollectionEntry<"docs">[],
+): Promise<(CollectionEntry<"docs"> & { aiMetadata: EnhancedAIMetadata })[]> {
   const results = await Promise.all(
     posts.map(async (post) => ({
       ...post,
@@ -149,9 +149,9 @@ export async function getContentWithAIMetadata(
  * Get content by learning stage with enhanced AI analysis
  */
 export async function getContentByLearningStageWithAI(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   stage: SimpleAIMetadata["learningStage"],
-): Promise<CollectionEntry<"blog">[]> {
+): Promise<CollectionEntry<"docs">[]> {
   const results = await Promise.all(
     posts.map(async (post) => {
       const metadata = await generateAIMetadata(post);
@@ -168,9 +168,9 @@ export async function getContentByLearningStageWithAI(
  * Get content by JLPT level with enhanced AI analysis
  */
 export async function getContentByJLPTLevelWithAI(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   level: "N5" | "N4" | "N3" | "N2" | "N1",
-): Promise<CollectionEntry<"blog">[]> {
+): Promise<CollectionEntry<"docs">[]> {
   const results = await Promise.all(
     posts.map(async (post) => {
       const metadata = await generateAIMetadata(post);
@@ -187,9 +187,9 @@ export async function getContentByJLPTLevelWithAI(
  * Get content by type with enhanced AI analysis
  */
 export async function getContentByTypeWithAI(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   type: SimpleAIMetadata["contentType"],
-): Promise<CollectionEntry<"blog">[]> {
+): Promise<CollectionEntry<"docs">[]> {
   const results = await Promise.all(
     posts.map(async (post) => {
       const metadata = await generateAIMetadata(post);
@@ -206,10 +206,10 @@ export async function getContentByTypeWithAI(
  * Get content recommendations with enhanced AI analysis
  */
 export async function getContentRecommendationsWithAI(
-  posts: CollectionEntry<"blog">[],
-  currentPost: CollectionEntry<"blog">,
+  posts: CollectionEntry<"docs">[],
+  currentPost: CollectionEntry<"docs">,
   maxRecommendations: number = 3,
-): Promise<CollectionEntry<"blog">[]> {
+): Promise<CollectionEntry<"docs">[]> {
   const currentMetadata = await generateAIMetadata(currentPost);
 
   // Enhanced recommendation algorithm

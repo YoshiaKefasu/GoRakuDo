@@ -1,6 +1,6 @@
 ---
 // 404 Error Page with Automatic Redirects
-import HeadSEO from "../components/public-components/HeadSEO.astro";
+import HeadSEO from "../components/public-components/HeadSEO.astro"
 
 // SEO data for 404 page
 const seoData = {
@@ -10,10 +10,10 @@ const seoData = {
   canonicalUrl: "https://gorakudo.org/404",
   pageType: "website" as const,
   authorName: "Tim GoRakuDo",
-};
+}
 
 // Redirect mapping for old URLs with dynamic path support
-import { getCollectionMetadata } from "../utils/content-path-resolver";
+import { getCollectionMetadata } from "../utils/content-path-resolver"
 
 const collectionMetadata = getCollectionMetadata("blog")
 const defaultPath = collectionMetadata.basePath
@@ -29,15 +29,15 @@ const redirectMap = {
   "/guides": defaultPath,
   "/tutorial": defaultPath,
   "/tutorials": defaultPath,
-};
+}
 
 // Get current path for potential redirect
-const currentPath = Astro.url.pathname;
-const redirectTarget = redirectMap[currentPath];
+const currentPath = Astro.url.pathname
+const redirectTarget = redirectMap[currentPath]
 
 // If we have a redirect target, perform the redirect
 if (redirectTarget) {
-  return Astro.redirect(redirectTarget, 301); // Permanent redirect
+  return Astro.redirect(redirectTarget, 301) // Permanent redirect
 }
 ---
 
@@ -66,21 +66,9 @@ if (redirectTarget) {
         right: 0;
         bottom: 0;
         background:
-          radial-gradient(
-            circle at 20% 80%,
-            rgba(139, 93, 255, 0.1) 0%,
-            transparent 50%
-          ),
-          radial-gradient(
-            circle at 80% 20%,
-            rgba(228, 180, 59, 0.1) 0%,
-            transparent 50%
-          ),
-          radial-gradient(
-            circle at 40% 40%,
-            rgba(139, 93, 255, 0.05) 0%,
-            transparent 50%
-          );
+          radial-gradient(circle at 20% 80%, rgba(139, 93, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(228, 180, 59, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(139, 93, 255, 0.05) 0%, transparent 50%);
         z-index: 1;
       }
 
@@ -258,8 +246,8 @@ if (redirectTarget) {
         <h1 class="error-title">404</h1>
         <h2 class="error-subtitle">Halaman Tidak Ditemukan</h2>
         <p class="error-description">
-          Maaf, halaman yang Anda cari tidak ditemukan. Mungkin halaman tersebut
-          telah dipindahkan atau dihapus.
+          Maaf, halaman yang Anda cari tidak ditemukan. Mungkin halaman tersebut telah
+          dipindahkan atau dihapus.
         </p>
 
         <div class="error-path">
@@ -269,9 +257,7 @@ if (redirectTarget) {
         <div class="error-actions">
           <a href="/" class="error-btn primary"> 🏠 Kembali ke Beranda </a>
           <a href="/docs" class="error-btn secondary"> 📚 Lihat Dokumentasi </a>
-          <button onclick="goBack()" class="error-btn secondary">
-            ⬅️ Kembali
-          </button>
+          <button onclick="goBack()" class="error-btn secondary"> ⬅️ Kembali </button>
         </div>
 
         <div class="error-suggestions">
@@ -289,23 +275,23 @@ if (redirectTarget) {
     <script>
       // Navigation functions
       function goHome() {
-        window.location.href = "/";
+        window.location.href = "/"
       }
 
       function goToDocs() {
-        window.location.href = "/docs";
+        window.location.href = "/docs"
       }
 
       function goBack() {
         if (window.history.length > 1) {
-          window.history.back();
+          window.history.back()
         } else {
-          window.location.href = "/";
+          window.location.href = "/"
         }
       }
 
       // Auto-redirect for common old URLs (client-side fallback)
-      const currentPath = window.location.pathname;
+      const currentPath = window.location.pathname
       const redirectMap = {
         "/docs/posts": "/docs",
         "/docs/post": "/docs",
@@ -317,46 +303,44 @@ if (redirectTarget) {
         "/guides": "/docs",
         "/tutorial": "/docs",
         "/tutorials": "/docs",
-      };
+      }
 
       if (redirectMap[currentPath]) {
-        console.log(
-          `🔄 Redirecting ${currentPath} to ${redirectMap[currentPath]}`
-        );
-        window.location.href = redirectMap[currentPath];
+        console.log(`🔄 Redirecting ${currentPath} to ${redirectMap[currentPath]}`)
+        window.location.href = redirectMap[currentPath]
       }
 
       // Add some interactive elements
       document.addEventListener("DOMContentLoaded", function () {
         // Add click handlers for buttons
-        const primaryBtn = document.querySelector(".error-btn.primary");
-        const secondaryBtns = document.querySelectorAll(".error-btn.secondary");
+        const primaryBtn = document.querySelector(".error-btn.primary")
+        const secondaryBtns = document.querySelectorAll(".error-btn.secondary")
 
         if (primaryBtn) {
-          primaryBtn.addEventListener("click", goHome);
+          primaryBtn.addEventListener("click", goHome)
         }
 
         secondaryBtns.forEach((btn) => {
-          const btnText = btn.textContent || "";
+          const btnText = btn.textContent || ""
           if (btnText.includes("Dokumentasi")) {
-            btn.addEventListener("click", goToDocs);
+            btn.addEventListener("click", goToDocs)
           } else if (btnText.includes("Kembali")) {
-            btn.addEventListener("click", goBack);
+            btn.addEventListener("click", goBack)
           }
-        });
+        })
 
         // Add some subtle animations
-        const errorIcon = document.querySelector(".error-icon");
+        const errorIcon = document.querySelector(".error-icon")
         if (errorIcon) {
           errorIcon.addEventListener("mouseenter", function () {
-            this.style.transform = "scale(1.1) rotate(5deg)";
-          });
+            this.style.transform = "scale(1.1) rotate(5deg)"
+          })
 
           errorIcon.addEventListener("mouseleave", function () {
-            this.style.transform = "scale(1) rotate(0deg)";
-          });
+            this.style.transform = "scale(1) rotate(0deg)"
+          })
         }
-      });
+      })
     </script>
   </body>
 </html>

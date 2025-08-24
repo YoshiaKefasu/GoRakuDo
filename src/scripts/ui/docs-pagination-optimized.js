@@ -52,7 +52,7 @@ class DocsPagination {
       title: card.querySelector(".post-title a")?.textContent || "",
       description: card.querySelector(".post-description")?.textContent || "",
       tags: Array.from(card.querySelectorAll(".post-tag")).map(
-        (tag) => tag.textContent || ""
+        (tag) => tag.textContent || "",
       ),
       slug: card.getAttribute("data-post-slug") || "",
       date: card.querySelector(".post-date")?.textContent || "",
@@ -143,7 +143,7 @@ class DocsPagination {
     const startIndex = this.progressiveLoading.loadedSearchResults;
     const endIndex = Math.min(
       startIndex + this.progressiveLoading.batchSize,
-      this.searchResults.length
+      this.searchResults.length,
     );
 
     if (startIndex >= this.searchResults.length) return;
@@ -153,7 +153,7 @@ class DocsPagination {
     if (!contentState) return;
 
     const skeletonPlaceholders = this.createSkeletonPlaceholders(
-      endIndex - startIndex
+      endIndex - startIndex,
     );
     skeletonPlaceholders.forEach((skeleton) => {
       contentState.appendChild(skeleton);
@@ -171,7 +171,8 @@ class DocsPagination {
           contentState.appendChild(postCard);
 
           requestAnimationFrame(() => {
-            postCard.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+            postCard.style.transition =
+              "opacity 0.3s ease, transform 0.3s ease";
             postCard.style.opacity = "1";
             postCard.style.transform = "translateY(0)";
           });
@@ -258,7 +259,7 @@ class DocsPagination {
       {
         rootMargin: "200px 0px",
         threshold: 0.1,
-      }
+      },
     );
   }
 
@@ -313,7 +314,7 @@ class DocsPagination {
         const startIndex = (this.currentPage - 1) * this.postsPerPage;
         const endIndex = Math.min(
           startIndex + this.postsPerPage,
-          this.allPosts.length
+          this.allPosts.length,
         );
         paginationStats.innerHTML = `
           <span class="pagination-stats">
@@ -331,14 +332,20 @@ class DocsPagination {
     const prevBtn = document.querySelector(".prev-btn");
     const nextBtn = document.querySelector(".next-btn");
     const pageNumbers = document.querySelectorAll(".pagination-number");
-    const infiniteScrollToggle = document.getElementById("infiniteScrollToggle");
+    const infiniteScrollToggle = document.getElementById(
+      "infiniteScrollToggle",
+    );
 
     if (prevBtn) {
-      prevBtn.addEventListener("click", () => this.goToPage(this.currentPage - 1));
+      prevBtn.addEventListener("click", () =>
+        this.goToPage(this.currentPage - 1),
+      );
     }
 
     if (nextBtn) {
-      nextBtn.addEventListener("click", () => this.goToPage(this.currentPage + 1));
+      nextBtn.addEventListener("click", () =>
+        this.goToPage(this.currentPage + 1),
+      );
     }
 
     pageNumbers.forEach((number) => {
@@ -401,7 +408,7 @@ class DocsPagination {
     const startIndex = this.loadedPosts;
     const endIndex = Math.min(
       startIndex + this.postsPerPage,
-      this.allPosts.length
+      this.allPosts.length,
     );
     const postsToLoad = this.allPosts.slice(startIndex, endIndex);
 
@@ -464,7 +471,7 @@ class DocsPagination {
     const startIndex = (page - 1) * this.postsPerPage;
     const endIndex = Math.min(
       startIndex + this.postsPerPage,
-      this.allPosts.length
+      this.allPosts.length,
     );
     const postsToShow = this.allPosts.slice(startIndex, endIndex);
 
@@ -491,12 +498,12 @@ class DocsPagination {
     const paginationStats = document.querySelector(".pagination-stats");
 
     if (prevBtn) {
-      (prevBtn).disabled = this.currentPage === 1;
+      prevBtn.disabled = this.currentPage === 1;
       prevBtn.setAttribute("data-page", String(this.currentPage - 1));
     }
 
     if (nextBtn) {
-      (nextBtn).disabled = this.currentPage === this.totalPages;
+      nextBtn.disabled = this.currentPage === this.totalPages;
       nextBtn.setAttribute("data-page", String(this.currentPage + 1));
     }
 
@@ -509,14 +516,14 @@ class DocsPagination {
       const startIndex = (this.currentPage - 1) * this.postsPerPage + 1;
       const endIndex = Math.min(
         this.currentPage * this.postsPerPage,
-        this.allPosts.length
+        this.allPosts.length,
       );
       paginationStats.textContent = `Menampilkan ${startIndex}-${endIndex} dari ${this.allPosts.length} dokumentasi`;
     }
 
     const paginationContainer = document.querySelector(".pagination-container");
     if (paginationContainer) {
-      (paginationContainer).style.display =
+      paginationContainer.style.display =
         this.totalPages > 1 ? "block" : "none";
     }
   }
@@ -529,7 +536,7 @@ class DocsPagination {
 
     const paginationControls = document.querySelector(".pagination-controls");
     if (paginationControls) {
-      (paginationControls).style.display = enabled ? "none" : "flex";
+      paginationControls.style.display = enabled ? "none" : "flex";
     }
 
     if (enabled) {
@@ -582,14 +589,14 @@ class DocsPagination {
 }
 
 // Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { DocsPagination };
 }
 
 // Auto-initialize if in browser environment
-if (typeof window !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
       initializeDocsPagination();
     });
   } else {
@@ -597,14 +604,14 @@ if (typeof window !== 'undefined') {
   }
 
   function initializeDocsPagination() {
-    console.log('📄 Initializing Docs Pagination...');
-    
+    console.log("📄 Initializing Docs Pagination...");
+
     setTimeout(() => {
       if (typeof DocsPagination !== "undefined") {
         const pagination = new DocsPagination();
         pagination.initializeFromURL();
         window.docsPagination = pagination;
-        console.log('📄 Docs Pagination initialized successfully');
+        console.log("📄 Docs Pagination initialized successfully");
       }
     }, 100);
   }

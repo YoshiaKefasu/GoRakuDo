@@ -7,7 +7,7 @@ export { default as LocalhostPerformanceMonitor } from "./performance/localhost-
 
 // UI Scripts
 export { default as DocsPagination } from "./ui/docs-pagination.js";
-export { default as DocsSearch } from "./ui/docs-search.js";
+// export { default as DocsSearch } from "./ui/docs-search.js"; // Removed - search handled inline in docs.astro
 export { default as DocsSkeletonLoader } from "./ui/docs-skeleton-loader.js";
 export { default as PostSkeletonLoader } from "./ui/post-skeleton-loader.js";
 export { default as SettingsManager } from "./ui/settings-manager.js";
@@ -28,7 +28,7 @@ export function loadScript(category, scriptName) {
     },
     ui: {
       "docs-pagination": () => import("./ui/docs-pagination.js"),
-      "docs-search": () => import("./ui/docs-search.js"),
+      // "docs-search": () => import("./ui/docs-search.js"), // Removed - search handled inline in docs.astro
       "docs-skeleton-loader": () => import("./ui/docs-skeleton-loader.js"),
       "post-skeleton-loader": () => import("./ui/post-skeleton-loader.js"),
       "settings-manager": () => import("./ui/settings-manager.js"),
@@ -64,7 +64,7 @@ export function initializeScripts() {
   } else if (path === "/docs") {
     // Docs listing page
     import("./ui/docs-pagination.js");
-    import("./ui/docs-search.js");
+    // import("./ui/docs-search.js"); // Removed - search handled inline in docs.astro
     import("./ui/docs-skeleton-loader.js");
   } else if (path === "/admin/settings") {
     // Settings page

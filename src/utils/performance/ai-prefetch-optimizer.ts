@@ -81,12 +81,13 @@ export function generateAIPrefetchHints(
 
     if (finalConfig.enableFIDOptimization) {
       // FID optimization - only essential interactive resources
-      resourceHints.push({
-        rel: "preload",
-        href: "/scripts/ui/docs-search.js",
-        as: "script",
-        fetchpriority: "high",
-      });
+      // Note: docs-search.js is loaded inline in docs.astro, no need to preload
+      // resourceHints.push({
+      //   rel: "preload",
+      //   href: "/scripts/ui/docs-search.js",
+      //   as: "script",
+      //   fetchpriority: "high",
+      // });
     }
 
     // 2. Essential DNS Prefetch (Simplified)
@@ -206,7 +207,7 @@ export function generateAIOptimizedScripts(
       scripts.push("homepage-script.js");
       break;
     case "docs":
-      scripts.push("docs-search.js");
+      // scripts.push("docs-search.js"); // Removed - loaded inline in docs.astro
       break;
     case "post":
       scripts.push("post-script.js");

@@ -9,9 +9,8 @@ difficulty: "intermediate"
 category: "tools"
 tags: ["anki", "srs", "flashcards", "spaced-repetition", "vocabulary"]
 featured: false
-mindMapBranch: "tools-resource"
-understandingLevel: "tingkat-1"
-learningStage: "starter"
+mindMapBranch: "D"
+contentType: "resource"
 ---
 
 # Panduan Menggunakan Anki
@@ -23,13 +22,15 @@ Anki adalah aplikasi flashcard menggunakan sistem **Spaced Repetition System (SR
 ## Setup Dasar
 
 ### 1. Download dan Install
+
 - [AnkiDroid](https://play.google.com/store/apps/details?id=com.ichi2.anki) untuk Android
-- [AnkiMobile](https://apps.apple.com/app/ankimobile-flashcards/id373493387) untuk iOS  
+- [AnkiMobile](https://apps.apple.com/app/ankimobile-flashcards/id373493387) untuk iOS
 - [Anki Desktop](https://apps.ankiweb.net/) untuk PC/Mac
 
 ## Best Practices
 
 ### Daily Reviews
+
 - **Consistency over quantity**
 - 20-30 kartu baru per hari maximum
 - Selalu selesaikan review harian

@@ -9,9 +9,8 @@ difficulty: "beginner"
 category: "methodology"
 tags: ["content-selection", "anime", "manga", "i+1", "comprehensible-input"]
 featured: false
-mindMapBranch: "strategi-tips"
-understandingLevel: "tingkat-1"
-learningStage: "starter"
+mindMapBranch: "E"
+contentType: "tutorial"
 ---
 
 # Memilih Konten yang Tepat
@@ -23,11 +22,13 @@ Stephen Krashen memperkenalkan konsep **i+1**, di mana 'i' adalah level pemahama
 ### Untuk Pemula (0-6 bulan)
 
 **Anime yang Direkomendasikan:**
+
 - Slice of Life anime (K-On!, Yuru Camp)
 - Anime anak-anak (Doraemon, Anpanman)
 
 ### Untuk Level Menengah (6-18 bulan)
 
 **Konten yang Cocok:**
+
 - Drama sekolah
 - Anime shounen populer

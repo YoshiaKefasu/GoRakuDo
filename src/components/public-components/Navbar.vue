@@ -1,90 +1,97 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <div class="nav-container">
-      <div class="nav-left">
-        <span class="nav-item" role="button" tabindex="0">Resources</span>
-        <span class="nav-item" role="button" tabindex="0">Tools</span>
-        <span class="nav-item" role="button" tabindex="0">Panduan</span>
-      </div>
-      <div class="nav-center">
-        <a
-          href="/"
-          class="logo-japanese"
-          aria-label="GoRakuDo - Kembali ke beranda"
-        >
-          語楽道
-        </a>
-      </div>
-      <div class="nav-right">
+  <div class="navbar-wrapper">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="nav-container">
+        <div class="nav-left">
+          <span class="nav-item" role="button" tabindex="0">Resources</span>
+          <span class="nav-item" role="button" tabindex="0">Tools</span>
+          <span class="nav-item" role="button" tabindex="0">Panduan</span>
+        </div>
+        <div class="nav-center">
+          <a
+            href="/"
+            class="logo-japanese"
+            aria-label="GoRakuDo - Kembali ke beranda"
+          >
+            語楽道
+          </a>
+        </div>
+        <div class="nav-right">
+          <button
+            class="get-started-btn"
+            @click="goToPosts"
+            role="button"
+            tabindex="0"
+          >
+            <svg
+              class="nav-svg-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M11 3V11L14 8L17 11V3M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Metodologi
+          </button>
+          <button
+            class="get-started-btn"
+            @click="scrollToMission"
+            aria-label="Mulai perjalanan belajar bahasa Jepang"
+          >
+            Mulai Sekarang
+          </button>
+        </div>
+        <!-- Mobile menu button -->
         <button
-          class="get-started-btn"
-          @click="goToPosts"
-          role="button"
-          tabindex="0"
+          class="mobile-menu-btn"
+          @click="openInvitationModal"
+          @touchstart="preloadModal"
+          aria-label="Gabung komunitas Discord"
         >
           <svg
-            class="nav-svg-icon"
+            xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+            class="nav-svg-icon lucide lucide-gamepad2-icon lucide-gamepad-2"
             aria-hidden="true"
           >
+            <line x1="6" x2="10" y1="11" y2="11" />
+            <line x1="8" x2="8" y1="9" y2="13" />
+            <line x1="15" x2="15.01" y1="12" y2="12" />
+            <line x1="18" x2="18.01" y1="10" y2="10" />
             <path
-              d="M11 3V11L14 8L17 11V3M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"
+              d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
           </svg>
-          Metodologi
-        </button>
-        <button
-          class="get-started-btn"
-          @click="scrollToMission"
-          aria-label="Mulai perjalanan belajar bahasa Jepang"
-        >
-          Mulai Sekarang
+          Join
         </button>
       </div>
-      <!-- Mobile menu button -->
-      <button
-        class="mobile-menu-btn"
-        @click="openInvitationModal"
-        @touchstart="preloadModal"
-        aria-label="Gabung komunitas Discord"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          class="nav-svg-icon lucide lucide-gamepad2-icon lucide-gamepad-2"
-          aria-hidden="true"
-        >
-          <line x1="6" x2="10" y1="11" y2="11" />
-          <line x1="8" x2="8" y1="9" y2="13" />
-          <line x1="15" x2="15.01" y1="12" y2="12" />
-          <line x1="18" x2="18.01" y1="10" y2="10" />
-          <path
-            d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        Join
-      </button>
-    </div>
-  </nav>
+    </nav>
 
-  <!-- Lazy-loaded Invitation Modal - Only rendered when needed -->
-  <InvitationModal v-if="showModal" ref="invitationModal" />
+    <!-- Lazy-loaded Invitation Modal - Only rendered when needed -->
+    <InvitationModal v-if="showModal" ref="invitationModal" />
+  </div>
 </template>
 
 <style scoped>
 /* ---------- Navbar component - Google UI/UX Team 2025 CSS Unit Optimization ---------- */
+.navbar-wrapper {
+  /* Wrapper for single root element - no layout impact */
+  display: contents !important;
+}
+
 .navbar {
   /* Spacing: REM for responsive scaling with user font preferences */
   padding-top: 0.75rem !important;

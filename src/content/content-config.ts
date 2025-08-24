@@ -78,32 +78,19 @@ export interface ContentConfig {
 
 // Main Configuration - EDIT THIS FILE TO CUSTOMIZE YOUR CONTENT!
 export const CONTENT_CONFIG: ContentConfig = {
-  version: "1.0.0",
+  version: "2.0.0",
 
-  // Categories - Main content organization
+  // Categories - Main content organization (aligned with actual content themes)
   categories: {
-    beginner: {
-      id: "beginner",
-      name: "beginner",
-      displayName: "Dokumentasi Pemula",
-      description:
-        "Content for beginners starting their Japanese learning journey",
-      color: "#10B981",
-      icon: "🌱",
-      keywords: ["pemula", "beginner", "awal", "dasar", "pemanasan"],
-      priority: 1,
-      isActive: true,
-    },
-
     getting_started: {
       id: "getting_started",
       name: "getting-started",
       displayName: "Memulai",
-      description: "Getting started guides and tutorials",
+      description: "Getting started guides and tutorials for beginners",
       color: "#3B82F6",
       icon: "🚀",
-      keywords: ["memulai", "getting started", "tutorial", "guide", "awal"],
-      priority: 2,
+      keywords: ["memulai", "getting started", "tutorial", "guide", "awal", "perjalanan"],
+      priority: 1,
       isActive: true,
     },
 
@@ -111,11 +98,11 @@ export const CONTENT_CONFIG: ContentConfig = {
       id: "methodology",
       name: "methodology",
       displayName: "Metodologi",
-      description: "Learning methodology and theory",
+      description: "Learning methodology, theory, and immersion philosophy",
       color: "#8B5CF6",
-      icon: "📚",
-      keywords: ["metodologi", "methodology", "teori", "theory", "filosofi"],
-      priority: 3,
+      icon: "🧠",
+      keywords: ["metodologi", "methodology", "teori", "theory", "filosofi", "immersion"],
+      priority: 2,
       isActive: true,
     },
 
@@ -123,34 +110,34 @@ export const CONTENT_CONFIG: ContentConfig = {
       id: "tools",
       name: "tools",
       displayName: "Tools",
-      description: "Tools and resources for Japanese learning",
+      description: "Tools, applications, and resources for Japanese learning",
       color: "#F59E0B",
       icon: "🛠️",
-      keywords: ["tools", "anki", "aplikasi", "software", "resource"],
-      priority: 4,
+      keywords: ["tools", "anki", "aplikasi", "software", "resource", "srs"],
+      priority: 3,
       isActive: true,
     },
 
-    advanced: {
-      id: "advanced",
-      name: "advanced",
-      displayName: "Lanjutan",
-      description: "Advanced topics and techniques",
-      color: "#EF4444",
-      icon: "🔥",
-      keywords: ["lanjutan", "advanced", "mahir", "expert", "tingkat tinggi"],
-      priority: 5,
+    content_selection: {
+      id: "content_selection",
+      name: "content-selection",
+      displayName: "Pemilihan Konten",
+      description: "How to choose appropriate content for your level",
+      color: "#10B981",
+      icon: "📚",
+      keywords: ["konten", "content", "selection", "pemilihan", "anime", "manga"],
+      priority: 4,
       isActive: true,
     },
   },
 
-  // Tags - Specific content labels
+  // Tags - Specific content labels (aligned with actual content)
   tags: {
     immersion: {
       id: "immersion",
       name: "immersion",
       displayName: "Immersion",
-      description: "Immersion learning techniques",
+      description: "Immersion learning techniques and philosophy",
       color: "#8B5CF6",
       category: "methodology",
       isActive: true,
@@ -160,59 +147,39 @@ export const CONTENT_CONFIG: ContentConfig = {
       id: "anki",
       name: "anki",
       displayName: "Anki",
-      description: "Anki flashcard system",
+      description: "Anki flashcard system and setup",
       color: "#F59E0B",
       category: "tools",
       isActive: true,
     },
 
-    manga: {
-      id: "manga",
-      name: "manga",
-      displayName: "Manga",
-      description: "Manga reading and comprehension",
-      color: "#EF4444",
-      category: "advanced",
-      isActive: true,
-    },
-
-    anime: {
-      id: "anime",
-      name: "anime",
-      displayName: "Anime",
-      description: "Anime watching and listening",
-      color: "#EC4899",
-      category: "advanced",
-      isActive: true,
-    },
-
-    grammar: {
-      id: "grammar",
-      name: "grammar",
-      displayName: "Grammar",
-      description: "Japanese grammar concepts",
+    beginner: {
+      id: "beginner",
+      name: "beginner",
+      displayName: "Pemula",
+      description: "Content suitable for beginners",
       color: "#10B981",
-      category: "methodology",
+      category: "getting_started",
       isActive: true,
     },
 
-    vocabulary: {
-      id: "vocabulary",
-      name: "vocabulary",
-      displayName: "Vocabulary",
-      description: "Vocabulary building techniques",
+    hiragana: {
+      id: "hiragana",
+      name: "hiragana",
+      displayName: "Hiragana",
+      description: "Hiragana writing system",
       color: "#3B82F6",
-      category: "methodology",
+      category: "getting_started",
       isActive: true,
     },
 
-    pronunciation: {
-      id: "pronunciation",
-      name: "pronunciation",
-      displayName: "Pronunciation",
-      description: "Japanese pronunciation and pitch accent",
-      color: "#06B6D4",
-      category: "beginner",
+    katakana: {
+      id: "katakana",
+      name: "katakana",
+      displayName: "Katakana",
+      description: "Katakana writing system",
+      color: "#3B82F6",
+      category: "getting_started",
       isActive: true,
     },
 
@@ -220,9 +187,29 @@ export const CONTENT_CONFIG: ContentConfig = {
       id: "kanji",
       name: "kanji",
       displayName: "Kanji",
-      description: "Kanji learning methods",
+      description: "Kanji characters and learning methods",
       color: "#DC2626",
-      category: "advanced",
+      category: "getting_started",
+      isActive: true,
+    },
+
+    filosofi: {
+      id: "filosofi",
+      name: "filosofi",
+      displayName: "Filosofi",
+      description: "Philosophical foundations of immersion learning",
+      color: "#8B5CF6",
+      category: "methodology",
+      isActive: true,
+    },
+
+    panduan: {
+      id: "panduan",
+      name: "panduan",
+      displayName: "Panduan",
+      description: "Step-by-step guides and tutorials",
+      color: "#10B981",
+      category: "getting_started",
       isActive: true,
     },
   },
@@ -243,20 +230,6 @@ export const CONTENT_CONFIG: ContentConfig = {
       priority: 1,
     },
 
-    beginner_filter: {
-      id: "beginner_filter",
-      name: "beginner",
-      displayName: "Dokumentasi Pemula",
-      type: "category",
-      target: "beginner",
-      color: "#10B981",
-      icon: "🌱",
-      description: "Beginner-friendly content",
-      isActive: true,
-      showCount: true,
-      priority: 2,
-    },
-
     getting_started_filter: {
       id: "getting_started_filter",
       name: "getting-started",
@@ -268,7 +241,7 @@ export const CONTENT_CONFIG: ContentConfig = {
       description: "Getting started guides",
       isActive: true,
       showCount: true,
-      priority: 3,
+      priority: 2,
     },
 
     methodology_filter: {
@@ -278,11 +251,11 @@ export const CONTENT_CONFIG: ContentConfig = {
       type: "category",
       target: "methodology",
       color: "#8B5CF6",
-      icon: "📚",
+      icon: "🧠",
       description: "Learning methodology",
       isActive: true,
       showCount: true,
-      priority: 4,
+      priority: 3,
     },
 
     tools_filter: {
@@ -296,28 +269,28 @@ export const CONTENT_CONFIG: ContentConfig = {
       description: "Tools and resources",
       isActive: true,
       showCount: true,
-      priority: 5,
+      priority: 4,
     },
 
-    advanced_filter: {
-      id: "advanced_filter",
-      name: "advanced",
-      displayName: "Lanjutan",
+    content_selection_filter: {
+      id: "content_selection_filter",
+      name: "content-selection",
+      displayName: "Pemilihan Konten",
       type: "category",
-      target: "advanced",
-      color: "#EF4444",
-      icon: "🔥",
-      description: "Advanced topics",
+      target: "content_selection",
+      color: "#10B981",
+      icon: "📚",
+      description: "Content selection guides",
       isActive: true,
       showCount: true,
-      priority: 6,
+      priority: 5,
     },
   },
 
-  // Mind Map Integration
+  // Mind Map Integration - Using actual branch IDs from mind-map-config.ts
   mindMap: {
     enabled: true,
-    branches: ["A", "B", "C", "D", "E"], // All mind map branches
+    branches: ["A", "B", "C", "D", "E"], // Actual branch IDs from mind-map-config.ts
     autoGenerateFilters: true,
     customFilters: [
       {
@@ -325,7 +298,7 @@ export const CONTENT_CONFIG: ContentConfig = {
         name: "mind-map-foundation",
         displayName: "Landasan & Filosofi",
         type: "mind-map",
-        target: "A",
+        target: "A", // Landasan & Filosofi
         color: "#8B5DFF",
         icon: "🏛️",
         description: "Foundation & Philosophy content",
@@ -338,7 +311,7 @@ export const CONTENT_CONFIG: ContentConfig = {
         name: "mind-map-learning-stages",
         displayName: "Tahap Pembelajaran",
         type: "mind-map",
-        target: "B",
+        target: "B", // Tahap Pembelajaran
         color: "#E4B43B",
         icon: "📚",
         description: "Learning stages content",
@@ -351,7 +324,7 @@ export const CONTENT_CONFIG: ContentConfig = {
         name: "mind-map-understanding-framework",
         displayName: "Kerangka Pemahaman",
         type: "mind-map",
-        target: "C",
+        target: "C", // Kerangka Pemahaman 7 Tingkat
         color: "#10B981",
         icon: "🎯",
         description: "Understanding framework content",
@@ -364,7 +337,7 @@ export const CONTENT_CONFIG: ContentConfig = {
         name: "mind-map-tools-resources",
         displayName: "Tools & Resources",
         type: "mind-map",
-        target: "D",
+        target: "D", // Tools & Resource
         color: "#F59E0B",
         icon: "🛠️",
         description: "Tools and resources content",
@@ -377,7 +350,7 @@ export const CONTENT_CONFIG: ContentConfig = {
         name: "mind-map-practice-application",
         displayName: "Praktik & Aplikasi",
         type: "mind-map",
-        target: "E",
+        target: "E", // Praktik & Aplikasi
         color: "#EF4444",
         icon: "🔥",
         description: "Practical application content",
@@ -388,22 +361,11 @@ export const CONTENT_CONFIG: ContentConfig = {
     ],
   },
 
-  // Search Suggestions
+  // Search Suggestions - Based on actual content themes
   search: {
     enabled: true,
     suggestions: [
-      "immersion",
-      "anki",
-      "manga",
-      "anime",
-      "grammar",
-      "vocabulary",
-      "pronunciation",
-      "kanji",
-      "pemula",
-      "lanjutan",
-      "metodologi",
-      "tools",
+      "immersion", "anki", "memulai", "filosofi", "panduan", "hiragana", "katakana", "kanji", "pemula", "metodologi", "tools", "konten"
     ],
     maxSuggestions: 6,
     autoGenerate: true,
@@ -527,7 +489,7 @@ export const ContentConfigUtils = {
             ?.toLowerCase()
             .includes(keyword.toLowerCase()) ||
           post.data.category === category.name ||
-          post.data.learningStage === category.name,
+          post.data.contentType === category.name,
       );
     }).length;
   },
@@ -552,9 +514,7 @@ export const ContentConfigUtils = {
    * Count posts by mind map branch
    */
   countPostsByMindMapBranch(posts: any[], branchId: string): number {
-    // This would integrate with your mind map system
-    // For now, return a placeholder count
-    return Math.floor(Math.random() * 5) + 1;
+    return posts.filter((post) => post.data.mindMapBranch === branchId).length;
   },
 
   /**
@@ -572,7 +532,7 @@ export const ContentConfigUtils = {
             ?.toLowerCase()
             .includes(keyword.toLowerCase()) ||
           post.data.category === category.name ||
-          post.data.learningStage === category.name,
+          post.data.contentType === category.name,
       ),
     );
   },
@@ -596,9 +556,7 @@ export const ContentConfigUtils = {
    * Filter posts by mind map branch
    */
   filterPostsByMindMapBranch(posts: any[], branchId: string): any[] {
-    // This would integrate with your mind map system
-    // For now, return a subset of posts
-    return posts.slice(0, Math.floor(posts.length / 2));
+    return posts.filter((post) => post.data.mindMapBranch === branchId);
   },
 
   /**

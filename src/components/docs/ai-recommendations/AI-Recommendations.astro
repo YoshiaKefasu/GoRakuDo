@@ -4,14 +4,17 @@
 // Provides intelligent content recommendations with TypeScript safety and responsive design
 // Enhanced with mind map integration for better context and visual relationships
 
-import type { AIRecommendationsProps } from "./types";
+import type { AIRecommendationsProps } from "./types"
 // import { MindMapIntegrationUtils } from "../../../utils/ai-content/mind-map-integration";
-import "./AI-Recommendations.css";
-import { resolveContentPath, getCollectionMetadata } from "../../../utils/content-path-resolver";
+import "./AI-Recommendations.css"
+import {
+  resolveContentPath,
+  getCollectionMetadata,
+} from "../../../utils/content-path-resolver"
 
 interface Props extends AIRecommendationsProps {
-  sourcePost?: any; // Add source post for mind map integration
-  enableMindMapContext?: boolean; // Enable mind map context features
+  sourcePost?: any // Add source post for mind map integration
+  enableMindMapContext?: boolean // Enable mind map context features
 }
 
 const {
@@ -22,7 +25,7 @@ const {
   showFallback = true,
   sourcePost = null,
   enableMindMapContext = true,
-} = Astro.props;
+} = Astro.props
 
 // Process recommendations with error handling and mind map integration
 const processRecommendations = () => {
@@ -50,7 +53,7 @@ const processRecommendations = () => {
       })),
     ]
       .sort((a, b) => b.score - a.score)
-      .slice(0, maxRecommendations);
+      .slice(0, maxRecommendations)
 
     // Enhance with mind map context if enabled and source post is available
     // Temporarily disabled due to build issues
@@ -81,12 +84,12 @@ const processRecommendations = () => {
     }
     */
 
-    return allRecommendations;
+    return allRecommendations
   } catch (error) {
-    console.error("Error processing AI recommendations:", error);
-    return [];
+    console.error("Error processing AI recommendations:", error)
+    return []
   }
-};
+}
 
 // Enhance recommendations with dynamic path resolution
 const enhancedRecommendations = processRecommendations().map((rec: any) => {
@@ -95,27 +98,25 @@ const enhancedRecommendations = processRecommendations().map((rec: any) => {
     return {
       ...rec,
       resolvedPath: resolvedPath.path,
-      collectionMetadata: getCollectionMetadata("blog")
+      collectionMetadata: getCollectionMetadata("blog"),
     }
   } catch (error) {
     console.warn(`Failed to resolve path for ${rec.targetSlug}:`, error)
     return {
       ...rec,
       resolvedPath: `/docs/${rec.targetSlug}`,
-      collectionMetadata: getCollectionMetadata("blog")
+      collectionMetadata: getCollectionMetadata("blog"),
     }
   }
 })
 
-const processedRecommendations = enhancedRecommendations;
-const hasRecommendations = processedRecommendations.length > 0;
+const processedRecommendations = enhancedRecommendations
+const hasRecommendations = processedRecommendations.length > 0
 const shouldShowFallback =
   showFallback &&
   !hasRecommendations &&
-  (!relatedContent.similarContent ||
-    relatedContent.similarContent.length === 0) &&
-  (!relatedContent.contextualRelevance ||
-    relatedContent.contextualRelevance.length === 0);
+  (!relatedContent.similarContent || relatedContent.similarContent.length === 0) &&
+  (!relatedContent.contextualRelevance || relatedContent.contextualRelevance.length === 0)
 ---
 
 {
@@ -146,8 +147,7 @@ const shouldShowFallback =
             </div>
             <h2 class="ai-recommendations-title">Rekomendasi Dokumentasi</h2>
             <p class="ai-recommendations-subtitle">
-              Temukan rekomendasi cerdas yang disesuaikan dengan perjalanan
-              belajar Anda.
+              Temukan rekomendasi cerdas yang disesuaikan dengan perjalanan belajar Anda.
             </p>
           </div>
         )}
@@ -210,10 +210,7 @@ const shouldShowFallback =
       <div class="ai-recommendations-container">
         <div class="ai-no-recommendations">
           <div class="ai-no-recommendations-icon">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M9.172 16.172A4 4 0 0 1 12 15a4 4 0 0 1 2.828 1.172M9 12H9.01M15 12H15.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
                 stroke="currentColor"
@@ -225,8 +222,8 @@ const shouldShowFallback =
           </div>
           <h3 class="ai-no-recommendations-title">Belum Ada Rekomendasi AI</h3>
           <p class="ai-no-recommendations-description">
-            AI kami masih mempelajari konten ini. Periksa kembali nanti untuk
-            rekomendasi yang dipersonalisasi.
+            AI kami masih mempelajari konten ini. Periksa kembali nanti untuk rekomendasi
+            yang dipersonalisasi.
           </p>
         </div>
       </div>
@@ -238,15 +235,13 @@ const shouldShowFallback =
   // Client-side enhancement for better user experience
   // Track recommendation interactions for analytics
   document.addEventListener("DOMContentLoaded", () => {
-    const recommendationCards = document.querySelectorAll(
-      ".ai-recommendation-card"
-    );
+    const recommendationCards = document.querySelectorAll(".ai-recommendation-card")
 
     recommendationCards.forEach((card: Element) => {
       card.addEventListener("click", (e: Event) => {
-        const targetSlug = card.getAttribute("href")?.replace("/docs/", "");
-        const targetTitle = card.querySelector(".ai-card-title")?.textContent;
-        const score = card.querySelector(".ai-confidence-score")?.textContent;
+        const targetSlug = card.getAttribute("href")?.replace("/docs/", "")
+        const targetTitle = card.querySelector(".ai-card-title")?.textContent
+        const score = card.querySelector(".ai-confidence-score")?.textContent
 
         // Track recommendation click for analytics
         if (targetSlug && targetTitle) {
@@ -255,9 +250,9 @@ const shouldShowFallback =
             targetTitle,
             score,
             timestamp: new Date().toISOString(),
-          });
+          })
         }
-      });
-    });
-  });
+      })
+    })
+  })
 </script>

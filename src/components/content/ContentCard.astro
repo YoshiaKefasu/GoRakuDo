@@ -2,30 +2,33 @@
 // ContentCard.astro - Reusable component for displaying content cards
 // Supports different content types with AI-ready features and mind map integration
 
-import { resolveContentPath, getCollectionMetadata } from "../../utils/content-path-resolver"
+import {
+  resolveContentPath,
+  getCollectionMetadata,
+} from "../../utils/content-path-resolver"
 
 export interface Props {
-  title: string;
-  description: string;
-  slug: string;
-  publishedDate: string;
-  readTime: number;
-  author: string;
-  difficulty: "beginner" | "intermediate" | "advanced";
-  category: string;
-  tags: string[];
-  featured: boolean;
-  mindMapBranch: string;
-  understandingLevel: string;
-  learningStage: string;
+  title: string
+  description: string
+  slug: string
+  publishedDate: string
+  readTime: number
+  author: string
+  difficulty: "beginner" | "intermediate" | "advanced"
+  category: string
+  tags: string[]
+  featured: boolean
+  mindMapBranch: string
+  understandingLevel: string
+  learningStage: string
   aiMetadata?: {
-    contentType?: string;
-    learningStage?: string;
-    complexityScore?: number;
-    estimatedStudyTime?: number;
-    primaryKeywords?: string[];
-    searchIntent?: string;
-  };
+    contentType?: string
+    learningStage?: string
+    complexityScore?: number
+    estimatedStudyTime?: number
+    primaryKeywords?: string[]
+    searchIntent?: string
+  }
 }
 
 const {
@@ -43,7 +46,7 @@ const {
   understandingLevel,
   learningStage,
   aiMetadata,
-} = Astro.props;
+} = Astro.props
 
 // Dynamic content path resolution
 const resolvedPath = resolveContentPath({ slug } as any)
@@ -54,21 +57,21 @@ const formattedDate = new Date(publishedDate).toLocaleDateString("id-ID", {
   year: "numeric",
   month: "long",
   day: "numeric",
-});
+})
 
 // Get difficulty color
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case "beginner":
-      return "bg-green-500";
+      return "bg-green-500"
     case "intermediate":
-      return "bg-yellow-500";
+      return "bg-yellow-500"
     case "advanced":
-      return "bg-red-500";
+      return "bg-red-500"
     default:
-      return "bg-gray-500";
+      return "bg-gray-500"
   }
-};
+}
 
 // Get mind map branch info
 const getBranchInfo = (branch: string) => {
@@ -98,15 +101,15 @@ const getBranchInfo = (branch: string) => {
       icon: "💡",
       color: "bg-pink-500",
     },
-  };
+  }
   return (
     branches[branch as keyof typeof branches] || {
       name: branch,
       icon: "📄",
       color: "bg-gray-500",
     }
-  );
-};
+  )
+}
 
 // Get understanding level info
 const getLevelInfo = (level: string) => {
@@ -118,11 +121,9 @@ const getLevelInfo = (level: string) => {
     "tingkat-4": { name: "Level 4", desc: "Upper Intermediate" },
     "tingkat-5": { name: "Level 5", desc: "Advanced" },
     "tingkat-6": { name: "Level 6", desc: "Near Native" },
-  };
-  return (
-    levels[level as keyof typeof levels] || { name: level, desc: "Unknown" }
-  );
-};
+  }
+  return levels[level as keyof typeof levels] || { name: level, desc: "Unknown" }
+}
 
 // Get learning stage info
 const getStageInfo = (stage: string) => {
@@ -134,20 +135,17 @@ const getStageInfo = (stage: string) => {
       desc: "Normalization Stage (6-12 Months)",
     },
     kompeten: { name: "Kompeten", desc: "Competent Stage (Lifetime)" },
-  };
-  return (
-    stages[stage as keyof typeof stages] || { name: stage, desc: "Unknown" }
-  );
-};
+  }
+  return stages[stage as keyof typeof stages] || { name: stage, desc: "Unknown" }
+}
 
-const branchInfo = getBranchInfo(mindMapBranch);
-const levelInfo = getLevelInfo(understandingLevel);
-const stageInfo = getStageInfo(learningStage);
+const branchInfo = getBranchInfo(mindMapBranch)
+const levelInfo = getLevelInfo(understandingLevel)
+const stageInfo = getStageInfo(learningStage)
 ---
 
 <article
-  class="content-card group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
->
+  class="content-card group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800">
   <!-- Featured Badge -->
   {
     featured && (
@@ -164,23 +162,20 @@ const stageInfo = getStageInfo(learningStage);
     <!-- Mind Map Branch Badge -->
     <div class="mb-3 flex items-center gap-2">
       <span
-        class={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-white ${branchInfo.color}`}
-      >
+        class={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-white ${branchInfo.color}`}>
         {branchInfo.icon}
         {branchInfo.name}
       </span>
       <span
-        class={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-white ${getDifficultyColor(difficulty)}`}
-      >
+        class={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-white ${getDifficultyColor(difficulty)}`}>
         {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
       </span>
     </div>
 
     <!-- Title -->
     <h3
-      class="mb-2 text-xl font-semibold text-gray-900 transition-colors group-hover:text-purple-600 dark:text-white dark:group-hover:text-purple-400"
-    >
-              <a href={resolvedPath.path} class="block">
+      class="mb-2 text-xl font-semibold text-gray-900 transition-colors group-hover:text-purple-600 dark:text-white dark:group-hover:text-purple-400">
+      <a href={resolvedPath.path} class="block">
         {title}
       </a>
     </h3>
@@ -193,9 +188,7 @@ const stageInfo = getStageInfo(learningStage);
     <!-- Meta Information -->
     <div class="mb-4 space-y-2">
       <!-- Author and Date -->
-      <div
-        class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400"
-      >
+      <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
         <span class="flex items-center gap-1">
           <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -228,13 +221,11 @@ const stageInfo = getStageInfo(learningStage);
       <!-- Learning Information -->
       <div class="flex flex-wrap gap-2 text-xs">
         <span
-          class="rounded bg-blue-100 px-2 py-1 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-        >
+          class="rounded bg-blue-100 px-2 py-1 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
           📊 {levelInfo.name}: {levelInfo.desc}
         </span>
         <span
-          class="rounded bg-green-100 px-2 py-1 text-green-800 dark:bg-green-900 dark:text-green-200"
-        >
+          class="rounded bg-green-100 px-2 py-1 text-green-800 dark:bg-green-900 dark:text-green-200">
           🎯 {stageInfo.name}: {stageInfo.desc}
         </span>
       </div>
@@ -302,15 +293,9 @@ const stageInfo = getStageInfo(learningStage);
     <div class="flex items-center justify-between">
       <a
         href={resolvedPath.path}
-        class="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-      >
+        class="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
         Read More
-        <svg
-          class="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
