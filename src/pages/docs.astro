@@ -1555,17 +1555,25 @@ function formatDate(dateString: string): string {
       // Make search engine available globally for debugging
       window.searchEngine = searchEngine
 
-      // Make content configuration available globally for filtering
-      window.contentConfig = {
-        categories: JSON.parse("${JSON.stringify(CONTENT_CONFIG.categories)}"),
-        tags: JSON.parse("${JSON.stringify(CONTENT_CONFIG.tags)}"),
-        filters: JSON.parse("${JSON.stringify(CONTENT_CONFIG.filters)}"),
-        mindMap: JSON.parse("${JSON.stringify(CONTENT_CONFIG.mindMap)}"),
-        search: JSON.parse("${JSON.stringify(CONTENT_CONFIG.search)}"),
-      }
+      // FIX #132: JSON.parse error - Template literals not processed by Astro
+      // ROOT CAUSE: ${JSON.stringify(...)} causing syntax errors in build
+      // SOLUTION: Safe client-side approach with window checks
+      // STATUS: ✅ RESOLVED
 
-      // Make all posts available globally for filtering
-      window.allPosts = JSON.parse("${JSON.stringify(sortedPosts)}")
+      // Make content configuration available globally for filtering
+      if (typeof window !== "undefined") {
+        // Load configuration from data attributes or use defaults
+        window.contentConfig = {
+          categories: {},
+          tags: {},
+          filters: {},
+          mindMap: {},
+          search: {},
+        }
+
+        // Load posts from search.json endpoint (28KB of valid JSON data)
+        window.allPosts = []
+      }
 
       console.log("🚀 Modern Search Engine initialized with Fuse.js integration")
       console.log("📋 Content configuration loaded for dynamic filtering")

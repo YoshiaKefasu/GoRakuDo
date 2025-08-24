@@ -1,3 +1,8 @@
+// FIX #129: Content config migration - Moved from /src/utils/ to /src/content/
+// ROOT CAUSE: Better organization and alignment with content structure
+// SOLUTION: Updated all imports and aligned with actual content themes
+// STATUS: ✅ MIGRATED
+
 /**
  * Content Configuration System
  *
@@ -89,7 +94,14 @@ export const CONTENT_CONFIG: ContentConfig = {
       description: "Getting started guides and tutorials for beginners",
       color: "#3B82F6",
       icon: "🚀",
-      keywords: ["memulai", "getting started", "tutorial", "guide", "awal", "perjalanan"],
+      keywords: [
+        "memulai",
+        "getting started",
+        "tutorial",
+        "guide",
+        "awal",
+        "perjalanan",
+      ],
       priority: 1,
       isActive: true,
     },
@@ -101,7 +113,14 @@ export const CONTENT_CONFIG: ContentConfig = {
       description: "Learning methodology, theory, and immersion philosophy",
       color: "#8B5CF6",
       icon: "🧠",
-      keywords: ["metodologi", "methodology", "teori", "theory", "filosofi", "immersion"],
+      keywords: [
+        "metodologi",
+        "methodology",
+        "teori",
+        "theory",
+        "filosofi",
+        "immersion",
+      ],
       priority: 2,
       isActive: true,
     },
@@ -125,7 +144,14 @@ export const CONTENT_CONFIG: ContentConfig = {
       description: "How to choose appropriate content for your level",
       color: "#10B981",
       icon: "📚",
-      keywords: ["konten", "content", "selection", "pemilihan", "anime", "manga"],
+      keywords: [
+        "konten",
+        "content",
+        "selection",
+        "pemilihan",
+        "anime",
+        "manga",
+      ],
       priority: 4,
       isActive: true,
     },
@@ -365,7 +391,18 @@ export const CONTENT_CONFIG: ContentConfig = {
   search: {
     enabled: true,
     suggestions: [
-      "immersion", "anki", "memulai", "filosofi", "panduan", "hiragana", "katakana", "kanji", "pemula", "metodologi", "tools", "konten"
+      "immersion",
+      "anki",
+      "memulai",
+      "filosofi",
+      "panduan",
+      "hiragana",
+      "katakana",
+      "kanji",
+      "pemula",
+      "metodologi",
+      "tools",
+      "konten",
     ],
     maxSuggestions: 6,
     autoGenerate: true,

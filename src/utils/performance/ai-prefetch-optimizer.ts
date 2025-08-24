@@ -88,6 +88,10 @@ export function generateAIPrefetchHints(
       //   as: "script",
       //   fetchpriority: "high",
       // });
+      // FIX #131: 404 error for docs-search.js - Unused file reference
+      // ROOT CAUSE: File referenced but not actually loaded
+      // SOLUTION: Removed preload reference, search handled inline
+      // STATUS: ✅ RESOLVED
     }
 
     // 2. Essential DNS Prefetch (Simplified)

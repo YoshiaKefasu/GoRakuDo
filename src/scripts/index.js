@@ -8,6 +8,10 @@ export { default as LocalhostPerformanceMonitor } from "./performance/localhost-
 // UI Scripts
 export { default as DocsPagination } from "./ui/docs-pagination.js";
 // export { default as DocsSearch } from "./ui/docs-search.js"; // Removed - search handled inline in docs.astro
+// FIX #131: 404 error for docs-search.js - Unused file reference
+// ROOT CAUSE: File referenced but not actually loaded
+// SOLUTION: Removed reference, search handled inline
+// STATUS: ✅ RESOLVED
 export { default as DocsSkeletonLoader } from "./ui/docs-skeleton-loader.js";
 export { default as PostSkeletonLoader } from "./ui/post-skeleton-loader.js";
 export { default as SettingsManager } from "./ui/settings-manager.js";
