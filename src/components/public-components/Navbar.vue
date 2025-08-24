@@ -23,7 +23,7 @@
           tabindex="0"
         >
           <svg
-            class="btn-icon"
+            class="nav-svg-icon"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -33,7 +33,6 @@
           >
             <path
               d="M11 3V11L14 8L17 11V3M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"
-              stroke="currentColor"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -53,12 +52,35 @@
       <button
         class="mobile-menu-btn"
         @click="openInvitationModal"
+        @touchstart="preloadModal"
         aria-label="Gabung komunitas Discord"
       >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          class="nav-svg-icon lucide lucide-gamepad2-icon lucide-gamepad-2"
+          aria-hidden="true"
+        >
+          <line x1="6" x2="10" y1="11" y2="11" />
+          <line x1="8" x2="8" y1="9" y2="13" />
+          <line x1="15" x2="15.01" y1="12" y2="12" />
+          <line x1="18" x2="18.01" y1="10" y2="10" />
+          <path
+            d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
         Join
       </button>
     </div>
   </nav>
+
+  <!-- Lazy-loaded Invitation Modal - Only rendered when needed -->
+  <InvitationModal v-if="showModal" ref="invitationModal" />
 </template>
 
 <style scoped>
@@ -130,6 +152,47 @@
   background: transparent !important;
 }
 
+/* ---------- UNIFIED SVG ICON STYLING SYSTEM ---------- */
+.nav-svg-icon {
+  color: inherit !important;
+  stroke: currentColor !important;
+  fill: none !important;
+
+  flex-shrink: 0 !important;
+  vertical-align: middle !important;
+
+  /* REASONING: Use global.css transition timing for consistency */
+  transition:
+    color var(--duration-fast) ease,
+    transform var(--duration-fast) ease,
+    opacity var(--duration-fast) ease !important;
+
+  width: 1em !important;
+  height: 1em !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* REASONING: Hover effects for interactive SVG icons */
+.nav-svg-icon:hover {
+  /* REASONING: Subtle scale effect on hover for better UX */
+  transform: scale(1.05) !important;
+  opacity: 0.9 !important;
+}
+
+/* REASONING: Active state for pressed feedback */
+.nav-svg-icon:active {
+  transform: scale(0.95) !important;
+  opacity: 0.8 !important;
+}
+
+/* REASONING: Focus state for accessibility */
+.nav-svg-icon:focus {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* ---------- Mobile-First Base Styles (0px - 640px) ---------- */
 .nav-left,
 .nav-right {
@@ -153,7 +216,10 @@
 }
 
 .mobile-menu-btn {
-  display: block !important; /* Visible by default on mobile */
+  display: flex !important; /* Changed from block to flex for icon alignment */
+  align-items: center !important; /* Center icon and text vertically */
+  justify-content: center !important; /* Center content horizontally */
+  gap: 0.25rem !important; /* Space between icon and text */
   cursor: pointer !important;
   /* Fixed border radius: PX for precise visual consistency */
   border-radius: 20px !important;
@@ -172,6 +238,8 @@
   font-weight: 500 !important;
   /* Enhanced WCAG-compliant text color */
   color: oklch(98% 0.002 270) !important; /* Pure white for maximum contrast */
+  /* Letter spacing for better text readability */
+  letter-spacing: 0.02em !important; /* Slightly looser spacing for "Join" */
   transition: background-color 0.12s ease;
 }
 
@@ -257,6 +325,8 @@
 
 /* ---------- Get Started Button - REM for accessibility ---------- */
 .get-started-btn {
+  font-size: 0.875rem !important; /* 14px → 0.875rem for accessibility scaling */
+  font-weight: 500 !important;
   /* Button spacing: REM for accessibility scaling */
   padding-left: 1.15rem !important; /* 24px → 1.5rem for accessibility scaling */
   padding-right: 1.15rem !important; /* 24px → 1.5rem for accessibility scaling */
@@ -264,18 +334,15 @@
   padding-bottom: 0.625rem !important; /* 10px → 0.625rem for accessibility scaling */
   cursor: pointer !important;
   border: none !important;
-  /* Enhanced WCAG-compliant button background using OKLCH */
-  background-color: oklch(
-    45% 0.25 280
-  ) !important; /* Brand purple converted from #410AC2 */
-  /* Typography: REM for accessibility scaling */
-  font-size: 0.875rem !important; /* 14px → 0.875rem for accessibility scaling */
-  font-weight: 500 !important;
-  /* Enhanced WCAG-compliant text color */
   color: oklch(98% 0.002 270) !important; /* Pure white for maximum contrast */
-  /* Border radius: CSS variable for consistent theming */
+  background-color: oklch(
+    40% 0.28 300
+  ) !important; /* Brand purple converted from #410AC2 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius-btn-small);
+
   transition:
+    background-color var(--animate-duration-slow) ease,
     box-shadow var(--animate-duration-normal) ease,
     transform var(--animate-duration-fast) ease,
     opacity var(--animate-duration-fast) ease;
@@ -288,24 +355,20 @@
 
 .get-started-btn:hover {
   /* Enhanced hover state using darker purple from global.css */
-  background-color: oklch(30% 0.3 280) !important; /* Darker purple for hover */
-  box-shadow: 0 12px 35px var(--color-accent-shadow);
+  background-color: oklch(
+    45% 0.25 280
+  ) !important; /* Darker purple for hover */
+
+  /* Enhanced hover shadow - larger, more prominent */
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
 }
 
 .get-started-btn:active {
   transform: translateY(0);
   opacity: 0.98;
-}
-
-/* Icon styling within button */
-.btn-icon {
-  /* Icon inherits the button's text color (white) */
-  color: inherit !important;
-  /* Ensure icon scales with button text */
-  flex-shrink: 0 !important;
-  /* Smooth transition for any icon color changes */
-  transition: color 0.12s ease !important;
 }
 
 /* ========== RESPONSIVE BREAKPOINTS - ALL BREAKPOINT STYLING BELOW ========== */
@@ -417,7 +480,19 @@
 </style>
 
 <script setup>
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, ref, nextTick } from "vue";
+import InvitationModal from "./InvitationModal.vue";
+
+// Lazy loading state
+const showModal = ref(false);
+const invitationModal = ref(null);
+
+// Pre-load modal on touch start (mobile optimization)
+function preloadModal() {
+  if (!showModal.value) {
+    showModal.value = true;
+  }
+}
 
 // `hompage-script.js`から移動した関数
 function goToPosts() {
@@ -442,9 +517,40 @@ function scrollToMission() {
   }
 }
 
-function openInvitationModal() {
-  // Use the same event-based system as the homepage
-  window.dispatchEvent(new CustomEvent("open-invitation-modal"));
+// Lazy-loaded modal opening function - Mobile optimized
+async function openInvitationModal() {
+  try {
+    // Ensure modal is loaded
+    if (!showModal.value) {
+      showModal.value = true;
+      await nextTick();
+    }
+
+    // Wait a bit more for mobile devices
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Try to open the modal
+    if (
+      invitationModal.value &&
+      typeof invitationModal.value.open === "function"
+    ) {
+      invitationModal.value.open();
+      return;
+    }
+
+    // Fallback: Try global function
+    if (typeof window.openInvitationModal === "function") {
+      window.openInvitationModal();
+      return;
+    }
+
+    // Final fallback: Open Discord directly
+    window.open("https://discord.gg/j8qmYPAGQh", "_blank");
+  } catch (err) {
+    console.error("openInvitationModal error:", err);
+    // Fallback to direct Discord link
+    window.open("https://discord.gg/j8qmYPAGQh", "_blank");
+  }
 }
 
 // Navbarのスクロール効果 - Dynamic transparency based on scroll

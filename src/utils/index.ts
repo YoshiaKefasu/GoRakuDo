@@ -21,7 +21,6 @@ export * from "./content-structure";
 export {
   analyzeContent,
   generateInternalLinks,
-  insertInternalLinks,
   getRelatedContent,
   getLearningPathRecommendations,
   getPostsWithSemanticRelationships,

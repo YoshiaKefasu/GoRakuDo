@@ -5,7 +5,6 @@
 export {
   analyzeContent,
   generateInternalLinks,
-  insertInternalLinks,
   MIND_MAP_BRANCHES,
 } from "./content-analysis";
 

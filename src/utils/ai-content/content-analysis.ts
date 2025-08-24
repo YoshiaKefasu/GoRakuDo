@@ -60,6 +60,8 @@ export interface InternalLinkSuggestion {
 // Export the interface as LinkSuggestion for backward compatibility
 export type LinkSuggestion = InternalLinkSuggestion;
 
+// NOTE: Old internal linking interfaces have been removed in favor of word-to-link conversion
+
 // Mind map customization interface for user modifications
 export interface MindMapCustomization {
   branchId: string;
@@ -249,6 +251,16 @@ function applyMindMapCustomizations(
 
   return customizedBranches;
 }
+
+// NOTE: generateReinventedInternalLinks function has been removed in favor of word-to-link conversion
+
+// NOTE: Legacy helper functions have been removed in favor of word-to-link conversion
+
+// NOTE: Legacy helper functions have been removed in favor of word-to-link conversion
+
+// NOTE: All remaining legacy helper functions have been removed in favor of word-to-link conversion
+
+// NOTE: All remaining legacy helper functions have been removed in favor of word-to-link conversion
 
 /**
  * Enhanced internal link generation with mind map context and adaptive count
@@ -454,6 +466,7 @@ export { MindMapUtils } from "../../components/mind-map/mind-map-config";
 
 /**
  * Find optimal insertion points for internal links
+ * COMPLETELY AVOIDING header positions to prevent reading flow disruption
  */
 function findOptimalInsertionPoints(
   content: string,
@@ -463,90 +476,99 @@ function findOptimalInsertionPoints(
   const insertionPoints: number[] = [];
   const contentLength = content.length;
 
-  // Strategy 1: Try to place after section headers (##, ###)
-  const headerMatches = [...content.matchAll(/^#{2,3}\s+.+$/gm)];
+  // Find ALL header positions to avoid them completely
+  const headerMatches = [...content.matchAll(/^#{1,6}\s+.+$/gm)];
   const headerPositions = headerMatches.map((match) => {
     const endOfHeader = content.indexOf("\n", match.index!);
     return endOfHeader > 0 ? endOfHeader : match.index! + match[0].length;
   });
 
-  // Strategy 2: Place after paragraph breaks with minimum spacing
+  // Strategy 1: Place after paragraph breaks with minimum spacing - AVOIDING headers
   const paragraphBreaks = [...content.matchAll(/\n\n+/g)];
-  const paragraphPositions = paragraphBreaks.map(
-    (match) => match.index! + match[0].length,
-  );
+  const safePositions: number[] = [];
 
-  // Strategy 3: Fallback to evenly distributed positions
-  const fallbackPositions = [];
-  for (let i = 1; i <= maxLinks; i++) {
-    const position = Math.floor((contentLength * i) / (maxLinks + 1));
-    fallbackPositions.push(position);
+  paragraphBreaks.forEach((match) => {
+    const position = match.index! + match[0].length;
+
+    // Check if this position is too close to any header
+    const isTooCloseToHeader = headerPositions.some(
+      (headerPos) => Math.abs(position - headerPos) < 500, // Minimum 500 characters from any header
+    );
+
+    if (!isTooCloseToHeader) {
+      safePositions.push(position);
+    }
+  });
+
+  // Strategy 2: If not enough safe positions, use content-based positions
+  if (safePositions.length < maxLinks) {
+    for (let i = 1; i <= maxLinks; i++) {
+      const candidatePosition = Math.floor(
+        (contentLength * i) / (maxLinks + 1),
+      );
+
+      // Check if this candidate is safe from headers
+      const isTooCloseToHeader = headerPositions.some(
+        (headerPos) => Math.abs(candidatePosition - headerPos) < 500,
+      );
+
+      if (!isTooCloseToHeader && !safePositions.includes(candidatePosition)) {
+        safePositions.push(candidatePosition);
+      }
+    }
   }
 
-  // Combine strategies with priority
+  // Strategy 3: Select best positions from safe candidates
   let currentPosition = 0;
   const usedPositions = new Set<number>();
 
+  // Sort safe positions by their location in content
+  safePositions.sort((a, b) => a - b);
+
   // Special handling for single link placement
   if (maxLinks === 1) {
-    let bestPosition = findOptimalSingleLinkPosition(
-      headerPositions,
-      paragraphPositions,
-      fallbackPositions,
-      contentLength,
+    const midContentPosition = Math.floor(contentLength * 0.6);
+    let bestPosition = safePositions.reduce(
+      (best, pos) => {
+        const distanceFromIdeal = Math.abs(pos - midContentPosition);
+        const bestDistance = Math.abs(best - midContentPosition);
+        return distanceFromIdeal < bestDistance ? pos : best;
+      },
+      safePositions[0] || Math.floor(contentLength * 0.6),
     );
-    if (bestPosition !== -1) {
+
+    // Final safety check
+    const finalCheck = headerPositions.some(
+      (headerPos) => Math.abs(bestPosition - headerPos) < 500,
+    );
+
+    if (!finalCheck && bestPosition) {
       insertionPoints.push(bestPosition);
     }
-    return insertionPoints.sort((a, b) => a - b);
+    return insertionPoints;
   }
 
-  // Standard multi-link placement logic
-  for (let i = 0; i < maxLinks; i++) {
+  // Multi-link placement with optimal spacing
+  for (let i = 0; i < maxLinks && i < safePositions.length; i++) {
     let bestPosition = -1;
     let bestScore = -1;
 
-    // Try header positions first (highest priority)
-    for (const headerPos of headerPositions) {
+    for (const position of safePositions) {
       if (
-        headerPos > currentPosition + optimalSpacing &&
-        !usedPositions.has(headerPos)
+        position > currentPosition + Math.min(optimalSpacing, 400) &&
+        !usedPositions.has(position)
       ) {
-        const score = calculatePositionScore(
-          headerPos,
+        const score = calculateSafePositionScore(
+          position,
           currentPosition,
           optimalSpacing,
+          contentLength,
         );
         if (score > bestScore) {
           bestScore = score;
-          bestPosition = headerPos;
+          bestPosition = position;
         }
       }
-    }
-
-    // Try paragraph positions second
-    if (bestPosition === -1) {
-      for (const paraPos of paragraphPositions) {
-        if (
-          paraPos > currentPosition + optimalSpacing &&
-          !usedPositions.has(paraPos)
-        ) {
-          const score = calculatePositionScore(
-            paraPos,
-            currentPosition,
-            optimalSpacing,
-          );
-          if (score > bestScore) {
-            bestScore = score;
-            bestPosition = paraPos;
-          }
-        }
-      }
-    }
-
-    // Use fallback position if no good position found
-    if (bestPosition === -1 && i < fallbackPositions.length) {
-      bestPosition = fallbackPositions[i];
     }
 
     if (bestPosition !== -1) {
@@ -560,8 +582,33 @@ function findOptimalInsertionPoints(
 }
 
 /**
+ * Calculate score for safe position (avoiding headers)
+ */
+function calculateSafePositionScore(
+  position: number,
+  lastPosition: number,
+  optimalSpacing: number,
+  contentLength: number,
+): number {
+  const spacing = position - lastPosition;
+  const spacingScore = Math.max(
+    0,
+    100 - Math.abs(spacing - optimalSpacing) / 10,
+  );
+
+  // Bonus for positions in the middle sections of content
+  const contentPercent = position / contentLength;
+  const middleBonus = contentPercent >= 0.3 && contentPercent <= 0.8 ? 20 : 0;
+
+  // Penalty for positions too close to beginning or end
+  const edgePenalty = contentPercent < 0.15 || contentPercent > 0.9 ? -30 : 0;
+
+  return spacingScore + middleBonus + edgePenalty;
+}
+
+/**
  * Find optimal position for a single internal link
- * Prioritizes mid-content placement at natural breaks
+ * Prioritizes mid-content placement at natural breaks - AVOIDING headers completely
  */
 function findOptimalSingleLinkPosition(
   headerPositions: number[],
@@ -573,43 +620,58 @@ function findOptimalSingleLinkPosition(
   let bestPosition = -1;
   let bestScore = -1;
 
-  // Strategy 1: Find header position closest to ideal position (after 50% mark)
-  const midContentHeaders = headerPositions.filter(
-    (pos) => pos > contentLength * 0.5,
-  );
-  for (const headerPos of midContentHeaders) {
+  // Strategy 1: Find safe paragraph positions (avoiding headers completely)
+  const safePositions = paragraphPositions.filter((pos) => {
+    // Must be far enough from any header
+    const isTooCloseToHeader = headerPositions.some(
+      (headerPos) => Math.abs(pos - headerPos) < 500,
+    );
+    return !isTooCloseToHeader && pos > contentLength * 0.3; // After 30% of content
+  });
+
+  for (const paraPos of safePositions) {
     const score = calculateSingleLinkScore(
-      headerPos,
+      paraPos,
       idealPosition,
       contentLength,
     );
     if (score > bestScore) {
       bestScore = score;
-      bestPosition = headerPos;
+      bestPosition = paraPos;
     }
   }
 
-  // Strategy 2: Find paragraph position closest to ideal position (if no good header)
+  // Strategy 2: Use safe fallback position if no good paragraph position found
   if (bestPosition === -1) {
-    const midContentParagraphs = paragraphPositions.filter(
-      (pos) => pos > contentLength * 0.4,
-    );
-    for (const paraPos of midContentParagraphs) {
-      const score = calculateSingleLinkScore(
-        paraPos,
-        idealPosition,
-        contentLength,
+    for (const fallbackPos of fallbackPositions) {
+      const isTooCloseToHeader = headerPositions.some(
+        (headerPos) => Math.abs(fallbackPos - headerPos) < 500,
       );
-      if (score > bestScore) {
-        bestScore = score;
-        bestPosition = paraPos;
+
+      if (!isTooCloseToHeader) {
+        const score = calculateSingleLinkScore(
+          fallbackPos,
+          idealPosition,
+          contentLength,
+        );
+        if (score > bestScore) {
+          bestScore = score;
+          bestPosition = fallbackPos;
+        }
       }
     }
   }
 
-  // Strategy 3: Use fallback position if no good structural break found
-  if (bestPosition === -1 && fallbackPositions.length > 0) {
-    bestPosition = fallbackPositions[0]; // Use the first (middle) fallback position
+  // Strategy 3: Final fallback - find safe middle position
+  if (bestPosition === -1) {
+    const middlePosition = Math.floor(contentLength * 0.6);
+    const isTooCloseToHeader = headerPositions.some(
+      (headerPos) => Math.abs(middlePosition - headerPos) < 500,
+    );
+
+    if (!isTooCloseToHeader) {
+      bestPosition = middlePosition;
+    }
   }
 
   return bestPosition;
@@ -660,58 +722,4 @@ function calculatePositionScore(
   return spacingScore + positionScore;
 }
 
-/**
- * Simplified link insertion - clean and efficient
- */
-export function insertInternalLinks(
-  content: string,
-  suggestions: InternalLinkSuggestion[],
-): string {
-  // Safety check for content
-  if (!content) {
-    console.warn("No content provided for internal link insertion");
-    return "";
-  }
-
-  if (suggestions.length === 0) {
-    console.log("No internal link suggestions to insert");
-    return content;
-  }
-
-  let enhancedContent = content;
-
-  // Sort suggestions by position in reverse order to avoid position shifts
-  const sortedSuggestions = [...suggestions].sort(
-    (a, b) => b.position - a.position,
-  );
-
-  sortedSuggestions.forEach((suggestion, index) => {
-    const linkHtml = `\n\n**📖 Baca juga:** <a href="/docs/${suggestion.targetSlug}" class="internal-link" title="${suggestion.reason}">${suggestion.targetTitle}</a>\n\n`;
-
-    if (suggestion.position <= enhancedContent.length) {
-      enhancedContent =
-        enhancedContent.slice(0, suggestion.position) +
-        linkHtml +
-        enhancedContent.slice(suggestion.position);
-
-      // Calculate spacing from previous link for better logging
-      const spacingFromStart = suggestion.position;
-      const spacingInfo =
-        spacingFromStart > 1000
-          ? `${Math.round(spacingFromStart / 1000)}k chars`
-          : `${spacingFromStart} chars`;
-
-      console.log(
-        `🔗 Inserted internal link to "${suggestion.targetTitle}" at ${spacingInfo} from start`,
-      );
-    } else {
-      // If position is beyond content length, append at the end
-      enhancedContent += linkHtml;
-      console.log(
-        `🔗 Appended internal link to "${suggestion.targetTitle}" at end of content`,
-      );
-    }
-  });
-
-  return enhancedContent;
-}
+// NOTE: insertInternalLinks function has been removed in favor of word-to-link conversion

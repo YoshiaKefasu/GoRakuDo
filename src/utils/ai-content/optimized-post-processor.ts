@@ -8,7 +8,11 @@ import { getCollection } from "astro:content";
 // Import RelatedContent type for consistency
 import type { RelatedContent } from "../../components/docs/ai-recommendations/types";
 import { getRelatedContent } from "./semantic-relationships";
-import { generateInternalLinks, insertInternalLinks } from "./content-analysis";
+import { generateInternalLinks } from "./content-analysis";
+import {
+  convertWordsToInternalLinks,
+  createWordToLinkConfig,
+} from "./word-to-link-converter";
 
 // Post processing result interface
 export interface PostProcessingResult {
@@ -128,13 +132,112 @@ export class OptimizedPostProcessor {
     try {
       // Get all posts for internal link generation
       const allPosts = await getCollection("blog");
-      
-      // Generate internal link suggestions
-      const linkSuggestions = generateInternalLinks(post, allPosts, 3);
-      
-      // Insert internal links into content
-      const enhancedBody = insertInternalLinks(post.body, linkSuggestions);
-      
+
+      console.log(`🔍 Starting post enhancement for "${post.slug}"`);
+      console.log(`📊 Total posts available for linking: ${allPosts.length}`);
+
+      // Generate word-to-link conversion for natural internal linking
+      console.log(`🔗 Starting word-to-link conversion for "${post.slug}"`);
+
+      const wordLinkResult = await convertWordsToInternalLinks(
+        post.body,
+        post,
+        allPosts,
+        createWordToLinkConfig({
+          maxConversionsPerArticle: 5, // Increased from 3 for better coverage
+          minWordLength: 3,
+          maxWordLength: 50,
+          caseSensitive: false,
+          exactMatch: false,
+          allowPartialMatch: true,
+          showTooltip: true,
+          tooltipStyle: "simple",
+          linkStyle: "invisible", // Words look exactly like normal text
+          excludeSelectors: [
+            "code",
+            "pre",
+            "blockquote",
+            ".no-links",
+            ".syntax-highlight",
+            ".code-block",
+            "a",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6", // Exclude headers
+          ],
+          excludePatterns: [
+            /^```[\s\S]*?```$/gm, // Code blocks
+            /^>\s+/gm, // Blockquotes
+            /^\d+\.\s+/gm, // Numbered lists
+            /^[-*+]\s+/gm, // Bullet lists
+            /^#{1,6}\s+/gm, // Headers (NEW)
+          ],
+          preserveFormatting: true,
+          respectIndonesianWords: true, // NEW: Respect Indonesian word boundaries
+          excludeHeaders: true, // NEW: Exclude headers from processing
+          excludeConjunctions: true, // FIXED: Re-enable Indonesian conjunction exclusion
+        }),
+      );
+
+      // Enhanced debugging for word-to-link conversion
+      console.log(`📊 Word-to-link conversion results for "${post.slug}":`);
+      console.log(
+        `   - Total words processed: ${wordLinkResult.statistics.totalWords}`,
+      );
+      console.log(
+        `   - Words converted: ${wordLinkResult.statistics.convertedWords}`,
+      );
+      console.log(
+        `   - Processing time: ${wordLinkResult.statistics.processingTime.toFixed(2)}ms`,
+      );
+
+      if (wordLinkResult.conversions.length > 0) {
+        console.log(`   - Conversions made:`);
+        wordLinkResult.conversions.forEach((conversion, index) => {
+          console.log(
+            `     ${index + 1}. "${conversion.originalWord}" → "${conversion.targetTitle}" (${conversion.targetSlug})`,
+          );
+        });
+      } else {
+        console.log(`   ⚠️  No conversions made - checking why...`);
+
+        // Debug: Check if generateInternalLinks returns suggestions
+        const linkSuggestions = generateInternalLinks(post, allPosts, 5);
+        console.log(
+          `   🔍 Link suggestions generated: ${linkSuggestions.length}`,
+        );
+        if (linkSuggestions.length > 0) {
+          console.log(`   📝 Available link suggestions:`);
+          linkSuggestions.forEach((suggestion, index) => {
+            console.log(
+              `     ${index + 1}. "${suggestion.targetTitle}" (${suggestion.targetSlug}) - Relevance: ${suggestion.relevance}`,
+            );
+          });
+        } else {
+          console.log(
+            `   ❌ No link suggestions generated - this is the root cause`,
+          );
+        }
+      }
+
+      const enhancedBody = wordLinkResult.enhancedContent;
+
+      // Debug: Check if content was actually enhanced
+      if (enhancedBody !== post.body) {
+        console.log(`✅ Content enhanced for "${post.slug}"`);
+        console.log(
+          `📝 Enhanced content preview:`,
+          enhancedBody.substring(0, 200) + "...",
+        );
+      } else {
+        console.log(
+          `⚠️  Content not enhanced for "${post.slug}" - using original body`,
+        );
+      }
+
       const enhancedPost = {
         ...post,
         body: enhancedBody, // Use enhanced body with internal links
@@ -169,9 +272,15 @@ export class OptimizedPostProcessor {
         );
       }
 
-      // Log internal link generation
-      if (linkSuggestions.length > 0) {
-        console.log(`🔗 Generated ${linkSuggestions.length} internal links for "${post.slug}"`);
+      // Log word-to-link conversion results
+      if (wordLinkResult.statistics.convertedWords > 0) {
+        console.log(
+          `🔗 Generated ${wordLinkResult.statistics.convertedWords} word-to-link conversions for "${post.slug}"`,
+        );
+      } else {
+        console.log(
+          `⚠️  No word-to-link conversions generated for "${post.slug}" - this needs investigation`,
+        );
       }
 
       return enhancedPost;
