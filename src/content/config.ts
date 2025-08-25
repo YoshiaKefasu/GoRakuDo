@@ -81,8 +81,72 @@ const templatesCollection = defineCollection({
   }),
 });
 
+// Tools Collection for Tool Documentation
+// Purpose: Store detailed documentation for immersion learning tools
+const toolsCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    // Core Content Metadata
+    title: z.string(),
+    description: z.string(),
+    publishedDate: z.string(),
+    author: z.string().default("Tim GoRakuDo"),
+
+    // Tool-Specific Metadata
+    toolName: z.string(),
+    toolVersion: z.string().optional(),
+    toolWebsite: z.string().url().optional(),
+    toolCategory: z.enum([
+      "flashcard",
+      "reading",
+      "listening",
+      "writing",
+      "suite",
+      "video",
+      "browser-extension",
+      "mobile-app",
+      "desktop-app",
+    ]),
+
+    // Difficulty and Setup Information
+    difficulty: z
+      .enum(["beginner", "intermediate", "advanced"])
+      .default("beginner"),
+    setupTime: z.string().optional(), // e.g., "5-10 minutes"
+    cost: z.enum(["free", "freemium", "paid", "subscription"]).default("free"),
+
+    // Visual Elements
+    emoji: z.string().optional(),
+    icon: z.string().optional(), // URL or path to tool icon
+
+    // Content Classification
+    tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
+
+    // Mind Map Integration
+    mindMapBranch: z.enum(["D"]).default("D"), // Tools & Resource branch
+
+    // Content Type
+    contentType: z
+      .enum(["tool-guide", "setup-tutorial", "usage-guide", "review"])
+      .default("tool-guide"),
+
+    // Read Time Estimation
+    readTime: z.number().optional(),
+
+    // Tool Features
+    features: z.array(z.string()).default([]),
+    requirements: z.array(z.string()).default([]),
+
+    // SEO and Discovery
+    keywords: z.array(z.string()).default([]),
+    relatedTools: z.array(z.string()).default([]),
+  }),
+});
+
 // Export the collections
 export const collections = {
   docs: docsCollection,
   templates: templatesCollection,
+  tools: toolsCollection,
 };

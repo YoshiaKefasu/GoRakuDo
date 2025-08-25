@@ -3,9 +3,36 @@
     <nav class="navbar" role="navigation" aria-label="Main navigation">
       <div class="nav-container">
         <div class="nav-left">
-          <span class="nav-item" role="button" tabindex="0">Resources</span>
-          <span class="nav-item" role="button" tabindex="0">Tools</span>
-          <span class="nav-item" role="button" tabindex="0">Panduan</span>
+          <span
+            class="nav-item"
+            role="button"
+            tabindex="0"
+            @click="goToResources"
+            @keydown.enter="goToResources"
+            @keydown.space="goToResources"
+          >
+            Resources
+          </span>
+          <span
+            class="nav-item"
+            role="button"
+            tabindex="0"
+            @click="goToTools"
+            @keydown.enter="goToTools"
+            @keydown.space="goToTools"
+          >
+            Tools
+          </span>
+          <span
+            class="nav-item"
+            role="button"
+            tabindex="0"
+            @click="goToPanduan"
+            @keydown.enter="goToPanduan"
+            @keydown.space="goToPanduan"
+          >
+            Panduan
+          </span>
         </div>
         <div class="nav-center">
           <a
@@ -20,6 +47,8 @@
           <button
             class="get-started-btn"
             @click="goToPosts"
+            @keydown.enter="goToPosts"
+            @keydown.space="goToPosts"
             role="button"
             tabindex="0"
           >
@@ -44,6 +73,8 @@
           <button
             class="get-started-btn"
             @click="scrollToMission"
+            @keydown.enter="scrollToMission"
+            @keydown.space="scrollToMission"
             aria-label="Mulai perjalanan belajar bahasa Jepang"
           >
             Mulai Sekarang
@@ -53,6 +84,8 @@
         <button
           class="mobile-menu-btn"
           @click="openInvitationModal"
+          @keydown.enter="openInvitationModal"
+          @keydown.space="openInvitationModal"
           @touchstart="preloadModal"
           aria-label="Gabung komunitas Discord"
         >
@@ -88,8 +121,9 @@
 <style scoped>
 /* ---------- Navbar component - Google UI/UX Team 2025 CSS Unit Optimization ---------- */
 .navbar-wrapper {
-  /* Wrapper for single root element - no layout impact */
-  display: contents !important;
+  /* Wrapper for single root element - ensure proper layout */
+  display: block !important;
+  width: 100% !important;
 }
 
 .navbar {
@@ -203,16 +237,35 @@
 /* ---------- Mobile-First Base Styles (0px - 640px) ---------- */
 .nav-left,
 .nav-right {
-  display: none !important; /* Hidden by default on mobile */
+  display: flex !important; /* Show navigation on all screen sizes */
+  flex: 1 1 0% !important;
+  align-items: center !important;
+}
+
+.nav-left {
+  gap: 0.75rem !important; /* Small gap for mobile */
+}
+
+.nav-right {
+  justify-content: flex-end !important;
+  gap: 0.5rem !important; /* Small gap for mobile */
 }
 
 .nav-item {
   cursor: pointer !important;
   /* Typography: REM for accessibility scaling with user font preferences */
-  font-size: 0.875rem !important; /* 14px → 0.875rem for accessibility scaling */
+  font-size: 0.75rem !important; /* Mobile-first: Start with smaller font */
   /* Enhanced WCAG-compliant text color using OKLCH */
   color: oklch(75% 0.008 270) !important; /* Enhanced contrast from #cccccc */
-  transition: color 0.12s ease;
+  /* Add padding for better touch targets */
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 0.375rem !important;
+  transition:
+    color 0.12s ease,
+    background-color 0.12s ease,
+    transform 0.12s ease;
+  /* Ensure proper focus outline */
+  outline: none !important;
 }
 
 .nav-item:hover {
@@ -220,6 +273,21 @@
   color: oklch(
     65% 0.18 280
   ) !important; /* Brand purple with excellent contrast */
+  background-color: oklch(98% 0.002 270 / 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+.nav-item:focus {
+  /* Focus state for accessibility */
+  outline: 2px solid oklch(65% 0.18 280) !important;
+  outline-offset: 2px !important;
+  background-color: oklch(98% 0.002 270 / 0.15) !important;
+}
+
+.nav-item:active {
+  /* Active state for click feedback */
+  transform: translateY(0) !important;
+  background-color: oklch(98% 0.002 270 / 0.2) !important;
 }
 
 .mobile-menu-btn {
@@ -384,7 +452,22 @@
   /* 640px → 40rem for responsive scaling */
   .nav-left,
   .nav-right {
-    display: none !important; /* Hidden by default on mobile */
+    display: flex !important; /* Show navigation on all screen sizes */
+    flex: 1 1 0% !important;
+    align-items: center !important;
+  }
+
+  .nav-left {
+    gap: 1rem !important; /* Smaller gap for mobile */
+  }
+
+  .nav-right {
+    justify-content: flex-end !important;
+    gap: 0.5rem !important; /* Smaller gap for mobile */
+  }
+
+  .nav-item {
+    font-size: 0.8rem !important; /* Slightly larger for tablet */
   }
 
   .navbar {
@@ -434,8 +517,12 @@
     gap: 1rem !important;
   }
 
+  .nav-item {
+    font-size: 0.875rem !important; /* Full size for desktop */
+  }
+
   .mobile-menu-btn {
-    display: none !important; /* Hide mobile menu button on desktop */
+    display: none !important; /* Hide mobile menu button since navigation is now available */
   }
 }
 
@@ -501,8 +588,20 @@ function preloadModal() {
   }
 }
 
-// `hompage-script.js`から移動した関数
+// Navigation functions
+function goToResources() {
+  window.location.href = "/docs";
+}
+
 function goToPosts() {
+  window.location.href = "/docs";
+}
+
+function goToTools() {
+  window.location.href = "/tools";
+}
+
+function goToPanduan() {
   window.location.href = "/docs";
 }
 

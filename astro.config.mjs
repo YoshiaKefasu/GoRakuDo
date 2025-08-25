@@ -47,9 +47,9 @@ export default defineConfig({
           assetFileNames: "assets/[name]-[hash].[ext]",
           // Enhanced manual chunk splitting for optimal performance
           manualChunks: {
-            // Critical Vue framework chunk (load first)
+            // Critical Vue framework chunk (load first) - OPTIMIZED FOR LOCALHOST
             "vue-core": ["vue"],
-            // Vue runtime optimization
+            // Vue runtime optimization for localhost
             "vue-runtime": ["vue/dist/runtime-dom.esm-bundler.js"],
             // Non-critical Vue components (load after)
             "vue-components": ["@astrojs/vue"],
@@ -58,6 +58,14 @@ export default defineConfig({
             // Scripts (migrated from public/scripts/)
             "scripts-performance": [
               "./src/scripts/performance/performance-monitor.js",
+            ],
+            "scripts-ui": [
+              "./src/scripts/ui/docs-pagination.js",
+              // "./src/scripts/ui/docs-search.js", // Removed - search handled inline in docs.astro
+              // FIX #131: 404 error for docs-search.js - Unused file reference
+              // ROOT CAUSE: File referenced but not actually loaded
+              // SOLUTION: Removed reference, search handled inline
+              // STATUS: ✅ RESOLVED
             ],
             "scripts-core": [
               "./src/scripts/core/hompage-script.js",
@@ -72,9 +80,7 @@ export default defineConfig({
             // Discord error reporter (load on demand)
             discord: ["./src/utils/error-handling/discord-error-reporter.js"],
             // Image slideshow (load on demand)
-            slideshow: [
-              "./src/components/homepage/Slideshow/ImageSlideshow.astro",
-            ],
+            slideshow: ["./src/components/ImageSlideshow.astro"],
           },
         },
       },
@@ -84,8 +90,6 @@ export default defineConfig({
       // Performance optimizations
       cssCodeSplit: true, // Split CSS for better caching
       sourcemap: false, // Disable sourcemaps for production
-      // Increased chunk size warning limit for development stability
-      chunkSizeWarningLimit: 500,
     },
     // Optimize CSS for performance
     css: {
@@ -95,6 +99,23 @@ export default defineConfig({
     optimizeDeps: {
       include: ["vue"], // Pre-bundle Vue for faster loading
       exclude: [], // Don't exclude anything for localhost
+    },
+    // Simplified chunking for development stability
+    build: {
+      chunkSizeWarningLimit: 500, // Increased for development stability
+      rollupOptions: {
+        output: {
+          // Simplified chunking to prevent dev toolbar conflicts
+          manualChunks: (id) => {
+            // Basic Vue chunking
+            if (id.includes("vue")) {
+              return "vue";
+            }
+            // Default chunking
+            return "vendor";
+          },
+        },
+      },
     },
     // Development server configuration for stability
     server: {
@@ -121,5 +142,21 @@ export default defineConfig({
       // Disable experimental features to prevent conflicts
       experimentalReactivityTransform: false,
     }),
+    // Enable View Transitions API for smooth page transitions
+    {
+      name: "view-transitions",
+      hooks: {
+        "astro:config:setup": ({ updateConfig }) => {
+          updateConfig({
+            vite: {
+              plugins: [tailwindcss()],
+            },
+            experimental: {
+              viewTransitions: true,
+            },
+          });
+        },
+      },
+    },
   ],
 });

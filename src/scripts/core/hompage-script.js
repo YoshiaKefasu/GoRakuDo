@@ -143,11 +143,11 @@ class WaveAnimation {
       this.ctx.stroke();
     });
 
-    // Add floating particles
-    for (let i = 0; i < 8; i++) {
+    // Add floating particles (reduced for performance)
+    for (let i = 0; i < 6; i++) {
       const x =
         this.width * 0.1 +
-        i * this.width * 0.1 +
+        i * this.width * 0.2 +
         Math.sin(this.time * 0.01 + i) * 20;
       const y = this.height * 0.3 + Math.sin(this.time * 0.008 + i * 1.5) * 30;
       const size = 1 + Math.sin(this.time * 0.02 + i) * 0.5;
@@ -159,14 +159,19 @@ class WaveAnimation {
       this.ctx.fill();
     }
 
-    this.time += 1;
+    this.time += timeStep;
     this.animationId = requestAnimationFrame(() => this.animate());
   }
 
-  destroy() {
+  stop() {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
+      this.animationId = null;
     }
+  }
+
+  destroy() {
+    this.stop();
     window.removeEventListener("resize", () => this.resizeCanvas());
   }
 }

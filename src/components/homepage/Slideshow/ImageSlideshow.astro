@@ -43,13 +43,15 @@ import { Image } from 'astro:assets';
         data-link={slide.link}
       >
         <Image 
-          loading="lazy"
-          fetchpriority="auto"
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchpriority={index === 0 ? "high" : "low"}
           src={slide.imageUrl} 
           alt={slide.alt}
           class="w-full h-full object-cover"
-          width={1200}
-          height={800}
+          width={800}
+          height={533}
+          format="webp"
+          quality={85}
         />
         <!-- Gradient overlay for better text visibility -->
         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>

@@ -1,0 +1,503 @@
+/* Import Tailwind CSS v4 */
+@import "tailwindcss";
+
+/* ========== TOOLS PAGE STYLES ========== */
+
+/* View Transitions API support for tools page */
+@supports (view-transition-name: none) {
+  /* Main content transitions */
+  ::view-transition-old(main-content),
+  ::view-transition-new(main-content) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-in-out;
+  }
+
+  /* Tools hero transitions */
+  ::view-transition-old(tools-hero),
+  ::view-transition-new(tools-hero) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  ::view-transition-old(tools-hero-title),
+  ::view-transition-new(tools-hero-title) {
+    animation-duration: 0.35s;
+    animation-timing-function: ease-out;
+  }
+
+  /* Tools section transitions */
+  ::view-transition-old(tools-section),
+  ::view-transition-new(tools-section) {
+    animation-duration: 0.4s;
+    animation-timing-function: ease-in-out;
+  }
+
+  ::view-transition-old(tools-title),
+  ::view-transition-new(tools-title) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+  }
+
+  /* Tool cards staggered animation */
+  ::view-transition-old(tool-card-1),
+  ::view-transition-new(tool-card-1) {
+    animation-duration: 0.3s;
+    animation-delay: 0s;
+  }
+
+  ::view-transition-old(tool-card-2),
+  ::view-transition-new(tool-card-2) {
+    animation-duration: 0.3s;
+    animation-delay: 0.05s;
+  }
+
+  ::view-transition-old(tool-card-3),
+  ::view-transition-new(tool-card-3) {
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+  }
+
+  ::view-transition-old(tool-card-4),
+  ::view-transition-new(tool-card-4) {
+    animation-duration: 0.3s;
+    animation-delay: 0.15s;
+  }
+
+  /* Getting started section transitions */
+  ::view-transition-old(getting-started-section),
+  ::view-transition-new(getting-started-section) {
+    animation-duration: 0.35s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(getting-started-title),
+  ::view-transition-new(getting-started-title) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(getting-started-button),
+  ::view-transition-new(getting-started-button) {
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
+  }
+}
+
+/* Fallback animations for browsers without View Transitions API */
+@supports not (view-transition-name: none) {
+  .main-content {
+    animation: fade-in 0.3s ease-in-out;
+  }
+
+  .tool-card {
+    animation: slide-from-bottom 0.4s ease-out;
+  }
+
+  .tool-card:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .tool-card:nth-child(2) {
+    animation-delay: 0.05s;
+  }
+  .tool-card:nth-child(3) {
+    animation-delay: 0.1s;
+  }
+  .tool-card:nth-child(4) {
+    animation-delay: 0.15s;
+  }
+
+  .getting-started-button {
+    animation: slide-from-right 0.25s ease-out;
+  }
+}
+
+/* Keyframe animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-from-bottom {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ========== TOOLS HERO SECTION ========== */
+.tools-hero {
+  padding-block: var(--section-padding-y);
+  padding-inline: 40px;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    var(--clr-accent-glow-faint) 0%,
+    var(--clr-accent-glow-medium) 100%
+  );
+  border-radius: 0 0 30px 30px;
+  margin-bottom: 60px;
+}
+
+.tools-hero-container {
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+.tools-hero-title {
+  font-size: clamp(42px, 5vw, 56px);
+  font-weight: 700;
+  margin-bottom: 24px;
+  background: linear-gradient(
+    135deg,
+    var(--clr-text-primary) 0%,
+    var(--clr-accent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--clr-text-primary); /* Fallback */
+}
+
+.tools-hero-description {
+  font-size: 20px;
+  color: var(--clr-text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+/* ========== TOOLS SECTION ========== */
+.tools-section {
+  padding-block: var(--section-padding-y);
+  padding-inline: 40px;
+  margin-bottom: 80px;
+}
+
+.tools-container {
+  max-width: 1200px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.tools-title {
+  font-size: clamp(36px, 4vw, 48px);
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--clr-text-primary);
+}
+
+.tools-description {
+  font-size: 18px;
+  color: var(--clr-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 60px;
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+/* ========== TOOLS GRID ========== */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+/* ========== TOOL CARDS ========== */
+.tool-card {
+  background: var(--clr-accent-glow-faint);
+  border: 1px solid var(--clr-accent-glow-medium);
+  border-radius: var(--border-radius-card);
+  overflow: hidden;
+  transition:
+    transform var(--transition-speed) ease,
+    border-color var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--clr-accent-glow-strong);
+  box-shadow: 0 15px 40px var(--clr-accent-glow-medium);
+}
+
+.tool-card-link {
+  display: block;
+  padding: 40px 30px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+
+.tool-card-link:hover {
+  text-decoration: none;
+}
+
+.tool-icon {
+  font-size: 48px;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.tool-content {
+  text-align: left;
+}
+
+.tool-name {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--clr-text-primary);
+}
+
+.tool-description {
+  color: var(--clr-text-muted);
+  line-height: 1.7;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.tool-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.tool-difficulty {
+  padding: 4px 12px;
+  border-radius: var(--border-radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tool-difficulty[data-difficulty="beginner"] {
+  background: var(--clr-accent-glow-medium);
+  color: var(--clr-accent-dark);
+}
+
+.tool-difficulty[data-difficulty="intermediate"] {
+  background: var(--clr-accent-glow-strong);
+  color: var(--clr-text-primary);
+}
+
+.tool-difficulty[data-difficulty="advanced"] {
+  background: var(--clr-accent-dark);
+  color: var(--clr-text-primary);
+}
+
+.tool-category {
+  padding: 4px 12px;
+  border-radius: var(--border-radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--clr-accent-glow-faint);
+  color: var(--clr-text-secondary);
+  border: 1px solid var(--clr-accent-glow-medium);
+}
+
+.tool-arrow {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: var(--clr-text-muted);
+  transition: color var(--transition-speed) ease;
+}
+
+.tool-card:hover .tool-arrow {
+  color: var(--clr-accent);
+}
+
+/* ========== GETTING STARTED SECTION ========== */
+.getting-started-section {
+  padding-block: var(--section-padding-y);
+  padding-inline: 40px;
+  background: var(--clr-accent-glow-faint);
+  border-radius: 30px 30px 0 0;
+}
+
+.getting-started-container {
+  max-width: 900px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.getting-started-title {
+  font-size: clamp(36px, 4vw, 48px);
+  font-weight: 600;
+  margin-bottom: 40px;
+  color: var(--clr-text-primary);
+}
+
+.getting-started-content {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+
+.getting-started-text {
+  text-align: left;
+}
+
+.getting-started-text p {
+  font-size: 18px;
+  color: var(--clr-text-secondary);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.getting-started-text p:last-child {
+  margin-bottom: 0;
+}
+
+.getting-started-cta {
+  text-align: center;
+}
+
+.getting-started-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 40px;
+  border-radius: var(--border-radius-pill);
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  background: linear-gradient(
+    135deg,
+    var(--clr-accent) 0%,
+    var(--clr-accent-dark) 100%
+  );
+  color: var(--clr-text-primary);
+  border: none;
+  cursor: pointer;
+  transition:
+    transform var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease;
+}
+
+.getting-started-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px var(--clr-accent-shadow);
+  text-decoration: none;
+  color: var(--clr-text-primary);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+  .tools-hero,
+  .tools-section,
+  .getting-started-section {
+    padding-inline: 20px;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .tool-card-link {
+    padding: 30px 20px;
+  }
+
+  .tool-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+
+  .tool-name {
+    font-size: 20px;
+  }
+
+  .getting-started-content {
+    gap: 30px;
+  }
+
+  .getting-started-text p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tools-hero-title {
+    font-size: 36px;
+  }
+
+  .tools-hero-description {
+    font-size: 18px;
+  }
+
+  .tools-title,
+  .getting-started-title {
+    font-size: 32px;
+  }
+
+  .tool-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ========== LOADING STATES ========== */
+.loading {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.loading.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========== ACCESSIBILITY ENHANCEMENTS ========== */
+@media (prefers-reduced-motion: reduce) {
+  .tool-card,
+  .getting-started-button {
+    transition: none;
+  }
+
+  .tool-card:hover {
+    transform: none;
+  }
+
+  .getting-started-button:hover {
+    transform: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.tool-card-link:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
+
+.getting-started-button:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
