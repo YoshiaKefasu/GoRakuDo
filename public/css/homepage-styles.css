@@ -399,7 +399,7 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
 
 .modal-list li::before {
   /* REASONING: Custom bullet using CSS pseudo-element for consistent rendering */
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0.75rem; /* Align with first line of text */
@@ -429,7 +429,7 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
 }
 
 .member-list li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0.75rem; /* Align with first line of text */
@@ -648,25 +648,87 @@ RULES FOR MODIFICATION:
 
 /* === CORRECTED STYLES ARE HERE === */
 .mission-section::before {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 10, 0.1) 0%,
-    rgba(10, 10, 10, 0.7) 100%
-  );
+  background: 
+    /* Primary buttery smooth gradient */
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.08) 0%,
+      rgba(10, 10, 10, 0.3) 30%,
+      rgba(10, 10, 10, 0.6) 70%,
+      rgba(10, 10, 10, 0.7) 100%
+    ),
+    /* Subtle wave overlay */
+      radial-gradient(
+        ellipse at 50% 80%,
+        rgba(139, 93, 255, 0.03) 0%,
+        transparent 50%
+      );
+
+  /* Enhanced buttery smooth transitions */
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Subtle animation for buttery smooth movement */
+  animation: buttery-wave-float 10s ease-in-out infinite;
 }
 
 .features-section::before {
-  background: radial-gradient(
-    ellipse at 50% 100%,
-    rgba(139, 93, 255, 0.15) 0%,
-    transparent 50%
-  );
+  background: 
+    /* Primary buttery smooth wave gradient */
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(139, 93, 255, 0.12) 0%,
+      rgba(139, 93, 255, 0.08) 25%,
+      rgba(139, 93, 255, 0.04) 50%,
+      transparent 70%
+    ),
+    /* Secondary subtle wave overlay for depth */
+      radial-gradient(
+        ellipse at 30% 90%,
+        rgba(139, 93, 255, 0.06) 0%,
+        rgba(139, 93, 255, 0.03) 40%,
+        transparent 60%
+      ),
+    /* Tertiary wave accent for buttery smoothness */
+      radial-gradient(
+        ellipse at 70% 95%,
+        rgba(139, 93, 255, 0.04) 0%,
+        rgba(139, 93, 255, 0.02) 30%,
+        transparent 50%
+      );
+
+  /* Enhanced buttery smooth transitions */
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Subtle animation for buttery smooth movement */
+  animation: buttery-wave-float 8s ease-in-out infinite;
 }
 
 .docs-preview-section::before {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 10, 0.7) 0%,
-    rgba(10, 10, 10, 0.1) 100%
-  );
+  background: 
+    /* Primary buttery smooth gradient */
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.7) 0%,
+      rgba(10, 10, 10, 0.5) 30%,
+      rgba(10, 10, 10, 0.2) 70%,
+      rgba(10, 10, 10, 0.1) 100%
+    ),
+    /* Subtle wave overlay */
+      radial-gradient(
+        ellipse at 50% 20%,
+        rgba(139, 93, 255, 0.04) 0%,
+        transparent 50%
+      );
+
+  /* Enhanced buttery smooth transitions */
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Subtle animation for buttery smooth movement */
+  animation: buttery-wave-float 12s ease-in-out infinite;
 }

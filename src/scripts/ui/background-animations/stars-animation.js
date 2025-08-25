@@ -371,17 +371,7 @@ export class StarsAnimation {
          pointer-events: none;
          z-index: 10;
          ${cssVarsString}
-         /* 
-          * DEBUG BORDER: Added for troubleshooting visibility issues
-          * 
-          * PURPOSE: Visual indicator to confirm container positioning
-          * - Shows if the stars container is properly positioned
-          * - Helps identify if stars are being created but not visible
-          * - Subtle purple border that doesn't interfere with stars
-          * 
-          * REMOVE IN PRODUCTION: This border should be removed for production use
-          */
-         border: 1px solid rgba(139, 93, 255, 0.1);
+
        }
       
       .${this.config.starClass} {
@@ -391,19 +381,8 @@ export class StarsAnimation {
         background: var(--stars-color);
         border-radius: 50%;
         opacity: var(--stars-opacity);
-        animation: twinkle-${this.config.containerId} var(--stars-animation-duration) infinite;
+        animation: twinkle var(--stars-animation-duration) infinite;
         ${this.config.accessibility.highContrastSupport ? "filter: contrast(1.2);" : ""}
-      }
-      
-      @keyframes twinkle-${this.config.containerId} {
-        0%, 100% { 
-          opacity: calc(var(--stars-opacity) * 0.5); 
-          transform: scale(1);
-        }
-        50% { 
-          opacity: var(--stars-opacity); 
-          transform: scale(var(--stars-scale));
-        }
       }
       
       ${
@@ -610,28 +589,41 @@ export class StarsAnimation {
     document.addEventListener("visibilitychange", () => {
       this.isPageVisible = !document.hidden;
 
-      if (this.isPageVisible) {
+      // DISABLED: Keep stars running continuously
+      // if (this.isPageVisible) {
+      //   this.resumeAnimation();
+      // } else {
+      //   this.pauseAnimation();
+      // }
+
+      // Always keep animation running
+      if (this.isPageVisible && this.isInitialized) {
         this.resumeAnimation();
-      } else {
-        this.pauseAnimation();
       }
     });
   }
 
   setupAccessibilityHandlers() {
+    // DISABLED: Reduced motion pause functionality
     // Listen for reduced motion preference changes
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     motionQuery.addEventListener("change", (e) => {
       this.reducedMotion = e.matches;
 
-      if (
-        this.reducedMotion &&
-        this.config.accessibility.respectReducedMotion
-      ) {
-        console.log("Reduced motion preference detected, pausing animation");
-        this.pauseAnimation();
-      } else if (!this.reducedMotion && this.isInitialized) {
-        console.log("Reduced motion preference removed, resuming animation");
+      // DISABLED: Keep stars running regardless of motion preference
+      // if (
+      //   this.reducedMotion &&
+      //   this.config.accessibility.respectReducedMotion
+      // ) {
+      //   console.log("Reduced motion preference detected, pausing animation");
+      //   this.pauseAnimation();
+      // } else if (!this.reducedMotion && this.isInitialized) {
+      //   console.log("Reduced motion preference removed, resuming animation");
+      //   this.resumeAnimation();
+      // }
+
+      // Always keep animation running
+      if (this.isInitialized) {
         this.resumeAnimation();
       }
     });
@@ -696,11 +688,18 @@ export class StarsAnimation {
     // Random positioning with better distribution
     const top = Math.random() * 100;
     const left = Math.random() * 100;
-    const delay = Math.random() * 3;
+    const twinkleDelay = Math.random() * 4; // Random twinkle delay
+    const floatDelay = Math.random() * 8; // Random float delay for natural movement
+
+    // Random floating pattern for varied movement
+    const floatPatterns = ["float", "float-2", "float-3"];
+    const randomFloatPattern =
+      floatPatterns[Math.floor(Math.random() * floatPatterns.length)];
 
     star.style.top = `${top}%`;
     star.style.left = `${left}%`;
-    star.style.animationDelay = `${delay}s`;
+    star.style.animationDelay = `${twinkleDelay}s, ${floatDelay}s`; // Both twinkle and float delays
+    star.style.animationName = `twinkle, ${randomFloatPattern}`; // Random float pattern
 
     // ENHANCED: Accessibility attributes for individual stars
     star.setAttribute("aria-hidden", "true");

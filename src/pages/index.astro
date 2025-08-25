@@ -37,26 +37,21 @@ import homepageOgImage from "../assets/images/Logo Discord.png"
   <body>
     <!-- Stylesheet -->
     <link fetchpriority="auto" rel="stylesheet" href="/css/homepage-styles.css" />
-    <!-- Wave Animation Background (Hidden from screen readers) -->
+    <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
     <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
 
-    <!-- Stars Background (Hidden from screen readers) -->
-    <div class="stars" aria-hidden="true">
-      <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
-      <div class="star" style="top: 20%; right: 20%; animation-delay: 1s;"></div>
-      <div class="star" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
-      <div class="star" style="bottom: 30%; left: 10%; animation-delay: 1.5s;"></div>
-      <div class="star" style="bottom: 20%; right: 30%; animation-delay: 0.5s;"></div>
-      <div class="star" style="top: 60%; left: 15%; animation-delay: 2.5s;"></div>
-      <div class="star" style="top: 80%; right: 20%; animation-delay: 1.8s;"></div>
-      <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
-    </div>
+    <!-- Stars Background (Hidden from screen readers) - Stars will be created dynamically by the module -->
+    <div class="stars" aria-hidden="true"></div>
 
     <!-- Navigation -->
     <Navbar client:visible />
 
     <!-- Main Content -->
-    <main class="main-content" role="main" transition:name="main-content">
+    <main
+      class="main-content"
+      role="main"
+      style="background: transparent !important;"
+      transition:name="main-content">
       <!-- Hero Section -->
       <Hero
         missionId="mission"
@@ -238,6 +233,87 @@ import homepageOgImage from "../assets/images/Logo Discord.png"
 
     <script fetchpriority="auto" is:inline src="/src/scripts/core/hompage-script.js"
     ></script>
+
+    <!-- Animation Modules Integration -->
+    <script>
+      // Dynamic import for animation modules with comprehensive error handling
+      Promise.all([import("../scripts/ui/background-animations/stars-animation.js")])
+        .then(([starsModule]) => {
+          console.log("🎬 Stars animation module loaded successfully")
+
+          // Initialize stars animation only
+          const starsAnimation = starsModule.initStarsAnimation({
+            enabled: true,
+            count: 8,
+            animationDuration: "4s",
+            opacity: 0.6,
+            containerClass: "stars",
+            starClass: "star",
+            containerId: "stars",
+            useExistingContainer: true,
+            createContainer: false,
+            containerSelector: ".stars",
+            accessibility: {
+              respectReducedMotion: false,
+              announceChanges: false,
+              screenReaderFriendly: true,
+              highContrastSupport: true,
+              forceEnable: true,
+            },
+          })
+
+          // Start animations when page loads
+          window.addEventListener("load", () => {
+            try {
+              // Initialize stars animation with existing container
+              starsAnimation.init("stars")
+              console.log("✨ Stars animation initialized successfully")
+
+              // Debug: Check if stars were created
+              setTimeout(() => {
+                const stars = document.querySelectorAll(".star")
+                console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
+                if (stars.length > 0) {
+                  console.log("✅ Stars are visible in DOM")
+                } else {
+                  console.log("⚠️ No stars found in DOM - checking container")
+                  const container = document.querySelector(".stars")
+                  console.log("Container:", container)
+                }
+              }, 500)
+
+              // Add loaded class to prevent popup effect
+              setTimeout(() => {
+                const starsContainer = document.querySelector(".stars")
+                if (starsContainer) {
+                  starsContainer.classList.add("loaded")
+                }
+              }, 100)
+
+              // Trigger hero animation after animations are ready
+              setTimeout(() => {
+                const heroContent = document.querySelector("#hero-content")
+                if (heroContent) {
+                  heroContent.classList.remove(
+                    "opacity-0",
+                    "translate-y-16",
+                    "scale-80",
+                    "blur-md"
+                  )
+                  console.log("✨ Hero content revealed smoothly")
+                }
+              }, 200) // Coordinate with hero component timing
+            } catch (error) {
+              console.error("❌ Animation initialization error:", error)
+            }
+          })
+        })
+        .catch((error) => {
+          console.log("⚠️ Animation modules failed to load:", error.message)
+          // Fallback: continue with existing inline animations
+          console.log("🔄 Falling back to existing inline animations")
+        })
+    </script>
 
     <!-- Bundle Splitting: Load performance monitoring as separate chunk -->
     <script>

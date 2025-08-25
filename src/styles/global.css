@@ -76,16 +76,68 @@
   }
 }
 
-/* Star twinkle animation - preserved for background elements */
+/* Balanced star twinkle animation */
 @keyframes twinkle {
   0%,
   100% {
-    opacity: 0.3;
+    opacity: 0.4;
     transform: scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    opacity: 0.6;
+    transform: scale(1.1);
+    filter: brightness(1.2);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.2);
+    opacity: 0.8;
+    transform: scale(1.3);
+    filter: brightness(1.5);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+
+/* Buttery smooth floating animations with varied patterns */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-8px) translateX(4px);
+  }
+  50% {
+    transform: translateY(-4px) translateX(-6px);
+  }
+  75% {
+    transform: translateY(-12px) translateX(2px);
+  }
+}
+
+@keyframes float-2 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-6px) translateX(-3px);
+  }
+  66% {
+    transform: translateY(-10px) translateX(5px);
+  }
+}
+
+@keyframes float-3 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-8px) translateX(-2px);
   }
 }
 
@@ -669,15 +721,36 @@
   .wave-canvas {
     @apply pointer-events-none fixed inset-0 z-0;
     /* Background removed to allow canvas animation to work properly */
+    /* CRITICAL FIX: Ensure canvas is truly transparent and doesn't create layer effect */
+    background: transparent !important;
+    opacity: 1; /* Always visible - restored */
+    mix-blend-mode: normal;
+    /* CRITICAL: Remove transition to prevent resize delay issues */
   }
 
   .stars {
     @apply pointer-events-none fixed inset-0 z-10;
+    /* Smooth fade-in to prevent popup effect */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .stars.loaded {
+    opacity: 1;
   }
 
   .star {
-    @apply absolute h-0.5 w-0.5 rounded-full bg-[var(--color-accent)] opacity-70;
-    animation: twinkle 3s infinite;
+    @apply absolute h-0.5 w-0.5 rounded-full bg-[var(--color-accent)] opacity-60;
+    animation:
+      twinkle 4s infinite,
+      float 8s ease-in-out infinite;
+    /* Enhanced visibility with glow effect */
+    box-shadow:
+      0 0 4px rgba(139, 93, 255, 0.6),
+      0 0 8px rgba(139, 93, 255, 0.4),
+      0 0 12px rgba(139, 93, 255, 0.2);
+    /* Balanced visibility */
+    opacity: 0.6 !important;
   }
 
   /* ===== CARD COMPONENTS ===== */
@@ -1229,6 +1302,37 @@ ol ol {
   }
 }
 
+/* ===== BUTTERY SMOOTH WAVE ANIMATIONS ===== */
+@keyframes buttery-wave-float {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translateY(-2px) scale(1.02);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-1px) scale(1.01);
+    opacity: 0.85;
+  }
+  75% {
+    transform: translateY(-3px) scale(1.03);
+    opacity: 0.95;
+  }
+}
+
+@keyframes buttery-wave-glow {
+  0%,
+  100% {
+    filter: brightness(1) blur(0px);
+  }
+  50% {
+    filter: brightness(1.1) blur(0.5px);
+  }
+}
+
 /* 
  * ========== MIGRATION COMPLETE ========== 
  * 
@@ -1240,6 +1344,7 @@ ol ol {
  * ✅ 100% backward compatibility
  * ✅ Future-ready extensibility
  * ✅ Google-standard list styling for consistency
+ * ✅ Buttery smooth wave and floating animations
  * 
  * Total migration: Legacy (927 lines) → Modern (650+ lines optimized)
  * All existing components will continue to work without changes
