@@ -782,7 +782,9 @@
   /* ===== LEGACY SECTION STYLES - PRESERVED ===== */
   .mission-section,
   .features-section,
-  .docs-preview-section {
+  .docs-preview-section,
+  .tools-hero,
+  .tools-section {
     @apply [@media(max-width:768px)]:px-[20px];
   }
 
@@ -1331,6 +1333,81 @@ ol ol {
   50% {
     filter: brightness(1.1) blur(0.5px);
   }
+}
+
+/* ===== TOOLS PAGE WAVE ANIMATIONS ===== */
+.tools-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: 
+    /* Primary buttery smooth gradient */
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.08) 0%,
+      rgba(10, 10, 10, 0.3) 30%,
+      rgba(10, 10, 10, 0.6) 70%,
+      rgba(10, 10, 10, 0.7) 100%
+    ),
+    /* Subtle wave overlay */
+      radial-gradient(
+        ellipse at 50% 80%,
+        rgba(139, 93, 255, 0.03) 0%,
+        transparent 50%
+      );
+
+  /* Enhanced buttery smooth transitions */
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Subtle animation for buttery smooth movement */
+  animation: buttery-wave-float 10s ease-in-out infinite;
+}
+
+.tools-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: 
+    /* Primary buttery smooth wave gradient */
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(139, 93, 255, 0.12) 0%,
+      rgba(139, 93, 255, 0.08) 25%,
+      rgba(139, 93, 255, 0.04) 50%,
+      transparent 70%
+    ),
+    /* Secondary subtle wave overlay for depth */
+      radial-gradient(
+        ellipse at 30% 90%,
+        rgba(139, 93, 255, 0.06) 0%,
+        rgba(139, 93, 255, 0.03) 40%,
+        transparent 60%
+      ),
+    /* Tertiary wave accent for buttery smoothness */
+      radial-gradient(
+        ellipse at 70% 95%,
+        rgba(139, 93, 255, 0.04) 0%,
+        rgba(139, 93, 255, 0.02) 30%,
+        transparent 50%
+      );
+
+  /* Enhanced buttery smooth transitions */
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Subtle animation for buttery smooth movement */
+  animation: buttery-wave-float 8s ease-in-out infinite;
 }
 
 /* 

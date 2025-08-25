@@ -145,6 +145,7 @@
 
 /* ========== TOOLS HERO SECTION ========== */
 .tools-hero {
+  position: relative;
   padding-block: var(--section-padding-y);
   padding-inline: 40px;
   text-align: center;
@@ -187,6 +188,7 @@
 
 /* ========== TOOLS SECTION ========== */
 .tools-section {
+  position: relative;
   padding-block: var(--section-padding-y);
   padding-inline: 40px;
   margin-bottom: 80px;

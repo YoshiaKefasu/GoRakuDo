@@ -188,7 +188,27 @@ export class StarsAnimation {
 
       // Range/pattern validation
       if (rules.min !== undefined && rules.max !== undefined) {
-        if (value < rules.min || value > rules.max) {
+        // Special handling for CSS time values
+        if (
+          rules.type === "string" &&
+          (key === "animationDuration" || key.includes("Duration"))
+        ) {
+          const timeValue = parseFloat(value);
+          const minValue = parseFloat(rules.min);
+          const maxValue = parseFloat(rules.max);
+
+          if (
+            isNaN(timeValue) ||
+            timeValue < minValue ||
+            timeValue > maxValue
+          ) {
+            console.warn(
+              `${key} out of range [${rules.min}, ${rules.max}], using default: ${rules.default}`,
+            );
+            validated[key] = rules.default;
+            continue;
+          }
+        } else if (value < rules.min || value > rules.max) {
           console.warn(
             `${key} out of range [${rules.min}, ${rules.max}], using default: ${rules.default}`,
           );

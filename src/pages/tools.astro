@@ -83,6 +83,11 @@ const tools = [
     <!-- Navigation -->
     <Navbar client:visible />
 
+    <!-- Background Animations -->
+    <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
+    <canvas id="waveCanvas" class="wave-canvas"></canvas>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+
     <!-- Main Content -->
     <main class="main-content" role="main" transition:name="main-content">
       <!-- Hero Section -->
@@ -234,6 +239,246 @@ const tools = [
     </main>
 
     <script>
+      // 🌊 DOCS PAGE WAVE ANIMATION INITIALIZATION
+      // Google Engineering Team 2025: Performance-optimized wave animation for docs page
+
+      let waveAnimation: { cleanup: () => void } | null = null
+      let starsContainer: HTMLElement | null = null
+
+      // Initialize wave animation for docs page
+      function initializeDocsWaveAnimation(): (() => void) | undefined {
+        console.log("🌊 Initializing docs page wave animation...")
+
+        const canvas = document.getElementById("waveCanvas")
+        if (!canvas) {
+          console.warn("Wave canvas not found for docs page")
+          return undefined
+        }
+
+        const ctx = (canvas as HTMLCanvasElement)?.getContext("2d")
+        if (!ctx) {
+          console.warn("Canvas context not available for docs page")
+          return undefined
+        }
+
+        let animationId: number | null = null
+        let time = 0
+
+        // Docs-specific wave configuration (optimized for content pages)
+        const waves = [
+          {
+            amplitude: 40,
+            frequency: 0.01,
+            speed: 0.02,
+            offset: 0,
+            color: "rgba(139, 93, 255, 0.08)",
+            y: 0.7,
+          },
+          {
+            amplitude: 60,
+            frequency: 0.008,
+            speed: -0.015,
+            offset: Math.PI / 3,
+            color: "rgba(139, 93, 255, 0.06)",
+            y: 0.75,
+          },
+          {
+            amplitude: 35,
+            frequency: 0.012,
+            speed: 0.025,
+            offset: Math.PI / 2,
+            color: "rgba(139, 93, 255, 0.04)",
+            y: 0.8,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+          {
+            amplitude: 45,
+            frequency: 0.009,
+            speed: -0.018,
+            offset: Math.PI,
+            color: "rgba(139, 93, 255, 0.03)",
+            y: 0.85,
+          },
+        ]
+
+        function resizeCanvas() {
+          const width = window.innerWidth
+          const height = window.innerHeight
+          ;(canvas as HTMLCanvasElement).width = width
+          ;(canvas as HTMLCanvasElement).height = height
+
+          // Update wave y positions based on new height
+          waves.forEach((wave) => {
+            wave.yPos = height * wave.y
+          })
+        }
+
+        function animate() {
+          if (!ctx) return
+
+          ctx.clearRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
+
+          // Create gradient background (docs-specific)
+          const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            (canvas as HTMLCanvasElement).height
+          )
+          gradient.addColorStop(0, "rgba(10, 10, 10, 1)")
+          gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)")
+          gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)")
+          ctx.fillStyle = gradient
+          ctx.fillRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
+
+          // Draw waves
+          waves.forEach((wave) => {
+            ctx.beginPath()
+
+            // Create wave path
+            for (let x = 0; x <= (canvas as HTMLCanvasElement).width + 10; x += 2) {
+              const y =
+                wave.yPos +
+                Math.sin(x * wave.frequency + time * wave.speed + wave.offset) *
+                  wave.amplitude
+
+              if (x === 0) {
+                ctx.moveTo(x, y)
+              } else {
+                ctx.lineTo(x, y)
+              }
+            }
+
+            // Close the path to create filled area
+            ctx.lineTo(
+              (canvas as HTMLCanvasElement).width,
+              (canvas as HTMLCanvasElement).height
+            )
+            ctx.lineTo(0, (canvas as HTMLCanvasElement).height)
+            ctx.closePath()
+
+            ctx.fillStyle = wave.color
+            ctx.fill()
+
+            // Add subtle stroke for more definition
+            ctx.strokeStyle = "rgba(139, 93, 255, 0.08)"
+            ctx.lineWidth = 0.5
+            ctx.stroke()
+          })
+
+          time += 0.5
+          animationId = requestAnimationFrame(animate)
+        }
+
+        // Initialize
+        resizeCanvas()
+        animate()
+
+        // Handle window resize
+        const handleResize = () => {
+          resizeCanvas()
+        }
+        window.addEventListener("resize", handleResize)
+
+        // Return cleanup function
+        return () => {
+          if (animationId) {
+            cancelAnimationFrame(animationId)
+          }
+          window.removeEventListener("resize", handleResize)
+        }
+      }
+
+      // Initialize wave animation when DOM is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        try {
+          waveAnimation = {
+            cleanup: initializeDocsWaveAnimation() || (() => {}),
+          }
+          console.log("✅ Docs page wave animation initialized successfully")
+        } catch (error) {
+          console.error("Error initializing docs page wave animation:", error)
+        }
+      })
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", function () {
+        if (waveAnimation) {
+          waveAnimation.cleanup()
+        }
+      })
+
+      // Animation Modules Integration
+      window.addEventListener("load", async () => {
+        try {
+          // Import animation modules
+          const [starsModule] = await Promise.all([
+            import("../scripts/ui/background-animations/stars-animation.js"),
+          ])
+
+          // Initialize stars animation
+          const starsAnimation = starsModule.initStarsAnimation({
+            enabled: true,
+            count: 8,
+            animationDuration: "4s",
+            opacity: 0.6,
+            containerClass: "stars",
+            starClass: "star",
+            containerId: "stars",
+            useExistingContainer: true,
+            createContainer: false,
+            containerSelector: ".stars",
+            accessibility: {
+              respectReducedMotion: false,
+              announceChanges: false,
+              screenReaderFriendly: true,
+              highContrastSupport: true,
+              forceEnable: true,
+            },
+          })
+
+          // Initialize the animation
+          starsAnimation.init("stars")
+
+          // Add smooth fade-in for stars
+          setTimeout(() => {
+            const starsContainer = document.querySelector(".stars")
+            if (starsContainer) {
+              starsContainer.classList.add("loaded")
+            }
+          }, 100)
+
+          console.log("✅ Tools page animations initialized successfully")
+
+          // Debug: Check if stars were created
+          setTimeout(() => {
+            const stars = document.querySelectorAll(".star")
+            console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
+            if (stars.length > 0) {
+              console.log("✅ Stars are visible in DOM")
+              console.log("First star element:", stars[0])
+            } else {
+              console.log("⚠️ No stars found in DOM - checking container")
+              const container = document.querySelector(".stars")
+              console.log("Container:", container)
+              console.log("Container HTML:", container?.innerHTML)
+            }
+          }, 500)
+        } catch (error) {
+          console.error("❌ Error initializing tools page animations:", error)
+        }
+      })
+
       // Enhanced Intersection Observer for lazy loading optimization
       const lazyElements = document.querySelectorAll("[data-lazy]")
       const lazyObserver = new IntersectionObserver(
