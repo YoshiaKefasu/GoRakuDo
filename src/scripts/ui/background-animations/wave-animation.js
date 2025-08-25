@@ -77,6 +77,7 @@ export class WaveAnimation {
     this.time = 0;
     this.isInitialized = false;
     this.isDestroyed = false;
+    this.animationFrameCount = 0; // Debug counter
 
     // Performance monitoring
     this.performanceMetrics = {
@@ -85,6 +86,8 @@ export class WaveAnimation {
       lastFrameTime: 0,
       memoryUsage: 0,
       startTime: 0,
+      averageFrameTime: 0,
+      frameTimeHistory: [],
     };
 
     // Error handling
@@ -266,14 +269,9 @@ export class WaveAnimation {
       }
 
       // Calculate wave positions
-      this.config.waves.forEach((wave) => {
+      this.config.waves.forEach((wave, index) => {
         wave.yPos = this.height * wave.y;
       });
-
-      console.log(
-        "🌊 Wave positions calculated:",
-        this.config.waves.map((w) => ({ y: w.y, yPos: w.yPos })),
-      );
 
       // Set up event listeners
       this.setupEventListeners();
@@ -287,8 +285,6 @@ export class WaveAnimation {
 
       // Start animation AFTER setting initialized flag
       this.startAnimation();
-
-      console.log("✅ Wave animation initialized successfully");
       return true;
     } catch (error) {
       console.error("❌ Wave Animation Init Error:", error);
@@ -374,11 +370,11 @@ export class WaveAnimation {
    * The fix was to reorder initialization in the init() method.
    */
   startAnimation() {
-    if (!this.isInitialized || this.animationId) return;
+    if (!this.isInitialized || this.animationId) {
+      return;
+    }
 
-    console.log("🎬 Starting wave animation loop...");
     this.animate();
-    console.log("🎬 Wave animation started");
   }
 
   /**
@@ -401,7 +397,6 @@ export class WaveAnimation {
    */
   animate() {
     if (!this.isInitialized || this.isDestroyed) {
-      console.warn("⚠️ Animation loop stopped - not initialized or destroyed");
       return;
     }
 
@@ -409,15 +404,31 @@ export class WaveAnimation {
       // Performance monitoring
       this.updatePerformanceMetrics();
 
-      // Check for performance issues
-      if (this.shouldReducePerformance()) {
-        this.reducePerformance();
-      }
+      // Check for performance issues and apply optimizations (disabled for now)
+      // if (this.shouldReducePerformance()) {
+      //   this.reducePerformance();
+      // }
+
+      // OPTIMIZATION: Frame rate control for performance (disabled for now)
+      // const currentTime = performance.now();
+      // const targetFrameTime = 1000 / this.config.performance.targetFPS;
+
+      // if (
+      //   currentTime - this.performanceMetrics.lastFrameTime <
+      //   targetFrameTime
+      // ) {
+      //   // Skip frame to maintain target FPS
+      //   this.animationId = requestAnimationFrame(() => this.animate());
+      //   return;
+      // }
+
+      // OPTIMIZATION: Use canvas optimization techniques
+      this.ctx.save();
 
       // Create gradient background (includes canvas clear)
       this.drawBackground();
 
-      // Draw waves
+      // Draw waves with optimized path generation
       this.drawWaves();
 
       // Draw particles
@@ -425,8 +436,11 @@ export class WaveAnimation {
         this.drawParticles();
       }
 
+      this.ctx.restore();
+
       // Update time
       this.time += 1;
+      this.animationFrameCount += 1;
 
       // Continue animation loop - use arrow function to preserve context
       this.animationId = requestAnimationFrame(() => this.animate());
@@ -442,20 +456,24 @@ export class WaveAnimation {
    */
   drawBackground() {
     try {
-      // Clear canvas completely
+      // OPTIMIZATION: Clear canvas efficiently
       this.ctx.clearRect(0, 0, this.width, this.height);
 
-      // Draw a subtle dark background
-      this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      this.ctx.fillRect(0, 0, this.width, this.height);
+      // OPTIMIZATION: Use cached gradient for better performance
+      if (!this.cachedGradient) {
+        this.cachedGradient = this.ctx.createLinearGradient(
+          0,
+          0,
+          0,
+          this.height,
+        );
+        this.cachedGradient.addColorStop(0, "rgba(139, 93, 255, 0.02)");
+        this.cachedGradient.addColorStop(0.5, "rgba(139, 93, 255, 0.01)");
+        this.cachedGradient.addColorStop(1, "rgba(139, 93, 255, 0.03)");
+      }
 
-      // Add a beautiful gradient overlay
-      const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
-      gradient.addColorStop(0, "rgba(139, 93, 255, 0.02)");
-      gradient.addColorStop(0.5, "rgba(139, 93, 255, 0.01)");
-      gradient.addColorStop(1, "rgba(139, 93, 255, 0.03)");
-
-      this.ctx.fillStyle = gradient;
+      // Draw background with cached gradient
+      this.ctx.fillStyle = this.cachedGradient;
       this.ctx.fillRect(0, 0, this.width, this.height);
     } catch (error) {
       console.error("❌ Background drawing error:", error);
@@ -467,26 +485,36 @@ export class WaveAnimation {
    */
   drawWaves() {
     try {
+      // OPTIMIZATION: Adaptive step size based on performance
+      const stepSize = this.getAdaptiveStepSize();
+
       this.config.waves.forEach((wave, index) => {
         this.ctx.beginPath();
 
-        // Create wave path
-        for (let x = 0; x <= this.width + 10; x += 2) {
-          const y =
-            wave.yPos +
-            Math.sin(
-              x * wave.frequency + this.time * wave.speed + wave.offset,
-            ) *
-              wave.amplitude;
+        // OPTIMIZATION: Pre-calculate wave parameters for better performance
+        const frequency = wave.frequency;
+        const speed = wave.speed;
+        const offset = wave.offset;
+        const amplitude = wave.amplitude;
+        const yPos = wave.yPos;
+        const time = this.time;
 
-          if (x === 0) {
+        // OPTIMIZATION: Use more efficient wave path generation
+        let firstPoint = true;
+
+        for (let x = 0; x <= this.width + 10; x += stepSize) {
+          const y =
+            yPos + Math.sin(x * frequency + time * speed + offset) * amplitude;
+
+          if (firstPoint) {
             this.ctx.moveTo(x, y);
+            firstPoint = false;
           } else {
             this.ctx.lineTo(x, y);
           }
         }
 
-        // Close the path to create filled area
+        // Close the path to create filled area (FIXED: Proper wave shape)
         this.ctx.lineTo(this.width, this.height);
         this.ctx.lineTo(0, this.height);
         this.ctx.closePath();
@@ -495,10 +523,12 @@ export class WaveAnimation {
         this.ctx.fillStyle = wave.color;
         this.ctx.fill();
 
-        // Add subtle stroke for definition
-        this.ctx.strokeStyle = "rgba(139, 93, 255, 0.3)";
-        this.ctx.lineWidth = 1;
-        this.ctx.stroke();
+        // OPTIMIZATION: Only add stroke if quality setting allows
+        if (this.config.performance.quality >= 2) {
+          this.ctx.strokeStyle = "rgba(139, 93, 255, 0.3)";
+          this.ctx.lineWidth = 1;
+          this.ctx.stroke();
+        }
       });
     } catch (error) {
       console.error("❌ Wave drawing error:", error);
@@ -543,6 +573,20 @@ export class WaveAnimation {
     if (this.performanceMetrics.lastFrameTime > 0) {
       const frameTime = now - this.performanceMetrics.lastFrameTime;
       this.performanceMetrics.fps = 1000 / frameTime;
+
+      // OPTIMIZATION: Track frame time history for better performance analysis
+      this.performanceMetrics.frameTimeHistory.push(frameTime);
+      if (this.performanceMetrics.frameTimeHistory.length > 60) {
+        this.performanceMetrics.frameTimeHistory.shift(); // Keep last 60 frames
+      }
+
+      // Calculate average frame time
+      const totalFrameTime = this.performanceMetrics.frameTimeHistory.reduce(
+        (sum, time) => sum + time,
+        0,
+      );
+      this.performanceMetrics.averageFrameTime =
+        totalFrameTime / this.performanceMetrics.frameTimeHistory.length;
     }
 
     this.performanceMetrics.lastFrameTime = now;
@@ -560,21 +604,65 @@ export class WaveAnimation {
   shouldReducePerformance() {
     if (!this.config.performance.autoReduceWaves) return false;
 
+    // Only reduce performance if FPS is very low (less than 20)
     return (
-      this.performanceMetrics.fps < this.config.performance.reduceThreshold ||
+      this.performanceMetrics.fps < 20 ||
       this.performanceMetrics.memoryUsage >
         this.config.performance.memoryThreshold
     );
   }
 
   /**
+   * Get adaptive step size based on performance
+   * @returns {number} Step size for wave path generation
+   */
+  getAdaptiveStepSize() {
+    // FIX: Use fixed step size for now to ensure proper wave shape
+    return 2; // Fixed step size for smooth waves
+
+    // if (!this.config.performance.adaptiveStepSize) {
+    //   return 2; // Default step size
+    // }
+
+    // // Calculate step size based on FPS
+    // const fps = this.performanceMetrics.fps;
+    // let stepSize = this.config.performance.minStepSize;
+
+    // if (fps < 30) {
+    //   stepSize = this.config.performance.maxStepSize; // Low FPS = larger steps
+    // } else if (fps < 45) {
+    //   stepSize = 3; // Medium FPS = medium steps
+    // } else if (fps >= 55) {
+    //   stepSize = this.config.performance.minStepSize; // High FPS = small steps
+    // }
+
+    // return stepSize;
+  }
+
+  /**
    * Reduce performance by simplifying animation
    */
   reducePerformance() {
+    // OPTIMIZATION: Multiple performance reduction strategies
     if (this.config.waves.length > 2) {
       // Remove one wave temporarily
       this.config.waves.pop();
       console.warn("⚠️ Performance optimization: Reduced wave count");
+    }
+
+    // Reduce quality if FPS is still low
+    if (
+      this.performanceMetrics.fps < 25 &&
+      this.config.performance.quality > 1
+    ) {
+      this.config.performance.quality--;
+      console.warn("⚠️ Performance optimization: Reduced quality level");
+    }
+
+    // Disable strokes for better performance
+    if (this.performanceMetrics.fps < 20) {
+      this.config.performance.enableStrokes = false;
+      console.warn("⚠️ Performance optimization: Disabled wave strokes");
     }
   }
 
@@ -639,6 +727,23 @@ export class WaveAnimation {
    */
   getPerformanceMetrics() {
     return { ...this.performanceMetrics };
+  }
+
+  /**
+   * Get performance optimization status
+   * @returns {Object} Performance optimization information
+   */
+  getPerformanceStatus() {
+    return {
+      fps: this.performanceMetrics.fps,
+      averageFrameTime: this.performanceMetrics.averageFrameTime,
+      stepSize: this.getAdaptiveStepSize(),
+      quality: this.config.performance.quality,
+      waveCount: this.config.waves.length,
+      enableStrokes: this.config.performance.enableStrokes,
+      enableGradients: this.config.performance.enableGradients,
+      adaptiveStepSize: this.config.performance.adaptiveStepSize,
+    };
   }
 
   /**
@@ -770,5 +875,11 @@ export const defaultWaveConfig = {
     autoReduceWaves: true,
     reduceThreshold: 30,
     memoryThreshold: 5 * 1024 * 1024,
+    quality: 3, // 1=low, 2=medium, 3=high
+    adaptiveStepSize: true,
+    maxStepSize: 4,
+    minStepSize: 1,
+    enableStrokes: true,
+    enableGradients: true,
   },
 };

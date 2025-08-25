@@ -1,7 +1,7 @@
 ---
-alwaysApply: true
+description: To think deeply
+alwaysApply: false
 ---
-
 Take time and think deeply before taking action. And The Rules is:
 
 - **Extract and map** the core message intent and context into comprehensive "mind maps"
