@@ -125,7 +125,7 @@
     flex-direction: column;
 
     /* Critical theme colors - mapped from legacy hex to OKLCH */
-    background-color: var(--color-background);
+    background-color: transparent; /* Transparent to allow canvas animation to show through */
     color: var(--color-foreground);
 
     /* Performance optimizations - enhanced from legacy */
@@ -668,11 +668,7 @@
   /* ===== LEGACY BACKGROUND ELEMENTS - PRESERVED EXACTLY ===== */
   .wave-canvas {
     @apply pointer-events-none fixed inset-0 z-0;
-    background: radial-gradient(
-      ellipse at center,
-      var(--color-accent-glow-faint) 0%,
-      var(--color-background) 70%
-    );
+    /* Background removed to allow canvas animation to work properly */
   }
 
   .stars {

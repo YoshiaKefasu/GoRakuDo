@@ -22860,3 +22860,151 @@ document.addEventListener('DOMContentLoaded', () => {
 - **Future-Ready**: Easy to expand with additional tools
 
 ---
+
+## Entry #22764: Wave Animation Modularization Story Creation
+
+**Date**: 2025-08-25  
+**Time**: 16:30  
+**Type**: Story Planning  
+**Status**: 📋 Planned
+
+### Context
+
+Following the successful completion of the Tools Page UX/UI Enhancement, the Product Owner identified a technical debt issue: wave animation and stars background code is duplicated across multiple pages with inconsistent configurations.
+
+### Problem Analysis
+
+**Current State**:
+- Wave animation code repeated in `index.astro`, `docs.astro`, and `[slug].astro`
+- Stars background code duplicated across pages
+- Different wave speeds and phases per page (no centralized configuration)
+- Tools page missing wave/stars background entirely
+- Maintenance overhead for animation changes
+
+**Technical Debt**:
+- Code duplication: ~60% of animation code is repeated
+- Inconsistent configurations across pages
+- No centralized management of visual effects
+- Missing implementation on tools page
+
+### Solution Design
+
+**Modular Architecture**:
+```
+src/scripts/background/
+├── wave-animation.ts          # Core wave animation module
+├── stars-background.ts        # Core stars background module
+├── background-manager.ts      # Unified background manager
+└── config/
+    ├── index.ts               # Main configuration export
+    ├── homepage-config.ts     # Homepage specific config
+    ├── docs-config.ts         # Docs page specific config
+    ├── post-config.ts         # Individual post config
+    └── tools-config.ts        # Tools page specific config
+```
+
+**Key Features**:
+- TypeScript implementation for type safety
+- Configuration-driven approach for page-specific settings
+- Unified API for easy integration
+- Performance optimization and cleanup
+- Backward compatibility preservation
+
+### Story Details
+
+**Story ID**: 1.5  
+**Title**: Wave Animation & Stars Background Modularization  
+**Epic**: GoRakuDo Japanese Learning Platform  
+**Priority**: High  
+**Estimated Time**: 3-4 hours
+
+**Acceptance Criteria**:
+1. ✅ Wave animation functionality preserved across all pages
+2. ✅ Stars background functionality preserved across all pages
+3. ✅ Tools page enhanced with wave/stars background
+4. ✅ Configuration system for page-specific settings
+5. ✅ 60% reduction in code duplication
+6. ✅ TypeScript implementation with full type safety
+7. ✅ Performance maintained or improved
+8. ✅ All browsers supported with graceful degradation
+
+### Implementation Plan
+
+**Phase 1: Core Module Development (1 hour)**
+- Create Wave Animation Module
+- Create Stars Background Module
+- Create Background Manager
+
+**Phase 2: Configuration System (30 minutes)**
+- Create configuration files for each page type
+- Implement configuration manager
+
+**Phase 3: Integration (1 hour)**
+- Update existing pages to use modules
+- Add wave/stars to tools page
+- Test functionality preservation
+
+**Phase 4: Testing & Optimization (30 minutes)**
+- Comprehensive testing across all pages
+- Performance optimization
+- Error handling implementation
+
+### Risk Assessment
+
+**High Risk**:
+- Functionality breakage during extraction
+- Performance degradation
+
+**Mitigation**:
+- Extensive testing at each phase
+- Gradual migration approach
+- Performance monitoring throughout
+
+### Success Metrics
+
+**Technical Metrics**:
+- 60% reduction in duplicated code
+- Maintain or improve current performance
+- 100% TypeScript coverage
+- All existing functionality preserved
+
+**Quality Metrics**:
+- 100% feature preservation
+- All browsers supported
+- 60fps animation maintained
+- WCAG compliance maintained
+
+### Impact
+
+**Immediate Benefits**:
+- Reduced code duplication
+- Centralized animation management
+- Consistent visual effects across pages
+- Enhanced tools page with background effects
+
+**Long-term Benefits**:
+- Easier maintenance and modifications
+- Faster future enhancements
+- Reduced bug potential
+- Improved code organization
+
+### Next Steps
+
+1. **Story Review**: Team review and approval
+2. **Implementation**: Begin Phase 1 development
+3. **Testing**: Comprehensive testing at each phase
+4. **Documentation**: Update technical documentation
+5. **Integration**: Deploy to production
+
+### Files Created
+
+- `docs/wave-animation-modularization-story.md` - Complete story documentation
+
+### Status
+
+**Current Status**: 📋 Planned  
+**Next Action**: Story review and implementation planning  
+**Estimated Start**: 2025-08-26  
+**Estimated Completion**: 2025-08-26
+
+---
