@@ -1,0 +1,406 @@
+---
+// Test page for wave animation module
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Wave Animation Module Test</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #000;
+        color: white;
+        overflow: hidden;
+      }
+
+      .wave-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .test-content {
+        position: relative;
+        z-index: 1;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .test-controls {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 1rem;
+        border-radius: 8px;
+        z-index: 10;
+      }
+
+      .test-controls button {
+        margin: 0.25rem;
+        padding: 0.5rem 1rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .test-controls button:hover {
+        background: #2563eb;
+      }
+
+      .test-controls button:disabled {
+        background: #6b7280;
+        cursor: not-allowed;
+      }
+
+      .metrics {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        z-index: 10;
+      }
+
+      .error-display {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        z-index: 20;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Wave Animation Canvas -->
+    <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+
+    <!-- Test Content -->
+    <div class="test-content">
+      <h1>🌊 Wave Animation Module Test</h1>
+      <p>Testing the modular wave animation system</p>
+      <p>Check the controls on the top-right and metrics on the bottom-left</p>
+    </div>
+
+    <!-- Test Controls -->
+    <div class="test-controls">
+      <h3>Controls</h3>
+      <button id="initBtn">Initialize</button>
+      <button id="destroyBtn" disabled>Destroy</button>
+      <button id="updateSpeedBtn" disabled>2x Speed</button>
+      <button id="updateColorBtn" disabled>Red Waves</button>
+      <button id="toggleParticlesBtn" disabled>Toggle Particles</button>
+      <button id="resetBtn" disabled>Reset Config</button>
+      <button id="debugBtn" disabled>Debug Canvas</button>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="metrics">
+      <h3>Performance Metrics</h3>
+      <div id="fpsDisplay">FPS: --</div>
+      <div id="memoryDisplay">Memory: --</div>
+      <div id="frameCountDisplay">Frames: --</div>
+      <div id="errorDisplay">Status: Ready</div>
+    </div>
+
+    <!-- Error Display -->
+    <div class="error-display" id="errorDisplay">
+      <h3>❌ Error</h3>
+      <div id="errorMessage"></div>
+      <button onclick="this.parentElement.style.display='none'">Close</button>
+    </div>
+
+    <script>
+      // Import wave animation module
+      import {
+        initWaveAnimation,
+        defaultWaveConfig,
+      } from "../scripts/ui/background-animations/wave-animation.js"
+
+      // Type definitions for custom events
+      interface WaveAnimationErrorEvent extends CustomEvent {
+        detail: {
+          type: string
+          message: string
+          timestamp: number
+        }
+      }
+
+      interface WaveAnimationConfigUpdatedEvent extends CustomEvent {
+        detail: {
+          oldConfig: any
+          newConfig: any
+          timestamp: number
+        }
+      }
+
+      let waveAnimation = null
+      let metricsInterval = null
+
+      // DOM elements
+      const initBtn = document.getElementById("initBtn") as HTMLButtonElement
+      const destroyBtn = document.getElementById("destroyBtn") as HTMLButtonElement
+      const updateSpeedBtn = document.getElementById(
+        "updateSpeedBtn"
+      ) as HTMLButtonElement
+      const updateColorBtn = document.getElementById(
+        "updateColorBtn"
+      ) as HTMLButtonElement
+      const toggleParticlesBtn = document.getElementById(
+        "toggleParticlesBtn"
+      ) as HTMLButtonElement
+      const resetBtn = document.getElementById("resetBtn") as HTMLButtonElement
+      const debugBtn = document.getElementById("debugBtn") as HTMLButtonElement
+
+      const fpsDisplay = document.getElementById("fpsDisplay")
+      const memoryDisplay = document.getElementById("memoryDisplay")
+      const frameCountDisplay = document.getElementById("frameCountDisplay")
+      const errorDisplay = document.getElementById("errorDisplay")
+      const errorMessage = document.getElementById("errorMessage")
+
+      // Initialize wave animation
+      function initializeAnimation() {
+        try {
+          console.log("🚀 Initializing wave animation...")
+
+          waveAnimation = initWaveAnimation(defaultWaveConfig)
+          const success = waveAnimation.init("waveCanvas")
+
+          if (success) {
+            console.log("✅ Wave animation initialized successfully")
+            updateButtonStates(true)
+            startMetricsMonitoring()
+            setupEventListeners()
+          } else {
+            throw new Error("Failed to initialize wave animation")
+          }
+        } catch (error) {
+          console.error("❌ Initialization error:", error)
+          showError("Initialization failed: " + error.message)
+        }
+      }
+
+      // Destroy wave animation
+      function destroyAnimation() {
+        try {
+          if (waveAnimation) {
+            waveAnimation.destroy()
+            waveAnimation = null
+            console.log("🗑️ Wave animation destroyed")
+            updateButtonStates(false)
+            stopMetricsMonitoring()
+          }
+        } catch (error) {
+          console.error("❌ Destruction error:", error)
+          showError("Destruction failed: " + error.message)
+        }
+      }
+
+      // Update wave speed
+      function updateWaveSpeed() {
+        try {
+          if (waveAnimation) {
+            const newWaves = waveAnimation.config.waves.map((wave) => ({
+              ...wave,
+              speed: wave.speed * 2,
+            }))
+
+            waveAnimation.updateConfig({ waves: newWaves })
+            console.log("⚡ Wave speed doubled")
+          }
+        } catch (error) {
+          console.error("❌ Speed update error:", error)
+          showError("Speed update failed: " + error.message)
+        }
+      }
+
+      // Update wave colors to red
+      function updateWaveColors() {
+        try {
+          if (waveAnimation) {
+            const newWaves = waveAnimation.config.waves.map((wave) => ({
+              ...wave,
+              color: "rgba(255, 100, 100, 0.1)",
+            }))
+
+            waveAnimation.updateConfig({ waves: newWaves })
+            console.log("🔴 Wave colors changed to red")
+          }
+        } catch (error) {
+          console.error("❌ Color update error:", error)
+          showError("Color update failed: " + error.message)
+        }
+      }
+
+      // Toggle particles
+      function toggleParticles() {
+        try {
+          if (waveAnimation) {
+            const newParticles = {
+              ...waveAnimation.config.particles,
+              enabled: !waveAnimation.config.particles.enabled,
+            }
+
+            waveAnimation.updateConfig({ particles: newParticles })
+            console.log("✨ Particles toggled:", newParticles.enabled ? "ON" : "OFF")
+          }
+        } catch (error) {
+          console.error("❌ Particle toggle error:", error)
+          showError("Particle toggle failed: " + error.message)
+        }
+      }
+
+      // Reset configuration
+      function resetConfiguration() {
+        try {
+          if (waveAnimation) {
+            waveAnimation.updateConfig(defaultWaveConfig)
+            console.log("🔄 Configuration reset to defaults")
+          }
+        } catch (error) {
+          console.error("❌ Reset error:", error)
+          showError("Reset failed: " + error.message)
+        }
+      }
+
+      // Debug canvas
+      function debugCanvas() {
+        try {
+          const canvas = document.getElementById("waveCanvas") as HTMLCanvasElement
+          if (canvas) {
+            const ctx = canvas.getContext("2d")
+            if (ctx) {
+              // Draw a bright test pattern
+              ctx.fillStyle = "rgba(0, 255, 0, 0.8)"
+              ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+              // Draw some test shapes
+              ctx.fillStyle = "rgba(255, 0, 0, 0.8)"
+              ctx.fillRect(100, 100, 200, 200)
+
+              ctx.fillStyle = "rgba(0, 0, 255, 0.8)"
+              ctx.beginPath()
+              ctx.arc(300, 300, 50, 0, Math.PI * 2)
+              ctx.fill()
+
+              console.log(
+                "🔍 Debug canvas test drawn - you should see green background with red square and blue circle"
+              )
+            }
+          }
+        } catch (error) {
+          console.error("❌ Debug canvas error:", error)
+          showError("Debug canvas failed: " + error.message)
+        }
+      }
+
+      // Update button states
+      function updateButtonStates(initialized) {
+        initBtn.disabled = initialized
+        destroyBtn.disabled = !initialized
+        updateSpeedBtn.disabled = !initialized
+        updateColorBtn.disabled = !initialized
+        toggleParticlesBtn.disabled = !initialized
+        resetBtn.disabled = !initialized
+        debugBtn.disabled = false // Always enabled for debugging
+      }
+
+      // Start metrics monitoring
+      function startMetricsMonitoring() {
+        metricsInterval = setInterval(() => {
+          if (waveAnimation) {
+            const metrics = waveAnimation.getPerformanceMetrics()
+            const errorState = waveAnimation.getErrorState()
+
+            fpsDisplay.textContent = `FPS: ${metrics.fps.toFixed(1)}`
+            memoryDisplay.textContent = `Memory: ${(metrics.memoryUsage / 1024 / 1024).toFixed(2)} MB`
+            frameCountDisplay.textContent = `Frames: ${metrics.frameCount}`
+
+            if (errorState.hasError) {
+              errorDisplay.textContent = `Status: Error - ${errorState.errorType}`
+              errorDisplay.style.color = "#ef4444"
+            } else {
+              errorDisplay.textContent = "Status: Running"
+              errorDisplay.style.color = "#10b981"
+            }
+          }
+        }, 1000)
+      }
+
+      // Stop metrics monitoring
+      function stopMetricsMonitoring() {
+        if (metricsInterval) {
+          clearInterval(metricsInterval)
+          metricsInterval = null
+        }
+
+        fpsDisplay.textContent = "FPS: --"
+        memoryDisplay.textContent = "Memory: --"
+        frameCountDisplay.textContent = "Frames: --"
+        errorDisplay.textContent = "Status: Stopped"
+        errorDisplay.style.color = "#6b7280"
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Listen for wave animation events
+        window.addEventListener("waveAnimationError", (event: Event) => {
+          const waveEvent = event as WaveAnimationErrorEvent
+          console.error("🌊 Wave Animation Error:", waveEvent.detail)
+          showError(
+            `Wave Animation Error: ${waveEvent.detail.type} - ${waveEvent.detail.message}`
+          )
+        })
+
+        window.addEventListener("waveAnimationConfigUpdated", (event: Event) => {
+          const configEvent = event as WaveAnimationConfigUpdatedEvent
+          console.log("⚙️ Wave Animation Config Updated:", configEvent.detail)
+        })
+      }
+
+      // Show error message
+      function showError(message) {
+        errorMessage.textContent = message
+        document.getElementById("errorDisplay").style.display = "block"
+      }
+
+      // Button event listeners
+      initBtn.addEventListener("click", initializeAnimation)
+      destroyBtn.addEventListener("click", destroyAnimation)
+      updateSpeedBtn.addEventListener("click", updateWaveSpeed)
+      updateColorBtn.addEventListener("click", updateWaveColors)
+      toggleParticlesBtn.addEventListener("click", toggleParticles)
+      resetBtn.addEventListener("click", resetConfiguration)
+      debugBtn.addEventListener("click", debugCanvas)
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", () => {
+        if (waveAnimation) {
+          waveAnimation.destroy()
+        }
+      })
+
+      console.log("🧪 Wave Animation Test Page Loaded")
+    </script>
+  </body>
+</html>
