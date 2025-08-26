@@ -436,6 +436,7 @@
   --z-tooltip: 1070; /* Legacy --z-tooltip */
 
   /* Container breakpoints - preserving legacy */
+  --container-xs: 320px; /* Legacy --container-xs */
   --container-sm: 640px; /* Legacy --container-sm */
   --container-md: 768px; /* Legacy --container-md */
   --container-lg: 1024px; /* Legacy --container-lg */
