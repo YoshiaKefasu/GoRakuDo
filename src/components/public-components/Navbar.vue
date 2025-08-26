@@ -237,7 +237,7 @@
 /* ---------- Mobile-First Base Styles (0px - 640px) ---------- */
 .nav-left,
 .nav-right {
-  display: flex !important; /* Show navigation on all screen sizes */
+  display: none !important; /* Show navigation on all screen sizes */
   flex: 1 1 0% !important;
   align-items: center !important;
 }
@@ -452,7 +452,7 @@
   /* 640px → 40rem for responsive scaling */
   .nav-left,
   .nav-right {
-    display: flex !important; /* Show navigation on all screen sizes */
+    display: none !important; /* Show navigation on all screen sizes */
     flex: 1 1 0% !important;
     align-items: center !important;
   }

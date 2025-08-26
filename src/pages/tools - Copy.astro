@@ -1,0 +1,161 @@
+---
+import Head from "../components/public-components/HeadSEO.astro"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Navbar from "../components/public-components/Navbar.vue"
+
+// Import CSS
+import "../styles/global.css"
+import "../styles/tools/tools.css"
+
+// Import images
+import homepageOgImage from "../assets/images/Logo Discord.png"
+
+// Tools data - UNTOUCHED
+const tools = [
+  {
+    id: "anki",
+    name: "Anki",
+    description:
+      "Sistem flashcard dengan Spaced Repetition System (SRS) untuk menghafal kosakata dan kanji secara efektif.",
+    icon: "📚",
+    color: "var(--clr-accent)",
+    link: "/docs/anki-guide",
+    difficulty: "intermediate",
+    category: "flashcard",
+    featured: true,
+  },
+  {
+    id: "yomichan",
+    name: "Yomichan",
+    description:
+      "Browser extension untuk membaca bahasa Jepang dengan hover dictionary dan furigana generation.",
+    icon: "🔍",
+    color: "var(--clr-accent-dark)",
+    link: "/docs/yomichan-guide",
+    difficulty: "beginner",
+    category: "reading",
+    featured: true,
+  },
+  {
+    id: "migaku",
+    name: "Migaku",
+    description:
+      "Suite tools untuk immersion learning termasuk browser extension dan Anki integration.",
+    icon: "🎯",
+    color: "var(--clr-accent-glow-strong)",
+    link: "/docs/migaku-guide",
+    difficulty: "intermediate",
+    category: "suite",
+    featured: false,
+  },
+  {
+    id: "language-reactor",
+    name: "Language Reactor",
+    description:
+      "Netflix extension untuk belajar bahasa dengan subtitle dual-language dan vocabulary tracking.",
+    icon: "🎬",
+    color: "var(--clr-accent-glow-medium)",
+    link: "/docs/language-reactor-guide",
+    difficulty: "beginner",
+    category: "video",
+    featured: false,
+  },
+]
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <Head
+      title="Tools Immersion - Alat Pembelajaran Bahasa Jepang"
+      description="Kumpulan tools dan aplikasi terbaik untuk pembelajaran bahasa Jepang dengan metode immersion. Setup dan panduan lengkap."
+      ogImage={homepageOgImage}
+      pageType="website"
+    />
+    <!-- Inter Font Implementation -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link fetchpriority="low" rel="prefetch" href="/docs" />
+  </head>
+  <body>
+    <!-- Navigation & Backgrounds -->
+    <Navbar client:visible />
+    <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main" transition:name="main-content">
+      <section class="tools-section loading" aria-labelledby="tools-title" data-lazy>
+        <div class="container">
+          <header class="tools-header">
+            <h1 class="tools-title" id="tools-title">Tools & Aplikasi</h1>
+            <p class="tools-description">
+              Pilih tool yang sesuai dengan tahap pembelajaran dan kebutuhan Anda.
+            </p>
+          </header>
+
+          <!-- Semantic List for Accessibility -->
+          <ul class="tools-grid" role="list">
+            {
+              tools.map((tool) => (
+                <li class="tool-grid-item">
+                  <a
+                    href={tool.link}
+                    class="tool-card"
+                    aria-labelledby={`tool-name-${tool.id}`}
+                    aria-describedby={`tool-desc-${tool.id}`}>
+                    <article>
+                      <header class="tool-card-header">
+                        <div class="tool-icon" style={`background-color: ${tool.color}`}>
+                          {tool.icon}
+                        </div>
+                        <div class="tool-meta">
+                          <span class="tool-difficulty">
+                            {tool.difficulty === "beginner"
+                              ? "Pemula"
+                              : tool.difficulty === "intermediate"
+                                ? "Menengah"
+                                : "Lanjutan"}
+                          </span>
+                          <span class="tool-category">{tool.category}</span>
+                        </div>
+                      </header>
+                      <div class="tool-card-body">
+                        <h3 class="tool-name" id={`tool-name-${tool.id}`}>
+                          {tool.name}
+                        </h3>
+                        <p class="tool-description-card" id={`tool-desc-${tool.id}`}>
+                          {tool.description}
+                        </p>
+                      </div>
+                      <footer class="tool-card-footer">
+                        <span class="tool-cta-text">Lihat Panduan</span>
+                        <svg
+                          class="tool-arrow"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </footer>
+                    </article>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scripts (omitted for brevity) -->
+    <script></script>
+  </body>
+</html>

@@ -13,8 +13,11 @@
   --clr-accent-glow-medium: rgba(139, 92, 246, 0.35);
   --clr-accent-glow-strong: rgba(139, 92, 246, 0.7);
 
-  /* Typography */
-  --fs-h1: clamp(2.25rem, 5vw, 3rem);
+  /* Typography System */
+  --font-family-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --fs-hero-title: clamp(2.5rem, 6vw, 4rem);
+  --fs-h2: clamp(2rem, 5vw, 2.5rem);
   --fs-h3: 1.25rem; /* 20px */
   --fs-base: 1rem; /* 16px */
   --fs-sm: 0.875rem; /* 14px */
@@ -27,13 +30,12 @@
   --spacing-4: 1rem; /* 16px */
   --spacing-6: 1.5rem; /* 24px */
   --spacing-8: 2rem; /* 32px */
-  --section-padding-y: var(--spacing-8);
+  --spacing-12: 3rem; /* 48px */
+  --section-padding-y: var(--spacing-12);
 
   /* Borders & Shadows */
   --border-radius-card: 1rem; /* 16px */
   --border-radius-pill: 9999px;
-  --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-lg-accent: 0 10px 30px rgba(139, 92, 246, 0.2);
 
   /* Transitions */
@@ -55,22 +57,44 @@ body {
   padding-inline: var(--spacing-6);
 }
 
-.tools-section {
+/* ========== HERO SECTION ========== */
+.tools-hero {
   padding-block: var(--section-padding-y);
+  text-align: center;
 }
 
-.tools-header {
+.tools-hero-title {
+  font-size: var(--fs-hero-title);
+  font-weight: 700;
+  margin-bottom: var(--spacing-4);
+  line-height: 1.2;
+}
+
+.tools-hero-description {
+  font-size: var(--fs-base);
+  color: var(--clr-text-secondary);
+  max-width: 60ch;
+  margin-inline: auto;
+  line-height: 1.7;
+}
+
+/* ========== TOOLS GRID SECTION ========== */
+.tools-grid-section {
+  padding-bottom: var(--section-padding-y);
+}
+
+.tools-grid-header {
   text-align: center;
   margin-bottom: var(--spacing-8);
 }
 
-.tools-title {
-  font-size: var(--fs-h1);
-  font-weight: 700;
+.tools-grid-title {
+  font-size: var(--fs-h2);
+  font-weight: 600;
   margin-bottom: var(--spacing-4);
 }
 
-.tools-description {
+.tools-grid-description {
   font-size: var(--fs-base);
   color: var(--clr-text-secondary);
   max-width: 50ch;
@@ -78,7 +102,6 @@ body {
   line-height: 1.7;
 }
 
-/* ========== TOOLS GRID (Mobile-First) ========== */
 .tools-grid {
   --grid-gap: var(--spacing-6);
   display: grid;
@@ -89,10 +112,10 @@ body {
 }
 
 .tool-grid-item {
-  list-style: none; /* Removes bullet from li */
+  list-style: none;
 }
 
-/* ========== TOOL CARD ========== */
+/* ========== TOOL CARD (Styles fully retained) ========== */
 .tool-card {
   background: var(--clr-accent-glow-faint);
   border: 1px solid var(--clr-accent-glow-medium);
@@ -101,9 +124,7 @@ body {
   display: block;
   text-decoration: none;
   height: 100%;
-  min-height: 44px; /* AC 9: Touch Target Compliance */
-
-  /* AC 2 & 7: Performance Optimization */
+  min-height: 44px;
   will-change: transform, border-color, box-shadow;
   transition:
     transform var(--transition-speed) var(--transition-ease),
@@ -126,9 +147,9 @@ body {
 }
 
 .tool-icon {
-  font-size: 1.5rem; /* 24px */
-  width: 44px; /* AC 9: Touch Target */
-  height: 44px; /* AC 9: Touch Target */
+  font-size: 1.5rem;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,7 +216,6 @@ body {
   transition: transform var(--transition-speed) var(--transition-ease);
 }
 
-/* --- Interaction States --- */
 .tool-card:hover {
   transform: translateY(-5px);
   border-color: var(--clr-accent-glow-strong);
@@ -210,7 +230,6 @@ body {
   transform: translateX(4px);
 }
 
-/* AC 10: Clear Focus Indicator */
 .tool-card:focus-visible {
   outline: none;
   transform: translateY(-5px);
@@ -220,39 +239,26 @@ body {
     0 0 0 5px var(--clr-accent);
 }
 
-/* ========== RESPONSIVE DESIGN (AC 6: Mobile-First with all Breakpoints) ========== */
-
-/* Base styles (360px and up) are default */
-
-/* Small devices (640px) */
+/* ========== RESPONSIVE DESIGN (Retained) ========== */
 @media (min-width: 640px) {
   .tools-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Tablet devices (768px) */
-@media (min-width: 768px) {
-  :root {
-    --fs-h3: 1.5rem; /* 24px */
-  }
-}
-
-/* Laptops (1024px) */
 @media (min-width: 1024px) {
   .tools-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* Desktops (1280px) */
 @media (min-width: 1280px) {
   .container {
     padding-inline: var(--spacing-8);
   }
 }
 
-/* ========== ANIMATIONS & REDUCED MOTION ========== */
+/* ========== ANIMATIONS (Retained) ========== */
 .loading {
   opacity: 0;
   transform: translateY(20px);
