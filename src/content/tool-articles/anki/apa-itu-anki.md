@@ -20,7 +20,7 @@ emoji: "📚"
 icon: "/img/tools/anki-icon.png"
 
 # Content Classification
-tags: ["srs", "flashcard", "vocabulary", "kanji", "memorization"]
+tags: ["anki", "srs", "flashcard", "vocabulary", "kanji", "memorization"]
 featured: true
 
 # Mind Map Integration
