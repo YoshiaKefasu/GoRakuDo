@@ -57,7 +57,7 @@ To evolve the `/tools` page from a simple list into a comprehensive and dynamic 
     4.  A tagging mechanism within the frontmatter of the articles to create relationships between them and the tool categories.
 -   **How it integrates:**
     1.  A schema will be defined in `src/content/config.ts`.
-    2.  Markdown files will be organized in `src/content/tools/{tool-name}/`.
+    2.  Markdown files will be organized in `src/content/tool-articles/{tool-name}/`.
     3.  Two new dynamic routes will be created: `src/pages/tools/[tool]/index.astro` and `src/pages/tools/[tool]/[...slug].astro`.
     4.  The `getCollection` API from Astro will be used to fetch and filter the articles based on the tool category and tags.
 -   **Success criteria:** All success criteria from the "Project Analysis" section are met.
@@ -67,10 +67,10 @@ To evolve the `/tools` page from a simple list into a comprehensive and dynamic 
 Here is the detailed 10-story breakdown to ensure a smooth, incremental implementation:
 
 1.  **Story 2.1: Define Content Collection Schema:** ✅ **COMPLETED** - Define the `tool-articles` schema in `src/content/config.ts` with all required fields (`title`, `description`, `tags`, `publishedDate`, `heroImage`, etc.).
-2.  **Story 2.2: Create Content Directory Structure:** ✅ **COMPLETED** - Create the necessary directory structure under `src/content/tools/` for different tools (e.g., `anki`, `yomitan`).
+2.  **Story 2.2: Create Content Directory Structure:** ✅ **COMPLETED** - Create the necessary directory structure under `src/content/tool-articles/` for different tools (e.g., `anki`, `yomitan`).
 3.  **Story 2.3: Validate Existing 'Anki' Content Schema Compliance:** ✅ **COMPLETED** - Verify that the existing `apa-itu-anki.md` file in `src/content/tool-articles/anki/` conforms to the established schema and build process.
 4.  **Story 2.4: Create Dynamic Article Page Layout:** Create the basic dynamic page for rendering a single article at `src/pages/tools/[tool]/[...slug].astro`. This initial version will focus on rendering the Markdown body.
-5.  **Story 2.5: Create Dynamic Tool Index Page:** Create the dynamic index page at `src/pages/tools/[tool]/index.astro` that lists all articles for a given tool (e.g., all articles in `src/content/tools/anki/`).
+5.  **Story 2.5: Create Dynamic Tool Index Page:** Create the dynamic index page at `src/pages/tools/[tool]/index.astro` that lists all articles for a given tool (e.g., all articles in `src/content/tool-articles/anki/`).
 6.  **Story 2.6: Implement Tagging System Logic:** Enhance the tool index page to filter and display articles based on tags, allowing an article to appear in multiple tool indexes.
 7.  **Story 2.7: Style the Article Page:** Apply styling to the article page to match the website's design, including typography, code blocks, and images.
 8.  **Story 2.8: Style the Tool Index Page:** Apply styling to the tool index page, creating a card grid or list view for the articles that is consistent with the site's aesthetic.

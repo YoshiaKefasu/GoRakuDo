@@ -60,6 +60,15 @@ const CONTENT_PATH_CONFIG: ContentPathConfig[] = [
     icon: "📮",
     priority: 5,
   },
+  {
+    collectionName: "tool-articles",
+    basePath: "/tools",
+    displayName: "Tools",
+    icon: "🛠️",
+    priority: 6,
+    // Note: This collection uses nested routing: /tools/{tool-name}/{article-slug}
+    // The basePath is /tools, but individual articles are at /tools/{tool}/{slug}
+  },
 ];
 
 // ========== PATH RESOLUTION UTILITIES ==========
