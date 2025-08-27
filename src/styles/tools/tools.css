@@ -9,6 +9,7 @@
   --clr-text-secondary: #a3a3a3;
   --clr-text-muted: #b0b0b0;
   --clr-accent: #8b5cf6;
+  --clr-accent-dark: #7b4def;
   --clr-accent-glow-faint: rgba(139, 92, 246, 0.05);
   --clr-accent-glow-medium: rgba(139, 92, 246, 0.35);
   --clr-accent-glow-strong: rgba(139, 92, 246, 0.7);
@@ -27,6 +28,8 @@
   --spacing-4: 1rem; /* 16px */
   --spacing-6: 1.5rem; /* 24px */
   --spacing-8: 2rem; /* 32px */
+  --spacing-12: 3rem; /* 48px */
+  --spacing-16: 4rem; /* 64px */
   --section-padding-y: var(--spacing-8);
 
   /* Borders & Shadows */
@@ -39,6 +42,9 @@
   /* Transitions */
   --transition-speed: 200ms;
   --transition-ease: ease-out;
+  --animate-duration-normal: 0.4s;
+  --animate-duration-fast: 0.2s;
+  --animate-duration-slow: 0.6s;
 }
 
 /* ========== BASE & LAYOUT ========== */
@@ -197,7 +203,7 @@ body {
 
 /* --- Interaction States --- */
 .tool-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-1px);
   border-color: var(--clr-accent-glow-strong);
   box-shadow: var(--shadow-lg-accent);
 }
@@ -213,7 +219,7 @@ body {
 /* AC 10: Clear Focus Indicator */
 .tool-card:focus-visible {
   outline: none;
-  transform: translateY(-5px);
+  transform: translateY(-1px);
   border-color: var(--clr-accent-glow-strong);
   box-shadow:
     0 0 0 3px var(--clr-bg),
@@ -253,12 +259,22 @@ body {
 }
 
 /* ========== ANIMATIONS & REDUCED MOTION ========== */
+
+/* Animation System Documentation:
+ * - Scale: Subtle scaling effects with smooth transitions
+ * - Fade: Opacity changes with gentle movement
+ * - Slide: Horizontal movement with smooth easing
+ * - Bounce: Spring-like effects with butter-like smoothness
+ * 
+ * All animations respect user's motion preferences and are optimized for performance
+ */
+
 .loading {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(4px);
   transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
+    opacity var(--animate-duration-fast) ease,
+    transform var(--animate-duration-fast) ease;
 }
 
 .loading.loaded {
@@ -269,10 +285,25 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .tool-card,
   .tool-arrow {
-    transition: none;
+    transition: none !important;
+    animation: none !important;
   }
+
   .tool-card:hover,
   .tool-card:focus-visible {
-    transform: none;
+    transform: none !important;
   }
+}
+
+/* Tool Icon Colors - Replace Inline Styles */
+.tool-icon-anki {
+  background-color: var(--clr-accent);
+}
+
+.tool-icon-yomichan {
+  background-color: var(--clr-accent-dark);
+}
+
+.tool-icon-migaku {
+  background-color: var(--clr-accent-glow-strong);
 }

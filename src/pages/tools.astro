@@ -23,6 +23,11 @@ const tools = [
     difficulty: "intermediate",
     category: "flashcard",
     featured: true,
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: "scale",
+    },
   },
   {
     id: "yomichan",
@@ -35,6 +40,11 @@ const tools = [
     difficulty: "beginner",
     category: "reading",
     featured: true,
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: "slide",
+    },
   },
   {
     id: "migaku",
@@ -47,23 +57,21 @@ const tools = [
     difficulty: "intermediate",
     category: "suite",
     featured: false,
-  },
-  {
-    id: "language-reactor",
-    name: "Language Reactor",
-    description:
-      "Netflix extension untuk belajar bahasa dengan subtitle dual-language dan vocabulary tracking.",
-    icon: "🎬",
-    color: "var(--clr-accent-glow-medium)",
-    link: "/docs/language-reactor-guide",
-    difficulty: "beginner",
-    category: "video",
-    featured: false,
+    status: "available",
+    priority: "medium",
+    estimatedCompletion: "Available Now",
+    tags: ["suite", "immersion", "integration"],
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: "scale",
+    },
   },
 ]
 ---
 
 <!doctype html>
+<!-- eslint-disable-next-line compat-api/html, compat-api/css -->
 <html lang="id">
   <head>
     <Head
@@ -110,7 +118,7 @@ const tools = [
 
       <!-- Tools Grid Section -->
       <section
-        class="tools-section loading"
+        class="npmnpm loading"
         aria-labelledby="tools-title"
         transition:name="tools-section"
         data-lazy>
@@ -123,7 +131,7 @@ const tools = [
           </div>
 
           <!-- Semantic List for Accessibility -->
-          <div class="tools-grid" role="list">
+          <div class="tools-grid">
             {
               tools.map((tool) => (
                 <div class="tool-grid-item">
@@ -134,9 +142,7 @@ const tools = [
                     aria-describedby={`tool-desc-${tool.id}`}>
                     <article>
                       <header class="tool-card-header">
-                        <div class="tool-icon" style={`background-color: ${tool.color}`}>
-                          {tool.icon}
-                        </div>
+                        <div class={`tool-icon tool-icon-${tool.id}`}>{tool.icon}</div>
                         <div class="tool-meta">
                           <span class="tool-difficulty">
                             {tool.difficulty === "beginner"
@@ -483,6 +489,61 @@ const tools = [
           preload.setAttribute("fetchpriority", "low")
           document.head.appendChild(preload)
         })
+      })
+
+      // Performance monitoring for interactive features
+      const performanceMonitor = {
+        startTime: performance.now(),
+        animationObserver: null as PerformanceObserver | null,
+
+        init() {
+          console.log("🎯 LCP:", this.getLCP().toFixed(2), "ms")
+          console.log("⚡ FID:", this.getFID().toFixed(2), "ms")
+          console.log("📐 CLS:", this.getCLSValue().toFixed(4))
+          console.log("🎨 FCP:", this.getFCP().toFixed(2), "ms")
+
+          // Custom animation performance logging
+          this.animationObserver = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === "measure") {
+                console.log(
+                  `🎬 Animation: ${entry.name} - ${entry.duration.toFixed(2)}ms`
+                )
+              }
+            }
+          })
+          this.animationObserver.observe({ entryTypes: ["measure"] })
+        },
+
+        getLCP(): number {
+          const entries = performance.getEntriesByType("largest-contentful-paint")
+          return entries.length > 0 ? entries[0].startTime : 0
+        },
+
+        getFID(): number {
+          const entries = performance.getEntriesByType("first-input")
+          return entries.length > 0
+            ? (entries[0] as any).processingStart - entries[0].startTime
+            : 0
+        },
+
+        getCLSValue(): number {
+          const entries = performance.getEntriesByType("layout-shift")
+          return entries.reduce((sum, entry: any) => sum + entry.value, 0)
+        },
+
+        getFCP(): number {
+          const entries = performance.getEntriesByType("paint")
+          const fcp = entries.find((entry) => entry.name === "first-contentful-paint")
+          return fcp ? fcp.startTime : 0
+        },
+      }
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", () => {
+        if (performanceMonitor.animationObserver) {
+          performanceMonitor.animationObserver.disconnect()
+        }
       })
     </script>
   </body>

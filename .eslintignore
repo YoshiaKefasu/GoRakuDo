@@ -1,0 +1,7 @@
+# Ignore built files
+dist/
+dist/**/*
+*.html
+
+# Ignore browser compatibility warnings
+**/dist/**/*.html

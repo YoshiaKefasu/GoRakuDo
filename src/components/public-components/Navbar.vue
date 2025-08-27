@@ -39,6 +39,7 @@
             href="/"
             class="logo-japanese"
             aria-label="GoRakuDo - Kembali ke beranda"
+            title="GoRakuDo - Kembali ke beranda"
           >
             語楽道
           </a>
