@@ -1,0 +1,87 @@
+---
+// Import required dependencies for tool articles
+import { getCollection, type CollectionEntry } from "astro:content"
+
+// Generate static paths for all tool articles
+export async function getStaticPaths() {
+  const posts = await getCollection("tool-articles")
+
+  return posts.map((post) => {
+    // Extract tool name from slug (first part before first slash)
+    const slugParts = post.slug.split("/")
+    const toolName = slugParts[0] // e.g., "anki" from "anki/apa-itu-anki"
+    const articleSlug = slugParts.slice(1).join("/") // remaining path
+
+    return {
+      params: { tool: toolName, slug: articleSlug },
+      props: { post },
+    }
+  })
+}
+
+// Get the post from props with type safety
+const { post } = Astro.props as { post: CollectionEntry<"tool-articles"> }
+
+// Security: Validate and sanitize URL parameters
+const params = Astro.params as { tool: string; slug: string }
+const toolName = params.tool
+const articleSlug = params.slug
+
+// Prevent path traversal attacks
+if (
+  toolName?.includes("..") ||
+  toolName?.includes("/") ||
+  articleSlug?.includes("..") ||
+  articleSlug?.includes("//")
+) {
+  console.warn("🚨 Security: Path traversal attempt detected:", { toolName, articleSlug })
+  return Astro.redirect("/404", 301)
+}
+
+// Validate tool name against whitelist (defense in depth)
+const validTools = ["anki", "migaku", "yomitan"]
+if (!validTools.includes(toolName)) {
+  console.warn("🚨 Security: Invalid tool name requested:", toolName)
+  return Astro.redirect("/tools", 301)
+}
+
+// Sanitize slug to prevent XSS through URL manipulation
+const sanitizedSlug = articleSlug?.replace(/[<>\"'&]/g, "")
+if (sanitizedSlug !== articleSlug) {
+  console.warn("🚨 Security: XSS attempt detected in slug:", articleSlug)
+  return Astro.redirect("/404", 301)
+}
+
+// Error handling pattern - redirect to 404 if post not found
+if (!post) {
+  console.warn("⚠️ Tool article not found:", { tool: toolName, slug: articleSlug })
+  return Astro.redirect("/404", 301)
+}
+
+// Render the content
+const { Content } = await post.render()
+
+// Log successful route access
+console.log("✅ Tool article accessed:", {
+  tool: toolName,
+  slug: articleSlug,
+  title: post.data.title,
+  timestamp: new Date().toISOString(),
+})
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <title>{post.data.title}</title>
+    <meta name="description" content={post.data.description} />
+  </head>
+
+  <body>
+    <!-- Article Header -->
+    <h1>{post.data.title}</h1>
+
+    <!-- Article Content -->
+    <Content />
+  </body>
+</html>
