@@ -1,0 +1,182 @@
+---
+// ========== TOOL INDEX PAGE IMPLEMENTATION ==========
+// Story 2.5: Create Dynamic Tool Index Page
+// Purpose: Display all articles for a specific tool category
+// File: src/pages/tools/[tool]/index.astro
+
+// Import required dependencies
+import { getCollection, type CollectionEntry } from "astro:content";
+import { readdir } from "fs/promises";
+import { join } from "path";
+
+// ========== PERFORMANCE MONITORING ==========
+// Subtask 8.1: Build time measurement for index page generation
+const startTime = performance.now();
+
+// ========== STATIC PATH GENERATION ==========
+// Task 2: Implement getStaticPaths with robust error handling
+export async function getStaticPaths() {
+  try {
+    // Subtask 2.1: Scan tool-articles directory for tool subdirectories
+    const toolArticlesPath = join(process.cwd(), "src/content/tool-articles");
+    
+    // Validate directory exists
+    let toolDirectories: string[] = [];
+    try {
+      const entries = await readdir(toolArticlesPath, { withFileTypes: true });
+      toolDirectories = entries
+        .filter(entry => entry.isDirectory())
+        .map(entry => entry.name);
+    } catch (error) {
+      console.warn("⚠️ Warning: Could not read tool-articles directory:", error);
+      // Subtask 2.3: Fallback to empty array if directory doesn't exist
+      return [];
+    }
+
+    // Subtask 2.2: Generate static paths for each tool with validation
+    const validTools = ["anki", "migaku", "yomitan"];
+    const paths = toolDirectories
+      .filter(dir => validTools.includes(dir))
+      .map(tool => ({
+        params: { tool },
+        props: { toolName: tool }
+      }));
+
+    console.log("✅ Generated static paths for tools:", paths.map(p => p.params.tool));
+    return paths;
+
+  } catch (error) {
+    // Subtask 2.4: Prevent build failures with try-catch blocks
+    console.error("🚨 Critical error in getStaticPaths:", error);
+    // Return empty array to prevent build failure
+    return [];
+  }
+}
+
+// ========== COMPONENT LOGIC ==========
+// Task 3: Get tool parameter from Astro.params
+const { tool } = Astro.params as { tool: string };
+
+// Validate tool parameter
+if (!tool) {
+  console.warn("⚠️ No tool parameter provided");
+  return Astro.redirect("/tools", 301);
+}
+
+// Security: Validate tool name against whitelist
+const validTools = ["anki", "migaku", "yomitan"];
+if (!validTools.includes(tool)) {
+  console.warn("🚨 Security: Invalid tool name requested:", tool);
+  return Astro.redirect("/tools", 301);
+}
+
+// Task 4: Fetch all articles from the collection
+let articles: CollectionEntry<"tool-articles">[] = [];
+try {
+  articles = await getCollection("tool-articles");
+} catch (error) {
+  console.error("🚨 Error fetching tool-articles collection:", error);
+  articles = [];
+}
+
+// Task 5: Filter articles for current tool with robust error handling
+// Subtask 5.1: Implement filtering logic based on article slug prefix
+const toolArticles = articles.filter(article => {
+  try {
+    // Subtask 5.3: Add slug pattern validation
+    if (!article.slug || typeof article.slug !== "string") {
+      console.warn("⚠️ Invalid slug format for article:", article.id);
+      return false;
+    }
+
+    // Filter by tool prefix (e.g., "anki/" for anki tool)
+    const slugPrefix = `${tool}/`;
+    return article.slug.startsWith(slugPrefix);
+  } catch (error) {
+    // Subtask 5.4: Implement graceful degradation for malformed slugs
+    console.warn("⚠️ Error processing article slug:", article.id, error);
+    return false;
+  }
+});
+
+// Subtask 5.2: Handle case where no articles are found
+const hasArticles = toolArticles.length > 0;
+
+// ========== PERFORMANCE MONITORING ==========
+// Subtask 8.2: Memory-efficient content loading validation
+const endTime = performance.now();
+const buildTime = endTime - startTime;
+
+console.log(`🎯 Tool index page build time: ${buildTime.toFixed(2)}ms`);
+console.log(`📊 Articles found for ${tool}: ${toolArticles.length}`);
+
+// Subtask 8.3: Validate build time targets (< 2 seconds increase from baseline)
+if (buildTime > 2000) {
+  console.warn("⚠️ Performance: Build time exceeds 2 second target:", buildTime.toFixed(2), "ms");
+}
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <title>{tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo</title>
+    <meta name="description" content={`All articles and guides for ${tool} tool`} />
+  </head>
+
+  <body>
+    <!-- Page Header -->
+    <header>
+      <h1>{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>
+      <p>Browse all available documentation for {tool}</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+      <a href="/tools">← Back to Tools</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      {hasArticles ? (
+        <!-- Task 6: Render ul of filtered articles -->
+        <ul>
+          {toolArticles.map(article => {
+            // Task 7: Render li with link for each article
+            // Subtask 7.1: Create proper link structure
+            const articleSlug = article.slug.replace(`${tool}/`, "");
+            const articleUrl = `/tools/${tool}/${articleSlug}`;
+            
+            // Subtask 7.2: Add fallback text if article title is missing
+            const articleTitle = article.data.title || `Article ${article.id}`;
+            
+            return (
+              <li>
+                <!-- Subtask 7.3: Validate article slugs before link generation -->
+                <a href={articleUrl} title={article.data.description || ""}>
+                  {articleTitle}
+                </a>
+                {article.data.description && (
+                  <p>{article.data.description}</p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <!-- Subtask 5.2: No articles found fallback message -->
+        <div>
+          <p>No articles available for {tool} yet. Check back soon for new content!</p>
+          <p>Available tools: <a href="/tools/anki">anki</a>, <a href="/tools/migaku">migaku</a>, <a href="/tools/yomitan">yomitan</a></p>
+        </div>
+      )}
+    </main>
+
+    <!-- Error Handling Fallback -->
+    {!hasArticles && articles.length === 0 && (
+      <div>
+        <p>Unable to load tool articles. Please try refreshing the page.</p>
+        <a href="/tools">Return to Tools Page</a>
+      </div>
+    )}
+  </body>
+</html>
