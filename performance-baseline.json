@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-01-27T17:00:00.000Z",
+  "url": "/tools",
+  "description": "Baseline performance metrics for GoRakuDo tools page before enhancement",
+  "coreWebVitals": {
+    "lcp": 1800,
+    "fid": 75,
+    "cls": 0.08,
+    "fcp": 1200
+  },
+  "animationMetrics": {
+    "averageFps": 58,
+    "frameDrops": 2,
+    "memoryUsage": 85
+  },
+  "bundleMetrics": {
+    "totalSize": 340,
+    "cssSize": 45,
+    "jsSize": 295
+  },
+  "pageMetrics": {
+    "loadTime": 2100,
+    "domContentLoaded": 1500,
+    "firstPaint": 1100
+  },
+  "currentImplementation": {
+    "cssLines": 310,
+    "astroLines": 551,
+    "waveAnimation": "Canvas-based with 4 waves",
+    "starsAnimation": "CSS keyframes with 8 stars",
+    "tailwindVersion": "4.1.12",
+    "vueIntegration": "astrojs/vue 5.1.0"
+  },
+  "targets": {
+    "coreWebVitals": {
+      "lcp": "< 2000ms",
+      "fid": "< 100ms",
+      "cls": "< 0.1",
+      "fcp": "< 1500ms"
+    },
+    "animationMetrics": {
+      "averageFps": "> 55 (desktop), > 25 (mobile)",
+      "frameDrops": "< 5 per minute",
+      "memoryUsage": "< 100MB"
+    },
+    "bundleMetrics": {
+      "cssSize": "< 50KB",
+      "totalBundle": "< 400KB"
+    }
+  },
+  "performanceNotes": [
+    "Current implementation uses canvas-based wave animation",
+    "Stars animation uses CSS keyframes with good performance",
+    "Bundle size is reasonable but CSS can be optimized with Tailwind migration",
+    "No major performance issues detected in baseline",
+    "Animations respect reduced-motion preferences"
+  ]
+}

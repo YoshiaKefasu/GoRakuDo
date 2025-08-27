@@ -86,6 +86,13 @@ export class StarsAnimation {
       cssInjectionTime: 0,
     };
 
+    // ENHANCED: Animation conflict prevention
+    this.animationConflicts = {
+      activeAnimations: new Set(),
+      lastAnimationTime: 0,
+      minInterval: 100, // Minimum 100ms between animation updates
+    };
+
     // ENHANCED: Error state management
     this.errorState = {
       hasError: false,
@@ -235,6 +242,12 @@ export class StarsAnimation {
 
   init(containerId = "stars") {
     try {
+      // ENHANCED: Animation conflict prevention - register stars animation
+      if (!this.registerAnimation("stars")) {
+        console.warn("⚠️ Stars animation blocked due to conflict or timing");
+        return;
+      }
+
       // ENHANCED: Performance monitoring start
       this.performanceMetrics.startTime = performance.now();
       performance.mark("stars-animation-init-start");
@@ -246,8 +259,12 @@ export class StarsAnimation {
         !this.config.accessibility.forceEnable // Allow override for testing
       ) {
         this.config.enabled = false;
+        this.unregisterAnimation("stars"); // Clean up registration
         return;
       }
+
+      // ENHANCED: Apply device-specific frame rate capping
+      this.applyFrameRateCapping();
 
       // Initialize stars container and create star elements
       this.injectDynamicStyles();
@@ -263,7 +280,11 @@ export class StarsAnimation {
       );
 
       this.isInitialized = true;
+      console.log(
+        "✅ Stars animation initialized with performance optimizations",
+      );
     } catch (error) {
+      this.unregisterAnimation("stars"); // Clean up registration on error
       this.handleError("initialization", error);
     }
   }
@@ -276,6 +297,9 @@ export class StarsAnimation {
         this.animationId = null;
       }
 
+      // ENHANCED: Unregister animation from conflict prevention system
+      this.unregisterAnimation("stars");
+
       // ENHANCED: Memory cleanup
       this.cleanupMemory();
 
@@ -284,6 +308,7 @@ export class StarsAnimation {
       this.cleanupContainer();
 
       this.isDestroyed = true;
+      console.log("✅ Stars animation destroyed and cleaned up");
     } catch (error) {
       console.error("Error during stars animation destruction:", error);
     }
@@ -352,6 +377,14 @@ export class StarsAnimation {
 
   // ENHANCED: Optimized CSS generation with CSS variables
   generateOptimizedCSS() {
+    console.log("🎨 Generating CSS for stars animation");
+    console.log("⚙️ Config:", {
+      opacity: this.config.opacity,
+      animationDuration: this.config.animationDuration,
+      containerClass: this.config.containerClass,
+      starClass: this.config.starClass,
+    });
+
     /*
      * CRITICAL FIXES APPLIED:
      *
@@ -381,7 +414,7 @@ export class StarsAnimation {
       .map(([key, value]) => `${key}: ${value};`)
       .join("\n      ");
 
-    return `
+    const css = `
              .${this.config.containerClass} {
          position: fixed;
          top: 0;
@@ -393,7 +426,7 @@ export class StarsAnimation {
          ${cssVarsString}
 
        }
-      
+
       .${this.config.starClass} {
         position: absolute;
         width: var(--stars-size);
@@ -404,7 +437,7 @@ export class StarsAnimation {
         animation: twinkle var(--stars-animation-duration) infinite;
         ${this.config.accessibility.highContrastSupport ? "filter: contrast(1.2);" : ""}
       }
-      
+
       ${
         this.config.accessibility.highContrastSupport
           ? `
@@ -416,6 +449,9 @@ export class StarsAnimation {
           : ""
       }
     `.trim();
+
+    console.log("✅ CSS generated:", css);
+    return css;
   }
 
   removeDynamicStyles() {
@@ -512,26 +548,118 @@ export class StarsAnimation {
     }
   }
 
+  // ENHANCED: Animation conflict prevention methods
+  registerAnimation(name) {
+    const now = performance.now();
+
+    // Prevent rapid-fire animation updates
+    if (
+      now - this.animationConflicts.lastAnimationTime <
+      this.animationConflicts.minInterval
+    ) {
+      return false; // Animation blocked due to timing
+    }
+
+    // Check for conflicting animations
+    if (this.animationConflicts.activeAnimations.has(name)) {
+      console.warn(`⚠️ Animation conflict detected: ${name} is already active`);
+      return false;
+    }
+
+    this.animationConflicts.activeAnimations.add(name);
+    this.animationConflicts.lastAnimationTime = now;
+    return true;
+  }
+
+  unregisterAnimation(name) {
+    this.animationConflicts.activeAnimations.delete(name);
+  }
+
+  clearAnimationConflicts() {
+    this.animationConflicts.activeAnimations.clear();
+    console.log("🧹 Animation conflicts cleared");
+  }
+
+  // ENHANCED: Device-specific frame rate capping
+  applyFrameRateCapping() {
+    const screenWidth = window.innerWidth;
+    let targetFPS = 60;
+
+    // Device-specific frame rate capping (GoRakuDo Strategy)
+    if (screenWidth < 640) {
+      // Mobile phones
+      targetFPS = 30;
+    } else if (screenWidth < 1024) {
+      // Tablets
+      targetFPS = 45;
+    } else {
+      // Desktop/large screens
+      targetFPS = 60;
+    }
+
+    // Update configuration
+    this.config.performance.targetFPS = targetFPS;
+    this.config.animationDuration = `${4 / (targetFPS / 60)}s`; // Scale duration based on FPS
+
+    console.log(
+      `🎯 Applied frame rate capping: ${targetFPS}fps for ${screenWidth}px screen`,
+    );
+    return targetFPS;
+  }
+
   // ENHANCED: Flexible container management with accessibility
   setupContainer(containerId) {
+    console.log("🔍 setupContainer() called with:", {
+      containerId,
+      useExistingContainer: this.config.useExistingContainer,
+      createContainer: this.config.createContainer,
+      containerSelector: this.config.containerSelector,
+    });
+
     if (this.config.useExistingContainer) {
       // Use existing container
+      console.log(
+        `🔍 Looking for existing container: ${this.config.containerSelector}`,
+      );
       this.container = document.querySelector(this.config.containerSelector);
+
       if (!this.container) {
         console.warn(
-          `Existing container not found: ${this.config.containerSelector}`,
+          `⚠️ Existing container not found: ${this.config.containerSelector}`,
         );
+        console.log("📄 Current DOM structure:");
+        console.log(
+          "All elements with class 'stars':",
+          document.querySelectorAll(".stars"),
+        );
+        console.log(
+          "All elements with id 'stars':",
+          document.getElementById("stars"),
+        );
+        console.log("Document body:", document.body);
         this.createNewContainer(containerId);
+      } else {
+        console.log(`✅ Found existing container:`, this.container);
       }
     } else if (this.config.createContainer) {
       // Create new container
+      console.log("🔄 Creating new container");
       this.createNewContainer(containerId);
     } else {
       // Use provided container ID
+      console.log(`🔍 Looking for container by ID: ${containerId}`);
       this.container = document.getElementById(containerId);
+
       if (!this.container) {
-        console.warn(`Container not found: ${containerId}`);
+        console.warn(`⚠️ Container not found: ${containerId}`);
+        console.log("📄 Current DOM structure:");
+        console.log(
+          "All elements with id 'stars':",
+          document.getElementById("stars"),
+        );
         this.createNewContainer(containerId);
+      } else {
+        console.log(`✅ Found container by ID:`, this.container);
       }
     }
 
@@ -589,6 +717,8 @@ export class StarsAnimation {
   }
 
   createNewContainer(containerId) {
+    console.log(`🔄 Creating new container with ID: ${containerId}`);
+
     this.container = document.createElement("div");
     this.container.id = containerId;
     this.container.className = this.config.containerClass;
@@ -601,7 +731,17 @@ export class StarsAnimation {
       pointer-events: none;
       z-index: 10;
     `;
+
+    console.log("📦 New container created:", this.container);
+    console.log("📍 Appending to document body");
+
     document.body.appendChild(this.container);
+
+    console.log("✅ Container appended to DOM");
+    console.log(
+      "🔍 Verifying container in DOM:",
+      document.getElementById(containerId),
+    );
   }
 
   // ENHANCED: Page visibility and accessibility handlers
@@ -935,11 +1075,23 @@ export class StarsAnimation {
   }
 
   createStars() {
-    if (!this.container || !this.config.enabled) return;
+    console.log("🔍 createStars() called");
+    console.log("📍 Container exists:", !!this.container);
+    console.log("⚙️ Config enabled:", this.config.enabled);
+
+    if (!this.container || !this.config.enabled) {
+      console.warn("⚠️ Cannot create stars: container or config issue", {
+        container: this.container,
+        enabled: this.config.enabled,
+      });
+      return;
+    }
 
     // Clear existing stars
     this.stars = [];
     this.container.innerHTML = "";
+
+    console.log(`🔄 Creating ${this.config.count} stars...`);
 
     // Create new stars
     for (let i = 0; i < this.config.count; i++) {
@@ -948,32 +1100,40 @@ export class StarsAnimation {
       this.stars.push(star);
     }
 
+    console.log(`✅ Successfully created ${this.stars.length} stars`);
+
     // Start animation loop
     this.update();
 
-    console.log(`✨ Created ${this.config.count} stars`);
+    console.log(
+      `✨ Stars animation initialized with ${this.config.count} stars`,
+    );
 
-    /*
-     * ENHANCED DEBUG LOGGING: Added for troubleshooting visibility issues
-     *
-     * PURPOSE: Comprehensive debugging information to identify problems
-     * - Container element reference and properties
-     * - Stars array with all created star elements
-     * - Computed styles to verify CSS is applied correctly
-     *
-     * USAGE: Check browser console for detailed debugging information
-     * - Container should be a div element with proper positioning
-     * - Stars array should contain the expected number of star elements
-     * - Computed styles should show proper CSS properties
-     *
-     * REMOVE IN PRODUCTION: These debug logs should be removed for production use
-     */
+    // ENHANCED DEBUG LOGGING
     console.log(`📍 Container:`, this.container);
     console.log(`🌟 Stars array:`, this.stars);
     console.log(
       `🎨 Container computed style:`,
       window.getComputedStyle(this.container),
     );
+
+    // Check if stars are actually visible
+    if (this.stars.length > 0) {
+      const firstStar = this.stars[0];
+      const computedStyle = window.getComputedStyle(firstStar);
+      console.log("⭐ First star computed style:", {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        background: computedStyle.background,
+        width: computedStyle.width,
+        height: computedStyle.height,
+        position: computedStyle.position,
+        top: computedStyle.top,
+        left: computedStyle.left,
+        zIndex: computedStyle.zIndex,
+      });
+    }
   }
 }
 

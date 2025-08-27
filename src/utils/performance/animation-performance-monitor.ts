@@ -1,0 +1,481 @@
+/**
+ * Animation Performance Monitor
+ * Monitors and optimizes animation performance for GoRakuDo
+ *
+ * Features:
+ * - Device-specific frame rate capping
+ * - Real-time FPS monitoring
+ * - Memory usage tracking
+ * - Animation conflict prevention
+ * - Reduced motion support
+ */
+
+export interface AnimationConfig {
+  targetFPS: number;
+  maxFrameDrops: number;
+  memoryThreshold: number;
+  enableFrameRateCapping: boolean;
+  reducedMotionSupport: boolean;
+}
+
+export interface AnimationMetrics {
+  currentFPS: number;
+  averageFPS: number;
+  frameDrops: number;
+  memoryUsage: number;
+  activeAnimations: number;
+  lastFrameTime: number;
+}
+
+export class AnimationPerformanceMonitor {
+  private config: AnimationConfig;
+  private metrics: AnimationMetrics;
+  private animationLoopId: number | null = null;
+  private observers: PerformanceObserver[] = [];
+  private frameCount: number = 0;
+  private lastFrameTime: number = 0;
+  private frameTimes: number[] = [];
+  private readonly maxFrameHistory = 60; // Keep 60 frames of history
+  private deviceCapabilities: {
+    isMobile: boolean;
+    isLowEnd: boolean;
+    screenWidth: number;
+    gpuTier: "high" | "medium" | "low";
+  };
+
+  constructor(config: Partial<AnimationConfig> = {}) {
+    this.config = {
+      targetFPS: 60,
+      maxFrameDrops: 5,
+      memoryThreshold: 100 * 1024 * 1024, // 100MB
+      enableFrameRateCapping: true,
+      reducedMotionSupport: true,
+      ...config,
+    };
+
+    this.metrics = {
+      currentFPS: 0,
+      averageFPS: 0,
+      frameDrops: 0,
+      memoryUsage: 0,
+      activeAnimations: 0,
+      lastFrameTime: 0,
+    };
+
+    this.deviceCapabilities = this.detectDeviceCapabilities();
+    this.setupPerformanceObservers();
+    this.adjustConfigForDevice();
+  }
+
+  /**
+   * Start monitoring animation performance
+   */
+  startMonitoring(): void {
+    if (this.animationLoopId !== null) return;
+
+    console.log(`🎬 Starting animation performance monitoring...`);
+    console.log(
+      `📱 Device: ${this.deviceCapabilities.isMobile ? "Mobile" : "Desktop"}`,
+    );
+    console.log(`🎯 Target FPS: ${this.config.targetFPS}`);
+
+    this.animationLoopId = requestAnimationFrame(this.monitorFrame.bind(this));
+    this.startMemoryMonitoring();
+  }
+
+  /**
+   * Stop monitoring animation performance
+   */
+  stopMonitoring(): void {
+    if (this.animationLoopId !== null) {
+      cancelAnimationFrame(this.animationLoopId);
+      this.animationLoopId = null;
+    }
+
+    this.observers.forEach((observer) => observer.disconnect());
+    this.observers = [];
+
+    console.log(`⏹️ Animation performance monitoring stopped`);
+  }
+
+  /**
+   * Get current animation metrics
+   */
+  getMetrics(): AnimationMetrics {
+    return { ...this.metrics };
+  }
+
+  /**
+   * Check if animations should be optimized for current device
+   */
+  shouldOptimizeAnimations(): boolean {
+    return (
+      this.metrics.averageFPS < this.config.targetFPS * 0.8 ||
+      this.metrics.memoryUsage > this.config.memoryThreshold ||
+      this.metrics.frameDrops > this.config.maxFrameDrops
+    );
+  }
+
+  /**
+   * Get recommended animation settings for current device
+   */
+  getRecommendedSettings(): {
+    targetFPS: number;
+    complexity: "high" | "medium" | "low";
+    disableHeavyAnimations: boolean;
+  } {
+    const { isMobile, isLowEnd, screenWidth } = this.deviceCapabilities;
+
+    if (isLowEnd) {
+      return {
+        targetFPS: 25,
+        complexity: "low",
+        disableHeavyAnimations: true,
+      };
+    }
+
+    if (isMobile || screenWidth < 1024) {
+      return {
+        targetFPS: 30,
+        complexity: "medium",
+        disableHeavyAnimations: false,
+      };
+    }
+
+    return {
+      targetFPS: 60,
+      complexity: "high",
+      disableHeavyAnimations: false,
+    };
+  }
+
+  /**
+   * Apply device-specific animation optimizations
+   */
+  applyDeviceOptimizations(): void {
+    const recommendations = this.getRecommendedSettings();
+
+    console.log(`⚡ Applying device optimizations:`, recommendations);
+
+    // Update target FPS
+    this.config.targetFPS = recommendations.targetFPS;
+
+    // Adjust canvas rendering quality
+    this.adjustCanvasQuality(recommendations.complexity);
+
+    // Disable heavy animations on low-end devices
+    if (recommendations.disableHeavyAnimations) {
+      this.disableHeavyAnimations();
+    }
+
+    // Update CSS animation performance
+    this.optimizeCSSAnimations(recommendations.complexity);
+  }
+
+  /**
+   * Monitor frame rate and performance
+   */
+  private monitorFrame = (currentTime: number): void => {
+    this.frameCount++;
+
+    if (this.lastFrameTime > 0) {
+      const deltaTime = currentTime - this.lastFrameTime;
+      const currentFPS = 1000 / deltaTime;
+
+      // Update metrics
+      this.metrics.currentFPS = currentFPS;
+      this.metrics.lastFrameTime = currentTime;
+
+      // Track frame times for average calculation
+      this.frameTimes.push(deltaTime);
+      if (this.frameTimes.length > this.maxFrameHistory) {
+        this.frameTimes.shift();
+      }
+
+      // Calculate average FPS
+      if (this.frameTimes.length > 10) {
+        const averageDeltaTime =
+          this.frameTimes.reduce((sum, time) => sum + time, 0) /
+          this.frameTimes.length;
+        this.metrics.averageFPS = 1000 / averageDeltaTime;
+      }
+
+      // Detect frame drops
+      if (currentFPS < this.config.targetFPS * 0.5) {
+        this.metrics.frameDrops++;
+      }
+
+      // Log performance issues
+      if (this.frameCount % 300 === 0) {
+        // Log every 5 seconds at 60fps
+        this.logPerformanceStatus();
+      }
+
+      // Apply optimizations if needed
+      if (
+        this.shouldOptimizeAnimations() &&
+        this.config.enableFrameRateCapping
+      ) {
+        this.applyDeviceOptimizations();
+      }
+    }
+
+    this.lastFrameTime = currentTime;
+    this.animationLoopId = requestAnimationFrame(this.monitorFrame);
+  };
+
+  /**
+   * Monitor memory usage
+   */
+  private startMemoryMonitoring(): void {
+    if (!performance.memory) {
+      console.warn("⚠️ Memory monitoring not available");
+      return;
+    }
+
+    const checkMemory = () => {
+      this.metrics.memoryUsage = performance.memory.usedJSHeapSize;
+
+      // Warn if memory usage is high
+      if (this.metrics.memoryUsage > this.config.memoryThreshold) {
+        console.warn(
+          `🚨 High memory usage: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`,
+        );
+        this.optimizeMemoryUsage();
+      }
+    };
+
+    // Check memory every 10 seconds
+    setInterval(checkMemory, 10000);
+    checkMemory(); // Initial check
+  }
+
+  /**
+   * Set up performance observers
+   */
+  private setupPerformanceObservers(): void {
+    if (!("PerformanceObserver" in window)) return;
+
+    try {
+      // Monitor long animation frames
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.duration > 16.67) {
+            // Longer than one frame at 60fps
+            console.warn(
+              `🐌 Long animation frame: ${entry.duration.toFixed(2)}ms`,
+            );
+          }
+        }
+      });
+
+      observer.observe({ entryTypes: ["long-animation-frame"] });
+      this.observers.push(observer);
+    } catch (error) {
+      console.warn("Long animation frame monitoring not supported:", error);
+    }
+  }
+
+  /**
+   * Detect device capabilities
+   */
+  private detectDeviceCapabilities() {
+    const userAgent = navigator.userAgent;
+    const screenWidth = window.innerWidth;
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        userAgent,
+      ) || screenWidth < 768;
+
+    // Simple heuristic for low-end devices
+    const isLowEnd = (() => {
+      const canvas = document.createElement("canvas");
+      const gl =
+        canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      if (!gl) return true;
+
+      const renderer = gl.getParameter(gl.RENDERER)?.toLowerCase() || "";
+      const isSoftwareRenderer =
+        renderer.includes("software") || renderer.includes("llvmpipe");
+      const hasLimitedMemory =
+        navigator.deviceMemory && navigator.deviceMemory < 4;
+
+      return isSoftwareRenderer || hasLimitedMemory || screenWidth < 640;
+    })();
+
+    // Determine GPU tier
+    let gpuTier: "high" | "medium" | "low" = "medium";
+    if (isLowEnd) {
+      gpuTier = "low";
+    } else if (screenWidth >= 1920 && !isMobile) {
+      gpuTier = "high";
+    }
+
+    return {
+      isMobile,
+      isLowEnd,
+      screenWidth,
+      gpuTier,
+    };
+  }
+
+  /**
+   * Adjust configuration based on device capabilities
+   */
+  private adjustConfigForDevice(): void {
+    const recommendations = this.getRecommendedSettings();
+    this.config.targetFPS = recommendations.targetFPS;
+  }
+
+  /**
+   * Adjust canvas rendering quality
+   */
+  private adjustCanvasQuality(complexity: "high" | "medium" | "low"): void {
+    // Find all canvas elements on the page
+    const canvases = document.querySelectorAll("canvas");
+
+    canvases.forEach((canvas) => {
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      switch (complexity) {
+        case "low":
+          ctx.imageSmoothingEnabled = false;
+          // Reduce canvas size for low-end devices
+          if (canvas.width > 800) {
+            canvas.width = Math.floor(canvas.width * 0.7);
+            canvas.height = Math.floor(canvas.height * 0.7);
+          }
+          break;
+
+        case "medium":
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "medium";
+          break;
+
+        case "high":
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          break;
+      }
+    });
+
+    console.log(`🎨 Canvas quality adjusted to: ${complexity}`);
+  }
+
+  /**
+   * Disable heavy animations on low-end devices
+   */
+  private disableHeavyAnimations(): void {
+    // Reduce stars animation count
+    const starsContainer = document.getElementById("stars");
+    if (starsContainer) {
+      const stars = starsContainer.querySelectorAll(".star");
+      const maxStars = Math.min(stars.length, 4); // Limit to 4 stars max
+
+      stars.forEach((star, index) => {
+        if (index >= maxStars) {
+          star.style.display = "none";
+        }
+      });
+
+      console.log(`✨ Reduced stars animation to ${maxStars} elements`);
+    }
+  }
+
+  /**
+   * Optimize CSS animations
+   */
+  private optimizeCSSAnimations(complexity: "high" | "medium" | "low"): void {
+    const styleId = "animation-performance-optimizations";
+
+    // Remove existing optimizations
+    const existingStyle = document.getElementById(styleId);
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    let css = "";
+
+    switch (complexity) {
+      case "low":
+        css = `
+          * {
+            animation-duration: 0.3s !important;
+            animation-timing-function: linear !important;
+            transition-duration: 0.15s !important;
+            transition-timing-function: linear !important;
+          }
+
+          .star {
+            animation-duration: 6s !important;
+          }
+        `;
+        break;
+
+      case "medium":
+        css = `
+          * {
+            animation-timing-function: ease-out !important;
+            transition-timing-function: ease-out !important;
+          }
+
+          .star {
+            animation-duration: 4s !important;
+          }
+        `;
+        break;
+
+      case "high":
+        css = `
+          * {
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+          }
+        `;
+        break;
+    }
+
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = css;
+    document.head.appendChild(style);
+
+    console.log(`⚡ CSS animations optimized for: ${complexity} complexity`);
+  }
+
+  /**
+   * Optimize memory usage
+   */
+  private optimizeMemoryUsage(): void {
+    // Force garbage collection if available
+    if (window.gc) {
+      window.gc();
+      console.log("🗑️ Forced garbage collection");
+    }
+
+    // Clear animation caches
+    this.frameTimes = [];
+
+    // Reduce canvas complexity
+    this.adjustCanvasQuality("low");
+  }
+
+  /**
+   * Log current performance status
+   */
+  private logPerformanceStatus(): void {
+    const emoji =
+      this.metrics.averageFPS > this.config.targetFPS * 0.9 ? "✅" : "⚠️";
+
+    console.log(
+      `${emoji} Animation FPS: ${this.metrics.averageFPS.toFixed(1)} ` +
+        `(Target: ${this.config.targetFPS}) | ` +
+        `Memory: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB | ` +
+        `Frame Drops: ${this.metrics.frameDrops}`,
+    );
+  }
+}
+
+// Export singleton instance
+export const animationPerformanceMonitor = new AnimationPerformanceMonitor();

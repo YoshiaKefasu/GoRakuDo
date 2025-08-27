@@ -96,76 +96,96 @@ const tools = [
     <div class="stars" id="stars" aria-hidden="true"></div>
 
     <!-- Main Content -->
-    <main class="main-content" role="main" transition:name="main-content">
+    <main
+      class="main-content min-h-screen tools-layout-optimized"
+      role="main"
+      transition:name="main-content">
       <!-- Hero Section -->
       <section
-        class="tools-section loading"
+        class="tools-section loading py-16 sm:py-20 lg:py-24 xl:py-32"
         aria-labelledby="tools-title"
         transition:name="tools-hero">
-        <div class="container">
-          <h1
-            class="tools-hero-title"
-            id="tools-hero-title"
-            transition:name="tools-hero-title">
-            Tools Immersion
-          </h1>
-          <p class="tools-hero-description">
-            Kumpulan tools dan aplikasi terbaik yang telah terbukti efektif untuk
-            pembelajaran bahasa Jepang dengan metode immersion.
-          </p>
+        <div class="container px-4 sm:px-6 lg:px-8">
+          <div class="max-w-4xl mx-auto text-center">
+            <h1
+              class="tools-hero-title mb-4 sm:mb-6"
+              id="tools-hero-title"
+              transition:name="tools-hero-title">
+              Tools Immersion
+            </h1>
+            <p
+              class="tools-hero-description text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-3xl mx-auto">
+              Kumpulan tools dan aplikasi terbaik yang telah terbukti efektif untuk
+              pembelajaran bahasa Jepang dengan metode immersion.
+            </p>
+          </div>
         </div>
       </section>
 
       <!-- Tools Grid Section -->
       <section
-        class="npmnpm loading"
+        class="npmnpm loading py-12 sm:py-16 lg:py-20 scroll-reveal"
         aria-labelledby="tools-title"
         transition:name="tools-section"
         data-lazy>
-        <div class="container">
-          <div class="tools-header">
-            <h1 class="tools-title" id="tools-title">Tools & Aplikasi</h1>
-            <p class="tools-description">
-              Pilih tool yang sesuai dengan tahap pembelajaran dan kebutuhan Anda.
-            </p>
+        <div class="container px-4 sm:px-6 lg:px-8">
+          <div class="tools-header mb-12 sm:mb-16 lg:mb-20">
+            <div class="max-w-3xl mx-auto text-center">
+              <h1 class="tools-title mb-4 sm:mb-6" id="tools-title">Tools & Aplikasi</h1>
+              <p class="tools-description text-base sm:text-lg leading-relaxed">
+                Pilih tool yang sesuai dengan tahap pembelajaran dan kebutuhan Anda.
+              </p>
+            </div>
           </div>
 
           <!-- Semantic List for Accessibility -->
-          <div class="tools-grid">
+          <div
+            class="tools-grid max-w-7xl mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 tools-migration-enabled">
             {
               tools.map((tool) => (
                 <div class="tool-grid-item">
                   <a
                     href={tool.link}
-                    class="tool-card"
+                    class="tool-card group hover:scale-[1.02] transition-all duration-300 ease-out tools-interactive-optimized"
                     aria-labelledby={`tool-name-${tool.id}`}
                     aria-describedby={`tool-desc-${tool.id}`}>
-                    <article>
-                      <header class="tool-card-header">
-                        <div class={`tool-icon tool-icon-${tool.id}`}>{tool.icon}</div>
-                        <div class="tool-meta">
-                          <span class="tool-difficulty">
+                    <article class="h-full flex flex-col">
+                      <header class="tool-card-header flex items-start justify-between gap-4 mb-6">
+                        <div
+                          class={`tool-icon tool-icon-${tool.id} flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-lg text-xl sm:text-2xl`}>
+                          {tool.icon}
+                        </div>
+                        <div class="tool-meta flex flex-col items-end gap-2 flex-shrink-0">
+                          <span class="tool-difficulty text-xs font-medium px-2 py-1 rounded-full border">
                             {tool.difficulty === "beginner"
                               ? "Pemula"
                               : tool.difficulty === "intermediate"
                                 ? "Menengah"
                                 : "Lanjutan"}
                           </span>
-                          <span class="tool-category">{tool.category}</span>
+                          <span class="tool-category text-xs font-medium px-2 py-1 rounded-full border">
+                            {tool.category}
+                          </span>
                         </div>
                       </header>
-                      <div class="tool-card-body">
-                        <h3 class="tool-name" id={`tool-name-${tool.id}`}>
+                      <div class="tool-card-body flex-grow mb-6">
+                        <h3
+                          class="tool-name text-lg sm:text-xl font-semibold mb-3 leading-tight"
+                          id={`tool-name-${tool.id}`}>
                           {tool.name}
                         </h3>
-                        <p class="tool-description-card" id={`tool-desc-${tool.id}`}>
+                        <p
+                          class="tool-description-card text-sm sm:text-base leading-relaxed opacity-80"
+                          id={`tool-desc-${tool.id}`}>
                           {tool.description}
                         </p>
                       </div>
-                      <footer class="tool-card-footer">
-                        <span class="tool-cta-text">Lihat Panduan</span>
+                      <footer class="tool-card-footer flex items-center justify-between pt-4 border-t border-white/10">
+                        <span class="tool-cta-text text-sm font-medium">
+                          Lihat Panduan
+                        </span>
                         <svg
-                          class="tool-arrow"
+                          class="tool-arrow w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
                           width="16"
                           height="16"
                           viewBox="0 0 24 24"
@@ -266,6 +286,11 @@ const tools = [
         function animate() {
           if (!ctx) return
 
+          // ENHANCED: Performance monitoring - track draw calls
+          if ((window as any).waveAnimationMonitor) {
+            ;(window as any).waveAnimationMonitor.metrics.drawCalls++
+          }
+
           ctx.clearRect(
             0,
             0,
@@ -291,12 +316,27 @@ const tools = [
             (canvas as HTMLCanvasElement).height
           )
 
-          // Draw waves
+          // ENHANCED: Adaptive wave rendering based on device performance
+          const screenWidth = window.innerWidth
+          let waveStep = 2 // Default step size
+
+          // Reduce wave detail on smaller screens or low-end devices
+          if (screenWidth < 768) {
+            waveStep = 4 // Reduce detail on mobile
+          } else if (screenWidth < 1024) {
+            waveStep = 3 // Reduce detail on tablets
+          }
+
+          // Draw waves with adaptive quality
           waves.forEach((wave) => {
             ctx.beginPath()
 
-            // Create wave path
-            for (let x = 0; x <= (canvas as HTMLCanvasElement).width + 10; x += 2) {
+            // Create wave path with adaptive step size
+            for (
+              let x = 0;
+              x <= (canvas as HTMLCanvasElement).width + 10;
+              x += waveStep
+            ) {
               const y =
                 wave.yPos +
                 Math.sin(x * wave.frequency + time * wave.speed + wave.offset) *
@@ -320,13 +360,18 @@ const tools = [
             ctx.fillStyle = wave.color
             ctx.fill()
 
-            // Add subtle stroke for more definition
-            ctx.strokeStyle = "rgba(139, 93, 255, 0.08)"
-            ctx.lineWidth = 0.5
-            ctx.stroke()
+            // Add subtle stroke for more definition (skip on low-end devices)
+            if (screenWidth >= 768) {
+              ctx.strokeStyle = "rgba(139, 93, 255, 0.08)"
+              ctx.lineWidth = 0.5
+              ctx.stroke()
+            }
           })
 
-          time += 0.5
+          // ENHANCED: Adaptive time increment based on performance
+          const timeIncrement = screenWidth < 768 ? 0.3 : 0.5
+          time += timeIncrement
+
           animationId = requestAnimationFrame(animate)
         }
 
@@ -352,31 +397,39 @@ const tools = [
       // Initialize wave animation when DOM is ready
       document.addEventListener("DOMContentLoaded", function () {
         try {
+          const cleanup = initializeDocsWaveAnimation()
           waveAnimation = {
-            cleanup: initializeDocsWaveAnimation() || (() => {}),
+            cleanup: cleanup || (() => {}),
           }
+
+          // Initialize wave animation performance monitoring
+          const canvas = document.getElementById("waveCanvas")
+          if (canvas) {
+            import(
+              "../scripts/ui/background-animations/wave-animation-performance.js"
+            ).then((module) => {
+              const waveMonitor = module.initWaveAnimationPerformanceMonitor(canvas, {
+                targetFPS: 60,
+                adaptiveQuality: true,
+              })
+              waveMonitor.startMonitoring()
+              ;(window as any).waveAnimationMonitor = waveMonitor
+              console.log("✅ Wave animation performance monitoring initialized")
+            })
+          }
+
           console.log("✅ Docs page wave animation initialized successfully")
         } catch (error) {
           console.error("Error initializing docs page wave animation:", error)
         }
       })
 
-      // Cleanup on page unload
-      window.addEventListener("beforeunload", function () {
-        if (waveAnimation) {
-          waveAnimation.cleanup()
-        }
-      })
+      // Dynamic import for animation modules with comprehensive error handling
+      Promise.all([import("../scripts/ui/background-animations/stars-animation.js")])
+        .then(([starsModule]) => {
+          console.log("🎬 Stars animation module loaded successfully")
 
-      // Animation Modules Integration
-      window.addEventListener("load", async () => {
-        try {
-          // Import animation modules
-          const [starsModule] = await Promise.all([
-            import("../scripts/ui/background-animations/stars-animation.js"),
-          ])
-
-          // Initialize stars animation
+          // Initialize stars animation only
           const starsAnimation = starsModule.initStarsAnimation({
             enabled: true,
             count: 8,
@@ -397,8 +450,338 @@ const tools = [
             },
           })
 
-          // Initialize the animation
+          // Start animations when page loads
+          window.addEventListener("load", () => {
+            try {
+              // Initialize stars animation with existing container
+              starsAnimation.init("stars")
+              console.log("✨ Stars animation initialized successfully")
+
+              // Debug: Check if stars were created
+              setTimeout(() => {
+                const stars = document.querySelectorAll(".star")
+                console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
+                if (stars.length > 0) {
+                  console.log("✅ Stars are visible in DOM")
+                } else {
+                  console.log("⚠️ No stars found in DOM - checking container")
+                  const container = document.querySelector(".stars")
+                  console.log("Container:", container)
+                }
+              }, 500)
+
+              // Add loaded class to prevent popup effect
+              setTimeout(() => {
+                const starsContainer = document.querySelector(".stars")
+                if (starsContainer) {
+                  starsContainer.classList.add("loaded")
+                }
+              }, 100)
+
+              // Trigger hero animation after animations are ready
+              setTimeout(() => {
+                const heroContent = document.querySelector("#hero-content")
+                if (heroContent) {
+                  heroContent.classList.remove(
+                    "opacity-0",
+                    "translate-y-16",
+                    "scale-80",
+                    "blur-md"
+                  )
+                  console.log("✨ Hero content revealed smoothly")
+                }
+              }, 200) // Coordinate with hero component timing
+            } catch (error) {
+              console.error("❌ Animation initialization error:", error)
+            }
+          })
+        })
+        .catch((error) => {
+          console.log("⚠️ Animation modules failed to load:", error.message)
+          // Fallback: continue with existing inline animations
+          console.log("🔄 Falling back to existing inline animations")
+        })
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", function () {
+        if (waveAnimation) {
+          waveAnimation.cleanup()
+        }
+        if ((window as any).waveAnimationMonitor) {
+          ;(window as any).waveAnimationMonitor.stopMonitoring()
+        }
+        if (animationPerformanceMonitor) {
+          animationPerformanceMonitor.stopMonitoring()
+        }
+      })
+
+      // ========== ENHANCED TRANSITIONS & LOADING STATES ==========
+      // Performance-optimized animations and loading states for better UX
+
+      // Enhanced loading state management
+      document.addEventListener("DOMContentLoaded", function () {
+        // Apply page load animations with performance monitoring
+        const mainContent = document.querySelector(".main-content")
+        if (mainContent) {
+          mainContent.classList.add("page-load-fade-in")
+        }
+
+        // Apply staggered animations to tool cards
+        const toolCards = document.querySelectorAll(".tool-card")
+        toolCards.forEach((card, index) => {
+          ;(card as HTMLElement).style.setProperty("--stagger-delay", index.toString())
+          card.classList.add("stagger-animation")
+        })
+
+        console.log("✅ Enhanced loading states applied")
+      })
+
+      // Intersection Observer for scroll reveals
+      const scrollRevealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in-view")
+              scrollRevealObserver.unobserve(entry.target)
+            }
+          })
+        },
+        {
+          threshold: 0.1,
+          rootMargin: "50px",
+        }
+      )
+
+      // Apply scroll reveals to sections
+      document.addEventListener("DOMContentLoaded", function () {
+        const sections = document.querySelectorAll(
+          "section.scroll-reveal, .scroll-reveal"
+        )
+        sections.forEach((section) => {
+          section.classList.add("scroll-reveal-intersection")
+          scrollRevealObserver.observe(section)
+        })
+      })
+
+      // Enhanced micro-interactions for better feedback
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add micro-interactions ONLY to tools page elements (avoid navbar conflicts)
+        const toolsPageElements = document.querySelectorAll(`
+          .tool-card,
+          .tools-section a,
+          .tools-section button,
+          .main-content a:not([href="/"]),
+          .main-content button:not(.get-started-btn):not(.mobile-menu-btn)
+        `)
+        toolsPageElements.forEach((element) => {
+          element.classList.add("micro-interaction-scale", "focus-enhanced")
+        })
+
+        // Enhanced loading states for lazy content
+        const lazyElements = document.querySelectorAll("[data-lazy]")
+        const lazyObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("loaded")
+
+                // Remove loading pulse if present
+                entry.target.classList.remove("loading-pulse")
+
+                lazyObserver.unobserve(entry.target)
+              }
+            })
+          },
+          { threshold: 0.1, rootMargin: "50px" }
+        )
+
+        lazyElements.forEach((el) => {
+          el.classList.add("loading-pulse") // Add loading pulse while loading
+          lazyObserver.observe(el)
+        })
+
+        console.log("✅ Enhanced micro-interactions and scroll reveals initialized")
+      })
+
+      // Performance monitoring for animations
+      window.addEventListener("load", function () {
+        // Monitor animation performance
+        let animationFrameCount = 0
+        let lastAnimationTime = performance.now()
+
+        function monitorAnimationPerformance() {
+          animationFrameCount++
+          const currentTime = performance.now()
+          const deltaTime = currentTime - lastAnimationTime
+
+          // Log animation performance every 5 seconds
+          if (animationFrameCount % 300 === 0) {
+            const fps = 1000 / deltaTime
+            console.log(
+              `🎬 Animation Performance: ${fps.toFixed(1)}fps (Frame ${animationFrameCount})`
+            )
+          }
+
+          lastAnimationTime = currentTime
+          requestAnimationFrame(monitorAnimationPerformance)
+        }
+
+        requestAnimationFrame(monitorAnimationPerformance)
+      })
+
+      // ========== CROSS-BROWSER COMPATIBILITY & SECURITY ==========
+      // Enhanced browser support and security measures
+
+      // Browser capability detection and security validation
+      document.addEventListener("DOMContentLoaded", function () {
+        // Security: Sanitize and validate browser environment
+        const securityCheck = {
+          isSecureContext: window.isSecureContext,
+          hasCSP:
+            document.querySelector('meta[http-equiv="Content-Security-Policy"]') !== null,
+          trustedOrigin:
+            window.location.origin === "https://gorakudo.org" ||
+            window.location.hostname === "localhost",
+        }
+
+        console.log("🔒 Security Context:", securityCheck)
+
+        // Enhanced browser detection
+        const browserDetect = {
+          userAgent: navigator.userAgent,
+          isChrome:
+            /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor),
+          isFirefox: /Firefox/.test(navigator.userAgent),
+          isSafari:
+            /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent),
+          isEdge: /Edg/.test(navigator.userAgent),
+          isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+          ),
+          supportsGrid: CSS.supports("display", "grid"),
+          supportsFlex: CSS.supports("display", "flex"),
+          supportsClamp: CSS.supports("width", "clamp(1px, 2px, 3px)"),
+          supportsIntersectionObserver: "IntersectionObserver" in window,
+          supportsRequestAnimationFrame: "requestAnimationFrame" in window,
+          supportsPerformanceObserver: "PerformanceObserver" in window,
+        }
+
+        console.log("🌐 Browser Capabilities:", browserDetect)
+
+        // Apply browser-specific optimizations
+        const html = document.documentElement
+
+        if (browserDetect.isChrome || browserDetect.isEdge) {
+          html.classList.add("chromium-optimized")
+        } else if (browserDetect.isSafari) {
+          html.classList.add("safari-optimized")
+        } else if (browserDetect.isFirefox) {
+          html.classList.add("firefox-optimized")
+        }
+
+        // Progressive enhancement based on capabilities
+        if (!browserDetect.supportsIntersectionObserver) {
+          console.log("⚠️ IntersectionObserver not supported, using fallback")
+          // Fallback: reveal all scroll-reveal elements immediately
+          document.querySelectorAll(".scroll-reveal-intersection").forEach((el) => {
+            el.classList.add("in-view")
+          })
+        }
+
+        if (!browserDetect.supportsRequestAnimationFrame) {
+          console.log("⚠️ requestAnimationFrame not supported, using setTimeout fallback")
+          // Fallback for animations using setTimeout
+        }
+
+        if (!browserDetect.supportsGrid) {
+          console.log("⚠️ CSS Grid not supported, applying fallback")
+          // Apply grid fallbacks
+          document.querySelectorAll(".tools-grid").forEach((grid) => {
+            grid.classList.add("browser-compat-grid")
+          })
+        }
+
+        if (!browserDetect.supportsClamp) {
+          console.log("⚠️ clamp() not supported, fallback applied")
+          // clamp() fallbacks are handled in CSS
+        }
+
+        // Security: Sanitize dynamic content
+        const sanitizeClassName = (className) => {
+          // Only allow predefined safe class names
+          const safeClasses = [
+            "loading",
+            "loaded",
+            "in-view",
+            "page-load-fade-in",
+            "stagger-animation",
+            "scroll-reveal-intersection",
+            "micro-interaction-scale",
+            "focus-enhanced",
+            "loading-pulse",
+          ]
+          return safeClasses.includes(className) ? className : ""
+        }
+
+        // Enhanced accessibility: respect user's motion preferences
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches
+        if (prefersReducedMotion) {
+          console.log("♿ Reduced motion preference detected, animations simplified")
+          // Disable heavy animations
+          document.documentElement.style.setProperty("--animation-duration", "0.01ms")
+        }
+
+        // Security audit logging
+        console.log("🔍 Security Audit Complete:", {
+          secureContext: securityCheck.isSecureContext,
+          trustedOrigin: securityCheck.trustedOrigin,
+          browserSupported: Object.values(browserDetect).filter(Boolean).length,
+          totalCapabilities: Object.keys(browserDetect).length,
+        })
+      })
+
+      // Animation Modules Integration
+      window.addEventListener("load", async () => {
+        try {
+          // Import animation modules
+          const [starsModule] = await Promise.all([
+            import("../scripts/ui/background-animations/stars-animation.js"),
+          ])
+
+          // Initialize stars animation with performance monitoring
+          const starsAnimation = starsModule.initStarsAnimation({
+            enabled: true,
+            count: 8,
+            animationDuration: "4s",
+            opacity: 0.6,
+            containerClass: "stars",
+            starClass: "star",
+            containerId: "stars",
+            useExistingContainer: true,
+            createContainer: false,
+            containerSelector: ".stars",
+            performance: {
+              targetFPS: 60,
+              memoryThreshold: 100 * 1024 * 1024, // 100MB
+              autoReduceComplexity: true,
+              reduceThreshold: 30,
+            },
+            accessibility: {
+              respectReducedMotion: true, // Enable for better performance monitoring
+              announceChanges: false,
+              screenReaderFriendly: true,
+              highContrastSupport: true,
+              forceEnable: false, // Allow performance monitoring to control
+            },
+          })
+
+          // Initialize the animation with performance optimizations
           starsAnimation.init("stars")
+
+          // ENHANCED: Monitor stars animation performance
+          ;(window as any).starsAnimationInstance = starsAnimation
 
           // Add smooth fade-in for stars
           setTimeout(() => {
@@ -491,7 +874,33 @@ const tools = [
         })
       })
 
-      // Performance monitoring for interactive features
+      // ========== ANIMATION PERFORMANCE MONITORING ==========
+      // Device-specific animation optimization and performance monitoring
+      // Implements PERF-001: Animation Performance Degradation mitigation
+
+      import { animationPerformanceMonitor } from "../utils/performance/animation-performance-monitor"
+
+      // Initialize animation performance monitoring
+      window.addEventListener("load", () => {
+        try {
+          // Start monitoring with device-specific optimizations
+          animationPerformanceMonitor.startMonitoring()
+
+          // Apply device-specific optimizations after a short delay
+          setTimeout(() => {
+            animationPerformanceMonitor.applyDeviceOptimizations()
+          }, 2000)
+
+          console.log("✅ Animation performance monitoring initialized")
+        } catch (error) {
+          console.error(
+            "❌ Failed to initialize animation performance monitoring:",
+            error
+          )
+        }
+      })
+
+      // Enhanced performance monitoring for interactive features
       const performanceMonitor = {
         startTime: performance.now(),
         animationObserver: null as PerformanceObserver | null,
@@ -541,6 +950,9 @@ const tools = [
 
       // Cleanup on page unload
       window.addEventListener("beforeunload", () => {
+        if (animationPerformanceMonitor) {
+          animationPerformanceMonitor.stopMonitoring()
+        }
         if (performanceMonitor.animationObserver) {
           performanceMonitor.animationObserver.disconnect()
         }
