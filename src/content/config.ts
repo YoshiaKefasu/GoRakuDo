@@ -81,15 +81,15 @@ const templatesCollection = defineCollection({
   }),
 });
 
-// Tools Collection for Tool Documentation
-// Purpose: Store detailed documentation for immersion learning tools
-const toolsCollection = defineCollection({
+// Tool Articles Collection for Tool Documentation Content
+// Updated to match existing tool content structure from Epic 2.0
+const toolArticlesCollection = defineCollection({
   type: "content",
   schema: z.object({
-    // Core Content Metadata
     title: z.string(),
     description: z.string(),
-    publishedDate: z.string(),
+    publishedDate: z.string(), // Changed from z.date() to z.string() to match existing content
+    updatedDate: z.string().optional(), // Changed from z.date() to z.string()
     author: z.string().default("Tim GoRakuDo"),
 
     // Tool-Specific Metadata
@@ -112,19 +112,19 @@ const toolsCollection = defineCollection({
     difficulty: z
       .enum(["beginner", "intermediate", "advanced"])
       .default("beginner"),
-    setupTime: z.string().optional(), // e.g., "5-10 minutes"
+    setupTime: z.string().optional(),
     cost: z.enum(["free", "freemium", "paid", "subscription"]).default("free"),
 
     // Visual Elements
     emoji: z.string().optional(),
-    icon: z.string().optional(), // URL or path to tool icon
+    icon: z.string().optional(),
 
     // Content Classification
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
 
     // Mind Map Integration
-    mindMapBranch: z.enum(["D"]).default("D"), // Tools & Resource branch
+    mindMapBranch: z.enum(["D"]).default("D"),
 
     // Content Type
     contentType: z
@@ -144,24 +144,9 @@ const toolsCollection = defineCollection({
   }),
 });
 
-// Tool Articles Collection for Documentation Content
-const toolArticlesCollection = defineCollection({
-  type: "content",
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    publishedDate: z.date(),
-    updatedDate: z.date().optional(),
-    tags: z.array(z.string()),
-    heroImage: z.string().optional(),
-    author: z.string().optional(),
-  }),
-});
-
 // Export the collections
 export const collections = {
   docs: docsCollection,
   templates: templatesCollection,
-  tools: toolsCollection,
   "tool-articles": toolArticlesCollection,
 };

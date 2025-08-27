@@ -67,7 +67,7 @@ To evolve the `/tools` page from a simple list into a comprehensive and dynamic 
 Here is the detailed 10-story breakdown to ensure a smooth, incremental implementation:
 
 1.  **Story 2.1: Define Content Collection Schema:** ✅ **COMPLETED** - Define the `tool-articles` schema in `src/content/config.ts` with all required fields (`title`, `description`, `tags`, `publishedDate`, `heroImage`, etc.).
-2.  **Story 2.2: Create Content Directory Structure:** Create the necessary directory structure under `src/content/tools/` for different tools (e.g., `anki`, `yomitan`).
+2.  **Story 2.2: Create Content Directory Structure:** ✅ **COMPLETED** - Create the necessary directory structure under `src/content/tools/` for different tools (e.g., `anki`, `yomitan`).
 3.  **Story 2.3: Migrate Existing 'Anki' Content:** Move the existing `apa-itu-anki.md` file into `src/content/tools/anki/` and update its frontmatter to match the new schema.
 4.  **Story 2.4: Create Dynamic Article Page Layout:** Create the basic dynamic page for rendering a single article at `src/pages/tools/[tool]/[...slug].astro`. This initial version will focus on rendering the Markdown body.
 5.  **Story 2.5: Create Dynamic Tool Index Page:** Create the dynamic index page at `src/pages/tools/[tool]/index.astro` that lists all articles for a given tool (e.g., all articles in `src/content/tools/anki/`).
@@ -79,7 +79,7 @@ Here is the detailed 10-story breakdown to ensure a smooth, incremental implemen
 
 #### Epic Progress Summary
 
-**Current Status:** Foundation Phase - 1 of 10 stories completed (10%)
+**Current Status:** Foundation Phase - 2 of 10 stories completed (20%)
 
 **Completed Stories:**
 - ✅ **Story 2.1:** Content Collection Schema - **COMPLETED** on December 19, 2024
@@ -88,10 +88,16 @@ Here is the detailed 10-story breakdown to ensure a smooth, incremental implemen
   - Build process validated successfully
   - Foundation established for subsequent stories
 
-**Next Priority:** Story 2.2 - Create Content Directory Structure
-- This story will build upon the completed schema to establish the organizational structure
-- Will create directories for different tools (anki, yomitan, migaku)
-- Prerequisites: Story 2.1 ✅ (Completed)
+- ✅ **Story 2.2:** Content Directory Structure - **COMPLETED** on December 19, 2024
+  - Directory structure verified and completed for tools (anki, migaku, yomitan)
+  - All acceptance criteria met and QA review passed (Gate: PASS)
+  - Build system compatibility validated successfully
+  - Directory structure ready for content migration in Story 2.3
+
+**Next Priority:** Story 2.3 - Migrate Existing 'Anki' Content
+- This story will migrate existing content into the established directory structure
+- Will move `apa-itu-anki.md` into `src/content/tools/anki/` with updated frontmatter
+- Prerequisites: Story 2.1 ✅ (Completed), Story 2.2 ✅ (Completed)
 
 **Risk Assessment:** Low - Foundation successfully established with comprehensive QA validation
 
