@@ -34,36 +34,33 @@ readTime: 12
 
 # Tool Features
 features:
-  [
-    "Spaced Repetition System (SRS)",
-    "Customizable card templates",
-    "Media support (images, audio, video)",
-    "Statistics and progress tracking",
-    "Cross-platform sync",
-    "Community decks available",
-  ]
+  - "Spaced Repetition System (SRS)"
+  - "Customizable card templates"
+  - "Media support (images, audio, video)"
+  - "Statistics and progress tracking"
+  - "Cross-platform sync"
+  - "Community decks available"
 
 # Requirements
 requirements:
-  [
-    "Windows, macOS, or Linux computer",
-    "Internet connection for initial setup",
-    "Basic computer literacy",
-  ]
+  - "Windows, macOS, or Linux computer"
+  - "Internet connection for initial setup"
+  - "Basic computer literacy"
 
 # SEO and Discovery
 keywords:
-  [
-    "anki",
-    "srs",
-    "flashcard",
-    "japanese",
-    "vocabulary",
-    "kanji",
-    "memorization",
-    "spaced repetition",
-  ]
-relatedTools: ["yomichan", "migaku", "language-reactor"]
+  - "anki"
+  - "srs"
+  - "flashcard"
+  - "japanese"
+  - "vocabulary"
+  - "kanji"
+  - "memorization"
+  - "spaced repetition"
+relatedTools:
+  - "yomichan"
+  - "migaku"
+  - "language-reactor"
 ---
 
 # Panduan Lengkap Anki untuk Pembelajaran Bahasa Jepang

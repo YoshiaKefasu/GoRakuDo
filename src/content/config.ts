@@ -144,9 +144,24 @@ const toolsCollection = defineCollection({
   }),
 });
 
+// Tool Articles Collection for Documentation Content
+const toolArticlesCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishedDate: z.date(),
+    updatedDate: z.date().optional(),
+    tags: z.array(z.string()),
+    heroImage: z.string().optional(),
+    author: z.string().optional(),
+  }),
+});
+
 // Export the collections
 export const collections = {
   docs: docsCollection,
   templates: templatesCollection,
   tools: toolsCollection,
+  "tool-articles": toolArticlesCollection,
 };

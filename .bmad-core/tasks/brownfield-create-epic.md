@@ -10,7 +10,7 @@ Create a single epic for smaller brownfield enhancements that don't require the 
 
 **Use this task when:**
 
-- The enhancement can be completed in 1-3 stories
+- The enhancement can be completed in 1-10 stories
 - No significant architectural changes are required
 - The enhancement follows existing project patterns
 - Integration complexity is minimal
