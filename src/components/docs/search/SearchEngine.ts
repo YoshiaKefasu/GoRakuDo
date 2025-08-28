@@ -54,10 +54,7 @@ export interface MatchInfo {
 export class IndonesianDocsSearch {
   private posts: any[] = [];
   private searchIndex: Map<string, Map<number, number>> = new Map();
-  private currentQuery: string = "";
-  private searchResults: SearchResult[] = [];
   private isInitialized: boolean = false;
-  private searchTimeout: NodeJS.Timeout | null = null;
   private enhancedSearchData: SearchData[] = [];
   private indonesianStopWords: Set<string>;
 
@@ -123,7 +120,7 @@ export class IndonesianDocsSearch {
 
   async initialize(): Promise<boolean> {
     try {
-      console.log("🇮🇩 Initializing Indonesian Docs Search System...");
+      console.log("�E�E Initializing Indonesian Docs Search System...");
 
       // Load Indonesian search data from build-time generation
       await this.loadIndonesianSearchData();
@@ -137,14 +134,14 @@ export class IndonesianDocsSearch {
       this.buildIndonesianSearchIndex();
 
       this.isInitialized = true;
-      console.log("✅ Indonesian search system ready! 🎯");
+      console.log("✁EIndonesian search system ready! 🎯");
       console.log(
         `📊 Indexed ${this.searchIndex.size} Indonesian terms for ${this.posts.length} posts`,
       );
 
       return true;
     } catch (error) {
-      console.error("❌ Failed to initialize Indonesian search:", error);
+      console.error("❁EFailed to initialize Indonesian search:", error);
       return false;
     }
   }
@@ -156,7 +153,7 @@ export class IndonesianDocsSearch {
         this.enhancedSearchData = (window as any).enhancedSearchData;
         this.posts = (window as any).enhancedSearchData;
         console.log(
-          `🇮🇩 Loaded ${this.enhancedSearchData.length} Indonesian posts for search`,
+          `�E�E Loaded ${this.enhancedSearchData.length} Indonesian posts for search`,
         );
         return;
       }
@@ -164,7 +161,7 @@ export class IndonesianDocsSearch {
       // Fallback: Load posts data from page elements
       await this.loadPostsData();
     } catch (error) {
-      console.error("❌ Error loading Indonesian search data:", error);
+      console.error("❁EError loading Indonesian search data:", error);
       await this.loadPostsData();
     }
   }
@@ -198,7 +195,7 @@ export class IndonesianDocsSearch {
 
       console.log(`📚 Loaded ${this.posts.length} posts for search`);
     } catch (error) {
-      console.error("❌ Error loading posts data:", error);
+      console.error("❁EError loading posts data:", error);
       this.posts = [];
     }
   }
@@ -451,30 +448,13 @@ export class IndonesianDocsSearch {
     return matrix[str2.length][str1.length];
   }
 
-  private findFuzzyMatches(queryWord: string, searchData: SearchData): any[] {
-    const matches: any[] = [];
-    const maxDistance = 2;
 
-    if (!searchData.searchableText) {
-      return matches;
-    }
-
-    const allWords = searchData.searchableText.split(/\s+/);
-
-    allWords.forEach((word) => {
-      const distance = this.levenshteinDistance(queryWord, word);
-      if (distance <= maxDistance && distance > 0) {
-        matches.push({
-          word: word,
-          score: Math.max(1, 5 - distance),
-        });
-      }
-    });
-
-    return matches;
-  }
 
   performSearch(query: string): SearchResponse {
+    if (!this.isInitialized) {
+      throw new Error("Search system not initialized. Call initialize() first.");
+    }
+
     if (!query || query.trim().length < 2) {
       return { results: [], total: 0, query: "", searchStrategy: "No query" };
     }
@@ -621,6 +601,10 @@ export class IndonesianDocsSearch {
   }
 
   generateContentSnippet(searchData: SearchData, query: string): string {
+    if (!this.isInitialized) {
+      throw new Error("Search system not initialized. Call initialize() first.");
+    }
+
     if (!searchData.fullContent) return "";
 
     const queryWords = this.tokenize(query);
@@ -672,6 +656,10 @@ export class IndonesianDocsSearch {
   }
 
   highlightText(text: string, query: string): string {
+    if (!this.isInitialized) {
+      throw new Error("Search system not initialized. Call initialize() first.");
+    }
+
     if (!text || !query) return text;
 
     const queryWords = this.tokenize(query);
