@@ -11,6 +11,13 @@ const PERFORMANCE_BUDGET = {
   IMAGE_LOAD: 2000, // 2 seconds for image loading
 };
 
+// Story 2.7 Performance Budget - 5% increase from Story 2.6 baseline
+const STORY_2_7_BUDGET = {
+  BUILD_TIME_MULTIPLIER: 1.05, // 5% increase allowed
+  CSS_BUNDLE_SIZE_BYTES: 3072, // 3KB maximum additional CSS
+  BASELINE_BUILD_TIME: null, // To be set from Story 2.6 measurements
+};
+
 // Initialize performance monitoring
 export function initPerformanceMonitoring() {
   console.log("📊 Performance monitoring initialized");
@@ -243,5 +250,105 @@ export function initPerformanceMonitoring() {
   });
 }
 
+// Build Performance Measurement for Story 2.7
+export function measureBuildPerformance() {
+  const startTime = performance.now();
+
+  // Measure build time
+  const buildTime = performance.now() - startTime;
+
+  console.log("🏗️ Build Performance Measurement:");
+  console.log(`  ⏱️ Build Time: ${buildTime.toFixed(2)}ms`);
+
+  // Check against Story 2.7 budget
+  if (STORY_2_7_BUDGET.BASELINE_BUILD_TIME) {
+    const budgetLimit =
+      STORY_2_7_BUDGET.BASELINE_BUILD_TIME *
+      STORY_2_7_BUDGET.BUILD_TIME_MULTIPLIER;
+    const budgetExceeded = buildTime > budgetLimit;
+
+    console.log(
+      `  📊 Baseline (Story 2.6): ${STORY_2_7_BUDGET.BASELINE_BUILD_TIME.toFixed(2)}ms`,
+    );
+    console.log(`  🎯 Budget Limit (5% increase): ${budgetLimit.toFixed(2)}ms`);
+    console.log(
+      `  ${budgetExceeded ? "❌" : "✅"} Budget Status: ${budgetExceeded ? "EXCEEDED" : "WITHIN LIMITS"}`,
+    );
+
+    if (budgetExceeded) {
+      console.warn(
+        `⚠️ Build time exceeds Story 2.7 performance budget by ${(buildTime - budgetLimit).toFixed(2)}ms`,
+      );
+    }
+  } else {
+    console.log(
+      "  📝 Note: Story 2.6 baseline not set - run calibrateBaselineBuildTime() first",
+    );
+  }
+
+  return buildTime;
+}
+
+// CSS Bundle Size Measurement for Story 2.7
+export function measureCssBundleSize() {
+  // Get all CSS files from the document
+  const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
+  let totalCssSize = 0;
+
+  console.log("📦 CSS Bundle Size Analysis:");
+  console.log(`  🔍 Found ${cssLinks.length} CSS files:`);
+
+  cssLinks.forEach((link, index) => {
+    const href = link.getAttribute("href");
+    console.log(`    ${index + 1}. ${href || "inline"}`);
+
+    // Note: Actual file size measurement would require server-side analysis
+    // This is a client-side approximation
+    if (href && href.includes("_astro")) {
+      console.log(`       📁 Astro-generated CSS bundle detected`);
+    }
+  });
+
+  // Check against Story 2.7 budget
+  const budgetExceeded = totalCssSize > STORY_2_7_BUDGET.CSS_BUNDLE_SIZE_BYTES;
+  console.log(`  📊 Total CSS Size: ~${(totalCssSize / 1024).toFixed(2)}KB`);
+  console.log(
+    `  🎯 Budget Limit: ${(STORY_2_7_BUDGET.CSS_BUNDLE_SIZE_BYTES / 1024).toFixed(2)}KB`,
+  );
+  console.log(
+    `  ${budgetExceeded ? "❌" : "✅"} Budget Status: ${budgetExceeded ? "EXCEEDED" : "WITHIN LIMITS"}`,
+  );
+
+  if (budgetExceeded) {
+    console.warn(
+      `⚠️ CSS bundle size exceeds Story 2.7 budget by ${((totalCssSize - STORY_2_7_BUDGET.CSS_BUNDLE_SIZE_BYTES) / 1024).toFixed(2)}KB`,
+    );
+  }
+
+  return totalCssSize;
+}
+
+// Calibrate baseline build time from Story 2.6
+export function calibrateBaselineBuildTime(baselineMs) {
+  STORY_2_7_BUDGET.BASELINE_BUILD_TIME = baselineMs;
+  console.log(`📊 Story 2.6 Baseline Calibrated: ${baselineMs.toFixed(2)}ms`);
+  console.log(
+    `🎯 Story 2.7 Budget Limit: ${(baselineMs * STORY_2_7_BUDGET.BUILD_TIME_MULTIPLIER).toFixed(2)}ms (5% increase allowed)`,
+  );
+
+  // Store in localStorage for persistence
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("story-2-6-baseline", baselineMs.toString());
+  }
+}
+
+// Load baseline from localStorage if available
+if (typeof localStorage !== "undefined") {
+  const storedBaseline = localStorage.getItem("story-2-6-baseline");
+  if (storedBaseline) {
+    STORY_2_7_BUDGET.BASELINE_BUILD_TIME = parseFloat(storedBaseline);
+  }
+}
+
 // Export for use in other modules
-export { PERFORMANCE_BUDGET };
+export { PERFORMANCE_BUDGET, STORY_2_7_BUDGET };

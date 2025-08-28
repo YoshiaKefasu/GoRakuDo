@@ -315,18 +315,15 @@ import homepageOgImage from "../assets/images/Logo Discord.png"
         })
     </script>
 
-    <!-- Bundle Splitting: Load performance monitoring as separate chunk -->
+    <!-- Performance monitoring for all pages - fixed to avoid static/dynamic import conflicts -->
+
     <script>
-      // Load performance monitoring after page load for better performance
-      window.addEventListener("load", () => {
-        // Dynamic import for performance monitoring (separate chunk)
-        import("../utils/performance/performance-monitor.js")
-          .then((module) => {
-            module.initPerformanceMonitoring()
-          })
-          .catch((error) => {
-            console.log("📊 Performance monitoring failed to load:", error.message)
-          })
+      // Performance monitoring for homepage
+      import { initPerformanceMonitoring } from "../utils/performance/performance-monitor.js"
+
+      // Initialize performance monitoring on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        initPerformanceMonitoring()
       })
 
       // Intersection Observer for lazy loading optimization

@@ -1,0 +1,37 @@
+---
+// ToolArticleLayout.astro - Performance-optimized article layout
+// Extends BaseLayout.astro while adding custom typography and responsive design
+import BaseLayout from "./BaseLayout.astro"
+import "../styles/global.css"
+// Import article-specific styles separately for code splitting
+import "../styles/article-specific.css"
+
+export interface Props {
+  title: string
+  description: string
+  publishedDate?: string
+  lang?: "id" | "ja"
+}
+
+const { title, description, publishedDate, lang } = Astro.props
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  pageType="article"
+  publishedDate={publishedDate}
+  lang={lang}>
+  <!-- Article Container with Responsive Design -->
+  <div class="min-h-screen bg-background">
+    <!-- Main Content Area -->
+    <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
+      <!-- Article Content with Custom Typography -->
+      <article class="article-content max-w-none">
+        <slot />
+      </article>
+    </main>
+  </div>
+</BaseLayout>
+
+<!-- Article-specific styles moved to article-specific.css for code splitting -->

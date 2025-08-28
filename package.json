@@ -5,6 +5,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:perf": "node src/scripts/build-performance-monitor.js start && astro build && node src/scripts/build-performance-monitor.js end",
+    "build:validate": "node src/scripts/build-performance-monitor.js css && node src/scripts/build-performance-monitor.js report",
+    "perf:calibrate": "node src/scripts/build-performance-monitor.js calibrate",
+    "perf:report": "node src/scripts/build-performance-monitor.js report",
+    "perf:css": "node src/scripts/build-performance-monitor.js css",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -26,6 +31,7 @@
     "vue": "^3.5.18"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "@types/dompurify": "^3.0.5",
     "@types/marked": "^5.0.2",
     "daisyui": "^5.0.50",
