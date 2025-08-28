@@ -120,7 +120,7 @@ export class IndonesianDocsSearch {
 
   async initialize(): Promise<boolean> {
     try {
-      console.log("ÔøΩEÔøΩE Initializing Indonesian Docs Search System...");
+      console.log("ÅEΩEÅEΩE Initializing Indonesian Docs Search System...");
 
       // Load Indonesian search data from build-time generation
       await this.loadIndonesianSearchData();
@@ -153,7 +153,7 @@ export class IndonesianDocsSearch {
         this.enhancedSearchData = (window as any).enhancedSearchData;
         this.posts = (window as any).enhancedSearchData;
         console.log(
-          `ÔøΩEÔøΩE Loaded ${this.enhancedSearchData.length} Indonesian posts for search`,
+          `ÅEΩEÅEΩE Loaded ${this.enhancedSearchData.length} Indonesian posts for search`,
         );
         return;
       }
@@ -420,33 +420,6 @@ export class IndonesianDocsSearch {
     return this.indonesianStopWords.has(word.toLowerCase());
   }
 
-  private levenshteinDistance(str1: string, str2: string): number {
-    const matrix: number[][] = [];
-
-    for (let i = 0; i <= str2.length; i++) {
-      matrix[i] = [i];
-    }
-
-    for (let j = 0; j <= str1.length; j++) {
-      matrix[0][j] = j;
-    }
-
-    for (let i = 1; i <= str2.length; i++) {
-      for (let j = 1; j <= str1.length; j++) {
-        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
-          matrix[i][j] = matrix[i - 1][j - 1];
-        } else {
-          matrix[i][j] = Math.min(
-            matrix[i - 1][j - 1] + 1,
-            matrix[i][j - 1] + 1,
-            matrix[i - 1][j] + 1,
-          );
-        }
-      }
-    }
-
-    return matrix[str2.length][str1.length];
-  }
 
   performSearch(query: string): SearchResponse {
     if (!this.isInitialized) {
