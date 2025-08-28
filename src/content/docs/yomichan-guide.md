@@ -1,5 +1,5 @@
 ---
-title: "Panduan Setup Yomichan"
+title: "SAMPLE POST ASAL:Panduan Setup Yomichan"
 description: "Setup dan penggunaan Yomichan untuk membaca bahasa Jepang dengan hover dictionary dan furigana generation."
 publishedDate: "2024-01-25T00:00:00.000Z"
 readTime: 15

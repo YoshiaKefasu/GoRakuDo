@@ -1,5 +1,5 @@
 ---
-title: "Panduan Setup Migaku"
+title: "SAMPLE POST ASAL:Panduan Setup Migaku"
 description: "Setup dan penggunaan Migaku suite untuk immersion learning dengan browser extension dan Anki integration."
 publishedDate: "2024-01-25T00:00:00.000Z"
 readTime: 20
@@ -13,7 +13,7 @@ mindMapBranch: "D"
 contentType: "resource"
 ---
 
-# Panduan Setup Migaku
+# SAMPLE POST ASAL:Panduan Setup Migaku
 
 ## Apa itu Migaku?
 

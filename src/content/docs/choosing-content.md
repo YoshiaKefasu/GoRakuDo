@@ -1,5 +1,5 @@
 ---
-title: "Memilih Konten yang Tepat"
+title: "SAMPLE POST ASAL: Memilih Konten yang Tepat"
 description: "Cara memilih anime, manga, dan media Jepang yang sesuai dengan level Anda."
 publishedDate: "2024-01-20T00:00:00.000Z"
 readTime: 8
@@ -13,7 +13,7 @@ mindMapBranch: "E"
 contentType: "tutorial"
 ---
 
-# Memilih Konten yang Tepat
+# SAMPLE POST ASAL: Memilih Konten yang Tepat
 
 ## Prinsip i+1
 

@@ -1,5 +1,5 @@
 ---
-title: "Memulai Perjalanan Immersion"
+title: "SAMPLE POST ASAL: Memulai Perjalanan Immersion"
 description: "Panduan langkah demi langkah untuk memulai immersion bahasa Jepang dari nol."
 publishedDate: "2024-01-15T00:00:00.000Z"
 readTime: 10
@@ -13,7 +13,7 @@ mindMapBranch: "A"
 contentType: "tutorial"
 ---
 
-# Memulai Perjalanan Immersion
+# SAMPLE POST ASAL: Memulai Perjalanan Immersion
 
 ## Apa itu Immersion?
 

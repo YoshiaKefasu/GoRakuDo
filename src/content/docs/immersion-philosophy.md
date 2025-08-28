@@ -1,5 +1,5 @@
 ---
-title: "Filosofi Immersion: Landasan Metodologi Pembelajaran Bahasa Jepang"
+title: "SAMPLE POST ASAL: Filosofi Immersion: Landasan Metodologi Pembelajaran Bahasa Jepang"
 description: "Panduan mendalam tentang filosofi immersion learning, prinsip-prinsip dasar, dan bagaimana menerapkannya dalam pembelajaran bahasa Jepang untuk mencapai kefasihan alami."
 publishedDate: "2024-12-19T00:00:00.000Z"
 readTime: 25
@@ -23,7 +23,7 @@ mindMapBranch: "A"
 contentType: "metodologi"
 ---
 
-# Filosofi Immersion: Landasan Metodologi Pembelajaran Bahasa Jepang
+# SAMPLE POST ASAL: Filosofi Immersion: Landasan Metodologi Pembelajaran Bahasa Jepang
 
 ## Pendahuluan
 

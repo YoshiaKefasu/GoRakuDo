@@ -954,7 +954,9 @@ function formatDate(dateString: string): string {
           }
 
           this.isReady = true
-          window.window.clientLogger.log("Search engine ready for use", "success")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Search engine ready for use", "success")
+          }
         }
 
         setErrorState(errorMessage = "Search temporarily unavailable") {
@@ -989,13 +991,17 @@ function formatDate(dateString: string): string {
 
       // Import the externalized search engine with loading state management
       // Temporarily disabled for build stability
-      window.clientLogger.log(
-        "Docs Search Engine module loading disabled for build stability",
-        "success"
-      )
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(
+          "Docs Search Engine module loading disabled for build stability",
+          "success"
+        )
+      }
       searchLoadingManager.setReadyState()
 
-      window.clientLogger.log("Loading Enhanced Search Engine...", "info")
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log("Loading Enhanced Search Engine...", "info")
+      }
     </script>
 
     <!-- Enhanced Search Engine Implementation -->
@@ -1022,15 +1028,23 @@ function formatDate(dateString: string): string {
         }
 
         constructor() {
-          this.initialize()
+          // Defer initialization to ensure clientLogger is available
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => this.initialize())
+          } else {
+            this.initialize()
+          }
         }
 
         async initialize() {
           try {
-            window.clientLogger.log(
-              "Initializing Modern Search Engine with Fuse.js...",
-              "info"
-            )
+            // Safety check for clientLogger
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                "Initializing Modern Search Engine with Fuse.js...",
+                "info"
+              )
+            }
 
             // Load search data from search.json.js endpoint
             await this.loadSearchData()
@@ -1041,11 +1055,13 @@ function formatDate(dateString: string): string {
             // Set up event listeners
             this.setupEventListeners()
 
-            window.clientLogger.log("Modern search engine ready!", "success")
-            window.clientLogger.log(
-              `Loaded ${this.searchData.length} posts for search`,
-              "success"
-            )
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log("Modern search engine ready!", "success")
+              window.clientLogger.log(
+                `Loaded ${this.searchData.length} posts for search`,
+                "success"
+              )
+            }
 
             // Notify loading manager that search is ready
             if (window.searchLoadingManager) {
@@ -1054,10 +1070,12 @@ function formatDate(dateString: string): string {
 
             return true
           } catch (error) {
-            window.clientLogger.log(
-              `Failed to initialize search engine: ${error}`,
-              "error"
-            )
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Failed to initialize search engine: ${error}`,
+                "error"
+              )
+            }
 
             // Set error state
             if (window.searchLoadingManager) {
@@ -1070,7 +1088,9 @@ function formatDate(dateString: string): string {
 
         async loadSearchData() {
           try {
-            window.clientLogger.log("Loading search data from /search.json...", "info")
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log("Loading search data from /search.json...", "info")
+            }
 
             // Fetch search data from the JSON endpoint
             const response = await fetch("/search.json")
@@ -1079,10 +1099,12 @@ function formatDate(dateString: string): string {
             }
 
             this.searchData = await response.json()
-            window.clientLogger.log(
-              `Loaded ${this.searchData.length} posts from search.json`,
-              "success"
-            )
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Loaded ${this.searchData.length} posts from search.json`,
+                "success"
+              )
+            }
 
             // Debug: Check if "Keyword" content is in the search data
             const krashenPosts = this.searchData.filter(
@@ -1092,12 +1114,16 @@ function formatDate(dateString: string): string {
                 post.description?.toLowerCase().includes("krashen")
             )
 
-            window.clientLogger.log(
-              `Found ${krashenPosts.length} posts containing "Krashen": ${krashenPosts.map((p) => p.title).join(", ")}`,
-              "info"
-            )
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Found ${krashenPosts.length} posts containing "Krashen": ${krashenPosts.map((p) => p.title).join(", ")}`,
+                "info"
+              )
+            }
           } catch (error) {
-            window.clientLogger.log(`Error loading search data: ${error}`, "error")
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Error loading search data: ${error}`, "error")
+            }
             throw error
           }
         }
@@ -1127,17 +1153,23 @@ function formatDate(dateString: string): string {
               }
 
               this.fuse = new Fuse(this.searchData, fuseOptions)
-              window.clientLogger.log("Fuse.js initialized with search data", "success")
+              if (window.clientLogger && window.clientLogger.log) {
+                window.clientLogger.log("Fuse.js initialized with search data", "success")
+              }
             } else {
-              window.clientLogger.log(
-                "Fuse.js not available, using simple search fallback",
-                "warning"
-              )
+              if (window.clientLogger && window.clientLogger.log) {
+                window.clientLogger.log(
+                  "Fuse.js not available, using simple search fallback",
+                  "warning"
+                )
+              }
               this.fuse = null
             }
           } catch (error) {
-            window.clientLogger.log(`Error initializing Fuse.js: ${error}`, "error")
-            window.clientLogger.log("Falling back to simple search", "warning")
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Error initializing Fuse.js: ${error}`, "error")
+              window.clientLogger.log("Falling back to simple search", "warning")
+            }
             this.fuse = null
           }
         }
@@ -1172,7 +1204,9 @@ function formatDate(dateString: string): string {
           document.addEventListener("click", (e) => {
             const target = e.target as HTMLElement
             if (target && target.closest('[data-action="clear-search"]')) {
-              window.clientLogger.log("Clear search button clicked", "info")
+              if (window.clientLogger && window.clientLogger.log) {
+                window.clientLogger.log("Clear search button clicked", "info")
+              }
               this.clearSearch()
             }
           })
@@ -1187,7 +1221,9 @@ function formatDate(dateString: string): string {
           }
 
           try {
-            window.clientLogger.log(`Searching for: "${query}"`, "info")
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Searching for: "${query}"`, "info")
+            }
 
             // Check cache first
             const cacheKey = query.toLowerCase()
@@ -1212,10 +1248,12 @@ function formatDate(dateString: string): string {
                 }))
                 searchStrategy = "fuzzy"
               } catch (fuseError) {
-                window.clientLogger.log(
-                  `Fuse.js search failed, falling back to simple search: ${fuseError}`,
-                  "warning"
-                )
+                if (window.clientLogger && window.clientLogger.log) {
+                  window.clientLogger.log(
+                    `Fuse.js search failed, falling back to simple search: ${fuseError}`,
+                    "warning"
+                  )
+                }
                 results = this.simpleSearch(query)
               }
             } else {
@@ -1240,19 +1278,23 @@ function formatDate(dateString: string): string {
               this.performanceMetrics.totalSearchTime /
               this.performanceMetrics.searchCount
 
-            window.clientLogger.log(
-              `Search completed in ${searchTime.toFixed(2)}ms`,
-              "success"
-            )
-            window.clientLogger.log(
-              `Found ${results.length} results for "${query}" using ${searchStrategy} search`,
-              "success"
-            )
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Search completed in ${searchTime.toFixed(2)}ms`,
+                "success"
+              )
+              window.clientLogger.log(
+                `Found ${results.length} results for "${query}" using ${searchStrategy} search`,
+                "success"
+              )
+            }
 
             // Display results
             this.displaySearchResults(searchResult)
           } catch (error) {
-            window.clientLogger.log(`Search error: ${error}`, "error")
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Search error: ${error}`, "error")
+            }
             this.displayError("Terjadi kesalahan dalam pencarian")
           }
         }
@@ -1311,7 +1353,9 @@ function formatDate(dateString: string): string {
           const contentState = document.getElementById("contentState")
 
           if (!searchResults || !searchStats || !searchResultsContent) {
-            window.clientLogger.log("Search results elements not found", "error")
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log("Search results elements not found", "error")
+            }
             return
           }
 
@@ -1430,7 +1474,9 @@ function formatDate(dateString: string): string {
         }
 
         clearSearch() {
-          window.clientLogger.log("Clearing search...", "info")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Clearing search...", "info")
+          }
 
           // Clear search input
           const searchInput = document.getElementById("searchInput") as HTMLInputElement
@@ -1444,11 +1490,15 @@ function formatDate(dateString: string): string {
           this.displayAllPosts()
 
           // Provide user feedback
-          window.clientLogger.log("Search cleared successfully", "success")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Search cleared successfully", "success")
+          }
         }
 
         handleFilter(filterType: string | null) {
-          window.clientLogger.log(`Filter applied: ${filterType}`, "info")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Filter applied: ${filterType}`, "info")
+          }
 
           // Update active filter button
           const filterButtons = document.querySelectorAll(".filter-button")
@@ -1462,10 +1512,12 @@ function formatDate(dateString: string): string {
           // Get filter configuration from content config
           const filterConfig = this.getFilterConfig(filterType)
           if (!filterConfig) {
-            window.clientLogger.log(
-              `No filter configuration found for: ${filterType}`,
-              "warning"
-            )
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `No filter configuration found for: ${filterType}`,
+                "warning"
+              )
+            }
             return
           }
 
@@ -1667,26 +1719,28 @@ function formatDate(dateString: string): string {
         window.allPosts = []
       }
 
-      window.clientLogger.log(
-        "Modern Search Engine initialized with Fuse.js integration",
-        "success"
-      )
-      window.clientLogger.log(
-        "Content configuration loaded for dynamic filtering",
-        "success"
-      )
-      window.clientLogger.log(
-        `Available filters: ${Object.keys((window as any).contentConfig.filters).length}`,
-        "info"
-      )
-      window.clientLogger.log(
-        `Available categories: ${Object.keys((window as any).contentConfig.categories).length}`,
-        "info"
-      )
-      window.clientLogger.log(
-        `Available tags: ${Object.keys((window as any).contentConfig.tags).length}`,
-        "info"
-      )
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(
+          "Modern Search Engine initialized with Fuse.js integration",
+          "success"
+        )
+        window.clientLogger.log(
+          "Content configuration loaded for dynamic filtering",
+          "success"
+        )
+        window.clientLogger.log(
+          `Available filters: ${Object.keys((window as any).contentConfig.filters).length}`,
+          "info"
+        )
+        window.clientLogger.log(
+          `Available categories: ${Object.keys((window as any).contentConfig.categories).length}`,
+          "info"
+        )
+        window.clientLogger.log(
+          `Available tags: ${Object.keys((window as any).contentConfig.tags).length}`,
+          "info"
+        )
+      }
     </script>
 
     <script>
@@ -1698,17 +1752,26 @@ function formatDate(dateString: string): string {
 
       // Initialize wave animation for docs page
       function initializeDocsWaveAnimation(): (() => void) | undefined {
-        window.clientLogger.log("Initializing docs page wave animation...", "info")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Initializing docs page wave animation...", "info")
+        }
 
         const canvas = document.getElementById("waveCanvas")
         if (!canvas) {
-          window.clientLogger.log("Wave canvas not found for docs page", "warning")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Wave canvas not found for docs page", "warning")
+          }
           return undefined
         }
 
         const ctx = (canvas as HTMLCanvasElement)?.getContext("2d")
         if (!ctx) {
-          window.clientLogger.log("Canvas context not available for docs page", "warning")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Canvas context not available for docs page",
+              "warning"
+            )
+          }
           return undefined
         }
 
@@ -1850,15 +1913,19 @@ function formatDate(dateString: string): string {
           waveAnimation = {
             cleanup: initializeDocsWaveAnimation() || (() => {}),
           }
-          window.clientLogger.log(
-            "Docs page wave animation initialized successfully",
-            "success"
-          )
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Docs page wave animation initialized successfully",
+              "success"
+            )
+          }
         } catch (error) {
-          window.clientLogger.log(
-            `Error initializing docs page wave animation: ${error}`,
-            "error"
-          )
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Error initializing docs page wave animation: ${error}`,
+              "error"
+            )
+          }
         }
       })
 
@@ -1871,11 +1938,18 @@ function formatDate(dateString: string): string {
 
       // Initialize stars background
       function initializeStars() {
-        window.clientLogger.log("Initializing stars background for docs page...", "info")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log(
+            "Initializing stars background for docs page...",
+            "info"
+          )
+        }
 
         const container = document.getElementById("starsContainer")
         if (!container) {
-          window.clientLogger.log("Stars container not found for docs page", "warning")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Stars container not found for docs page", "warning")
+          }
           return
         }
 
@@ -1891,26 +1965,36 @@ function formatDate(dateString: string): string {
           container.appendChild(star)
         }
 
-        window.clientLogger.log("Stars background initialized", "success")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Stars background initialized", "success")
+        }
       }
 
       // Navigation functions for docs page
       ;(window as any).goHome = function () {
-        window.clientLogger.log("Navigating to home...", "info")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Navigating to home...", "info")
+        }
         window.location.href = "/"
       }
       ;(window as any).goToPosts = function () {
-        window.clientLogger.log("Already on docs page...", "info")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Already on docs page...", "info")
+        }
         window.location.reload()
       }
       ;(window as any).goToInvitation = function () {
-        window.clientLogger.log("Navigating to Discord...", "info")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Navigating to Discord...", "info")
+        }
         window.location.href = "/discord"
       }
 
       // Google UI/UX 2025: Tag Popup Functionality
       function initializeTagPopups() {
-        window.clientLogger.log("Initializing minimalist tag popups...", "info")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Initializing minimalist tag popups...", "info")
+        }
 
         const tagContainers = document.querySelectorAll(".post-tags")
 
@@ -2011,44 +2095,66 @@ function formatDate(dateString: string): string {
           )
         })
 
-        window.clientLogger.log("Tag popups initialized", "success")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Tag popups initialized", "success")
+        }
       }
 
       // Initialize everything when DOM is loaded
       document.addEventListener("DOMContentLoaded", function () {
-        window.clientLogger.log("GoRakuDo Docs Page Loading...", "info")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("GoRakuDo Docs Page Loading...", "info")
+        }
 
         // Initialize wave animation
         try {
           const cleanupWave = initializeDocsWaveAnimation()
           if (cleanupWave) {
             waveAnimation = { cleanup: cleanupWave }
-            window.clientLogger.log("Wave animation initialized for docs page", "success")
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                "Wave animation initialized for docs page",
+                "success"
+              )
+            }
           }
         } catch (error) {
-          window.clientLogger.log(
-            `Wave animation failed for docs page: ${error}`,
-            "error"
-          )
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Wave animation failed for docs page: ${error}`,
+              "error"
+            )
+          }
         }
 
         // Initialize stars
         try {
           initializeStars()
-          window.clientLogger.log("Stars background initialized for docs page", "success")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Stars background initialized for docs page",
+              "success"
+            )
+          }
         } catch (error) {
-          window.clientLogger.log(
-            `Stars background failed for docs page: ${error}`,
-            "error"
-          )
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Stars background failed for docs page: ${error}`,
+              "error"
+            )
+          }
         }
 
         // Initialize tag popups
         try {
           initializeTagPopups()
-          window.clientLogger.log("Tag popups initialized for docs page", "success")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Tag popups initialized for docs page", "success")
+          }
         } catch (error) {
-          window.clientLogger.log(`Tag popups failed for docs page: ${error}`, "error")
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Tag popups failed for docs page: ${error}`, "error")
+          }
         }
 
         // Cleanup on page unload
@@ -2058,7 +2164,9 @@ function formatDate(dateString: string): string {
           }
         })
 
-        window.clientLogger.log("Docs Page Loaded Successfully!", "success")
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Docs Page Loaded Successfully!", "success")
+        }
       })
     </script>
   </body>

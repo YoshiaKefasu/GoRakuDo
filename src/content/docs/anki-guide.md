@@ -1,5 +1,5 @@
 ---
-title: "Panduan Menggunakan Anki"
+title: "SAMPLE POST ASAL: Panduan Menggunakan Anki"
 description: "Setup dan strategi optimal untuk menggunakan Anki dalam pembelajaran bahasa Jepang."
 publishedDate: "2024-01-25T00:00:00.000Z"
 readTime: 12
@@ -13,7 +13,7 @@ mindMapBranch: "D"
 contentType: "resource"
 ---
 
-# Panduan Menggunakan Anki
+# SAMPLE POST ASAL: Panduan Menggunakan Anki
 
 ## Apa itu Anki?
 

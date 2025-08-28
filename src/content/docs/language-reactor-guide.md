@@ -1,5 +1,5 @@
 ---
-title: "Panduan Setup Language Reactor"
+title: "SAMPLE POST ASAL:Panduan Setup Language Reactor"
 description: "Setup dan penggunaan Language Reactor untuk belajar bahasa Jepang dengan Netflix subtitle dual-language dan vocabulary tracking."
 publishedDate: "2024-01-25T00:00:00.000Z"
 readTime: 18
@@ -14,7 +14,7 @@ mindMapBranch: "D"
 contentType: "resource"
 ---
 
-# Panduan Setup Language Reactor
+# SAMPLE POST ASAL:Panduan Setup Language Reactor
 
 ## Apa itu Language Reactor?
 
