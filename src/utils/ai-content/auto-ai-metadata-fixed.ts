@@ -55,7 +55,6 @@ export async function generateAIMetadata(
   // Analyze content for enhanced features
   const content = (post.body || "").toLowerCase();
   const title = (post.data?.title || "").toLowerCase();
-  const description = (post.data?.description || "").toLowerCase();
 
   // Detect practice exercises
   if (

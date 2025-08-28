@@ -198,10 +198,7 @@ export class EnhancedContentExtractor {
       };
       console.log(`🔍 Processing: ${typedEntry.slug}`);
 
-      const fileResult = await this.processContentEntry(
-        typedEntry,
-        collectionName,
-      );
+      const fileResult = await this.processContentEntry(typedEntry);
       files.push(fileResult);
 
       totalContentLength += fileResult.contentLength;
@@ -219,10 +216,7 @@ export class EnhancedContentExtractor {
   /**
    * Process individual content entry with QA
    */
-  private async processContentEntry(
-    entry: CollectionEntry<any>,
-    collectionName: string,
-  ) {
+  private async processContentEntry(entry: CollectionEntry<any>) {
     const typedEntry = entry as CollectionEntry<any> & {
       slug: string;
       data?: any;

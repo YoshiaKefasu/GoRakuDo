@@ -58,7 +58,7 @@ export class NodeEnvSetup {
 
       // Test the connection
       try {
-        const response = await this.ai.models.generateContent({
+        await this.ai.models.generateContent({
           model: this.config.model,
           contents: "Test connection",
         });
@@ -98,7 +98,7 @@ export class NodeEnvSetup {
         await this.initializeAI();
       }
 
-      const response = await this.ai!.models.generateContent({
+      await this.ai!.models.generateContent({
         model: this.config.model,
         contents: "Hello, this is a test message.",
       });

@@ -33,7 +33,7 @@ export class SimpleSearch {
     // Pre-process posts for faster searching
     this.posts.forEach((post) => {
       // Create searchable text for each post
-      const searchableText = this.createSearchableText(post);
+      this.createSearchableText(post);
       post.element = this.findPostElement(post.slug);
     });
   }

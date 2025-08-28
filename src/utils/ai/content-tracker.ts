@@ -1,6 +1,5 @@
 import * as fs from "fs/promises";
 import * as path from "path";
-import type { AIProcessingResult } from "./types";
 
 export interface ContentManifest {
   version: string;

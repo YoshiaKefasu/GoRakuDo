@@ -20,13 +20,9 @@
 import type { CollectionEntry } from "astro:content";
 import {
   generateInternalLinks,
-  analyzeContent,
   type InternalLinkSuggestion,
 } from "./content-analysis";
-import {
-  resolveContentPath,
-  getCollectionMetadata,
-} from "../content-path-resolver";
+import { resolveContentPath } from "../content-path-resolver";
 
 // ========== PERFORMANCE CACHING ==========
 
@@ -448,7 +444,7 @@ export async function convertWordsToInternalLinks(
   const convertedWords = new Set<string>();
 
   // Process each section
-  sections.forEach((section, sectionIndex) => {
+  sections.forEach((section) => {
     if (section.isHeader) {
       // SIMPLE APPROACH: Skip headers completely - no word matching at all
       currentPosition += section.content.length;
@@ -458,7 +454,7 @@ export async function convertWordsToInternalLinks(
     // Only process non-header sections for word matching
     const words = extractWordsFromContent(section.content, finalConfig);
 
-    words.forEach((word, wordIndex) => {
+    words.forEach((word) => {
       if (matchCount >= finalConfig.maxConversionsPerArticle) {
         return; // Stop if we've reached the limit
       }
@@ -490,7 +486,7 @@ export async function convertWordsToInternalLinks(
       const exactMatch = targetVariations.get(cleanWord.toLowerCase());
       if (exactMatch) {
         const position = currentPosition + section.content.indexOf(word);
-        const context = extractContext(section.content, word, finalConfig);
+        const context = extractContext(section.content, word);
 
         wordMatches.push({
           word,
@@ -515,14 +511,10 @@ export async function convertWordsToInternalLinks(
       for (const [targetWord, targetLink] of targetVariations) {
         if (matchCount >= finalConfig.maxConversionsPerArticle) break;
 
-        const relevance = calculateRelevance(
-          cleanWord,
-          targetWord,
-          finalConfig,
-        );
+        const relevance = calculateRelevance(cleanWord, targetWord);
         if (relevance >= finalConfig.minRelevanceScore) {
           const position = currentPosition + section.content.indexOf(word);
-          const context = extractContext(section.content, word, finalConfig);
+          const context = extractContext(section.content, word);
 
           wordMatches.push({
             word,
@@ -774,146 +766,6 @@ async function processHTMLNodes(
 }
 
 /**
- * Find word matches for conversion
- * Enhanced to be less restrictive and better at finding matches
- *
- * @param content - Content to search for matches
- * @param linkSuggestions - Available link suggestions
- * @param config - Configuration options
- * @returns Array of word matches for conversion
- */
-function findWordMatches(
-  content: string,
-  linkSuggestions: InternalLinkSuggestion[],
-  config: WordToLinkConfig,
-): WordMatch[] {
-  const matches: WordMatch[] = [];
-  const targetVariations = new Map<string, InternalLinkSuggestion>();
-
-  // Create target variations map with more flexible matching
-  linkSuggestions.forEach((link) => {
-    const title = link.targetTitle;
-    const variations = generateWordVariations(title, config);
-
-    // Add variations to the map
-    variations.forEach((variation) => {
-      if (
-        variation.length >= config.minWordLength &&
-        variation.length <= config.maxWordLength
-      ) {
-        targetVariations.set(variation.toLowerCase(), link);
-      }
-    });
-
-    // Also add individual words from the title for better matching
-    const titleWords = title.split(/\s+/);
-    titleWords.forEach((word) => {
-      const cleanWord = cleanWordForMatching(word, config);
-      if (
-        cleanWord.length >= config.minWordLength &&
-        cleanWord.length <= config.maxWordLength
-      ) {
-        targetVariations.set(cleanWord.toLowerCase(), link);
-      }
-    });
-  });
-
-  // Split content into sections to avoid headers
-  const sections = splitContentIntoSections(content, config);
-
-  let currentPosition = 0;
-  let matchCount = 0;
-
-  // Process each section
-  sections.forEach((section, sectionIndex) => {
-    if (section.isHeader) {
-      // SIMPLE APPROACH: Skip headers completely - no word matching at all
-      currentPosition += section.content.length;
-      return;
-    }
-
-    // Only process non-header sections for word matching
-    const words = extractWordsFromContent(section.content, config);
-
-    words.forEach((word, wordIndex) => {
-      if (matchCount >= config.maxConversionsPerArticle) {
-        return; // Stop if we've reached the limit
-      }
-
-      const cleanWord = cleanWordForMatching(word, config);
-
-      // Skip words that are too short or too long
-      if (
-        cleanWord.length < config.minWordLength ||
-        cleanWord.length > config.maxWordLength
-      ) {
-        return;
-      }
-
-      // Skip Indonesian conjunctions if configured
-      if (config.excludeConjunctions && isIndonesianConjunction(cleanWord)) {
-        return;
-      }
-
-      // Check for exact matches first
-      const exactMatch = targetVariations.get(cleanWord.toLowerCase());
-      if (exactMatch) {
-        const position = currentPosition + section.content.indexOf(word);
-        const context = extractContext(section.content, word, config);
-
-        matches.push({
-          word,
-          targetLink: exactMatch,
-          position,
-          context,
-          relevance: 1.0, // Exact matches get perfect relevance
-          matchType: "exact",
-        });
-
-        matchCount++;
-        console.log(
-          `✅ Found exact match: "${word}" → "${exactMatch.targetTitle}"`,
-        );
-        return;
-      }
-
-      // Check for partial matches
-      for (const [targetWord, targetLink] of targetVariations) {
-        if (matchCount >= config.maxConversionsPerArticle) break;
-
-        const relevance = calculateRelevance(cleanWord, targetWord, config);
-        if (relevance >= config.minRelevanceScore) {
-          const position = currentPosition + section.content.indexOf(word);
-          const context = extractContext(section.content, word, config);
-
-          matches.push({
-            word,
-            targetLink,
-            position,
-            context,
-            matchType: "partial",
-            relevance,
-          });
-
-          matchCount++;
-          console.log(
-            `✅ Found partial match: "${word}" → "${targetLink.targetTitle}" (relevance: ${relevance.toFixed(2)})`,
-          );
-          break;
-        }
-      }
-    });
-
-    currentPosition += section.content.length;
-  });
-
-  // Sort matches by relevance (highest first) and limit to maxConversionsPerArticle
-  return matches
-    .sort((a, b) => b.relevance - a.relevance)
-    .slice(0, config.maxConversionsPerArticle);
-}
-
-/**
  * Find word matches in text content
  */
 function findWordMatchesInText(
@@ -1007,7 +859,6 @@ function splitContentIntoSections(
 
   lines.forEach((line, lineIndex) => {
     const lineLength = line.length + 1; // +1 for newline
-    const trimmedLine = line.trim();
 
     // CRITICAL FIX: Use comprehensive header detection
     const isHeader = isComprehensiveHeader(
@@ -1186,11 +1037,7 @@ function extractWordsFromContent(
  * @param config - Configuration options
  * @returns Context string around the word
  */
-function extractContext(
-  content: string,
-  word: string,
-  config: WordToLinkConfig,
-): string {
+function extractContext(content: string, word: string): string {
   const index = content.indexOf(word);
   if (index === -1) return word;
 
@@ -1207,11 +1054,7 @@ function extractContext(
  * @param config - Configuration options
  * @returns Relevance score between 0 and 1
  */
-function calculateRelevance(
-  word1: string,
-  word2: string,
-  config: WordToLinkConfig,
-): number {
+function calculateRelevance(word1: string, word2: string): number {
   const w1 = word1.toLowerCase();
   const w2 = word2.toLowerCase();
 
@@ -1446,7 +1289,7 @@ function convertWordsToLinks(
   let currentPosition = 0;
 
   // Process each section
-  sections.forEach((section, sectionIndex) => {
+  sections.forEach((section) => {
     if (section.isHeader) {
       // Skip header sections completely - no word replacement
       currentPosition += section.content.length;
@@ -1512,7 +1355,6 @@ function convertWordsToLinks(
  * @param config - Configuration options
  * @returns Cleaned content with no links in headers
  */
-
 
 /**
  * Generate HTML for word-to-link conversion

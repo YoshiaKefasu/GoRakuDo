@@ -25,7 +25,6 @@ export class HybridProgressiveEnhancement {
   private enhancements: Map<string, EnhancementConfig> = new Map();
   private states: Map<string, EnhancementState> = new Map();
   private userPreferences: Map<string, boolean> = new Map();
-  private performanceThreshold = 0.7; // 70% performance score threshold
 
   constructor() {
     this.loadUserPreferences();

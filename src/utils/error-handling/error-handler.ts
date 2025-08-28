@@ -98,7 +98,7 @@ export class ProgressiveErrorHandler {
     }
   }
 
-  private getBasicMessage(error: Error, context: ErrorContext): string {
+  private getBasicMessage(_error: Error, context: ErrorContext): string {
     const messages: Record<string, string> = {
       "content-loading":
         "Unable to load content. Please try refreshing the page.",

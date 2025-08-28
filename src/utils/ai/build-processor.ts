@@ -23,7 +23,7 @@ export class BuildProcessor {
 
     if (!this.environment.isAIAvailable()) {
       console.log("📁 Loading pre-processed data for production build");
-      return await this.loadPreProcessedData(title, content);
+      return await this.loadPreProcessedData(title);
     }
 
     // Smart content detection
@@ -40,7 +40,7 @@ export class BuildProcessor {
 
     if (isProcessed && !hasChanged) {
       console.log(`📁 Content already processed and unchanged: ${title}`);
-      return await this.loadPreProcessedData(title, content);
+      return await this.loadPreProcessedData(title);
     }
 
     if (hasChanged) {
@@ -83,13 +83,12 @@ export class BuildProcessor {
       return result;
     } catch (error) {
       console.error("❌ AI processing failed:", error);
-      return await this.loadPreProcessedData(title, content);
+      return await this.loadPreProcessedData(title);
     }
   }
 
   private async loadPreProcessedData(
     title: string,
-    content: string,
   ): Promise<AIProcessingResult | null> {
     try {
       const data = await this.dataPersistence.loadProcessedData(title);
@@ -102,13 +101,10 @@ export class BuildProcessor {
     }
 
     // Return fallback data if no pre-processed data available
-    return this.generateFallbackData(title, content);
+    return this.generateFallbackData(title);
   }
 
-  private generateFallbackData(
-    title: string,
-    content: string,
-  ): AIProcessingResult {
+  private generateFallbackData(title: string): AIProcessingResult {
     console.log(`🔄 Generating fallback data for: ${title}`);
 
     return {

@@ -530,7 +530,7 @@ export class RUMMonitor {
    * @returns Session ID string
    */
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 
   /**
@@ -540,7 +540,7 @@ export class RUMMonitor {
   private generateUserId(): string {
     let userId = localStorage.getItem("rum_user_id");
     if (!userId) {
-      userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      userId = `user_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
       localStorage.setItem("rum_user_id", userId);
     }
     return userId;

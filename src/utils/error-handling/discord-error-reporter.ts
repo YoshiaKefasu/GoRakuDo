@@ -221,7 +221,7 @@ export class DiscordErrorReporter {
   }
 
   // Collect user feedback for Discord
-  async collectUserFeedback(error: DiscordErrorReport): Promise<string> {
+  async collectUserFeedback(_error: DiscordErrorReport): Promise<string> {
     return new Promise((resolve) => {
       if (typeof window === "undefined") {
         resolve("Feedback tidak tersedia");

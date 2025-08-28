@@ -219,9 +219,9 @@ export function validateAIMetadata(
 function validateContentSpecificMetadata(
   post: CollectionEntry<"docs">,
   metadata: SimpleAIMetadata,
-  errors: ValidationError[],
+  _errors: ValidationError[],
   warnings: ValidationWarning[],
-  suggestions: string[],
+  _suggestions: string[],
 ): void {
   const { title, description, difficulty, tags } = post.data;
   const text = `${title} ${description} ${tags.join(" ")}`.toLowerCase();
@@ -394,9 +394,8 @@ export function validateFullAIMetadata(
   return validateAIMetadata(post, metadata as SimpleAIMetadata);
 }
 
-export function validateSchemaCompliance(
-  metadata: any, // Will be typed properly in Phase 2
-): ValidationResult {
+export function validateSchemaCompliance(): ValidationResult {
+// Will be typed properly in Phase 2
   // Phase 2+: Will implement Zod schema validation
   // For now, return empty result
   return {

@@ -243,18 +243,6 @@ export class PerformanceEnhancementLoader {
   }
 
   /**
-   * Get default preferences
-   */
-  private getDefaultPreferences(): any {
-    return {
-      enableAllFeatures: false,
-      aggressiveLoading: false,
-      autoDetectCapabilities: true,
-      customThresholds: {},
-    };
-  }
-
-  /**
    * Get loaded enhancements
    */
   getLoadedEnhancements(): string[] {

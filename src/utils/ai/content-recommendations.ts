@@ -61,11 +61,7 @@ export class ContentRecommendationSystem {
               matchingPost,
               request.currentPost,
             ),
-            reason: this.generateRecommendationReason(
-              matchingPost,
-              request.currentPost,
-              index,
-            ),
+            reason: this.generateRecommendationReason(matchingPost, index),
             tags: matchingPost.tags || [],
           };
         }
@@ -116,7 +112,6 @@ export class ContentRecommendationSystem {
 
   private generateRecommendationReason(
     recommendedPost: any,
-    currentPost: any,
     index: number,
   ): string {
     const reasons = [
@@ -152,12 +147,12 @@ export class ContentRecommendationSystem {
       postId: post.id,
       title: post.title,
       relevanceScore: 0.8 - index * 0.1,
-      reason: this.generateFallbackReason(post, index),
+      reason: this.generateFallbackReason(index),
       tags: post.tags || [],
     }));
   }
 
-  private generateFallbackReason(post: any, index: number): string {
+  private generateFallbackReason(index: number): string {
     const reasons = [
       "Artikel terkait tentang pembelajaran bahasa Jepang",
       "Materi lanjutan untuk memperdalam pemahaman",

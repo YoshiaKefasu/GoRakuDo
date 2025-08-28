@@ -1,6 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-import * as fs from "fs/promises";
-import * as path from "path";
 
 export interface APIGeneratedRecommendation {
   targetSlug: string;

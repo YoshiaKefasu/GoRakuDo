@@ -19,14 +19,9 @@
 import type { CollectionEntry } from "astro:content";
 import {
   generateInternalLinks,
-  analyzeContent,
   type InternalLinkSuggestion,
-  type ContentAnalysisResult,
 } from "./content-analysis";
-import {
-  resolveContentPath,
-  getCollectionMetadata,
-} from "../content-path-resolver";
+import { resolveContentPath } from "../content-path-resolver";
 
 // ========== CONFIGURATION INTERFACES ==========
 

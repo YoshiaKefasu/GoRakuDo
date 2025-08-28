@@ -2,8 +2,6 @@
 // Provides clean AI content generation capabilities
 // Handles AI-powered content generation with proper error handling and validation
 
-import type { CollectionEntry } from "astro:content";
-
 // Clean AI generation result interface
 export interface CleanAIGenerationResult {
   success: boolean;
@@ -129,16 +127,16 @@ export class CleanAIGenerator {
         content += this.generateToolContent(prompt, learningStage);
         break;
       case "theory":
-        content += this.generateTheoryContent(prompt, learningStage);
+        content += this.generateTheoryContent(prompt);
         break;
       case "practice":
-        content += this.generatePracticeContent(prompt, learningStage);
+        content += this.generatePracticeContent(prompt);
         break;
       case "review":
         content += this.generateReviewContent(prompt, learningStage);
         break;
       case "case-study":
-        content += this.generateCaseStudyContent(prompt, learningStage);
+        content += this.generateCaseStudyContent(prompt);
         break;
       case "faq":
         content += this.generateFAQContent(prompt, learningStage);
@@ -308,7 +306,7 @@ Common issues and their solutions...`;
   /**
    * Generate theory content
    */
-  private generateTheoryContent(prompt: string, learningStage: string): string {
+  private generateTheoryContent(prompt: string): string {
     return `## Theoretical Framework
 
 This section explores the theoretical foundations of ${prompt.toLowerCase()}.
@@ -348,10 +346,7 @@ Emerging trends and potential developments...`;
   /**
    * Generate practice content
    */
-  private generatePracticeContent(
-    prompt: string,
-    learningStage: string,
-  ): string {
+  private generatePracticeContent(prompt: string): string {
     return `## Practice Exercises
 
 Hands-on practice is essential for mastering ${prompt.toLowerCase()}.
@@ -474,10 +469,7 @@ Overall assessment and recommendation...`;
   /**
    * Generate case study content
    */
-  private generateCaseStudyContent(
-    prompt: string,
-    learningStage: string,
-  ): string {
+  private generateCaseStudyContent(prompt: string): string {
     return `## Case Study: ${prompt}
 
 This case study examines a real-world application of ${prompt.toLowerCase()}.
