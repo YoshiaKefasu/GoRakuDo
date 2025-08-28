@@ -1,362 +1,221 @@
+// Animation Performance Monitor
+// Basic animation performance monitoring for GoRakuDo
+// Google Engineering Team 2025
+
 /**
- * Animation Performance Monitor
- * Monitors and optimizes animation performance for GoRakuDo
- *
- * Features:
- * - Device-specific frame rate capping
- * - Real-time FPS monitoring
- * - Memory usage tracking
- * - Animation conflict prevention
- * - Reduced motion support
+ * Basic Animation Performance Monitor
+ * Monitors and optimizes animation performance
  */
-
-export interface AnimationConfig {
-  targetFPS: number;
-  maxFrameDrops: number;
-  memoryThreshold: number;
-  enableFrameRateCapping: boolean;
-  reducedMotionSupport: boolean;
-}
-
-export interface AnimationMetrics {
-  currentFPS: number;
-  averageFPS: number;
-  frameDrops: number;
-  memoryUsage: number;
-  activeAnimations: number;
-  lastFrameTime: number;
-}
-
 export class AnimationPerformanceMonitor {
-  private config: AnimationConfig;
-  private metrics: AnimationMetrics;
-  private animationLoopId: number | null = null;
-  private observers: PerformanceObserver[] = [];
-  private frameCount: number = 0;
-  private lastFrameTime: number = 0;
-  private frameTimes: number[] = [];
-  private readonly maxFrameHistory = 60; // Keep 60 frames of history
-  private deviceCapabilities: {
-    isMobile: boolean;
-    isLowEnd: boolean;
-    screenWidth: number;
-    gpuTier: "high" | "medium" | "low";
+  private config: any = {
+    targetFPS: 60,
+    memoryThreshold: 50 * 1024 * 1024, // 50MB
   };
 
-  constructor(config: Partial<AnimationConfig> = {}) {
-    this.config = {
-      targetFPS: 60,
-      maxFrameDrops: 5,
-      memoryThreshold: 100 * 1024 * 1024, // 100MB
-      enableFrameRateCapping: true,
-      reducedMotionSupport: true,
-      ...config,
-    };
+  private metrics: any = {
+    averageFPS: 0,
+    frameDrops: 0,
+    memoryUsage: 0,
+  };
 
-    this.metrics = {
-      currentFPS: 0,
-      averageFPS: 0,
-      frameDrops: 0,
-      memoryUsage: 0,
-      activeAnimations: 0,
-      lastFrameTime: 0,
-    };
+  private frameTimes: number[] = [];
+  private observers: any[] = [];
+  private deviceCapabilities: any = {};
 
-    this.deviceCapabilities = this.detectDeviceCapabilities();
-    this.setupPerformanceObservers();
-    this.adjustConfigForDevice();
+  constructor(config: any = {}) {
+    this.config = { ...this.config, ...config };
+    this.initialize();
   }
 
   /**
-   * Start monitoring animation performance
+   * Initialize the performance monitor
+   */
+  private initialize(): void {
+    this.detectDeviceCapabilities();
+    this.setupPerformanceObservers();
+    this.startMonitoring();
+  }
+
+  /**
+   * Start performance monitoring
    */
   startMonitoring(): void {
-    if (this.animationLoopId !== null) return;
+    // Start frame rate monitoring
+    this.startFrameMonitoring();
 
-    console.log(`🎬 Starting animation performance monitoring...`);
-    console.log(
-      `📱 Device: ${this.deviceCapabilities.isMobile ? "Mobile" : "Desktop"}`,
-    );
-    console.log(`🎯 Target FPS: ${this.config.targetFPS}`);
-
-    this.animationLoopId = requestAnimationFrame(this.monitorFrame.bind(this));
+    // Start memory monitoring
     this.startMemoryMonitoring();
+
+    // Set up automatic optimizations
+    this.setupAutoOptimization();
   }
 
   /**
-   * Stop monitoring animation performance
+   * Start frame rate monitoring
    */
-  stopMonitoring(): void {
-    if (this.animationLoopId !== null) {
-      cancelAnimationFrame(this.animationLoopId);
-      this.animationLoopId = null;
-    }
+  private startFrameMonitoring(): void {
+    let lastTime = performance.now();
 
-    this.observers.forEach((observer) => observer.disconnect());
-    this.observers = [];
-
-    console.log(`⏹️ Animation performance monitoring stopped`);
-  }
-
-  /**
-   * Get current animation metrics
-   */
-  getMetrics(): AnimationMetrics {
-    return { ...this.metrics };
-  }
-
-  /**
-   * Check if animations should be optimized for current device
-   */
-  shouldOptimizeAnimations(): boolean {
-    return (
-      this.metrics.averageFPS < this.config.targetFPS * 0.8 ||
-      this.metrics.memoryUsage > this.config.memoryThreshold ||
-      this.metrics.frameDrops > this.config.maxFrameDrops
-    );
-  }
-
-  /**
-   * Get recommended animation settings for current device
-   */
-  getRecommendedSettings(): {
-    targetFPS: number;
-    complexity: "high" | "medium" | "low";
-    disableHeavyAnimations: boolean;
-  } {
-    const { isMobile, isLowEnd, screenWidth } = this.deviceCapabilities;
-
-    if (isLowEnd) {
-      return {
-        targetFPS: 25,
-        complexity: "low",
-        disableHeavyAnimations: true,
-      };
-    }
-
-    if (isMobile || screenWidth < 1024) {
-      return {
-        targetFPS: 30,
-        complexity: "medium",
-        disableHeavyAnimations: false,
-      };
-    }
-
-    return {
-      targetFPS: 60,
-      complexity: "high",
-      disableHeavyAnimations: false,
-    };
-  }
-
-  /**
-   * Apply device-specific animation optimizations
-   */
-  applyDeviceOptimizations(): void {
-    const recommendations = this.getRecommendedSettings();
-
-    console.log(`⚡ Applying device optimizations:`, recommendations);
-
-    // Update target FPS
-    this.config.targetFPS = recommendations.targetFPS;
-
-    // Adjust canvas rendering quality
-    this.adjustCanvasQuality(recommendations.complexity);
-
-    // Disable heavy animations on low-end devices
-    if (recommendations.disableHeavyAnimations) {
-      this.disableHeavyAnimations();
-    }
-
-    // Update CSS animation performance
-    this.optimizeCSSAnimations(recommendations.complexity);
-  }
-
-  /**
-   * Monitor frame rate and performance
-   */
-  private monitorFrame = (currentTime: number): void => {
-    this.frameCount++;
-
-    if (this.lastFrameTime > 0) {
-      const deltaTime = currentTime - this.lastFrameTime;
-      const currentFPS = 1000 / deltaTime;
-
-      // Update metrics
-      this.metrics.currentFPS = currentFPS;
-      this.metrics.lastFrameTime = currentTime;
-
-      // Track frame times for average calculation
+    const monitorFrame = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime;
       this.frameTimes.push(deltaTime);
-      if (this.frameTimes.length > this.maxFrameHistory) {
+
+      // Keep only last 60 frames for average calculation
+      if (this.frameTimes.length > 60) {
         this.frameTimes.shift();
       }
 
       // Calculate average FPS
-      if (this.frameTimes.length > 10) {
-        const averageDeltaTime =
-          this.frameTimes.reduce((sum, time) => sum + time, 0) /
-          this.frameTimes.length;
-        this.metrics.averageFPS = 1000 / averageDeltaTime;
-      }
+      const avgDelta =
+        this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length;
+      this.metrics.averageFPS = 1000 / avgDelta;
 
-      // Detect frame drops
-      if (currentFPS < this.config.targetFPS * 0.5) {
-        this.metrics.frameDrops++;
-      }
-
-      // Log performance issues
-      if (this.frameCount % 300 === 0) {
-        // Log every 5 seconds at 60fps
-        this.logPerformanceStatus();
-      }
-
-      // Apply optimizations if needed
-      if (
-        this.shouldOptimizeAnimations() &&
-        this.config.enableFrameRateCapping
-      ) {
-        this.applyDeviceOptimizations();
-      }
-    }
-
-    this.lastFrameTime = currentTime;
-    this.animationLoopId = requestAnimationFrame(this.monitorFrame);
-  };
-
-  /**
-   * Monitor memory usage
-   */
-  private startMemoryMonitoring(): void {
-    if (!performance.memory) {
-      console.warn("⚠️ Memory monitoring not available");
-      return;
-    }
-
-    const checkMemory = () => {
-      this.metrics.memoryUsage = performance.memory.usedJSHeapSize;
-
-      // Warn if memory usage is high
-      if (this.metrics.memoryUsage > this.config.memoryThreshold) {
-        console.warn(
-          `🚨 High memory usage: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`,
-        );
-        this.optimizeMemoryUsage();
-      }
+      lastTime = currentTime;
+      requestAnimationFrame(monitorFrame);
     };
 
-    // Check memory every 10 seconds
-    setInterval(checkMemory, 10000);
-    checkMemory(); // Initial check
+    requestAnimationFrame(monitorFrame);
   }
 
   /**
-   * Set up performance observers
+   * Start memory monitoring
+   */
+  private startMemoryMonitoring(): void {
+    // Memory monitoring is not available in all browsers
+    // This is a basic implementation
+    if (typeof performance !== "undefined" && (performance as any).memory) {
+      const checkMemory = () => {
+        this.metrics.memoryUsage = (performance as any).memory.usedJSHeapSize;
+
+        // Check if we need to optimize memory usage
+        if (this.metrics.memoryUsage > this.config.memoryThreshold) {
+          this.optimizeMemoryUsage();
+        }
+      };
+
+      // Check memory every 10 seconds
+      setInterval(checkMemory, 10000);
+      checkMemory(); // Initial check
+    }
+  }
+
+  /**
+   * Setup performance observers
    */
   private setupPerformanceObservers(): void {
-    if (!("PerformanceObserver" in window)) return;
+    if (typeof window !== "undefined" && "PerformanceObserver" in window) {
+      try {
+        // Monitor long animation frames
+        const observer = new (window as any).PerformanceObserver(
+          (list: any) => {
+            const entries = list.getEntries();
+            this.metrics.frameDrops = entries.length;
+          },
+        );
 
-    try {
-      // Monitor long animation frames
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.duration > 16.67) {
-            // Longer than one frame at 60fps
-            console.warn(
-              `🐌 Long animation frame: ${entry.duration.toFixed(2)}ms`,
-            );
-          }
-        }
-      });
-
-      observer.observe({ entryTypes: ["long-animation-frame"] });
-      this.observers.push(observer);
-    } catch (error) {
-      console.warn("Long animation frame monitoring not supported:", error);
+        observer.observe({ entryTypes: ["long-animation-frame"] });
+        this.observers.push(observer);
+      } catch (error) {
+        console.warn("Long animation frame monitoring not supported:", error);
+      }
     }
   }
 
   /**
    * Detect device capabilities
    */
-  private detectDeviceCapabilities() {
-    const userAgent = navigator.userAgent;
-    const screenWidth = window.innerWidth;
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        userAgent,
-      ) || screenWidth < 768;
+  private detectDeviceCapabilities(): void {
+    const canvas = document.createElement("canvas");
+    const gl =
+      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 
-    // Simple heuristic for low-end devices
-    const isLowEnd = (() => {
-      const canvas = document.createElement("canvas");
-      const gl =
-        canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      if (!gl) return true;
+    let gpuTier: "high" | "medium" | "low" = "medium";
+    const deviceMemory = (navigator as any).deviceMemory;
 
-      const renderer = gl.getParameter(gl.RENDERER)?.toLowerCase() || "";
+    if (gl) {
+      const renderer =
+        (gl as any).getParameter((gl as any).RENDERER)?.toLowerCase() || "";
       const isSoftwareRenderer =
         renderer.includes("software") || renderer.includes("llvmpipe");
-      const hasLimitedMemory =
-        navigator.deviceMemory && navigator.deviceMemory < 4;
 
-      return isSoftwareRenderer || hasLimitedMemory || screenWidth < 640;
-    })();
-
-    // Determine GPU tier
-    let gpuTier: "high" | "medium" | "low" = "medium";
-    if (isLowEnd) {
-      gpuTier = "low";
-    } else if (screenWidth >= 1920 && !isMobile) {
-      gpuTier = "high";
+      if (isSoftwareRenderer) {
+        gpuTier = "low";
+      } else {
+        // Check for high-end GPU indicators
+        const hasLimitedMemory = deviceMemory && deviceMemory < 4;
+        gpuTier = hasLimitedMemory ? "medium" : "high";
+      }
     }
 
-    return {
-      isMobile,
-      isLowEnd,
-      screenWidth,
+    this.deviceCapabilities = {
       gpuTier,
+      hasWebGL: !!gl,
+      hardwareConcurrency: navigator.hardwareConcurrency || 4,
+      deviceMemory: deviceMemory || 4,
     };
   }
 
   /**
-   * Adjust configuration based on device capabilities
+   * Setup automatic optimization
    */
-  private adjustConfigForDevice(): void {
+  private setupAutoOptimization(): void {
+    // Get recommended settings based on device
     const recommendations = this.getRecommendedSettings();
-    this.config.targetFPS = recommendations.targetFPS;
+
+    // Apply optimizations
+    this.adjustCanvasQuality(recommendations.complexity);
+
+    if (recommendations.disableHeavyAnimations) {
+      this.disableHeavyAnimations();
+    }
+
+    if (recommendations.optimizeCSS) {
+      this.optimizeCSSAnimations(recommendations.complexity);
+    }
+
+    // Set up performance status logging
+    setInterval(() => {
+      this.logPerformanceStatus();
+    }, 30000); // Log every 30 seconds
   }
 
   /**
-   * Adjust canvas rendering quality
+   * Get recommended settings
+   */
+  private getRecommendedSettings(): any {
+    const isLowEnd =
+      this.deviceCapabilities.gpuTier === "low" ||
+      this.deviceCapabilities.deviceMemory < 4;
+
+    if (isLowEnd) {
+      return {
+        targetFPS: 30,
+        complexity: "low" as const,
+        disableHeavyAnimations: true,
+        optimizeCSS: true,
+      };
+    }
+
+    return {
+      targetFPS: 60,
+      complexity: "medium" as const,
+      disableHeavyAnimations: false,
+      optimizeCSS: false,
+    };
+  }
+
+  /**
+   * Adjust canvas quality
    */
   private adjustCanvasQuality(complexity: "high" | "medium" | "low"): void {
-    // Find all canvas elements on the page
     const canvases = document.querySelectorAll("canvas");
 
     canvases.forEach((canvas) => {
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      switch (complexity) {
-        case "low":
-          ctx.imageSmoothingEnabled = false;
-          // Reduce canvas size for low-end devices
-          if (canvas.width > 800) {
-            canvas.width = Math.floor(canvas.width * 0.7);
-            canvas.height = Math.floor(canvas.height * 0.7);
-          }
-          break;
-
-        case "medium":
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "medium";
-          break;
-
-        case "high":
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "high";
-          break;
+      const ctx = (canvas as HTMLCanvasElement).getContext("2d");
+      if (ctx) {
+        // Adjust image smoothing based on complexity
+        (ctx as any).imageSmoothingEnabled = complexity !== "low";
+        (ctx as any).imageSmoothingQuality = complexity;
       }
     });
 
@@ -364,22 +223,19 @@ export class AnimationPerformanceMonitor {
   }
 
   /**
-   * Disable heavy animations on low-end devices
+   * Disable heavy animations
    */
   private disableHeavyAnimations(): void {
-    // Reduce stars animation count
+    // Disable animations on stars or other heavy elements
     const starsContainer = document.getElementById("stars");
     if (starsContainer) {
-      const stars = starsContainer.querySelectorAll(".star");
-      const maxStars = Math.min(stars.length, 4); // Limit to 4 stars max
-
+      const stars = starsContainer.querySelectorAll("*");
       stars.forEach((star, index) => {
-        if (index >= maxStars) {
-          star.style.display = "none";
+        if (index >= 50) {
+          // Keep only first 50 stars
+          (star as HTMLElement).style.display = "none";
         }
       });
-
-      console.log(`✨ Reduced stars animation to ${maxStars} elements`);
     }
   }
 
@@ -389,7 +245,7 @@ export class AnimationPerformanceMonitor {
   private optimizeCSSAnimations(complexity: "high" | "medium" | "low"): void {
     const styleId = "animation-performance-optimizations";
 
-    // Remove existing optimizations
+    // Remove existing style if it exists
     const existingStyle = document.getElementById(styleId);
     if (existingStyle) {
       existingStyle.remove();
@@ -403,39 +259,27 @@ export class AnimationPerformanceMonitor {
           * {
             animation-duration: 0.3s !important;
             animation-timing-function: linear !important;
-            transition-duration: 0.15s !important;
-            transition-timing-function: linear !important;
           }
-
-          .star {
-            animation-duration: 6s !important;
+          .heavy-animation {
+            display: none !important;
           }
         `;
         break;
-
       case "medium":
         css = `
           * {
-            animation-timing-function: ease-out !important;
-            transition-timing-function: ease-out !important;
-          }
-
-          .star {
-            animation-duration: 4s !important;
+            animation-duration: 0.5s !important;
           }
         `;
         break;
-
       case "high":
         css = `
-          * {
-            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
-          }
+          /* High quality animations enabled */
         `;
         break;
     }
 
+    // Create and append style
     const style = document.createElement("style");
     style.id = styleId;
     style.textContent = css;
@@ -449,20 +293,19 @@ export class AnimationPerformanceMonitor {
    */
   private optimizeMemoryUsage(): void {
     // Force garbage collection if available
-    if (window.gc) {
-      window.gc();
-      console.log("🗑️ Forced garbage collection");
+    if (typeof window !== "undefined" && (window as any).gc) {
+      (window as any).gc();
     }
 
-    // Clear animation caches
+    // Clear frame times history to free memory
     this.frameTimes = [];
 
-    // Reduce canvas complexity
+    // Adjust canvas quality to low if memory is critical
     this.adjustCanvasQuality("low");
   }
 
   /**
-   * Log current performance status
+   * Log performance status
    */
   private logPerformanceStatus(): void {
     const emoji =
@@ -475,7 +318,54 @@ export class AnimationPerformanceMonitor {
         `Frame Drops: ${this.metrics.frameDrops}`,
     );
   }
+
+  /**
+   * Get current metrics
+   */
+  getMetrics(): any {
+    return { ...this.metrics };
+  }
+
+  /**
+   * Update configuration
+   */
+  updateConfig(newConfig: any): void {
+    this.config = { ...this.config, ...newConfig };
+  }
+
+  /**
+   * Stop monitoring
+   */
+  stopMonitoring(): void {
+    this.stop();
+  }
+
+  /**
+   * Apply device-specific optimizations
+   */
+  applyDeviceOptimizations(): void {
+    // Apply optimizations based on device capabilities
+    if (this.deviceCapabilities.gpuTier === "low") {
+      this.adjustCanvasQuality("low");
+      this.disableHeavyAnimations();
+    } else if (this.deviceCapabilities.gpuTier === "medium") {
+      this.adjustCanvasQuality("medium");
+    }
+  }
+
+  /**
+   * Stop monitoring
+   */
+  stop(): void {
+    // Disconnect all observers
+    this.observers.forEach((observer) => {
+      if (observer.disconnect) {
+        observer.disconnect();
+      }
+    });
+    this.observers = [];
+  }
 }
 
-// Export singleton instance
+// Export a singleton instance for convenience
 export const animationPerformanceMonitor = new AnimationPerformanceMonitor();

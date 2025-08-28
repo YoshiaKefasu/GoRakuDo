@@ -254,8 +254,8 @@ export class OptimizedPostProcessor {
           tags: post.data.tags || [],
           featured: post.data.featured || false,
           mindMapBranch: post.data.mindMapBranch || "landasan-filosofi",
-          understandingLevel: post.data.understandingLevel || "tingkat-0",
-          learningStage: post.data.learningStage || "pemanasan",
+          // understandingLevel: post.data.understandingLevel || "tingkat-0", // Property doesn't exist in docs schema
+          // learningStage: post.data.learningStage || "pemanasan", // Property doesn't exist in docs schema
         },
       };
 

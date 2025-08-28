@@ -2,7 +2,8 @@
 // Google Engineering Team 2025: Modular Search Component Exports
 
 // Export the main SearchWidget component
-export { default as SearchWidget } from "./SearchWidget.astro";
+// TODO: Create SearchWidget.astro component
+// export { default as SearchWidget } from "./SearchWidget.astro";
 
 // Export the search engine and types
 export {

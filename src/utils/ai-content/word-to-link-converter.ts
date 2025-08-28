@@ -100,58 +100,11 @@ export interface WordToLinkConfig {
   excludeHeaders: boolean;
   /** Exclude Indonesian conjunctions from word conversion */
   excludeConjunctions: boolean;
+
+  // Relevance scoring
+  /** Minimum relevance score for word conversion (0-1) */
+  minRelevanceScore: number;
 }
-
-/**
- * Default configuration for natural-looking links
- * Optimized for invisible internal linking with minimal disruption
- */
-export const DEFAULT_WORD_TO_LINK_CONFIG: WordToLinkConfig = {
-  // Conversion limits - conservative for natural experience
-  maxConversionsPerArticle: 5,
-  minWordLength: 3,
-  maxWordLength: 50,
-
-  // Matching strategy - flexible for better coverage
-  caseSensitive: false,
-  exactMatch: false,
-  allowPartialMatch: true,
-
-  // Display - invisible with informative tooltips
-  showTooltip: true,
-  tooltipStyle: "simple",
-  linkStyle: "invisible",
-
-  // Content filtering - exclude inappropriate elements
-  excludeSelectors: [
-    "code",
-    "pre",
-    "blockquote",
-    ".no-links",
-    ".syntax-highlight",
-    ".code-block",
-    "a",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6", // Exclude headers
-  ],
-  excludePatterns: [
-    /^```[\s\S]*?```$/gm, // Code blocks
-    /^>\s+/gm, // Blockquotes
-    /^\d+\.\s+/gm, // Numbered lists
-    /^[-*+]\s+/gm, // Bullet lists
-    /^#{1,6}\s+/gm, // Headers (NEW)
-  ],
-  preserveFormatting: true,
-
-  // NEW: Indonesian language support
-  respectIndonesianWords: true,
-  excludeHeaders: true,
-  excludeConjunctions: true,
-};
 
 // ========== INDONESIAN CONJUNCTION LIST ==========
 
@@ -379,7 +332,39 @@ export interface WordMatch {
   relevance: number;
   /** Target link information */
   targetLink: InternalLinkSuggestion;
+  /** Type of match (exact/partial) */
+  matchType: "exact" | "partial";
 }
+
+export const DEFAULT_WORD_TO_LINK_CONFIG: WordToLinkConfig = {
+  // Conversion settings
+  maxConversionsPerArticle: 10,
+  minWordLength: 4,
+  maxWordLength: 20,
+
+  // Matching settings
+  caseSensitive: false,
+  exactMatch: false,
+  allowPartialMatch: true,
+
+  // Display settings
+  showTooltip: true,
+  tooltipStyle: "simple",
+  linkStyle: "invisible",
+
+  // Content filtering
+  excludeSelectors: [],
+  excludePatterns: [],
+  preserveFormatting: true,
+
+  // NEW: Indonesian language support
+  respectIndonesianWords: true,
+  excludeHeaders: false,
+  excludeConjunctions: true,
+
+  // Relevance scoring
+  minRelevanceScore: 0.5,
+};
 
 // ========== MAIN FUNCTIONALITY ==========
 
@@ -512,6 +497,7 @@ export async function convertWordsToInternalLinks(
           targetLink: exactMatch,
           position,
           context,
+          relevance: 1.0, // Exact matches get perfect relevance
           matchType: "exact",
         });
 
@@ -880,6 +866,7 @@ function findWordMatches(
           targetLink: exactMatch,
           position,
           context,
+          relevance: 1.0, // Exact matches get perfect relevance
           matchType: "exact",
         });
 

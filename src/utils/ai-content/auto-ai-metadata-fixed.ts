@@ -1,4 +1,4 @@
-// FIX #130: Collection type errors - Updated CollectionEntry<"blog"> to "docs"
+// FIX #130: Collection type errors - Updated CollectionEntry<"docs"> to "docs"
 // ROOT CAUSE: Old collection name references causing TypeScript errors
 // SOLUTION: Updated all function signatures and return types to use "docs"
 // STATUS: ✅ RESOLVED
@@ -33,7 +33,7 @@ export interface EnhancedAIMetadata extends SimpleAIMetadata {
  * Fixed version with improved content analysis
  */
 export async function generateAIMetadata(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
 ): Promise<EnhancedAIMetadata> {
   // Start with simple metadata (now using static import)
   const simpleMetadata = generateSimpleAIMetadata(post);

@@ -37,7 +37,7 @@ export interface SimpleAIMetadata {
  * Phase 1: Basic metadata generation based on content analysis
  */
 export function generateSimpleAIMetadata(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
 ): SimpleAIMetadata {
   // Default metadata based on post content analysis
   const defaultMetadata: SimpleAIMetadata = {
@@ -194,8 +194,8 @@ export function generateSimpleAIMetadata(
  * Returns posts with generated metadata
  */
 export function getContentWithSimpleAIMetadata(
-  posts: CollectionEntry<"blog">[],
-): (CollectionEntry<"blog"> & { simpleAIMetadata: SimpleAIMetadata })[] {
+  posts: CollectionEntry<"docs">[],
+): (CollectionEntry<"docs"> & { simpleAIMetadata: SimpleAIMetadata })[] {
   return posts.map((post) => ({
     ...post,
     simpleAIMetadata: generateSimpleAIMetadata(post),
@@ -206,9 +206,9 @@ export function getContentWithSimpleAIMetadata(
  * Get content by learning stage (simple version)
  */
 export function getContentByLearningStage(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   stage: SimpleAIMetadata["learningStage"],
-): CollectionEntry<"blog">[] {
+): CollectionEntry<"docs">[] {
   return posts.filter((post) => {
     const metadata = generateSimpleAIMetadata(post);
     return metadata.learningStage === stage;
@@ -219,9 +219,9 @@ export function getContentByLearningStage(
  * Get content by type (simple version)
  */
 export function getContentByType(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   type: SimpleAIMetadata["contentType"],
-): CollectionEntry<"blog">[] {
+): CollectionEntry<"docs">[] {
   return posts.filter((post) => {
     const metadata = generateSimpleAIMetadata(post);
     return metadata.contentType === type;
@@ -232,10 +232,10 @@ export function getContentByType(
  * Get content recommendations (simple version)
  */
 export function getContentRecommendations(
-  posts: CollectionEntry<"blog">[],
-  currentPost: CollectionEntry<"blog">,
+  posts: CollectionEntry<"docs">[],
+  currentPost: CollectionEntry<"docs">,
   maxRecommendations: number = 3,
-): CollectionEntry<"blog">[] {
+): CollectionEntry<"docs">[] {
   const currentMetadata = generateSimpleAIMetadata(currentPost);
 
   // Filter out current post and get similar content

@@ -268,7 +268,7 @@ export class AutoContentExtractor {
   /**
    * Extract content from a markdown post
    */
-  public extractContent(post: CollectionEntry<"blog">): ExtractedContent {
+  public extractContent(post: CollectionEntry<"docs">): ExtractedContent {
     const { slug, data, body } = post;
 
     // Extract basic metadata
@@ -638,7 +638,7 @@ export class AutoContentExtractor {
    * Process all posts and generate search data
    */
   public processAllPosts(
-    posts: CollectionEntry<"blog">[],
+    posts: CollectionEntry<"docs">[],
   ): Map<string, ExtractedContent> {
     const extractedData = new Map<string, ExtractedContent>();
 

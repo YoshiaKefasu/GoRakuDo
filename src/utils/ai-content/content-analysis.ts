@@ -113,7 +113,7 @@ export const DEFAULT_MIND_MAP_CONFIG = MIND_MAP_CONFIG;
  * Enhanced content analysis with mind map customization support
  */
 export function analyzeContent(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
   customizations?: MindMapCustomization[],
 ): ContentAnalysisResult {
   // Content analysis started for post: "${post.data.title}"
@@ -266,8 +266,8 @@ function applyMindMapCustomizations(
  * Enhanced internal link generation with mind map context and adaptive count
  */
 export function generateInternalLinks(
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
   maxLinks: number = 3,
   customizations?: MindMapCustomization[],
 ): InternalLinkSuggestion[] {

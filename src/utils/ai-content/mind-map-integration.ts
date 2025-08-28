@@ -1,12 +1,12 @@
 /**
  * Enhanced Mind Map Integration System
- * 
+ *
  * This module provides deep integration between the mind map system and:
  * - AI recommendations
  * - Internal linking
  * - Content analysis
  * - User customizations
- * 
+ *
  * Features:
  * - Mind map context in AI recommendations
  * - Visual relationship indicators in internal links
@@ -15,15 +15,15 @@
  */
 
 import type { CollectionEntry } from "astro:content";
-import type { 
-  ContentAnalysisResult, 
+import type {
+  ContentAnalysisResult,
   InternalLinkSuggestion,
-  MindMapCustomization
+  MindMapCustomization,
 } from "./content-analysis";
-import { 
-  MIND_MAP_BRANCHES, 
+import {
+  MIND_MAP_BRANCHES,
   DEFAULT_MIND_MAP_CONFIG,
-  MindMapUtils 
+  MindMapUtils,
 } from "./content-analysis";
 import type { MindMapConfig } from "../../components/mind-map/mind-map-config";
 
@@ -32,23 +32,23 @@ export interface MindMapIntegration {
   // AI Recommendations with mind map context
   enhanceAIRecommendations: (
     recommendations: any[],
-    sourcePost: CollectionEntry<"blog">,
-    customizations?: MindMapCustomization[]
+    sourcePost: CollectionEntry<"docs">,
+    customizations?: MindMapCustomization[],
   ) => EnhancedRecommendation[];
-  
+
   // Internal links with visual relationship indicators
   enhanceInternalLinks: (
     links: InternalLinkSuggestion[],
-    sourcePost: CollectionEntry<"blog">,
-    customizations?: MindMapCustomization[]
+    sourcePost: CollectionEntry<"docs">,
+    customizations?: MindMapCustomization[],
   ) => EnhancedInternalLink[];
-  
+
   // Content analysis with mind map classification
   enhanceContentAnalysis: (
     analysis: ContentAnalysisResult,
-    customizations?: MindMapCustomization[]
+    customizations?: MindMapCustomization[],
   ) => EnhancedContentAnalysis;
-  
+
   // User customization management
   saveUserCustomizations: (customizations: MindMapCustomization[]) => void;
   loadUserCustomizations: () => MindMapCustomization[];
@@ -63,7 +63,7 @@ export interface EnhancedRecommendation {
   targetTitle: string;
   reason: string;
   score: number;
-  
+
   // Mind map context
   mindMapContext: {
     sourceBranch: string;
@@ -79,7 +79,7 @@ export interface EnhancedRecommendation {
       target: any;
     };
   };
-  
+
   // Enhanced UI data
   ui?: {
     badgeText: string;
@@ -97,7 +97,7 @@ export interface EnhancedInternalLink {
   reason: string;
   relevance: number;
   position: number;
-  
+
   // Mind map context
   mindMapContext: {
     sourceBranch: string;
@@ -109,7 +109,7 @@ export interface EnhancedInternalLink {
       thickness: string;
     };
   };
-  
+
   // Enhanced styling
   styling: {
     borderColor: string;
@@ -131,13 +131,13 @@ export interface EnhancedContentAnalysis extends ContentAnalysisResult {
       y: number;
     };
   };
-  
+
   relatedBranches: {
     branchId: string;
     relationshipType: string;
     strength: number;
   }[];
-  
+
   learningPath: {
     previousBranch?: string;
     currentBranch: string;
@@ -167,45 +167,47 @@ export interface UserMindMapSettings {
  * Enhanced Mind Map Integration Implementation
  */
 export class MindMapIntegrationSystem implements MindMapIntegration {
-  
   /**
    * Enhance AI recommendations with mind map context
    */
   enhanceAIRecommendations(
     recommendations: any[],
-    sourcePost: CollectionEntry<"blog">,
-    customizations?: MindMapCustomization[]
+    sourcePost: CollectionEntry<"docs">,
+    customizations?: MindMapCustomization[],
   ): EnhancedRecommendation[] {
     const customizedBranches = MindMapUtils.applyMindMapCustomizations(
       MIND_MAP_BRANCHES,
-      customizations
+      customizations,
     );
-    
-    return recommendations.map(recommendation => {
-      const sourceAnalysis = this.analyzePostWithCustomizations(sourcePost, customizations);
-      const targetAnalysis = this.analyzePostWithCustomizations(
-        { slug: recommendation.targetSlug } as CollectionEntry<"blog">,
-        customizations
+
+    return recommendations.map((recommendation) => {
+      const sourceAnalysis = this.analyzePostWithCustomizations(
+        sourcePost,
+        customizations,
       );
-      
+      const targetAnalysis = this.analyzePostWithCustomizations(
+        { slug: recommendation.targetSlug } as CollectionEntry<"docs">,
+        customizations,
+      );
+
       const relationshipType = this.determineRelationshipType(
         sourceAnalysis.mindMapBranch,
-        targetAnalysis.mindMapBranch
+        targetAnalysis.mindMapBranch,
       );
-      
+
       const visualConnection = this.generateVisualConnection(
         relationshipType,
         sourceAnalysis,
-        targetAnalysis
+        targetAnalysis,
       );
-      
+
       const ui = this.generateRecommendationUI(
         relationshipType,
         sourceAnalysis,
         targetAnalysis,
-        recommendation.score
+        recommendation.score,
       );
-      
+
       return {
         ...recommendation,
         mindMapContext: {
@@ -215,110 +217,116 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
           visualConnection,
           branchData: {
             source: customizedBranches[sourceAnalysis.mindMapBranch],
-            target: customizedBranches[targetAnalysis.mindMapBranch]
-          }
+            target: customizedBranches[targetAnalysis.mindMapBranch],
+          },
         },
-        ui
+        ui,
       };
     });
   }
-  
+
   /**
    * Enhance internal links with visual relationship indicators
    */
   enhanceInternalLinks(
     links: InternalLinkSuggestion[],
-    sourcePost: CollectionEntry<"blog">,
-    customizations?: MindMapCustomization[]
+    sourcePost: CollectionEntry<"docs">,
+    customizations?: MindMapCustomization[],
   ): EnhancedInternalLink[] {
     const customizedBranches = MindMapUtils.applyMindMapCustomizations(
       MIND_MAP_BRANCHES,
-      customizations
+      customizations,
     );
-    
-    return links.map(link => {
-      const sourceAnalysis = this.analyzePostWithCustomizations(sourcePost, customizations);
-      const targetAnalysis = this.analyzePostWithCustomizations(
-        { slug: link.targetSlug } as CollectionEntry<"blog">,
-        customizations
+
+    return links.map((link) => {
+      const sourceAnalysis = this.analyzePostWithCustomizations(
+        sourcePost,
+        customizations,
       );
-      
+      const targetAnalysis = this.analyzePostWithCustomizations(
+        { slug: link.targetSlug } as CollectionEntry<"docs">,
+        customizations,
+      );
+
       const relationshipType = this.determineRelationshipType(
         sourceAnalysis.mindMapBranch,
-        targetAnalysis.mindMapBranch
+        targetAnalysis.mindMapBranch,
       );
-      
+
       const visualConnection = this.generateVisualConnection(
         relationshipType,
         sourceAnalysis,
-        targetAnalysis
+        targetAnalysis,
       );
-      
+
       const styling = this.generateLinkStyling(
         relationshipType,
         sourceAnalysis,
         targetAnalysis,
-        link.relevance
+        link.relevance,
       );
-      
+
       return {
         ...link,
         mindMapContext: {
           sourceBranch: sourceAnalysis.mindMapBranch,
           targetBranch: targetAnalysis.mindMapBranch,
           relationshipType,
-          visualConnection
+          visualConnection,
         },
-        styling
+        styling,
       };
     });
   }
-  
+
   /**
    * Enhance content analysis with mind map visualization data
    */
   enhanceContentAnalysis(
     analysis: ContentAnalysisResult,
-    customizations?: MindMapCustomization[]
+    customizations?: MindMapCustomization[],
   ): EnhancedContentAnalysis {
     const customizedBranches = MindMapUtils.applyMindMapCustomizations(
       MIND_MAP_BRANCHES,
-      customizations
+      customizations,
     );
-    
-    const branchData = customizedBranches[analysis.mindMapBranch as keyof typeof MIND_MAP_BRANCHES];
-    
+
+    const branchData =
+      customizedBranches[
+        analysis.mindMapBranch as keyof typeof MIND_MAP_BRANCHES
+      ];
+
     const mindMapVisualization = {
       branchColor: branchData.visual.color,
       branchIcon: branchData.visual.icon,
       branchGradient: branchData.visual.gradient,
       connectionStyle: "solid",
-      position: this.calculateBranchPosition(analysis.mindMapBranch)
+      position: this.calculateBranchPosition(analysis.mindMapBranch),
     };
-    
+
     const relatedBranches = this.findRelatedBranches(
       analysis.mindMapBranch,
-      customizedBranches
+      customizedBranches,
     );
-    
+
     const learningPath = this.calculateLearningPath(
       analysis.mindMapBranch,
-      customizedBranches
+      customizedBranches,
     );
-    
+
     return {
       ...analysis,
       mindMapVisualization,
       relatedBranches,
-      learningPath
+      learningPath,
     };
   }
-  
+
   /**
    * Save user customizations to localStorage
    */
   saveUserCustomizations(customizations: MindMapCustomization[]): void {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const settings: UserMindMapSettings = {
         customizations,
         config: DEFAULT_MIND_MAP_CONFIG,
@@ -326,36 +334,36 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
           showMindMapContext: true,
           showRelationshipIndicators: true,
           autoApplyCustomizations: true,
-          saveHistory: true
+          saveHistory: true,
         },
         metadata: {
           lastUpdated: new Date(),
-          version: "2.0.0"
-        }
+          version: "2.0.0",
+        },
       };
-      
-      localStorage.setItem('mindMapSettings', JSON.stringify(settings));
+
+      localStorage.setItem("mindMapSettings", JSON.stringify(settings));
     }
   }
-  
+
   /**
    * Load user customizations from localStorage
    */
   loadUserCustomizations(): MindMapCustomization[] {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('mindMapSettings');
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("mindMapSettings");
       if (stored) {
         try {
           const settings: UserMindMapSettings = JSON.parse(stored);
           return settings.customizations || [];
         } catch (error) {
-          console.warn('Failed to load mind map customizations:', error);
+          console.warn("Failed to load mind map customizations:", error);
         }
       }
     }
     return [];
   }
-  
+
   /**
    * Export user settings
    */
@@ -368,27 +376,27 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
         showMindMapContext: true,
         showRelationshipIndicators: true,
         autoApplyCustomizations: true,
-        saveHistory: true
+        saveHistory: true,
       },
       metadata: {
         lastUpdated: new Date(),
-        version: "2.0.0"
-      }
+        version: "2.0.0",
+      },
     };
   }
-  
+
   /**
    * Import user settings
    */
   importUserSettings(settings: UserMindMapSettings): void {
     this.saveUserCustomizations(settings.customizations);
   }
-  
+
   // Private helper methods
-  
+
   private analyzePostWithCustomizations(
-    post: CollectionEntry<"blog">,
-    customizations?: MindMapCustomization[]
+    post: CollectionEntry<"docs">,
+    customizations?: MindMapCustomization[],
   ): ContentAnalysisResult {
     // This would integrate with the existing analyzeContent function
     // For now, return a basic analysis
@@ -397,137 +405,141 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
       mindMapBranchData: MIND_MAP_BRANCHES.A,
       keywords: ["immersion", "filosofi"],
       difficulty: "beginner",
-      contentType: "guide"
+      contentType: "guide",
     };
   }
-  
+
   private determineRelationshipType(
     sourceBranch: string,
-    targetBranch: string
+    targetBranch: string,
   ): "same-branch" | "related-branch" | "progression" | "complementary" {
     if (sourceBranch === targetBranch) {
       return "same-branch";
     }
-    
+
     // Define progression relationships
     const progressionMap: Record<string, string[]> = {
       A: ["B", "C"],
       B: ["C", "E"],
       C: ["D", "E"],
       D: ["E"],
-      E: []
+      E: [],
     };
-    
+
     if (progressionMap[sourceBranch]?.includes(targetBranch)) {
       return "progression";
     }
-    
+
     // Define complementary relationships
     const complementaryMap: Record<string, string[]> = {
       A: ["D"],
       B: ["D"],
       C: ["A"],
       D: ["B"],
-      E: ["A", "B", "C"]
+      E: ["A", "B", "C"],
     };
-    
+
     if (complementaryMap[sourceBranch]?.includes(targetBranch)) {
       return "complementary";
     }
-    
+
     return "related-branch";
   }
-  
+
   private generateVisualConnection(
     relationshipType: string,
     sourceAnalysis: ContentAnalysisResult,
-    targetAnalysis: ContentAnalysisResult
+    targetAnalysis: ContentAnalysisResult,
   ) {
     const baseConnection = {
       style: "solid" as const,
-      thickness: "medium" as const
+      thickness: "medium" as const,
     };
-    
+
     switch (relationshipType) {
       case "same-branch":
         return {
           ...baseConnection,
           color: sourceAnalysis.mindMapBranchData.visual.color,
           style: "solid" as const,
-          thickness: "thick" as const
+          thickness: "thick" as const,
         };
       case "progression":
         return {
           ...baseConnection,
           color: "#10B981",
           style: "solid" as const,
-          thickness: "medium" as const
+          thickness: "medium" as const,
         };
       case "complementary":
         return {
           ...baseConnection,
           color: "#F59E0B",
           style: "dashed" as const,
-          thickness: "medium" as const
+          thickness: "medium" as const,
         };
       default:
         return {
           ...baseConnection,
           color: "#6B7280",
           style: "dotted" as const,
-          thickness: "thin" as const
+          thickness: "thin" as const,
         };
     }
   }
-  
+
   private generateRecommendationUI(
     relationshipType: string,
     sourceAnalysis: ContentAnalysisResult,
     targetAnalysis: ContentAnalysisResult,
-    score: number
+    score: number,
   ) {
     const relationshipLabels = {
       "same-branch": "Same Topic",
-      "progression": "Next Step",
-      "complementary": "Related",
-      "related-branch": "Connected"
+      progression: "Next Step",
+      complementary: "Related",
+      "related-branch": "Connected",
     };
-    
+
     const relationshipIcons = {
       "same-branch": "🔄",
-      "progression": "➡️",
-      "complementary": "🔗",
-      "related-branch": "📎"
+      progression: "➡️",
+      complementary: "🔗",
+      "related-branch": "📎",
     };
-    
+
     const relationshipColors = {
       "same-branch": sourceAnalysis.mindMapBranchData.visual.color,
-      "progression": "#10B981",
-      "complementary": "#F59E0B",
-      "related-branch": "#6B7280"
+      progression: "#10B981",
+      complementary: "#F59E0B",
+      "related-branch": "#6B7280",
     };
-    
+
     return {
-      badgeText: relationshipLabels[relationshipType as keyof typeof relationshipLabels],
-      badgeColor: relationshipColors[relationshipType as keyof typeof relationshipColors],
+      badgeText:
+        relationshipLabels[relationshipType as keyof typeof relationshipLabels],
+      badgeColor:
+        relationshipColors[relationshipType as keyof typeof relationshipColors],
       tooltipText: `${relationshipLabels[relationshipType as keyof typeof relationshipLabels]} content from ${targetAnalysis.mindMapBranchData.displayName}`,
-      icon: relationshipIcons[relationshipType as keyof typeof relationshipIcons]
+      icon: relationshipIcons[
+        relationshipType as keyof typeof relationshipIcons
+      ],
     };
   }
-  
+
   private generateLinkStyling(
     relationshipType: string,
     sourceAnalysis: ContentAnalysisResult,
     targetAnalysis: ContentAnalysisResult,
-    relevance: number
+    relevance: number,
   ) {
     const baseStyling = {
       borderColor: "#E5E7EB",
       backgroundColor: "#F9FAFB",
       icon: "🔗",
-      badgeText: "Related"
+      badgeText: "Related",
     };
-    
+
     switch (relationshipType) {
       case "same-branch":
         return {
@@ -535,7 +547,7 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
           borderColor: sourceAnalysis.mindMapBranchData.visual.color,
           backgroundColor: `${sourceAnalysis.mindMapBranchData.visual.color}10`,
           icon: "🔄",
-          badgeText: "Same Topic"
+          badgeText: "Same Topic",
         };
       case "progression":
         return {
@@ -543,7 +555,7 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
           borderColor: "#10B981",
           backgroundColor: "#10B98110",
           icon: "➡️",
-          badgeText: "Next Step"
+          badgeText: "Next Step",
         };
       case "complementary":
         return {
@@ -551,13 +563,13 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
           borderColor: "#F59E0B",
           backgroundColor: "#F59E0B10",
           icon: "🔗",
-          badgeText: "Related"
+          badgeText: "Related",
         };
       default:
         return baseStyling;
     }
   }
-  
+
   private calculateBranchPosition(branchId: string) {
     // Calculate position in mind map layout
     const positions = {
@@ -565,72 +577,75 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
       B: { x: 20, y: 50 }, // Left center
       C: { x: 80, y: 50 }, // Right center
       D: { x: 35, y: 80 }, // Bottom left
-      E: { x: 65, y: 80 }  // Bottom right
+      E: { x: 65, y: 80 }, // Bottom right
     };
-    
+
     return positions[branchId as keyof typeof positions] || { x: 50, y: 50 };
   }
-  
+
   private findRelatedBranches(
     sourceBranch: string,
-    branches: typeof MIND_MAP_BRANCHES
+    branches: typeof MIND_MAP_BRANCHES,
   ) {
     const related = [];
-    
+
     for (const [branchId, branch] of Object.entries(branches)) {
       if (branchId !== sourceBranch) {
-        const relationshipType = this.determineRelationshipType(sourceBranch, branchId);
+        const relationshipType = this.determineRelationshipType(
+          sourceBranch,
+          branchId,
+        );
         const strength = this.calculateRelationshipStrength(relationshipType);
-        
+
         related.push({
           branchId,
           relationshipType,
-          strength
+          strength,
         });
       }
     }
-    
+
     return related.sort((a, b) => b.strength - a.strength);
   }
-  
+
   private calculateRelationshipStrength(relationshipType: string): number {
     const strengths = {
       "same-branch": 1.0,
-      "progression": 0.8,
-      "complementary": 0.6,
-      "related-branch": 0.4
+      progression: 0.8,
+      complementary: 0.6,
+      "related-branch": 0.4,
     };
-    
+
     return strengths[relationshipType as keyof typeof strengths] || 0.3;
   }
-  
+
   private calculateLearningPath(
     currentBranch: string,
-    branches: typeof MIND_MAP_BRANCHES
+    branches: typeof MIND_MAP_BRANCHES,
   ) {
     const progressionMap: Record<string, string[]> = {
       A: ["B", "C"],
       B: ["C", "E"],
       C: ["D", "E"],
       D: ["E"],
-      E: []
+      E: [],
     };
-    
+
     const previousBranches = Object.entries(progressionMap)
       .filter(([_, nextBranches]) => nextBranches.includes(currentBranch))
       .map(([branchId]) => branchId);
-    
+
     const nextBranches = progressionMap[currentBranch] || [];
-    
+
     const totalBranches = Object.keys(branches).length;
     const currentIndex = Object.keys(branches).indexOf(currentBranch);
     const progress = ((currentIndex + 1) / totalBranches) * 100;
-    
+
     return {
       previousBranch: previousBranches[0],
       currentBranch,
       nextBranch: nextBranches[0],
-      progress: Math.round(progress)
+      progress: Math.round(progress),
     };
   }
 }
@@ -645,32 +660,31 @@ export const MindMapIntegrationUtils = {
    */
   enhanceRecommendations: (
     recommendations: any[],
-    sourcePost: CollectionEntry<"blog">
+    sourcePost: CollectionEntry<"docs">,
   ) => mindMapIntegration.enhanceAIRecommendations(recommendations, sourcePost),
-  
+
   /**
    * Quick integration for internal links
    */
   enhanceLinks: (
     links: InternalLinkSuggestion[],
-    sourcePost: CollectionEntry<"blog">
+    sourcePost: CollectionEntry<"docs">,
   ) => mindMapIntegration.enhanceInternalLinks(links, sourcePost),
-  
+
   /**
    * Quick integration for content analysis
    */
-  enhanceAnalysis: (
-    analysis: ContentAnalysisResult
-  ) => mindMapIntegration.enhanceContentAnalysis(analysis),
-  
+  enhanceAnalysis: (analysis: ContentAnalysisResult) =>
+    mindMapIntegration.enhanceContentAnalysis(analysis),
+
   /**
    * Get user customizations
    */
   getUserCustomizations: () => mindMapIntegration.loadUserCustomizations(),
-  
+
   /**
    * Save user customizations
    */
-  saveCustomizations: (customizations: MindMapCustomization[]) => 
-    mindMapIntegration.saveUserCustomizations(customizations)
+  saveCustomizations: (customizations: MindMapCustomization[]) =>
+    mindMapIntegration.saveUserCustomizations(customizations),
 };

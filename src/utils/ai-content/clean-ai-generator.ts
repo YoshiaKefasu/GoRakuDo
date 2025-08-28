@@ -33,11 +33,25 @@ export class CleanAIGenerator {
   async generateContent(
     prompt: string,
     options: {
-      contentType?: "guide" | "methodology" | "tool" | "theory" | "practice" | "review" | "case-study" | "faq";
-      learningStage?: "alphabet" | "basic-grammar" | "kanji-intro" | "intermediate" | "advanced" | "fluency";
+      contentType?:
+        | "guide"
+        | "methodology"
+        | "tool"
+        | "theory"
+        | "practice"
+        | "review"
+        | "case-study"
+        | "faq";
+      learningStage?:
+        | "alphabet"
+        | "basic-grammar"
+        | "kanji-intro"
+        | "intermediate"
+        | "advanced"
+        | "fluency";
       maxLength?: number;
       includeMetadata?: boolean;
-    } = {}
+    } = {},
   ): Promise<CleanAIGenerationResult> {
     const startTime = Date.now();
     this.reset();
@@ -50,7 +64,7 @@ export class CleanAIGenerator {
 
       // Generate content based on prompt and options
       const content = await this.generateContentFromPrompt(prompt, options);
-      
+
       // Generate metadata if requested
       let metadata = undefined;
       if (options.includeMetadata) {
@@ -93,7 +107,7 @@ export class CleanAIGenerator {
       contentType?: string;
       learningStage?: string;
       maxLength?: number;
-    }
+    },
   ): Promise<string> {
     // Placeholder content generation
     // In a real implementation, this would integrate with an AI service
@@ -192,7 +206,10 @@ This guide covered the essential aspects of ${prompt.toLowerCase()}. Remember to
   /**
    * Generate methodology content
    */
-  private generateMethodologyContent(prompt: string, learningStage: string): string {
+  private generateMethodologyContent(
+    prompt: string,
+    learningStage: string,
+  ): string {
     return `## Methodology Overview
 
 This methodology provides a systematic approach to ${prompt.toLowerCase()} for ${learningStage} learners.
@@ -331,7 +348,10 @@ Emerging trends and potential developments...`;
   /**
    * Generate practice content
    */
-  private generatePracticeContent(prompt: string, learningStage: string): string {
+  private generatePracticeContent(
+    prompt: string,
+    learningStage: string,
+  ): string {
     return `## Practice Exercises
 
 Hands-on practice is essential for mastering ${prompt.toLowerCase()}.
@@ -454,7 +474,10 @@ Overall assessment and recommendation...`;
   /**
    * Generate case study content
    */
-  private generateCaseStudyContent(prompt: string, learningStage: string): string {
+  private generateCaseStudyContent(
+    prompt: string,
+    learningStage: string,
+  ): string {
     return `## Case Study: ${prompt}
 
 This case study examines a real-world application of ${prompt.toLowerCase()}.
@@ -596,7 +619,7 @@ Common questions about ${prompt.toLowerCase()} for ${learningStage} learners.
     options: {
       contentType?: string;
       learningStage?: string;
-    }
+    },
   ) {
     const wordCount = content.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200);
@@ -604,15 +627,15 @@ Common questions about ${prompt.toLowerCase()} for ${learningStage} learners.
     // Extract keywords from content
     const words = content.toLowerCase().split(/\s+/);
     const keywordCounts: Record<string, number> = {};
-    
-    words.forEach(word => {
+
+    words.forEach((word) => {
       if (word.length > 3) {
         keywordCounts[word] = (keywordCounts[word] || 0) + 1;
       }
     });
 
     const primaryKeywords = Object.entries(keywordCounts)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
       .map(([word]) => word);
 
@@ -668,11 +691,25 @@ Common questions about ${prompt.toLowerCase()} for ${learningStage} learners.
 export async function generateCleanAIContent(
   prompt: string,
   options: {
-    contentType?: "guide" | "methodology" | "tool" | "theory" | "practice" | "review" | "case-study" | "faq";
-    learningStage?: "alphabet" | "basic-grammar" | "kanji-intro" | "intermediate" | "advanced" | "fluency";
+    contentType?:
+      | "guide"
+      | "methodology"
+      | "tool"
+      | "theory"
+      | "practice"
+      | "review"
+      | "case-study"
+      | "faq";
+    learningStage?:
+      | "alphabet"
+      | "basic-grammar"
+      | "kanji-intro"
+      | "intermediate"
+      | "advanced"
+      | "fluency";
     maxLength?: number;
     includeMetadata?: boolean;
-  } = {}
+  } = {},
 ): Promise<CleanAIGenerationResult> {
   const generator = new CleanAIGenerator();
   return await generator.generateContent(prompt, options);

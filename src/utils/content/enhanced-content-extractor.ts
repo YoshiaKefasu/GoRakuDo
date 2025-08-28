@@ -163,6 +163,7 @@ export class EnhancedContentExtractor {
       this.addQAResult({
         success: collections.length > 0,
         message: `Discovered ${collections.length} collections: ${collections.join(", ")}`,
+        timestamp: new Date().toISOString(),
         details: { collections },
       });
     } catch (error) {
@@ -170,7 +171,8 @@ export class EnhancedContentExtractor {
       this.addQAResult({
         success: false,
         message: "Failed to discover collections",
-        details: { error: error.message },
+        timestamp: new Date().toISOString(),
+        details: { error: (error as Error).message },
       });
     }
 
@@ -189,9 +191,17 @@ export class EnhancedContentExtractor {
     let totalWordCount = 0;
 
     for (const entry of collection) {
-      console.log(`🔍 Processing: ${entry.slug}`);
+      const typedEntry = entry as CollectionEntry<any> & {
+        slug: string;
+        data?: any;
+        body?: string;
+      };
+      console.log(`🔍 Processing: ${typedEntry.slug}`);
 
-      const fileResult = await this.processContentEntry(entry, collectionName);
+      const fileResult = await this.processContentEntry(
+        typedEntry,
+        collectionName,
+      );
       files.push(fileResult);
 
       totalContentLength += fileResult.contentLength;
@@ -213,44 +223,56 @@ export class EnhancedContentExtractor {
     entry: CollectionEntry<any>,
     collectionName: string,
   ) {
+    const typedEntry = entry as CollectionEntry<any> & {
+      slug: string;
+      data?: any;
+      body?: string;
+    };
     const qaResults: QAResult[] = [];
 
     try {
       // Extract full content
-      const fullContent = await this.extractFullContent(entry);
+      const fullContent = await this.extractFullContent(typedEntry);
 
       // QA: Validate content extraction
-      const contentQA = this.qaValidateContentExtraction(entry, fullContent);
+      const contentQA = this.qaValidateContentExtraction(
+        typedEntry,
+        fullContent,
+      );
       qaResults.push(contentQA);
 
       // QA: Validate content quality
-      const qualityQA = this.qaValidateContentQuality(entry, fullContent);
+      const qualityQA = this.qaValidateContentQuality(typedEntry, fullContent);
       qaResults.push(qualityQA);
 
       // QA: Check for specific content (like "Krashen")
-      const specificQA = this.qaValidateSpecificContent(entry, fullContent);
+      const specificQA = this.qaValidateSpecificContent(
+        typedEntry,
+        fullContent,
+      );
       qaResults.push(specificQA);
 
       return {
-        slug: entry.slug,
-        title: entry.data.title || "Untitled",
+        slug: typedEntry.slug,
+        title: typedEntry.data?.title || "Untitled",
         contentLength: fullContent.length,
         wordCount: fullContent.split(/\s+/).length,
         hasContent: fullContent.length > 0,
         qaResults,
       };
     } catch (error) {
-      console.error(`❌ Error processing entry ${entry.slug}:`, error);
+      console.error(`❌ Error processing entry ${typedEntry.slug}:`, error);
 
       qaResults.push({
         success: false,
-        message: `Failed to process entry: ${entry.slug}`,
-        details: { error: error.message },
+        message: `Failed to process entry: ${typedEntry.slug}`,
+        timestamp: new Date().toISOString(),
+        details: { error: (error as Error).message },
       });
 
       return {
-        slug: entry.slug,
-        title: entry.data.title || "Untitled",
+        slug: typedEntry.slug,
+        title: typedEntry.data?.title || "Untitled",
         contentLength: 0,
         wordCount: 0,
         hasContent: false,
@@ -265,9 +287,15 @@ export class EnhancedContentExtractor {
   private async extractFullContent(
     entry: CollectionEntry<any>,
   ): Promise<string> {
+    // Add type assertion for better TypeScript inference
+    const typedEntry = entry as CollectionEntry<any> & {
+      slug: string;
+      body?: string;
+    };
+
     try {
       // Get the full markdown content
-      const fullContent = entry.body || "";
+      const fullContent = typedEntry.body || "";
 
       // Clean the markdown content for search indexing
       const cleanedContent = fullContent
@@ -285,7 +313,10 @@ export class EnhancedContentExtractor {
 
       return cleanedContent;
     } catch (error) {
-      console.error(`❌ Error extracting content from ${entry.slug}:`, error);
+      console.error(
+        `❌ Error extracting content from ${typedEntry.slug}:`,
+        error,
+      );
       return "";
     }
   }
@@ -301,13 +332,15 @@ export class EnhancedContentExtractor {
       this.addQAResult({
         success: true,
         message: "Content directory exists and is accessible",
+        timestamp: new Date().toISOString(),
         details: { path: contentPath },
       });
     } catch (error) {
       this.addQAResult({
         success: false,
         message: "Content directory not found or not accessible",
-        details: { error: error.message },
+        timestamp: new Date().toISOString(),
+        details: { error: (error as Error).message },
       });
     }
   }
@@ -321,6 +354,7 @@ export class EnhancedContentExtractor {
     this.addQAResult({
       success: collections.length > 0,
       message: `Collections discovery completed: ${collections.length} collections found`,
+      timestamp: new Date().toISOString(),
       details: { collections, count: collections.length },
     });
   }
@@ -335,6 +369,7 @@ export class EnhancedContentExtractor {
     this.addQAResult({
       success: result.entries > 0,
       message: `Collection ${collectionName} extraction completed: ${result.entries} entries`,
+      timestamp: new Date().toISOString(),
       details: {
         collectionName,
         entries: result.entries,
@@ -351,17 +386,23 @@ export class EnhancedContentExtractor {
     entry: CollectionEntry<any>,
     content: string,
   ): QAResult {
+    const typedEntry = entry as CollectionEntry<any> & {
+      slug: string;
+      data?: any;
+      body?: string;
+    };
     const hasContent = content.length > 0;
-    const hasTitle = entry.data.title && entry.data.title.length > 0;
+    const hasTitle =
+      typedEntry.data?.title && typedEntry.data?.title.length > 0;
 
     return {
       success: hasContent && hasTitle,
-      message: `Content extraction validation for ${entry.slug}`,
+      message: `Content extraction validation for ${typedEntry.slug}`,
       details: {
         hasContent,
         hasTitle,
         contentLength: content.length,
-        title: entry.data.title,
+        title: typedEntry.data?.title,
       },
       timestamp: new Date().toISOString(),
     };
@@ -374,13 +415,18 @@ export class EnhancedContentExtractor {
     entry: CollectionEntry<any>,
     content: string,
   ): QAResult {
+    const typedEntry = entry as CollectionEntry<any> & {
+      slug: string;
+      data?: any;
+      body?: string;
+    };
     const wordCount = content.split(/\s+/).length;
     const hasMinimumContent = content.length >= 50; // Minimum 50 characters
     const hasMinimumWords = wordCount >= 10; // Minimum 10 words
 
     return {
       success: hasMinimumContent && hasMinimumWords,
-      message: `Content quality validation for ${entry.slug}`,
+      message: `Content quality validation for ${typedEntry.slug}`,
       details: {
         contentLength: content.length,
         wordCount,
@@ -398,6 +444,11 @@ export class EnhancedContentExtractor {
     entry: CollectionEntry<any>,
     content: string,
   ): QAResult {
+    const typedEntry = entry as CollectionEntry<any> & {
+      slug: string;
+      data?: any;
+      body?: string;
+    };
     const importantTerms = [
       "krashen",
       "immersion",
@@ -415,7 +466,7 @@ export class EnhancedContentExtractor {
 
     return {
       success: true, // Always success, just informational
-      message: `Specific content validation for ${entry.slug}`,
+      message: `Specific content validation for ${typedEntry.slug}`,
       details: {
         hasKrashen,
         foundTerms,
@@ -438,6 +489,7 @@ export class EnhancedContentExtractor {
     this.addQAResult({
       success: hasContent && totalFiles > 0,
       message: "Overall extraction validation completed",
+      timestamp: new Date().toISOString(),
       details: {
         totalFiles,
         totalContentLength,

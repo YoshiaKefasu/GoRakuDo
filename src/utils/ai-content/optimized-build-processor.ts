@@ -62,8 +62,8 @@ export class OptimizedBuildProcessor {
    * Process posts with optimization
    */
   async processPosts(
-    posts: CollectionEntry<"blog">[],
-  ): Promise<CollectionEntry<"blog">[]> {
+    posts: CollectionEntry<"docs">[],
+  ): Promise<CollectionEntry<"docs">[]> {
     this.stats.totalPosts = posts.length;
     this.stats.startTime = Date.now();
 
@@ -98,8 +98,8 @@ export class OptimizedBuildProcessor {
    * Process a single post with optimization
    */
   private async processSinglePost(
-    post: CollectionEntry<"blog">,
-  ): Promise<CollectionEntry<"blog">> {
+    post: CollectionEntry<"docs">,
+  ): Promise<CollectionEntry<"docs">> {
     // Basic optimization: validate and enhance metadata
     const enhancedPost = {
       ...post,
@@ -165,8 +165,8 @@ export class OptimizedBuildProcessor {
  * Convenience function for processing posts with optimization
  */
 export async function runOptimizedBuildProcessing(
-  posts: CollectionEntry<"blog">[],
-): Promise<{ posts: CollectionEntry<"blog">[]; stats: BuildProcessingStats }> {
+  posts: CollectionEntry<"docs">[],
+): Promise<{ posts: CollectionEntry<"docs">[]; stats: BuildProcessingStats }> {
   const processor = new OptimizedBuildProcessor();
   const processedPosts = await processor.processPosts(posts);
   const stats = processor.getStats();

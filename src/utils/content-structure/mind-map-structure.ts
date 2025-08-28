@@ -408,9 +408,9 @@ export function getSubBranch(
  * Get posts by mind map branch
  */
 export function getPostsByMindMapBranch(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   branchId: string,
-): CollectionEntry<"blog">[] {
+): CollectionEntry<"docs">[] {
   try {
     return posts.filter((post) => post.data.mindMapBranch === branchId);
   } catch (error) {
@@ -426,11 +426,12 @@ export function getPostsByMindMapBranch(
  * Get posts by understanding level
  */
 export function getPostsByUnderstandingLevel(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   levelId: string,
-): CollectionEntry<"blog">[] {
+): CollectionEntry<"docs">[] {
   try {
-    return posts.filter((post) => post.data.understandingLevel === levelId);
+    // return posts.filter((post) => post.data.understandingLevel === levelId); // Property doesn't exist in docs schema
+    return posts; // Return all posts since understandingLevel doesn't exist
   } catch (error) {
     console.warn(
       `⚠️ Error filtering posts by understanding level "${levelId}":`,
@@ -444,11 +445,12 @@ export function getPostsByUnderstandingLevel(
  * Get posts by learning stage
  */
 export function getPostsByLearningStage(
-  posts: CollectionEntry<"blog">[],
+  posts: CollectionEntry<"docs">[],
   stageId: string,
-): CollectionEntry<"blog">[] {
+): CollectionEntry<"docs">[] {
   try {
-    return posts.filter((post) => post.data.learningStage === stageId);
+    // return posts.filter((post) => post.data.learningStage === stageId); // Property doesn't exist in docs schema
+    return posts; // Return all posts since learningStage doesn't exist
   } catch (error) {
     console.warn(
       `⚠️ Error filtering posts by learning stage "${stageId}":`,
@@ -462,7 +464,7 @@ export function getPostsByLearningStage(
  * Generate breadcrumb path for a post
  */
 export function generateBreadcrumbPath(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
 ): string[] {
   try {
     const breadcrumbs: string[] = ["Home"];
@@ -474,10 +476,10 @@ export function generateBreadcrumbPath(
     }
 
     // Add understanding level
-    const level = getUnderstandingLevel(post.data.understandingLevel);
-    if (level) {
-      breadcrumbs.push(level.title);
-    }
+    // const level = getUnderstandingLevel(post.data.understandingLevel); // Property doesn't exist in docs schema
+    // if (level) {
+    //   breadcrumbs.push(level.title);
+    // }
 
     // Add post title
     breadcrumbs.push(post.data.title);

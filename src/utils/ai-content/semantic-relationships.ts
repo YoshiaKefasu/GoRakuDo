@@ -28,8 +28,8 @@ export type RelationshipAnalysis = SemanticRelationships;
  * Generate simplified semantic relationships for content
  */
 export function getRelatedContent(
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
 ): SemanticRelationships {
   const relationships: SemanticRelationships = {
     relatedContent: [],
@@ -124,7 +124,7 @@ export function getRelatedContent(
 /**
  * Simplified post analysis
  */
-function analyzePost(post: CollectionEntry<"blog">) {
+function analyzePost(post: CollectionEntry<"docs">) {
   // Add safety checks for post data
   if (!post || !post.data) {
     return {
@@ -203,8 +203,8 @@ function calculateRelevance(current: any, target: any): number {
  * Get learning path recommendations (simplified)
  */
 export function getLearningPathRecommendations(
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
 ): ContentRelationship[] {
   // Safety check: ensure allPosts is an array
   if (!Array.isArray(allPosts)) {
@@ -240,9 +240,9 @@ export function getLearningPathRecommendations(
  * Get posts with semantic relationships (simplified)
  */
 export function getPostsWithSemanticRelationships(
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
-): CollectionEntry<"blog">[] {
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
+): CollectionEntry<"docs">[] {
   // Safety check: ensure allPosts is an array
   if (!Array.isArray(allPosts)) {
     console.warn(
@@ -263,8 +263,8 @@ export function getPostsWithSemanticRelationships(
  * Analyze semantic relationships (simplified)
  */
 export function analyzeSemanticRelationships(
-  currentPost: CollectionEntry<"blog">,
-  allPosts: CollectionEntry<"blog">[],
+  currentPost: CollectionEntry<"docs">,
+  allPosts: CollectionEntry<"docs">[],
 ): SemanticRelationships {
   return getRelatedContent(currentPost, allPosts);
 }

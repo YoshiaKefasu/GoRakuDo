@@ -37,7 +37,7 @@ export interface ValidationWarning {
  * Phase 1: Basic validation for current SimpleAIMetadata
  */
 export function validateAIMetadata(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
   metadata: SimpleAIMetadata,
 ): ValidationResult {
   const errors: ValidationError[] = [];
@@ -217,7 +217,7 @@ export function validateAIMetadata(
  * Validate content-specific metadata based on post content
  */
 function validateContentSpecificMetadata(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
   metadata: SimpleAIMetadata,
   errors: ValidationError[],
   warnings: ValidationWarning[],
@@ -302,7 +302,7 @@ function validateContentSpecificMetadata(
  */
 export function validateAIMetadataBatch(
   posts: Array<
-    CollectionEntry<"blog"> & { simpleAIMetadata: SimpleAIMetadata }
+    CollectionEntry<"docs"> & { simpleAIMetadata: SimpleAIMetadata }
   >,
 ): {
   summary: {
@@ -313,7 +313,7 @@ export function validateAIMetadataBatch(
     totalWarnings: number;
   };
   results: Array<{
-    post: CollectionEntry<"blog">;
+    post: CollectionEntry<"docs">;
     validation: ValidationResult;
   }>;
 } {
@@ -386,7 +386,7 @@ export function generateValidationReport(
 
 // Phase 2+ placeholder functions for future expansion
 export function validateFullAIMetadata(
-  post: CollectionEntry<"blog">,
+  post: CollectionEntry<"docs">,
   metadata: any, // Will be typed properly in Phase 2
 ): ValidationResult {
   // Phase 2+: Will implement full schema validation
