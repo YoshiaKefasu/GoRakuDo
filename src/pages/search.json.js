@@ -5,14 +5,16 @@ import {
   resolveContentPath,
   getCollectionMetadata,
 } from "../utils/content-path-resolver";
+import { logger } from "../utils/logging/console-logger";
 
 export async function GET() {
   try {
-    console.log("🔍 Generating search data JSON endpoint...");
+    logger.startGroup("Search Data Generation");
+    logger.log("Generating search data JSON endpoint...", "info");
 
     // Get all blog posts
     const posts = await getCollection("docs");
-    console.log(`📚 Found ${posts.length} posts for search indexing`);
+    logger.log(`Found ${posts.length} posts for search indexing`, "success");
 
     // Process posts for search data
     const searchData = posts.map((post) => {
@@ -103,7 +105,10 @@ export async function GET() {
             const resolvedPath = resolveContentPath(post);
             return resolvedPath.path;
           } catch (error) {
-            console.warn(`Failed to resolve path for ${post.slug}:`, error);
+            logger.log(
+              `Failed to resolve path for ${post.slug}: ${error.message}`,
+              "warning",
+            );
             return `/docs/${post.slug}`;
           }
         })(),
@@ -112,25 +117,37 @@ export async function GET() {
       return searchItem;
     });
 
-    console.log(`✅ Generated search data for ${searchData.length} posts`);
-    console.log(
-      `📊 Total searchable content: ${searchData.reduce((sum, item) => sum + item.wordCount, 0)} words`,
+    logger.log(
+      `Generated search data for ${searchData.length} posts`,
+      "success",
     );
+    logger.logSummary("Search Data Summary", {
+      "Total posts": searchData.length,
+      "Total words": searchData.reduce((sum, item) => sum + item.wordCount, 0),
+      "Total content length": searchData.reduce(
+        (sum, item) => sum + item.contentLength,
+        0,
+      ),
+    });
 
-    // DEBUG: Log sample search data structure for troubleshooting
+    // Log sample search data structure for troubleshooting
     if (searchData.length > 0) {
-      console.log("🔍 Sample search data structure:", {
-        slug: searchData[0].slug,
-        title: searchData[0].title,
-        url: searchData[0].url,
-        hasContent: !!searchData[0].content,
-        contentLength: searchData[0].content?.length || 0,
-        hasKrashen:
-          searchData[0].content?.toLowerCase().includes("krashen") || false,
-      });
+      logger.logContentPreview(
+        "Sample search data structure",
+        JSON.stringify({
+          slug: searchData[0].slug,
+          title: searchData[0].title,
+          url: searchData[0].url,
+          hasContent: !!searchData[0].content,
+          contentLength: searchData[0].content?.length || 0,
+          hasKrashen:
+            searchData[0].content?.toLowerCase().includes("krashen") || false,
+        }),
+      );
     }
 
     // Return JSON response with proper headers
+    logger.endGroup();
     return new Response(JSON.stringify(searchData, null, 2), {
       status: 200,
       headers: {
@@ -140,7 +157,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("❌ Error generating search data:", error);
+    logger.log(`Error generating search data: ${error.message}`, "error");
 
     return new Response(
       JSON.stringify({

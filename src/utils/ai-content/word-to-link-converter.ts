@@ -23,6 +23,7 @@ import {
   type InternalLinkSuggestion,
 } from "./content-analysis";
 import { resolveContentPath } from "../content-path-resolver";
+import { logger } from "../logging/console-logger";
 
 // ========== PERFORMANCE CACHING ==========
 
@@ -386,8 +387,8 @@ export async function convertWordsToInternalLinks(
   const finalConfig = { ...DEFAULT_WORD_TO_LINK_CONFIG, ...config };
 
   // Essential logging for functionality tracking
-  console.log(
-    `🔄 Processing word-to-link conversion for "${currentPost.slug}"`,
+  logger.verbose(
+    `Processing word-to-link conversion for "${currentPost.slug}"`,
   );
 
   // Step 1: Generate internal link suggestions using existing system
@@ -398,12 +399,12 @@ export async function convertWordsToInternalLinks(
   );
 
   if (linkSuggestions.length === 0) {
-    console.log(`⚠️  No link suggestions found for "${currentPost.slug}"`);
+    logger.verbose(`No link suggestions found for "${currentPost.slug}"`);
     return createEmptyResult(content, startTime);
   }
 
   // Step 2: Find word matches in content
-  console.log(`🔍 Finding word matches in content...`);
+  logger.verbose(`Finding word matches in content...`);
 
   // Create target variations map for word matching
   const targetVariations = new Map<string, InternalLinkSuggestion>();
@@ -501,8 +502,8 @@ export async function convertWordsToInternalLinks(
         convertedWords.add(cleanWord.toLowerCase());
 
         matchCount++;
-        console.log(
-          `✅ Found exact match: "${word}" → "${exactMatch.targetTitle}"`,
+        logger.verbose(
+          `Found exact match: "${word}" → "${exactMatch.targetTitle}"`,
         );
         return;
       }
@@ -529,8 +530,8 @@ export async function convertWordsToInternalLinks(
           convertedWords.add(cleanWord.toLowerCase());
 
           matchCount++;
-          console.log(
-            `✅ Found partial match: "${word}" → "${targetLink.targetTitle}" (relevance: ${relevance.toFixed(2)})`,
+          logger.verbose(
+            `Found partial match: "${word}" → "${targetLink.targetTitle}" (relevance: ${relevance.toFixed(2)})`,
           );
           break;
         }
@@ -540,11 +541,11 @@ export async function convertWordsToInternalLinks(
     currentPosition += section.content.length;
   });
 
-  console.log(`📊 Word matches found: ${wordMatches.length}`);
+  logger.verbose(`Word matches found: ${wordMatches.length}`);
 
   if (wordMatches.length === 0) {
-    console.log(
-      `⚠️  No word matches found for conversion in "${currentPost.slug}"`,
+    logger.verbose(
+      `No word matches found for conversion in "${currentPost.slug}"`,
     );
     return createEmptyResult(content, startTime);
   }
@@ -558,8 +559,8 @@ export async function convertWordsToInternalLinks(
 
   const processingTime = performance.now() - startTime;
 
-  console.log(
-    `✅ Word-to-link conversion complete: ${wordMatches.length} words converted in ${processingTime.toFixed(2)}ms`,
+  logger.verbose(
+    `Word-to-link conversion complete: ${wordMatches.length} words converted in ${processingTime.toFixed(2)}ms`,
   );
 
   return {
@@ -1111,7 +1112,7 @@ function isIndonesianConjunction(word: string): boolean {
   performanceCache.conjunctionDetection.set(cleanWord, isConjunction);
 
   if (isConjunction) {
-    console.log(`🚫 Excluding Indonesian conjunction: "${word}"`);
+    logger.verbose(`Excluding Indonesian conjunction: "${word}"`);
   }
 
   return isConjunction;

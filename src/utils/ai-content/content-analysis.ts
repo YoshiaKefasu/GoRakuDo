@@ -13,9 +13,8 @@
  */
 
 import type { CollectionEntry } from "astro:content";
-import {
-  MIND_MAP_CONFIG,
-} from "../../components/mind-map/mind-map-config";
+import { MIND_MAP_CONFIG } from "../../components/mind-map/mind-map-config";
+import { logger } from "../logging/console-logger";
 
 // Use the simplified mind map configuration
 export const MIND_MAP_BRANCHES = MIND_MAP_CONFIG.branches;
@@ -204,8 +203,6 @@ export function analyzeContent(
   };
 }
 
-
-
 // NOTE: generateReinventedInternalLinks function has been removed in favor of word-to-link conversion
 
 // NOTE: Legacy helper functions have been removed in favor of word-to-link conversion
@@ -229,7 +226,7 @@ export function generateInternalLinks(
 
   // Safety check for post body
   if (!currentPost.body) {
-    console.warn(`Post ${currentPost.slug} has no body content`);
+    logger.log(`Post ${currentPost.slug} has no body content`, "warning");
     return suggestions;
   }
 
@@ -237,8 +234,8 @@ export function generateInternalLinks(
   const contentLength = currentPost.body.length;
   const adaptiveMaxLinks = calculateAdaptiveLinkCount(contentLength, maxLinks);
 
-  console.log(
-    `📏 Content length: ${contentLength} chars, adaptive links: ${adaptiveMaxLinks}`,
+  logger.verbose(
+    `Content length: ${contentLength} chars, adaptive links: ${adaptiveMaxLinks}`,
   );
 
   // Find related posts with enhanced scoring and mind map context
@@ -556,11 +553,5 @@ function calculateSafePositionScore(
 
   return spacingScore + middleBonus + edgePenalty;
 }
-
-
-
-
-
-
 
 // NOTE: insertInternalLinks function has been removed in favor of word-to-link conversion

@@ -1,3 +1,5 @@
+import { logger } from "../logging/console-logger";
+
 export interface EnvironmentConfig {
   isDevelopment: boolean;
   isProduction: boolean;
@@ -55,7 +57,7 @@ export class EnvironmentManager {
   ): boolean {
     // Enable AI processing only on localhost, not in GitHub Actions
     if (isGitHubActions) {
-      console.log("🔒 GitHub Actions detected - AI processing disabled");
+      logger.log("GitHub Actions detected - AI processing disabled", "warning");
       return false;
     }
 
@@ -66,21 +68,22 @@ export class EnvironmentManager {
       process.env.ENABLE_AI_PROCESSING === "true";
 
     if (isLocalBuild) {
-      console.log("✅ Local build detected - AI processing enabled");
+      logger.log("Local build detected - AI processing enabled", "success");
     } else if (!isDevelopment) {
-      console.log(
-        "🔒 Production environment detected - AI processing disabled",
+      logger.log(
+        "Production environment detected - AI processing disabled",
+        "warning",
       );
       return false;
     }
 
     const apiKey = process.env.GOOGLE_API_KEY;
     if (!apiKey) {
-      console.warn("⚠️ No Gemini API key found - AI processing disabled");
+      logger.log("No Gemini API key found - AI processing disabled", "warning");
       return false;
     }
 
-    console.log("✅ AI processing enabled");
+    logger.log("AI processing enabled", "success");
     return true;
   }
 

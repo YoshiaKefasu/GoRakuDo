@@ -2,6 +2,7 @@
 // Import required dependencies for tool articles
 import { getCollection, type CollectionEntry } from "astro:content"
 import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro"
+import { logger } from "../../../utils/logging/console-logger"
 
 // Generate static paths for all tool articles
 export async function getStaticPaths() {
@@ -35,21 +36,21 @@ if (
   articleSlug?.includes("..") ||
   articleSlug?.includes("//")
 ) {
-  console.warn("🚨 Security: Path traversal attempt detected:", { toolName, articleSlug })
+  logger.log(`Security: Path traversal attempt detected: ${toolName}, ${articleSlug}`, "warning")
   return Astro.redirect("/404", 301)
 }
 
 // Validate tool name against whitelist (defense in depth)
 const validTools = ["anki", "migaku", "yomitan"]
 if (!validTools.includes(toolName)) {
-  console.warn("🚨 Security: Invalid tool name requested:", toolName)
+  logger.log(`Security: Invalid tool name requested: ${toolName}`, "warning")
   return Astro.redirect("/tools", 301)
 }
 
 // Sanitize slug to prevent XSS through URL manipulation
 const sanitizedSlug = articleSlug?.replace(/[<>\"'&]/g, "")
 if (sanitizedSlug !== articleSlug) {
-  console.warn("🚨 Security: XSS attempt detected in slug:", articleSlug)
+  logger.log(`Security: XSS attempt detected in slug: ${articleSlug}`, "warning")
   return Astro.redirect("/404", 301)
 }
 
@@ -58,13 +59,13 @@ const currentPath = `/tools/${toolName}/${sanitizedSlug}`
 const validatedCurrentPath = currentPath.replace(/[<>\"'&]/g, "")
 
 if (validatedCurrentPath !== currentPath) {
-  console.warn("🚨 Security: XSS attempt detected in currentPath:", currentPath)
+  logger.log(`Security: XSS attempt detected in currentPath: ${currentPath}`, "warning")
   return Astro.redirect("/404", 301)
 }
 
 // Error handling pattern - redirect to 404 if post not found
 if (!post) {
-  console.warn("⚠️ Tool article not found:", { tool: toolName, slug: articleSlug })
+  logger.log(`Tool article not found: ${toolName}, ${articleSlug}`, "warning")
   return Astro.redirect("/404", 301)
 }
 

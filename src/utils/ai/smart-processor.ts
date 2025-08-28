@@ -3,6 +3,7 @@ import { DataPersistence } from "./data-persistence";
 import { FileDetector } from "./file-detector";
 import { AISystem } from "./index";
 import type { AIProcessingResult } from "./types";
+import { logger } from "../logging/console-logger";
 
 export class SmartProcessor {
   private environment: EnvironmentManager;
@@ -22,11 +23,11 @@ export class SmartProcessor {
     availablePosts: any[],
     language: "id" | "ja" = "id",
   ): Promise<AIProcessingResult | null> {
-    console.log(`🤖 Processing content: "${title}"`);
+    logger.log(`Processing content: "${title}"`);
 
     // Check if we should process with AI
     if (!this.environment.isAIAvailable()) {
-      console.log("🔒 AI processing disabled - loading existing data");
+      logger.log("AI processing disabled - loading existing data", "warning");
       return await this.loadExistingData(title);
     }
 
@@ -38,10 +39,10 @@ export class SmartProcessor {
       const isValid = await this.fileDetector.validateDataFile(title);
 
       if (isValid) {
-        console.log("✅ Using existing valid data file");
+        logger.log("Using existing valid data file", "success");
         return await this.loadExistingData(title);
       } else {
-        console.log("⚠️ Existing data file is invalid, regenerating");
+        logger.log("Existing data file is invalid, regenerating", "warning");
       }
     }
 
@@ -53,10 +54,15 @@ export class SmartProcessor {
     availablePosts: any[],
     language: "id" | "ja" = "id",
   ): Promise<void> {
-    console.log(`🚀 Processing all content (${availablePosts.length} posts)`);
+    logger.startGroup(`Batch Content Processing`);
+    logger.log(`Processing all content (${availablePosts.length} posts)`);
 
     if (!this.environment.isAIAvailable()) {
-      console.log("🔒 AI processing disabled - skipping batch processing");
+      logger.log(
+        "AI processing disabled - skipping batch processing",
+        "warning",
+      );
+      logger.endGroup();
       return;
     }
 
@@ -69,7 +75,7 @@ export class SmartProcessor {
       (post) => !processedTitles.includes(post.title.toLowerCase()),
     );
 
-    console.log(`📊 Found ${unprocessedPosts.length} unprocessed posts`);
+    logger.log(`Found ${unprocessedPosts.length} unprocessed posts`);
 
     for (const post of unprocessedPosts) {
       try {
@@ -79,18 +85,20 @@ export class SmartProcessor {
           availablePosts,
           language,
         );
-        console.log(`✅ Processed: ${post.title}`);
+        logger.log(`Processed: ${post.title}`, "success");
       } catch (error) {
-        console.error(`❌ Failed to process "${post.title}":`, error);
+        logger.log(`Failed to process "${post.title}": ${error}`, "error");
       }
     }
 
     // Cleanup invalid files
     await this.fileDetector.cleanupInvalidFiles();
+    logger.endGroup();
   }
 
   async validateAllData(): Promise<void> {
-    console.log("🔍 Validating all AI-generated data");
+    logger.startGroup(`Data Validation`);
+    logger.log("Validating all AI-generated data");
 
     const processedFiles = await this.fileDetector.listProcessedFiles();
     let validCount = 0;
@@ -104,13 +112,16 @@ export class SmartProcessor {
         validCount++;
       } else {
         invalidCount++;
-        console.log(`⚠️ Invalid file: ${file}`);
+        logger.log(`Invalid file: ${file}`, "warning");
       }
     }
 
-    console.log(
-      `📊 Validation complete: ${validCount} valid, ${invalidCount} invalid files`,
-    );
+    logger.logSummary("Validation Results", {
+      "Valid files": validCount,
+      "Invalid files": invalidCount,
+      "Total files": processedFiles.length,
+    });
+    logger.endGroup();
   }
 
   async getProcessingStats(): Promise<{
@@ -154,11 +165,11 @@ export class SmartProcessor {
     try {
       const data = await this.dataPersistence.loadProcessedData(title);
       if (data) {
-        console.log("📁 Loaded existing data successfully");
+        logger.log("Loaded existing data successfully", "success");
         return data;
       }
     } catch (error) {
-      console.warn("⚠️ Failed to load existing data:", error);
+      logger.log(`Failed to load existing data: ${error}`, "warning");
     }
 
     return null;
@@ -183,7 +194,7 @@ export class SmartProcessor {
         });
       }
 
-      console.log("🤖 Processing with Gemini AI...");
+      logger.log("Processing with Gemini AI...");
       const result = await this.aiSystem.processContent(
         title,
         content,
@@ -194,12 +205,12 @@ export class SmartProcessor {
       if (result) {
         // Save the processed data
         await this.dataPersistence.saveProcessedData(title, content, result);
-        console.log("💾 Saved processed data successfully");
+        logger.log("Saved processed data successfully", "success");
       }
 
       return result;
     } catch (error) {
-      console.error("❌ AI processing failed:", error);
+      logger.log(`AI processing failed: ${error}`, "error");
       return null;
     }
   }

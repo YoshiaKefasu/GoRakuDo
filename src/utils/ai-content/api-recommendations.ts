@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { logger } from "../logging/console-logger";
 
 export interface APIGeneratedRecommendation {
   targetSlug: string;
@@ -63,7 +64,7 @@ export async function generateAPIRecommendations(
       contextualRelevance,
     };
   } catch (error) {
-    console.error("API recommendation generation failed:", error);
+    logger.log(`API recommendation generation failed: ${error}`, "error");
     return {
       similarContent: [],
       contextualRelevance: [],
@@ -162,7 +163,7 @@ Format your response as JSON with exactly 3 recommendations:
 
     return [];
   } catch (error) {
-    console.error("Similar content generation failed:", error);
+    logger.log(`Similar content generation failed: ${error}`, "error");
     return [];
   }
 }
@@ -258,7 +259,7 @@ Format your response as JSON with exactly 3 recommendations:
 
     return [];
   } catch (error) {
-    console.error("Contextual relevance generation failed:", error);
+    logger.log(`Contextual relevance generation failed: ${error}`, "error");
     return [];
   }
 }
@@ -304,7 +305,7 @@ export async function loadAndEnhanceRecommendations(
 
     return apiRecommendations;
   } catch (error) {
-    console.error("Failed to load and enhance recommendations:", error);
+    logger.log(`Failed to load and enhance recommendations: ${error}`, "error");
     return {
       similarContent: [],
       contextualRelevance: [],

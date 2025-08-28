@@ -2,6 +2,7 @@ import { EnvironmentManager } from "./environment";
 import { DataPersistence } from "./data-persistence";
 import { AISystem } from "./ai-system";
 import type { AIProcessingResult } from "./types";
+import { logger } from "../logging/console-logger";
 
 export class BuildProcessor {
   private environment: EnvironmentManager;
@@ -19,10 +20,10 @@ export class BuildProcessor {
     language: "id" | "ja" = "id",
   ): Promise<AIProcessingResult | null> {
     const envInfo = this.environment.getEnvironmentInfo();
-    console.log(`🔧 Build Processor: ${envInfo}`);
+    logger.log(`Build Processor: ${envInfo}`);
 
     if (!this.environment.isAIAvailable()) {
-      console.log("📁 Loading pre-processed data for production build");
+      logger.log("Loading pre-processed data for production build", "info");
       return await this.loadPreProcessedData(title);
     }
 
@@ -39,17 +40,17 @@ export class BuildProcessor {
     );
 
     if (isProcessed && !hasChanged) {
-      console.log(`📁 Content already processed and unchanged: ${title}`);
+      logger.log(`Content already processed and unchanged: ${title}`, "info");
       return await this.loadPreProcessedData(title);
     }
 
     if (hasChanged) {
-      console.log(`🔄 Content changed, regenerating AI data: ${title}`);
+      logger.log(`Content changed, regenerating AI data: ${title}`, "warning");
     } else {
-      console.log(`🆕 New content detected, processing with AI: ${title}`);
+      logger.log(`New content detected, processing with AI: ${title}`, "info");
     }
 
-    console.log("🤖 Processing content with AI for development build");
+    logger.log("Processing content with AI for development build");
     return await this.processWithAI(title, content, availablePosts, language);
   }
 
@@ -79,10 +80,13 @@ export class BuildProcessor {
       // Save processed data for production builds
       await this.dataPersistence.saveProcessedData(title, content, result);
 
-      console.log(`✅ AI processing completed and data saved for: ${title}`);
+      logger.log(
+        `AI processing completed and data saved for: ${title}`,
+        "success",
+      );
       return result;
     } catch (error) {
-      console.error("❌ AI processing failed:", error);
+      logger.log(`AI processing failed: ${error}`, "error");
       return await this.loadPreProcessedData(title);
     }
   }
@@ -93,11 +97,11 @@ export class BuildProcessor {
     try {
       const data = await this.dataPersistence.loadProcessedData(title);
       if (data) {
-        console.log(`📁 Loaded pre-processed data for: ${title}`);
+        logger.log(`Loaded pre-processed data for: ${title}`, "success");
         return data;
       }
     } catch (error) {
-      console.warn("⚠️ Failed to load pre-processed data:", error);
+      logger.log(`Failed to load pre-processed data: ${error}`, "warning");
     }
 
     // Return fallback data if no pre-processed data available
@@ -105,7 +109,7 @@ export class BuildProcessor {
   }
 
   private generateFallbackData(title: string): AIProcessingResult {
-    console.log(`🔄 Generating fallback data for: ${title}`);
+    logger.log(`Generating fallback data for: ${title}`, "warning");
 
     return {
       metaDescription: {
@@ -129,7 +133,7 @@ export class BuildProcessor {
     language: "id" | "ja" = "id",
   ): Promise<void> {
     if (!this.environment.isAIAvailable()) {
-      console.log("🔒 AI not available, skipping content processing");
+      logger.log("AI not available, skipping content processing", "warning");
       return;
     }
 
@@ -137,11 +141,12 @@ export class BuildProcessor {
       await this.dataPersistence.getUnprocessedContent(availablePosts);
 
     if (unprocessed.length === 0) {
-      console.log("✅ All content already processed");
+      logger.log("All content already processed", "success");
       return;
     }
 
-    console.log(`🔄 Processing ${unprocessed.length} unprocessed posts...`);
+    logger.startGroup(`Batch Content Processing`);
+    logger.log(`Processing ${unprocessed.length} unprocessed posts...`);
 
     for (const post of unprocessed) {
       try {
@@ -151,11 +156,13 @@ export class BuildProcessor {
           availablePosts,
           language,
         );
-        console.log(`✅ Processed: ${post.title}`);
+        logger.log(`Processed: ${post.title}`, "success");
       } catch (error) {
-        console.error(`❌ Failed to process: ${post.title}`, error);
+        logger.log(`Failed to process: ${post.title} - ${error}`, "error");
       }
     }
+
+    logger.endGroup();
   }
 
   async cleanupOldData(): Promise<void> {

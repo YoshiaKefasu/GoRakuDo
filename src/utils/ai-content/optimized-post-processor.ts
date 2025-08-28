@@ -13,6 +13,7 @@ import {
   convertWordsToInternalLinks,
   createWordToLinkConfig,
 } from "./word-to-link-converter";
+import { logger } from "../logging/console-logger";
 
 // Post processing result interface
 export interface PostProcessingResult {
@@ -133,11 +134,12 @@ export class OptimizedPostProcessor {
       // Get all posts for internal link generation
       const allPosts = await getCollection("docs");
 
-      console.log(`🔍 Starting post enhancement for "${post.slug}"`);
-      console.log(`📊 Total posts available for linking: ${allPosts.length}`);
+      logger.startGroup(`Post Enhancement: ${post.slug}`);
+      logger.log(`Starting post enhancement`);
+      logger.log(`Total posts available for linking: ${allPosts.length}`);
 
       // Generate word-to-link conversion for natural internal linking
-      console.log(`🔗 Starting word-to-link conversion for "${post.slug}"`);
+      logger.log(`Starting word-to-link conversion`);
 
       const wordLinkResult = await convertWordsToInternalLinks(
         post.body,
@@ -182,43 +184,25 @@ export class OptimizedPostProcessor {
         }),
       );
 
-      // Enhanced debugging for word-to-link conversion
-      console.log(`📊 Word-to-link conversion results for "${post.slug}":`);
-      console.log(
-        `   - Total words processed: ${wordLinkResult.statistics.totalWords}`,
-      );
-      console.log(
-        `   - Words converted: ${wordLinkResult.statistics.convertedWords}`,
-      );
-      console.log(
-        `   - Processing time: ${wordLinkResult.statistics.processingTime.toFixed(2)}ms`,
+      // Clean word-to-link conversion results logging
+      logger.logWordToLinkResults(
+        post.slug,
+        wordLinkResult.statistics,
+        wordLinkResult.conversions,
       );
 
-      if (wordLinkResult.conversions.length > 0) {
-        console.log(`   - Conversions made:`);
-        wordLinkResult.conversions.forEach((conversion, index) => {
-          console.log(
-            `     ${index + 1}. "${conversion.originalWord}" → "${conversion.targetTitle}" (${conversion.targetSlug})`,
-          );
-        });
-      } else {
-        console.log(`   ⚠️  No conversions made - checking why...`);
-
+      if (wordLinkResult.conversions.length === 0) {
         // Debug: Check if generateInternalLinks returns suggestions
         const linkSuggestions = generateInternalLinks(post, allPosts, 5);
-        console.log(
-          `   🔍 Link suggestions generated: ${linkSuggestions.length}`,
-        );
+        logger.verbose(`Link suggestions generated: ${linkSuggestions.length}`);
         if (linkSuggestions.length > 0) {
-          console.log(`   📝 Available link suggestions:`);
-          linkSuggestions.forEach((suggestion, index) => {
-            console.log(
-              `     ${index + 1}. "${suggestion.targetTitle}" (${suggestion.targetSlug}) - Relevance: ${suggestion.relevance}`,
-            );
-          });
+          logger.verbose(
+            `Available link suggestions: ${linkSuggestions.length}`,
+          );
         } else {
-          console.log(
-            `   ❌ No link suggestions generated - this is the root cause`,
+          logger.log(
+            `No link suggestions generated - this needs investigation`,
+            "warning",
           );
         }
       }
@@ -227,15 +211,10 @@ export class OptimizedPostProcessor {
 
       // Debug: Check if content was actually enhanced
       if (enhancedBody !== post.body) {
-        console.log(`✅ Content enhanced for "${post.slug}"`);
-        console.log(
-          `📝 Enhanced content preview:`,
-          enhancedBody.substring(0, 200) + "...",
-        );
+        logger.log(`Content enhanced successfully`, "success");
+        logger.logContentPreview("Enhanced content preview", enhancedBody, 200);
       } else {
-        console.log(
-          `⚠️  Content not enhanced for "${post.slug}" - using original body`,
-        );
+        logger.log(`Content not enhanced - using original body`, "warning");
       }
 
       const enhancedPost = {
@@ -274,18 +253,22 @@ export class OptimizedPostProcessor {
 
       // Log word-to-link conversion results
       if (wordLinkResult.statistics.convertedWords > 0) {
-        console.log(
-          `🔗 Generated ${wordLinkResult.statistics.convertedWords} word-to-link conversions for "${post.slug}"`,
+        logger.log(
+          `Generated ${wordLinkResult.statistics.convertedWords} word-to-link conversions`,
+          "success",
         );
       } else {
-        console.log(
-          `⚠️  No word-to-link conversions generated for "${post.slug}" - this needs investigation`,
+        logger.log(
+          `No word-to-link conversions generated - this needs investigation`,
+          "warning",
         );
       }
 
+      logger.endGroup();
       return enhancedPost;
     } catch (error) {
-      console.error(`Error enhancing post ${post.slug}:`, error);
+      logger.log(`Error enhancing post: ${error}`, "error");
+      logger.endGroup();
       // Return original post if enhancement fails
       return post;
     }
