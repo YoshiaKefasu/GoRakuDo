@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://gorkaudo.org",
+  site: "https://gorakudo.org",
   base: "/",
 
   // GitHub Pages Optimization
