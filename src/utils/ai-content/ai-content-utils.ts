@@ -267,8 +267,6 @@ export function generateLearningPath(
   return availableContent.slice(0, 5);
 }
 
-
-
 /**
  * Get content recommendations (simplified - basic filtering only)
  */

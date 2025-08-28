@@ -15,7 +15,6 @@
 import type { CollectionEntry } from "astro:content";
 import {
   MIND_MAP_CONFIG,
-  MindMapUtils,
 } from "../../components/mind-map/mind-map-config";
 
 // Use the simplified mind map configuration
@@ -114,7 +113,6 @@ export const DEFAULT_MIND_MAP_CONFIG = MIND_MAP_CONFIG;
  */
 export function analyzeContent(
   post: CollectionEntry<"docs">,
-  customizations?: MindMapCustomization[],
 ): ContentAnalysisResult {
   // Content analysis started for post: "${post.data.title}"
 
@@ -206,51 +204,7 @@ export function analyzeContent(
   };
 }
 
-/**
- * Apply user customizations to mind map branches
- */
-function applyMindMapCustomizations(
-  branches: typeof MIND_MAP_BRANCHES,
-  customizations?: MindMapCustomization[],
-): typeof MIND_MAP_BRANCHES {
-  if (!customizations || customizations.length === 0) {
-    return branches;
-  }
 
-  const customizedBranches = { ...branches };
-
-  customizations.forEach((customization) => {
-    const branchId = customization.branchId as keyof typeof MIND_MAP_BRANCHES;
-    if (customizedBranches[branchId]) {
-      const branch = customizedBranches[branchId];
-
-      // Apply customizations
-      if (customization.customizations.name) {
-        branch.displayName = customization.customizations.name;
-      }
-      if (customization.customizations.color) {
-        branch.visual.color = customization.customizations.color;
-        branch.visual.gradient = `linear-gradient(135deg, ${customization.customizations.color} 0%, ${customization.customizations.color}dd 100%)`;
-        branch.visual.borderColor = customization.customizations.color;
-        branch.visual.backgroundColor = `${customization.customizations.color}1a`;
-      }
-      if (customization.customizations.icon) {
-        branch.visual.icon = customization.customizations.icon;
-      }
-      if (customization.customizations.keywords) {
-        branch.keywords = [
-          ...branch.keywords,
-          ...customization.customizations.keywords,
-        ];
-      }
-      if (customization.customizations.description) {
-        branch.description = customization.customizations.description;
-      }
-    }
-  });
-
-  return customizedBranches;
-}
 
 // NOTE: generateReinventedInternalLinks function has been removed in favor of word-to-link conversion
 
@@ -269,9 +223,8 @@ export function generateInternalLinks(
   currentPost: CollectionEntry<"docs">,
   allPosts: CollectionEntry<"docs">[],
   maxLinks: number = 3,
-  customizations?: MindMapCustomization[],
 ): InternalLinkSuggestion[] {
-  const currentAnalysis = analyzeContent(currentPost, customizations);
+  const currentAnalysis = analyzeContent(currentPost);
   const suggestions: InternalLinkSuggestion[] = [];
 
   // Safety check for post body
@@ -292,7 +245,7 @@ export function generateInternalLinks(
   const relatedPosts = allPosts
     .filter((post) => post.slug !== currentPost.slug)
     .map((post) => {
-      const analysis = analyzeContent(post, customizations);
+      const analysis = analyzeContent(post);
       const relevance =
         analysis.mindMapBranch === currentAnalysis.mindMapBranch ? 0.8 : 0.4;
 
@@ -333,7 +286,6 @@ export function generateInternalLinks(
         visualConnection: generateVisualConnection(
           relationshipType,
           currentAnalysis,
-          analysis,
         ),
       };
 
@@ -397,7 +349,6 @@ function determineRelationshipType(
 function generateVisualConnection(
   relationshipType: string,
   sourceAnalysis: ContentAnalysisResult,
-  targetAnalysis: ContentAnalysisResult,
 ) {
   const baseConnection = {
     style: "solid" as const,
@@ -606,120 +557,10 @@ function calculateSafePositionScore(
   return spacingScore + middleBonus + edgePenalty;
 }
 
-/**
- * Find optimal position for a single internal link
- * Prioritizes mid-content placement at natural breaks - AVOIDING headers completely
- */
-function findOptimalSingleLinkPosition(
-  headerPositions: number[],
-  paragraphPositions: number[],
-  fallbackPositions: number[],
-  contentLength: number,
-): number {
-  const idealPosition = Math.floor(contentLength * 0.6); // 60% through content for optimal discovery
-  let bestPosition = -1;
-  let bestScore = -1;
 
-  // Strategy 1: Find safe paragraph positions (avoiding headers completely)
-  const safePositions = paragraphPositions.filter((pos) => {
-    // Must be far enough from any header
-    const isTooCloseToHeader = headerPositions.some(
-      (headerPos) => Math.abs(pos - headerPos) < 500,
-    );
-    return !isTooCloseToHeader && pos > contentLength * 0.3; // After 30% of content
-  });
 
-  for (const paraPos of safePositions) {
-    const score = calculateSingleLinkScore(
-      paraPos,
-      idealPosition,
-      contentLength,
-    );
-    if (score > bestScore) {
-      bestScore = score;
-      bestPosition = paraPos;
-    }
-  }
 
-  // Strategy 2: Use safe fallback position if no good paragraph position found
-  if (bestPosition === -1) {
-    for (const fallbackPos of fallbackPositions) {
-      const isTooCloseToHeader = headerPositions.some(
-        (headerPos) => Math.abs(fallbackPos - headerPos) < 500,
-      );
 
-      if (!isTooCloseToHeader) {
-        const score = calculateSingleLinkScore(
-          fallbackPos,
-          idealPosition,
-          contentLength,
-        );
-        if (score > bestScore) {
-          bestScore = score;
-          bestPosition = fallbackPos;
-        }
-      }
-    }
-  }
 
-  // Strategy 3: Final fallback - find safe middle position
-  if (bestPosition === -1) {
-    const middlePosition = Math.floor(contentLength * 0.6);
-    const isTooCloseToHeader = headerPositions.some(
-      (headerPos) => Math.abs(middlePosition - headerPos) < 500,
-    );
-
-    if (!isTooCloseToHeader) {
-      bestPosition = middlePosition;
-    }
-  }
-
-  return bestPosition;
-}
-
-/**
- * Calculate score for single link positioning
- * Favors positions closer to ideal placement with structural bonuses
- */
-function calculateSingleLinkScore(
-  position: number,
-  idealPosition: number,
-  contentLength: number,
-): number {
-  // Distance from ideal position (closer is better)
-  const distanceFromIdeal = Math.abs(position - idealPosition);
-  const distanceScore = Math.max(
-    0,
-    100 - (distanceFromIdeal / contentLength) * 200,
-  );
-
-  // Bonus for positions in the sweet spot (40-80% through content)
-  const contentPercent = position / contentLength;
-  const sweetSpotScore =
-    contentPercent >= 0.4 && contentPercent <= 0.8 ? 20 : 0;
-
-  // Penalty for positions too close to beginning or end
-  const edgePenalty = contentPercent < 0.2 || contentPercent > 0.9 ? -30 : 0;
-
-  return distanceScore + sweetSpotScore + edgePenalty;
-}
-
-/**
- * Calculate score for a potential insertion position
- */
-function calculatePositionScore(
-  position: number,
-  lastPosition: number,
-  optimalSpacing: number,
-): number {
-  const spacing = position - lastPosition;
-  const spacingScore = Math.max(0, 100 - Math.abs(spacing - optimalSpacing));
-
-  // Bonus for positions that are not too close to the beginning or end
-  const contentPosition = position / 1000; // Normalize to reasonable range
-  const positionScore = Math.max(0, 50 - Math.abs(contentPosition - 0.5) * 100);
-
-  return spacingScore + positionScore;
-}
 
 // NOTE: insertInternalLinks function has been removed in favor of word-to-link conversion
