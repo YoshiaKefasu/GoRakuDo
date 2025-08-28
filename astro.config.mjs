@@ -4,12 +4,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.NODE_ENV === "production" 
-    ? "https://yoshiakefasu.github.io" 
-    : "http://localhost:4321",
-  base: process.env.NODE_ENV === "production" 
-    ? "/GoRakuDo" 
-    : "/",
+  site:
+    process.env.NODE_ENV === "production"
+      ? "https://yoshiakefasu.github.io"
+      : "http://localhost:4321",
+  base: process.env.NODE_ENV === "production" ? "/GoRakuDo" : "/",
 
   // GitHub Pages Optimization
   output: "static",
