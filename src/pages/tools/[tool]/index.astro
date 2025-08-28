@@ -9,6 +9,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import { readdir } from "fs/promises";
 import { join } from "path";
 import ArticleCard from "../../../components/content/ArticleCard.astro";
+import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro";
 
 // ========== PERFORMANCE MONITORING ==========
 // Subtask 8.1: Build time measurement for index page generation
@@ -68,6 +69,15 @@ if (!tool) {
 const validTools = ["anki", "migaku", "yomitan"];
 if (!validTools.includes(tool)) {
   console.warn("🚨 Security: Invalid tool name requested:", tool);
+  return Astro.redirect("/tools", 301);
+}
+
+// Construct and validate currentPath for breadcrumb
+const currentPath = `/tools/${tool}`;
+const validatedCurrentPath = currentPath.replace(/[<>\"'&]/g, "");
+
+if (validatedCurrentPath !== currentPath) {
+  console.warn("🚨 Security: XSS attempt detected in currentPath:", currentPath);
   return Astro.redirect("/tools", 301);
 }
 
@@ -188,90 +198,87 @@ if (performanceMetrics.cachingMetrics.cacheSize > 100) {
 }
 ---
 
-<!doctype html>
-<html lang="id">
-  <head>
-    <title>{tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo</title>
-    <meta name="description" content={`All articles and guides for ${tool} tool`} />
-  </head>
+<ToolArticleLayout
+  title={`${tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo`}
+  description={`All articles and guides for ${tool} tool`}
+  lang="id"
+  showBreadcrumb={true}
+  currentPath={validatedCurrentPath}>
+  <!-- Page Header -->
+  <header class="tool-index-header">
+    <h1 class="tool-index-title">{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>
+    <p class="tool-index-description">Browse all available documentation for {tool}</p>
+  </header>
 
-  <body>
-    <!-- Page Header -->
-    <header class="tool-index-header">
-      <h1 class="tool-index-title">{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>
-      <p class="tool-index-description">Browse all available documentation for {tool}</p>
-    </header>
+  <!-- Navigation -->
+  <nav>
+    <a href="/tools">← Back to Tools</a>
+  </nav>
 
-    <!-- Navigation -->
-    <nav>
-      <a href="/tools">← Back to Tools</a>
-    </nav>
+  <!-- Main Content -->
+  <main>
+    {hasArticles ? (
+      <!-- Responsive Grid Layout for Articles -->
+      <div class="articles-grid">
+        {toolArticles.map((article, index) => {
+          // Task 7: Render article cards with comprehensive error handling
+          // Subtask 7.1: Safe data extraction with fallbacks
+          try {
+            const articleSlug = article.slug || article.id || "";
+            const articleTitle = article.data?.title || `Article ${article.id}`;
+            const articleDescription = article.data?.description || "";
+            const articleTags = Array.isArray(article.data?.tags) ? article.data.tags : [];
 
-    <!-- Main Content -->
-    <main>
-      {hasArticles ? (
-        <!-- Responsive Grid Layout for Articles -->
-        <div class="articles-grid">
-          {toolArticles.map((article, index) => {
-            // Task 7: Render article cards with comprehensive error handling
-            // Subtask 7.1: Safe data extraction with fallbacks
-            try {
-              const articleSlug = article.slug || article.id || "";
-              const articleTitle = article.data?.title || `Article ${article.id}`;
-              const articleDescription = article.data?.description || "";
-              const articleTags = Array.isArray(article.data?.tags) ? article.data.tags : [];
+            // Optimize first 3 articles for above-the-fold loading (Subtask 4.4: Lazy loading)
+            const isPriority = index < 3;
 
-              // Optimize first 3 articles for above-the-fold loading (Subtask 4.4: Lazy loading)
-              const isPriority = index < 3;
-
-              return (
-                <div class="article-grid-item">
-                  <ArticleCard
-                    title={articleTitle}
-                    description={articleDescription}
-                    slug={articleSlug}
-                    tags={articleTags}
-                    tool={tool}
-                    priority={isPriority}
-                  />
-                </div>
-              );
-            } catch (error) {
-              // Subtask 7.4: Comprehensive error handling for malformed article data
-              console.warn("⚠️ Error processing article:", article.id, error);
-              return (
-                <div class="article-grid-item">
-                  <ArticleCard
-                    title={`Article ${article.id}`}
-                    description="Content unavailable"
-                    slug={article.id || ""}
-                    tags={[]}
-                    tool={tool}
-                    priority={false}
-                  />
-                </div>
-              );
-            }
-          })}
-        </div>
-      ) : (
-        <!-- Subtask 5.2: No articles found fallback message -->
-        <div>
-          <p>No articles available for {tool} yet. Check back soon for new content!</p>
-          <p>Available tools: <a href="/tools/anki">anki</a>, <a href="/tools/migaku">migaku</a>, <a href="/tools/yomitan">yomitan</a></p>
-        </div>
-      )}
-    </main>
-
-    <!-- Error Handling Fallback -->
-    {!hasArticles && articles.length === 0 && (
+            return (
+              <div class="article-grid-item">
+                <ArticleCard
+                  title={articleTitle}
+                  description={articleDescription}
+                  slug={articleSlug}
+                  tags={articleTags}
+                  tool={tool}
+                  priority={isPriority}
+                />
+              </div>
+            );
+          } catch (error) {
+            // Subtask 7.4: Comprehensive error handling for malformed article data
+            console.warn("⚠️ Error processing article:", article.id, error);
+            return (
+              <div class="article-grid-item">
+                <ArticleCard
+                  title={`Article ${article.id}`}
+                  description="Content unavailable"
+                  slug={article.id || ""}
+                  tags={[]}
+                  tool={tool}
+                  priority={false}
+                />
+              </div>
+            );
+          }
+        })}
+      </div>
+    ) : (
+      <!-- Subtask 5.2: No articles found fallback message -->
       <div>
-        <p>Unable to load tool articles. Please try refreshing the page.</p>
-        <a href="/tools">Return to Tools Page</a>
+        <p>No articles available for {tool} yet. Check back soon for new content!</p>
+        <p>Available tools: <a href="/tools/anki">anki</a>, <a href="/tools/migaku">migaku</a>, <a href="/tools/yomitan">yomitan</a></p>
       </div>
     )}
-  </body>
-</html>
+  </main>
+
+  <!-- Error Handling Fallback -->
+  {!hasArticles && articles.length === 0 && (
+    <div>
+      <p>Unable to load tool articles. Please try refreshing the page.</p>
+      <a href="/tools">Return to Tools Page</a>
+    </div>
+  )}
+</ToolArticleLayout>
 
 <style>
 /* ========== PAGE HEADER STYLES ========== */

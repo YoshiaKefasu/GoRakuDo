@@ -53,6 +53,15 @@ if (sanitizedSlug !== articleSlug) {
   return Astro.redirect("/404", 301)
 }
 
+// Construct and validate currentPath for breadcrumb
+const currentPath = `/tools/${toolName}/${sanitizedSlug}`
+const validatedCurrentPath = currentPath.replace(/[<>\"'&]/g, "")
+
+if (validatedCurrentPath !== currentPath) {
+  console.warn("🚨 Security: XSS attempt detected in currentPath:", currentPath)
+  return Astro.redirect("/404", 301)
+}
+
 // Error handling pattern - redirect to 404 if post not found
 if (!post) {
   console.warn("⚠️ Tool article not found:", { tool: toolName, slug: articleSlug })
@@ -81,7 +90,9 @@ console.log("✅ Tool article accessed:", {
   title={post.data.title}
   description={post.data.description}
   publishedDate={post.data.publishedDate}
-  lang="id">
+  lang="id"
+  showBreadcrumb={true}
+  currentPath={validatedCurrentPath}>
   <!-- Article Header -->
   <header class="mb-8">
     <h1 class="text-3xl font-bold text-foreground mb-4 sm:text-4xl lg:text-5xl">
