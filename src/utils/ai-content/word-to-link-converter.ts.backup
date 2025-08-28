@@ -1245,6 +1245,37 @@ function calculateRelevance(
  * @param words - Array of words in the line
  * @returns True if word appears to be in a header context
  */
+function isWordInHeaderContext(
+  content: string,
+  wordIndex: number,
+  words: string[],
+): boolean {
+  const line = content.trim();
+
+  // Check for markdown header patterns
+  if (/^#{1,6}\s+/.test(line)) {
+    return true;
+  }
+
+  // Check for HTML header patterns
+  if (/<h[1-6][^>]*>.*<\/h[1-6]>/.test(line)) {
+    return true;
+  }
+
+  // Check if this is a short line that might be a header
+  if (words.length <= 5 && wordIndex === 0) {
+    // Very short lines are likely headers
+    return true;
+  }
+
+  // Check for underlined headers (=== or ---)
+  const nextLine = content.split("\n")[1] || "";
+  if (/^[=\-]{3,}$/.test(nextLine.trim())) {
+    return true;
+  }
+
+  return false;
+}
 
 /**
  * NEW: Check if word is an Indonesian conjunction
@@ -1411,6 +1442,11 @@ function cleanWordForMatching(word: string, config: WordToLinkConfig): string {
  * @param index - Index of target word
  * @returns Context string around the word
  */
+function getWordContext(words: string[], index: number): string {
+  const start = Math.max(0, index - 3);
+  const end = Math.min(words.length, index + 4);
+  return words.slice(start, end).join(" ");
+}
 
 /**
  * Calculate relevance score for partial matches
@@ -1419,6 +1455,17 @@ function cleanWordForMatching(word: string, config: WordToLinkConfig): string {
  * @param variation - Matching variation
  * @returns Relevance score (0-1)
  */
+function calculatePartialMatchRelevance(
+  word: string,
+  variation: string,
+): number {
+  const longer = word.length > variation.length ? word : variation;
+  const shorter = word.length <= variation.length ? word : variation;
+
+  // Simple relevance based on length ratio
+  const ratio = shorter.length / longer.length;
+  return Math.max(0.3, ratio * 0.8); // Minimum 0.3, maximum 0.8 for partial matches
+}
 
 // ========== CONTENT CONVERSION ==========
 
@@ -1512,7 +1559,38 @@ function convertWordsToLinks(
  * @param config - Configuration options
  * @returns Cleaned content with no links in headers
  */
+function removeLinksFromHeaders(
+  content: string,
+  config: WordToLinkConfig,
+): string {
+  if (!config.excludeHeaders) return content;
 
+  let cleanedContent = content;
+  const lines = content.split("\n");
+
+  lines.forEach((line, lineIndex) => {
+    const trimmedLine = line.trim();
+
+    // Check if this line is a header
+    const isHeader = isComprehensiveHeader(
+      line,
+      lineIndex,
+      lines.length,
+      config,
+    );
+
+    if (isHeader) {
+      // Remove any HTML links from header content
+      const originalLine = line;
+      const cleanedLine = line.replace(/<a[^>]*>(.*?)<\/a>/g, "$1");
+
+      // Replace the line in the content
+      cleanedContent = cleanedContent.replace(originalLine, cleanedLine);
+    }
+  });
+
+  return cleanedContent;
+}
 
 /**
  * Generate HTML for word-to-link conversion
