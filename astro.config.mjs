@@ -4,8 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://gorakudo.org",
-  base: "/",
+  site: "https://yoshiakefasu.github.io",
+  base: "/GoRakuDo",
 
   // GitHub Pages Optimization
   output: "static",

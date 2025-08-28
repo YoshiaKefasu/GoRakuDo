@@ -1,39 +1,31 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Jalankan workflow ini setiap kali ada push ke branch `main`
+  # Trigger the workflow every time you push to the `main` branch
+  # Using a different branch name? Replace `main` with your branch's name
   push:
     branches: [main]
-  # Memungkinkan Anda menjalankan workflow ini secara manual dari tab Actions di GitHub
+  # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
 
-# Izinkan GitHub Action untuk melakukan deployment
+# Allow this job to clone the repo and create a page deployment
 permissions:
   contents: read
   pages: write
   id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "npm"
-      - name: Install dependencies with clean slate
-        run: |
-          rm -rf node_modules package-lock.json
-          npm cache clean --force
-          npm install
-          npm rebuild
-      - name: Build the site with secure environment
+      - name: Install, build, and upload your site
+        uses: withastro/action@v3
+        # with:
+        # path: . # The root location of your Astro project inside the repository. (optional)
+        # node-version: 22 # The specific version of Node that should be used to build your site. Defaults to 20. (optional)
+        # package-manager: npm # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
         env:
           NODE_ENV: production
           GITHUB_ACTIONS: true
@@ -46,22 +38,23 @@ jobs:
           SITE_URL: https://gorakudo.org
           SITE_TITLE: GoRakuDo - Komunitas Immersion Bahasa Jepang
           SITE_DESCRIPTION: Komunitas immersion bahasa Jepang terbesar Indonesia
-        run: |
-          echo "🔒 Building in secure GitHub Actions environment..."
-          echo "🔒 AI processing disabled for security"
-          echo "🔒 Using pre-processed data files only"
-          npm run build
-          echo "✅ Build completed securely"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
-          user_name: "github-actions[bot]"
-          user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_message: "Deploy to GitHub Pages - ${{ github.sha }}"
+        uses: actions/deploy-pages@v4
+
+  # Discord notification after deployment
+  notify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
       - name: Send Discord notification
         uses: sarisia/actions-status-discord@v1.15.3
         if: always()
@@ -71,7 +64,7 @@ jobs:
           content: "Hey <@209310690643673088>"
           title: "Deploy to GitHub Pages"
           description: |
-            Secure deployment completed.
+            Official Astro deployment completed.
             Triggered by: `${{ github.event_name }}` On Branch: `${{ github.ref_name }}`.
             Environment: GitHub Actions (AI processing disabled for security)
           color: 0x2fa64d
