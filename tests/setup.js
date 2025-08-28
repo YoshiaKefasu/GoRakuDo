@@ -7,12 +7,12 @@ global.console = {
   log: jest.fn(),
   warn: jest.fn(),
   error: jest.fn(),
-  info: jest.fn()
+  info: jest.fn(),
 };
 
 // Mock performance API
 global.performance = {
-  now: () => Date.now()
+  now: () => Date.now(),
 };
 
 // Mock IntersectionObserver
@@ -32,9 +32,9 @@ global.ResizeObserver = class ResizeObserver {
 };
 
 // Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -67,7 +67,7 @@ const mockCSS = `
 `;
 
 // Add mock CSS to document head
-const style = document.createElement('style');
+const style = document.createElement("style");
 style.textContent = mockCSS;
 document.head.appendChild(style);
 
@@ -75,37 +75,37 @@ document.head.appendChild(style);
 global.testUtils = {
   // Create mock article data
   createMockArticle: (overrides = {}) => ({
-    id: 'test-article-1',
-    slug: 'test-article',
+    id: "test-article-1",
+    slug: "test-article",
     data: {
-      title: 'Test Article',
-      description: 'Test description',
-      tags: ['test', 'article'],
-      ...overrides
-    }
+      title: "Test Article",
+      description: "Test description",
+      tags: ["test", "article"],
+      ...overrides,
+    },
   }),
 
   // Create mock tool data
-  createMockTool: (toolName = 'anki') => ({
+  createMockTool: (toolName = "anki") => ({
     name: toolName,
-    path: `src/content/tool-articles/${toolName}`
+    path: `src/content/tool-articles/${toolName}`,
   }),
 
   // Simulate different screen sizes
   setViewport: (width, height) => {
-    Object.defineProperty(window, 'innerWidth', {
+    Object.defineProperty(window, "innerWidth", {
       writable: true,
       configurable: true,
-      value: width
+      value: width,
     });
-    Object.defineProperty(window, 'innerHeight', {
+    Object.defineProperty(window, "innerHeight", {
       writable: true,
       configurable: true,
-      value: height
+      value: height,
     });
-    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event("resize"));
   },
 
   // Wait for next tick
-  nextTick: () => new Promise(resolve => setTimeout(resolve, 0))
+  nextTick: () => new Promise((resolve) => setTimeout(resolve, 0)),
 };

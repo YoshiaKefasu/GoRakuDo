@@ -1,27 +1,20 @@
+// Simple Jest configuration for ES modules
 export default {
   preset: null,
-  testEnvironment: 'jsdom',
-  roots: ['<rootDir>/tests'],
-  testMatch: [
-    '**/__tests__/**/*.js',
-    '**/?(*.)+(spec|test).js'
-  ],
+  testEnvironment: "node",
+  roots: ["<rootDir>/tests"],
+  testMatch: ["**/__tests__/**/*.js", "**/?(*.)+(spec|test).js"],
   transform: {},
-  extensionsToTreatAsEsm: ['.js'],
-  globals: {
-    'ts-jest': {
-      useESM: true
-    }
-  },
+  extensionsToTreatAsEsm: [".js"],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   collectCoverageFrom: [
-    'src/**/*.{js,astro}',
-    '!src/**/*.test.js',
-    '!src/**/*.config.js'
+    "src/**/*.{js,astro}",
+    "!src/**/*.test.js",
+    "!src/**/*.config.js",
   ],
-  coverageDirectory: 'tests/coverage',
-  coverageReporters: ['text', 'lcov', 'html'],
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.js']
+  coverageDirectory: "tests/coverage",
+  coverageReporters: ["text", "lcov", "html"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
 };

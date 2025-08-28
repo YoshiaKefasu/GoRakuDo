@@ -1,0 +1,83 @@
+{
+  "timestamp": "2025-08-28T07:33:40.394Z",
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "tests": [
+      {
+        "name": "2.9-UNIT-001: Tools array exists and has correct structure",
+        "status": "PASS",
+        "error": null
+      },
+      {
+        "name": "2.9-UNIT-002: Link properties point to new dynamic routes",
+        "status": "PASS",
+        "error": null
+      },
+      {
+        "name": "2.9-UNIT-003: Tool ID yomichan changed to yomitan for consistency",
+        "status": "PASS",
+        "error": null
+      },
+      {
+        "name": "2.9-INT-001: Preload links array updated for new routes",
+        "status": "PASS",
+        "error": null
+      },
+      {
+        "name": "2.9-INT-002: HTML structure and animations preserved",
+        "status": "PASS",
+        "error": null
+      },
+      {
+        "name": "2.9-E2E-001: Navigation paths follow expected pattern",
+        "status": "PASS",
+        "error": null
+      },
+      {
+        "name": "2.9-PERF-001: Performance impact validation (file size check)",
+        "status": "PASS",
+        "error": null
+      }
+    ]
+  },
+  "testDetails": [
+    {
+      "name": "2.9-UNIT-001: Tools array exists and has correct structure",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "2.9-UNIT-002: Link properties point to new dynamic routes",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "2.9-UNIT-003: Tool ID yomichan changed to yomitan for consistency",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "2.9-INT-001: Preload links array updated for new routes",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "2.9-INT-002: HTML structure and animations preserved",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "2.9-E2E-001: Navigation paths follow expected pattern",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "2.9-PERF-001: Performance impact validation (file size check)",
+      "status": "PASS",
+      "error": null
+    }
+  ],
+  "storyStatus": "PASSED"
+}

@@ -19,7 +19,7 @@ const tools = [
       "Sistem flashcard dengan Spaced Repetition System (SRS) untuk menghafal kosakata dan kanji secara efektif.",
     icon: "📚",
     color: "var(--clr-accent)",
-    link: "/docs/anki-guide",
+    link: "/tools/anki",
     difficulty: "intermediate",
     category: "flashcard",
     featured: true,
@@ -30,13 +30,13 @@ const tools = [
     },
   },
   {
-    id: "yomichan",
+    id: "yomitan",
     name: "Yomichan",
     description:
       "Browser extension untuk membaca bahasa Jepang dengan hover dictionary dan furigana generation.",
     icon: "🔍",
     color: "var(--clr-accent-dark)",
-    link: "/docs/yomichan-guide",
+    link: "/tools/yomitan",
     difficulty: "beginner",
     category: "reading",
     featured: true,
@@ -53,7 +53,7 @@ const tools = [
       "Suite tools untuk immersion learning termasuk browser extension dan Anki integration.",
     icon: "🎯",
     color: "var(--clr-accent-glow-strong)",
-    link: "/docs/migaku-guide",
+    link: "/tools/migaku",
     difficulty: "intermediate",
     category: "suite",
     featured: false,
@@ -858,11 +858,11 @@ const tools = [
           })
         })
 
-        // Preload critical resources (unchanged)
+        // Preload critical resources (updated for new tool routes)
         const preloadLinks = [
-          "/docs/anki-guide",
-          "/docs/yomichan-guide",
-          "/docs/migaku-guide",
+          "/tools/anki",
+          "/tools/yomitan",
+          "/tools/migaku",
           "/docs/language-reactor-guide",
         ]
         preloadLinks.forEach((link) => {

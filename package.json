@@ -12,8 +12,11 @@
     "perf:css": "node src/scripts/build-performance-monitor.js css",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node tests/validate-story-2.8.js",
-    "test:validate": "node tests/validate-story-2.8.js"
+    "test": "node tests/story-2.9-basic-test.cjs",
+    "test:validate": "node tests/story-2.9-basic-test.cjs",
+    "test:simple": "node tests/simple-test-runner.js",
+    "test:jest": "NODE_OPTIONS=\"--experimental-vm-modules\" npx jest",
+    "test:2.9": "node tests/story-2.9-basic-test.cjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
