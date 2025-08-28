@@ -12,57 +12,8 @@ export default {
     "./src/content/**/*.{md,astro}",
   ],
   // Enable purging in production to reduce CSS bundle size
-  purge: {
-    enabled: process.env.NODE_ENV === "production",
-    preserveHtmlElements: false,
-    layers: ["base", "components", "utilities"],
-    mode: "all",
-    content: [
-      "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
-      "./src/pages/**/*.{astro,ts,js}",
-      "./src/components/**/*.{astro,vue,ts,js}",
-      "./src/layouts/**/*.{astro,ts,js}",
-      "./src/content/**/*.{md,astro}",
-    ],
-    options: {
-      safelist: [
-        // Preserve critical classes that might be added dynamically
-        /^bg-/,
-        /^text-/,
-        /^border-/,
-        /^rounded-/,
-        /^shadow-/,
-        /^opacity-/,
-        // Preserve animation classes
-        /^animate-/,
-        /^fade-/,
-        /^slide-/,
-        // Preserve responsive utilities
-        /^sm:/,
-        /^md:/,
-        /^lg:/,
-        /^xl:/,
-        // Preserve state utilities
-        /^hover:/,
-        /^focus:/,
-        /^active:/,
-        // Preserve accessibility utilities
-        /^sr-only$/,
-        /^focus:not-sr-only$/,
-        // Preserve article-specific classes
-        /^article-content$/,
-        // Preserve navbar and component classes
-        /^navbar$/,
-        /^logo-/,
-        // Preserve color utilities used in components
-        /^primary$/,
-        /^secondary$/,
-        /^muted$/,
-        /^foreground$/,
-        /^background$/,
-      ],
-    },
-  },
+  // REMOVED: purge configuration is deprecated in TailwindCSS v4
+  // Content array above handles this automatically
 
   theme: {
     extend: {
