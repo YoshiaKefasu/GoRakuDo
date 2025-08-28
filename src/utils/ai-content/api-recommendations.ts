@@ -33,7 +33,7 @@ export async function generateAPIRecommendations(
   availablePosts: PostInfo[],
 ): Promise<APIGeneratedRecommendations> {
   try {
-    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiKey = process.env.GOOGLE_API_KEY || "";
     const model = process.env.GOOGLE_MODEL || "gemini-2.5-flash";
 
     if (!apiKey || apiKey === "your_actual_api_key_here") {

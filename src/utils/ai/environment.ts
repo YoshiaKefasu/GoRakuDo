@@ -43,7 +43,7 @@ export class EnvironmentManager {
         isDevelopment,
       ),
       geminiConfig: {
-        apiKey: process.env.GOOGLE_API_KEY,
+        apiKey: process.env.GOOGLE_API_KEY || "",
         model: process.env.GOOGLE_MODEL || "gemini-2.5-flash",
         rateLimitRPD: parseInt(process.env.GOOGLE_RATE_LIMIT_RPD || "500"),
         rateLimitRPM: parseInt(process.env.GOOGLE_RATE_LIMIT_RPM || "15"),
@@ -77,7 +77,7 @@ export class EnvironmentManager {
       return false;
     }
 
-    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiKey = process.env.GOOGLE_API_KEY || "";
     if (!apiKey) {
       logger.log("No Gemini API key found - AI processing disabled", "warning");
       return false;
