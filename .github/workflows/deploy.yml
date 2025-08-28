@@ -35,6 +35,10 @@ jobs:
         run: |
           npm uninstall lightningcss
           npm install lightningcss
+      - name: Reinstall TailwindCSS Oxide for CI
+        run: |
+          npm uninstall @tailwindcss/oxide
+          npm install @tailwindcss/oxide
       - name: Build the site
         run: npm run build
         env:
