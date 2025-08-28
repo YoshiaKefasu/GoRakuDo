@@ -8,6 +8,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { readdir } from "fs/promises";
 import { join } from "path";
+import ArticleCard from "../../../components/content/ArticleCard.astro";
 
 // ========== PERFORMANCE MONITORING ==========
 // Subtask 8.1: Build time measurement for index page generation
@@ -196,9 +197,9 @@ if (performanceMetrics.cachingMetrics.cacheSize > 100) {
 
   <body>
     <!-- Page Header -->
-    <header>
-      <h1>{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>
-      <p>Browse all available documentation for {tool}</p>
+    <header class="tool-index-header">
+      <h1 class="tool-index-title">{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>
+      <p class="tool-index-description">Browse all available documentation for {tool}</p>
     </header>
 
     <!-- Navigation -->
@@ -209,30 +210,50 @@ if (performanceMetrics.cachingMetrics.cacheSize > 100) {
     <!-- Main Content -->
     <main>
       {hasArticles ? (
-        <!-- Task 6: Render ul of filtered articles -->
-        <ul>
-          {toolArticles.map(article => {
-            // Task 7: Render li with link for each article
-            // Subtask 7.1: Create proper link structure
-            const articleSlug = article.slug.replace(`${tool}/`, "");
-            const articleUrl = `/tools/${tool}/${articleSlug}`;
-            
-            // Subtask 7.2: Add fallback text if article title is missing
-            const articleTitle = article.data.title || `Article ${article.id}`;
-            
-            return (
-              <li>
-                <!-- Subtask 7.3: Validate article slugs before link generation -->
-                <a href={articleUrl} title={article.data.description || ""}>
-                  {articleTitle}
-                </a>
-                {article.data.description && (
-                  <p>{article.data.description}</p>
-                )}
-              </li>
-            );
+        <!-- Responsive Grid Layout for Articles -->
+        <div class="articles-grid">
+          {toolArticles.map((article, index) => {
+            // Task 7: Render article cards with comprehensive error handling
+            // Subtask 7.1: Safe data extraction with fallbacks
+            try {
+              const articleSlug = article.slug || article.id || "";
+              const articleTitle = article.data?.title || `Article ${article.id}`;
+              const articleDescription = article.data?.description || "";
+              const articleTags = Array.isArray(article.data?.tags) ? article.data.tags : [];
+
+              // Optimize first 3 articles for above-the-fold loading (Subtask 4.4: Lazy loading)
+              const isPriority = index < 3;
+
+              return (
+                <div class="article-grid-item">
+                  <ArticleCard
+                    title={articleTitle}
+                    description={articleDescription}
+                    slug={articleSlug}
+                    tags={articleTags}
+                    tool={tool}
+                    priority={isPriority}
+                  />
+                </div>
+              );
+            } catch (error) {
+              // Subtask 7.4: Comprehensive error handling for malformed article data
+              console.warn("⚠️ Error processing article:", article.id, error);
+              return (
+                <div class="article-grid-item">
+                  <ArticleCard
+                    title={`Article ${article.id}`}
+                    description="Content unavailable"
+                    slug={article.id || ""}
+                    tags={[]}
+                    tool={tool}
+                    priority={false}
+                  />
+                </div>
+              );
+            }
           })}
-        </ul>
+        </div>
       ) : (
         <!-- Subtask 5.2: No articles found fallback message -->
         <div>
@@ -251,3 +272,86 @@ if (performanceMetrics.cachingMetrics.cacheSize > 100) {
     )}
   </body>
 </html>
+
+<style>
+/* ========== PAGE HEADER STYLES ========== */
+/* Using design system tokens for consistent typography and spacing */
+
+.tool-index-header {
+  text-align: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.tool-index-title {
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  color: var(--clr-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+  line-height: 1.2;
+}
+
+.tool-index-description {
+  font-size: var(--fs-base);
+  color: var(--clr-text-secondary);
+  max-width: 50ch;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ========== ARTICLES GRID LAYOUT ========== */
+/* Mobile-first responsive grid following design system patterns */
+
+.articles-grid {
+  --grid-gap: var(--spacing-6);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.article-grid-item {
+  display: contents; /* Allows grid item to be transparent */
+}
+
+/* ArticleCard component provides its own styling */
+
+/* ========== RESPONSIVE BREAKPOINTS ========== */
+/* Following mobile-first approach with all specified breakpoints */
+
+/* Small devices (640px) - Enhanced mobile experience */
+@media (min-width: 640px) {
+  .articles-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-6);
+  }
+}
+
+/* Tablet devices (768px) - Improved readability */
+@media (min-width: 768px) {
+  .articles-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-8);
+  }
+}
+
+/* Laptops (1024px) - Desktop optimization */
+@media (min-width: 1024px) {
+  .articles-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-8);
+  }
+}
+
+/* Large desktops (1280px+) - Enhanced spacing */
+@media (min-width: 1280px) {
+  .articles-grid {
+    gap: var(--spacing-12);
+  }
+}
+
+/* ========== ACCESSIBILITY ENHANCEMENTS ========== */
+
+/* Accessibility enhancements handled by ArticleCard component */
+</style>
