@@ -173,21 +173,19 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
   enhanceAIRecommendations(
     recommendations: any[],
     sourcePost: CollectionEntry<"docs">,
-    customizations?: MindMapCustomization[],
+    _customizations?: MindMapCustomization[],
   ): EnhancedRecommendation[] {
     const customizedBranches = MindMapUtils.applyMindMapCustomizations(
       MIND_MAP_BRANCHES,
-      customizations,
+      _customizations,
     );
 
     return recommendations.map((recommendation) => {
       const sourceAnalysis = this.analyzePostWithCustomizations(
         sourcePost,
-        customizations,
       );
       const targetAnalysis = this.analyzePostWithCustomizations(
         { slug: recommendation.targetSlug } as CollectionEntry<"docs">,
-        customizations,
       );
 
       const relationshipType = this.determineRelationshipType(
@@ -198,14 +196,12 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
       const visualConnection = this.generateVisualConnection(
         relationshipType,
         sourceAnalysis,
-        targetAnalysis,
       );
 
       const ui = this.generateRecommendationUI(
         relationshipType,
         sourceAnalysis,
         targetAnalysis,
-        recommendation.score,
       );
 
       return {
@@ -231,21 +227,14 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
   enhanceInternalLinks(
     links: InternalLinkSuggestion[],
     sourcePost: CollectionEntry<"docs">,
-    customizations?: MindMapCustomization[],
+    _customizations?: MindMapCustomization[],
   ): EnhancedInternalLink[] {
-    const customizedBranches = MindMapUtils.applyMindMapCustomizations(
-      MIND_MAP_BRANCHES,
-      customizations,
-    );
-
     return links.map((link) => {
       const sourceAnalysis = this.analyzePostWithCustomizations(
         sourcePost,
-        customizations,
       );
       const targetAnalysis = this.analyzePostWithCustomizations(
         { slug: link.targetSlug } as CollectionEntry<"docs">,
-        customizations,
       );
 
       const relationshipType = this.determineRelationshipType(
@@ -256,14 +245,11 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
       const visualConnection = this.generateVisualConnection(
         relationshipType,
         sourceAnalysis,
-        targetAnalysis,
       );
 
       const styling = this.generateLinkStyling(
         relationshipType,
         sourceAnalysis,
-        targetAnalysis,
-        link.relevance,
       );
 
       return {
@@ -284,11 +270,11 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
    */
   enhanceContentAnalysis(
     analysis: ContentAnalysisResult,
-    customizations?: MindMapCustomization[],
+    _customizations?: MindMapCustomization[],
   ): EnhancedContentAnalysis {
     const customizedBranches = MindMapUtils.applyMindMapCustomizations(
       MIND_MAP_BRANCHES,
-      customizations,
+      _customizations,
     );
 
     const branchData =
@@ -395,8 +381,7 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
   // Private helper methods
 
   private analyzePostWithCustomizations(
-    post: CollectionEntry<"docs">,
-    customizations?: MindMapCustomization[],
+    _post: CollectionEntry<"docs">,
   ): ContentAnalysisResult {
     // This would integrate with the existing analyzeContent function
     // For now, return a basic analysis
@@ -449,7 +434,6 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
   private generateVisualConnection(
     relationshipType: string,
     sourceAnalysis: ContentAnalysisResult,
-    targetAnalysis: ContentAnalysisResult,
   ) {
     const baseConnection = {
       style: "solid" as const,
@@ -492,7 +476,6 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
     relationshipType: string,
     sourceAnalysis: ContentAnalysisResult,
     targetAnalysis: ContentAnalysisResult,
-    score: number,
   ) {
     const relationshipLabels = {
       "same-branch": "Same Topic",
@@ -530,8 +513,6 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
   private generateLinkStyling(
     relationshipType: string,
     sourceAnalysis: ContentAnalysisResult,
-    targetAnalysis: ContentAnalysisResult,
-    relevance: number,
   ) {
     const baseStyling = {
       borderColor: "#E5E7EB",
@@ -589,7 +570,7 @@ export class MindMapIntegrationSystem implements MindMapIntegration {
   ) {
     const related = [];
 
-    for (const [branchId, branch] of Object.entries(branches)) {
+    for (const [branchId] of Object.entries(branches)) {
       if (branchId !== sourceBranch) {
         const relationshipType = this.determineRelationshipType(
           sourceBranch,
