@@ -394,7 +394,8 @@
   background: rgba(25, 25, 25, 0.2);
   backdrop-filter: blur(6px);
   border-radius: 0.75rem;
-  border: 1px solid var(--color-border);
+  /* GitHub Pages optimized border - more subtle and fallback */
+  border: 1px solid rgba(139, 93, 255, 0.1);
 }
 
 .post-header h1 {

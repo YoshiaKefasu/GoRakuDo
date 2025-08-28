@@ -15,13 +15,13 @@
 }
 
 .posts-container {
-  @apply mx-auto max-w-6xl px-10;
-  /* Enhanced container constraints */
-  max-width: min(72rem, 95vw);
+  @apply mx-auto max-w-7xl px-6;
+  /* GitHub Pages optimized container constraints */
+  max-width: min(80rem, 98vw);
   overflow-x: hidden;
-  /* Responsive padding */
-  padding-left: clamp(1rem, 3vw, 2.5rem);
-  padding-right: clamp(1rem, 3vw, 2.5rem);
+  /* Responsive padding for better mobile experience */
+  padding-left: clamp(1rem, 4vw, 3rem);
+  padding-right: clamp(1rem, 4vw, 3rem);
 }
 
 .posts-header {
@@ -572,6 +572,11 @@
 
 .posts-container {
   @apply relative z-20 mx-auto max-w-7xl px-5 py-10;
+  /* GitHub Pages optimized container constraints - override duplicate rule */
+  max-width: min(80rem, 98vw);
+  /* Responsive padding for better mobile experience */
+  padding-left: clamp(1rem, 4vw, 3rem);
+  padding-right: clamp(1rem, 4vw, 3rem);
 }
 
 /* Posts Header */
@@ -592,7 +597,7 @@
 }
 
 .posts-header p {
-  @apply mx-auto max-w-2xl text-lg leading-relaxed text-gray-300;
+  @apply mx-auto max-w-4xl text-lg leading-relaxed text-gray-300;
 }
 
 /* Posts Grid */
@@ -719,7 +724,10 @@
 /* Responsive Design */
 @media (max-width: 48rem) {
   .posts-container {
-    @apply px-5;
+    @apply px-4;
+    /* Maintain responsive padding for mobile */
+    padding-left: clamp(1rem, 3vw, 1.5rem);
+    padding-right: clamp(1rem, 3vw, 1.5rem);
   }
 
   .posts-header {
@@ -737,7 +745,10 @@
 
 @media (max-width: 48rem) {
   .posts-container {
-    @apply px-5;
+    @apply px-4;
+    /* Maintain responsive padding for mobile */
+    padding-left: clamp(1rem, 3vw, 1.5rem);
+    padding-right: clamp(1rem, 3vw, 1.5rem);
   }
 
   .posts-header h1 {
@@ -1447,7 +1458,7 @@
 .search-container {
   margin-bottom: 40px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(139, 93, 255, 0.1);
+  border: 1px solid rgba(139, 93, 255, 0.05);
   border-radius: 20px;
   padding: 30px;
 }
