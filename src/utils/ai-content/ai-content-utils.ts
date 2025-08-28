@@ -86,7 +86,6 @@ export interface ContentRelationship {
  */
 export function getContentByLearningStage(
   posts: CollectionEntry<"docs">[],
-  stage: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   // For now, return all posts since learningStage filtering requires aiMetadata
@@ -98,7 +97,6 @@ export function getContentByLearningStage(
  */
 export function getContentByJLPTLevel(
   posts: CollectionEntry<"docs">[],
-  level: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   // For now, return all posts since JLPT level filtering requires aiMetadata
@@ -126,11 +124,10 @@ export function getContentByType(
  */
 export function getRelatedContent(
   posts: CollectionEntry<"docs">[],
-  currentSlug: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
-  // For now, return a few random posts excluding current
-  return posts.filter((post) => post.slug !== currentSlug).slice(0, 3);
+  // For now, return a few random posts
+  return posts.slice(0, 3);
 }
 
 /**
@@ -138,7 +135,6 @@ export function getRelatedContent(
  */
 export function getPrerequisites(
   posts: CollectionEntry<"docs">[],
-  currentSlug: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   // For now, return beginner content
@@ -152,7 +148,6 @@ export function getPrerequisites(
  */
 export function getNextSteps(
   posts: CollectionEntry<"docs">[],
-  currentSlug: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   // For now, return intermediate/advanced content
@@ -170,7 +165,6 @@ export function getNextSteps(
  */
 export function getContentSeries(
   posts: CollectionEntry<"docs">[],
-  seriesName: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   return posts; // Return all posts for now
@@ -181,7 +175,6 @@ export function getContentSeries(
  */
 export function getContentByAudience(
   posts: CollectionEntry<"docs">[],
-  audience: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   return posts; // Return all posts for now
@@ -213,7 +206,6 @@ export function getContentByComplexity(
  */
 export function getContentByStudyTime(
   posts: CollectionEntry<"docs">[],
-  maxTime: number,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   return posts; // Return all posts for now
@@ -224,11 +216,6 @@ export function getContentByStudyTime(
  */
 export function getContentWithFeatures(
   posts: CollectionEntry<"docs">[],
-  features: {
-    hasAudioContent?: boolean;
-    hasVisualContent?: boolean;
-    hasPracticeExercises?: boolean;
-  },
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   return posts; // Return all posts for now
@@ -239,7 +226,6 @@ export function getContentWithFeatures(
  */
 export function getContentBySearchIntent(
   posts: CollectionEntry<"docs">[],
-  intent: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   return posts; // Return all posts for now
@@ -250,7 +236,6 @@ export function getContentBySearchIntent(
  */
 export function getContentByFreshness(
   posts: CollectionEntry<"docs">[],
-  freshness: string,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   return posts; // Return all posts for now
@@ -262,8 +247,6 @@ export function getContentByFreshness(
 export function generateLearningPath(
   posts: CollectionEntry<"docs">[],
   userLevel: string,
-  targetLevel: string,
-  maxTimePerDay: number,
 ): CollectionEntry<"docs">[] {
   // TODO: Re-enable when aiMetadata is added to docs collection schema
   // For now, use basic difficulty-based filtering
@@ -284,23 +267,7 @@ export function generateLearningPath(
   return availableContent.slice(0, 5);
 }
 
-/**
- * Helper function to get next learning level
- */
-function getNextLevel(currentLevel: string): string {
-  const levels = [
-    "alphabet",
-    "basic-grammar",
-    "kanji-intro",
-    "intermediate",
-    "advanced",
-    "fluency",
-  ];
-  const currentIndex = levels.indexOf(currentLevel);
-  return currentIndex < levels.length - 1
-    ? levels[currentIndex + 1]
-    : currentLevel;
-}
+
 
 /**
  * Get content recommendations (simplified - basic filtering only)
