@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
       - name: Install dependencies with clean slate
         run: |
           rm -rf node_modules package-lock.json
@@ -59,9 +59,9 @@ jobs:
           github_token: ${{ secrets.GH_TOKEN }}
           publish_dir: ./dist
           force_orphan: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy to GitHub Pages - ${{ github.sha }}'
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "Deploy to GitHub Pages - ${{ github.sha }}"
       - name: Send Discord notification
         uses: sarisia/actions-status-discord@v1.15.3
         if: always()
@@ -77,4 +77,3 @@ jobs:
           color: 0x2fa64d
           url: "https://github.com/sarisia/actions-status-discord"
           username: GitHub Actions Deployer
-
