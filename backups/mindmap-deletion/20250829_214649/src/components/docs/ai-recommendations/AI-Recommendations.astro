@@ -1,0 +1,258 @@
+---
+// AI-Recommendations.astro - Reusable AI-powered content recommendations component
+// Extracted from src/pages/docs/[slug].astro for reusability across multiple pages
+// Provides intelligent content recommendations with TypeScript safety and responsive design
+// Enhanced with mind map integration for better context and visual relationships
+
+import type { AIRecommendationsProps } from "./types"
+// import { MindMapIntegrationUtils } from "../../../utils/ai-content/mind-map-integration";
+import "./AI-Recommendations.css"
+import {
+  resolveContentPath,
+  getCollectionMetadata,
+} from "../../../utils/content-path-resolver"
+
+interface Props extends AIRecommendationsProps {
+  sourcePost?: any // Add source post for mind map integration
+  enableMindMapContext?: boolean // Enable mind map context features
+}
+
+const {
+  relatedContent,
+  maxRecommendations = 3,
+  showHeader = true,
+  className = "",
+  showFallback = true,
+  sourcePost = null,
+  enableMindMapContext = true,
+} = Astro.props
+
+// Process recommendations with error handling and mind map integration
+const processRecommendations = () => {
+  try {
+    const allRecommendations = [
+      ...(relatedContent.similarContent || []).map((rel: any) => ({
+        ...rel,
+        type: "similar" as const,
+        label: "Kecocokan",
+        processedIcon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        displayScore: `${rel.score}%`,
+        cardClass: "ai-similar-card",
+      })),
+      ...(relatedContent.contextualRelevance || []).map((rel: any) => ({
+        ...rel,
+        type: "contextual" as const,
+        label: "Relevansi",
+        processedIcon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        displayScore: `${rel.score}%`,
+        cardClass: "ai-contextual-card",
+      })),
+    ]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, maxRecommendations)
+
+    // Enhance with mind map context if enabled and source post is available
+    // Temporarily disabled due to build issues
+    /*
+    if (enableMindMapContext && sourcePost) {
+      try {
+        const enhancedRecommendations =
+          MindMapIntegrationUtils.enhanceRecommendations(
+            allRecommendations,
+            sourcePost
+          );
+
+        // Add mind map context to each recommendation
+        return enhancedRecommendations.map((rec: any) => ({
+          ...rec,
+          mindMapBadge: rec.ui?.badgeText || null,
+          mindMapColor: rec.ui?.badgeColor || null,
+          mindMapIcon: rec.ui?.icon || null,
+          mindMapTooltip: rec.ui?.tooltipText || null,
+        }));
+      } catch (mindMapError) {
+        console.warn(
+          "Mind map integration failed, using basic recommendations:",
+          mindMapError
+        );
+        return allRecommendations;
+      }
+    }
+    */
+
+    return allRecommendations
+  } catch (error) {
+    console.error("Error processing AI recommendations:", error)
+    return []
+  }
+}
+
+// Enhance recommendations with dynamic path resolution
+const enhancedRecommendations = processRecommendations().map((rec: any) => {
+  try {
+    const resolvedPath = resolveContentPath({ slug: rec.targetSlug } as any)
+    return {
+      ...rec,
+      resolvedPath: resolvedPath.path,
+      collectionMetadata: getCollectionMetadata("blog"),
+    }
+  } catch (error) {
+    console.warn(`Failed to resolve path for ${rec.targetSlug}:`, error)
+    return {
+      ...rec,
+      resolvedPath: `/docs/${rec.targetSlug}`,
+      collectionMetadata: getCollectionMetadata("blog"),
+    }
+  }
+})
+
+const processedRecommendations = enhancedRecommendations
+const hasRecommendations = processedRecommendations.length > 0
+const shouldShowFallback =
+  showFallback &&
+  !hasRecommendations &&
+  (!relatedContent.similarContent || relatedContent.similarContent.length === 0) &&
+  (!relatedContent.contextualRelevance || relatedContent.contextualRelevance.length === 0)
+---
+
+{
+  hasRecommendations && (
+    <section class={`ai-recommendations-section ${className}`}>
+      <div class="ai-recommendations-container">
+        {showHeader && (
+          <div class="ai-recommendations-header">
+            <div class="ai-icon-wrapper">
+              <svg
+                class="ai-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M19 15L19.74 17.74L22.5 18.5L19.74 19.26L19 22L18.26 19.26L15.5 18.5L18.26 17.74L19 15Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M5 6L5.5 7.5L7 8L5.5 8.5L5 10L4.5 8.5L3 8L4.5 7.5L5 6Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+            <h2 class="ai-recommendations-title">Rekomendasi Dokumentasi</h2>
+            <p class="ai-recommendations-subtitle">
+              Temukan rekomendasi cerdas yang disesuaikan dengan perjalanan belajar Anda.
+            </p>
+          </div>
+        )}
+
+        <div class="ai-recommendations-group">
+          <div class="ai-recommendations-grid">
+            {processedRecommendations.map((rel: any) => (
+              <a
+                href={rel.resolvedPath || `/docs/${rel.targetSlug}`}
+                class={`ai-recommendation-card ${rel.cardClass}`}>
+                <div class="ai-card-header">
+                  <div class="ai-card-icon" set:html={rel.processedIcon} />
+                  <div class="ai-confidence-badge">
+                    <span class="ai-confidence-score">{rel.displayScore}</span>
+                    <span class="ai-confidence-label">{rel.label}</span>
+                  </div>
+                  {/* Mind Map Context Badge */}
+                  {rel.mindMapBadge && (
+                    <div
+                      class="mind-map-badge"
+                      style={`background-color: ${rel.mindMapColor};`}
+                      title={rel.mindMapTooltip}>
+                      <span class="mind-map-icon">{rel.mindMapIcon}</span>
+                      <span class="mind-map-text">{rel.mindMapBadge}</span>
+                    </div>
+                  )}
+                </div>
+                <div class="ai-card-content">
+                  <h4 class="ai-card-title">{rel.targetTitle}</h4>
+                  <p class="ai-card-description">{rel.reason}</p>
+                </div>
+                <div class="ai-card-actions">
+                  <span class="ai-read-more">Baca Artikel</span>
+                  <svg
+                    class="ai-arrow-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M5 12H19M19 12L12 5M19 12L12 19"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  shouldShowFallback && (
+    <section class={`ai-recommendations-section ${className}`}>
+      <div class="ai-recommendations-container">
+        <div class="ai-no-recommendations">
+          <div class="ai-no-recommendations-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M9.172 16.172A4 4 0 0 1 12 15a4 4 0 0 1 2.828 1.172M9 12H9.01M15 12H15.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <h3 class="ai-no-recommendations-title">Belum Ada Rekomendasi AI</h3>
+          <p class="ai-no-recommendations-description">
+            AI kami masih mempelajari konten ini. Periksa kembali nanti untuk rekomendasi
+            yang dipersonalisasi.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  // Client-side enhancement for better user experience
+  // Track recommendation interactions for analytics
+  document.addEventListener("DOMContentLoaded", () => {
+    const recommendationCards = document.querySelectorAll(".ai-recommendation-card")
+
+    recommendationCards.forEach((card: Element) => {
+      card.addEventListener("click", (e: Event) => {
+        const targetSlug = card.getAttribute("href")?.replace("/docs/", "")
+        const targetTitle = card.querySelector(".ai-card-title")?.textContent
+        const score = card.querySelector(".ai-confidence-score")?.textContent
+
+        // Track recommendation click for analytics
+        if (targetSlug && targetTitle) {
+          console.log("🤖 AI Recommendation clicked:", {
+            targetSlug,
+            targetTitle,
+            score,
+            timestamp: new Date().toISOString(),
+          })
+        }
+      })
+    })
+  })
+</script>

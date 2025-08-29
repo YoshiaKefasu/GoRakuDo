@@ -1,0 +1,1758 @@
+---
+import { getCollection } from "astro:content"
+import HeadSEO from "../components/public-components/HeadSEO.astro"
+import Breadcrumb from "../components/public-components/Breadcrumb.astro"
+import Navbar from "../components/public-components/Navbar.vue"
+import "../styles/global.css"
+import "../styles/docs/docs.css"
+import { resolveContentPath, getCollectionMetadata } from "../utils/content-path-resolver"
+import {
+  getContentWithAIMetadata,
+  getContentByLearningStageWithAI,
+  getContentByTypeWithAI,
+  getContentRecommendationsWithAI,
+} from "../utils/ai-content"
+import { triggerAIBuildProcessing, testAIFunctionality } from "../utils/ai"
+import {
+  runOptimizedBuildProcessing,
+  shouldEnableOptimizedProcessing,
+} from "../utils/ai-content"
+import {
+  getPostsWithSemanticRelationships,
+  getLearningPathRecommendations,
+} from "../utils/ai-content"
+import { searchDataGenerator } from "../utils/content/search-data-generator"
+import { CONTENT_CONFIG, ContentConfigUtils } from "../content/content-config"
+import { logger, ConsoleLogger } from "../utils/logging/console-logger"
+
+// TypeScript declarations for global objects in this file
+declare global {
+  interface Window {
+    clientLogger: {
+      log: (message: string, level?: "info" | "success" | "warning" | "error") => void
+      startGroup: (title: string) => void
+      endGroup: (title: string) => void
+    }
+    searchLoadingManager?: any
+    searchEngine?: any
+    contentConfig?: any
+    allPosts?: any[]
+    Fuse?: any
+  }
+}
+
+// Set global build mode to suppress console output during build
+ConsoleLogger.setGlobalBuildMode(true)
+// Set critical errors only mode - only show critical errors
+ConsoleLogger.setGlobalCriticalErrorsOnly(true)
+
+// Get all blog posts with error handling
+let posts: any[] = []
+let error: string | null = null
+
+try {
+  posts = await getCollection("docs")
+  logger.log(`Posts loaded: ${posts.length}`, "success")
+} catch (err: any) {
+  logger.log(`Error loading posts: ${err.message}`, "error")
+  error = err.message
+}
+
+// Sort posts by published date (newest first)
+const sortedPosts = posts.sort(
+  (a, b) =>
+    new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime()
+)
+
+// Pagination configuration
+const POSTS_PER_PAGE = 6 // Show 6 posts per page
+const totalPosts = sortedPosts.length
+const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
+
+// Get current page from URL or default to 1
+const currentPage = 1 // For static generation, we'll handle pagination client-side
+
+// Calculate pagination info
+const startIndex = 0
+const endIndex = Math.min(POSTS_PER_PAGE, totalPosts)
+const currentPosts = sortedPosts.slice(startIndex, endIndex)
+
+// Clean pagination logging
+logger.logPaginationInfo(totalPosts, POSTS_PER_PAGE, currentPage)
+
+// Demonstrate automatic AI metadata generation (using all posts for metadata)
+// AI metadata generation started - temporarily disabled for build stability
+const postsWithAI = sortedPosts // Use regular posts for now
+
+const beginnerContent = sortedPosts.filter(
+  (post) => post.data.learningStage === "pemanasan" || post.data.difficulty === "beginner"
+)
+
+// Use the working content analysis system instead
+const toolContent = sortedPosts.filter((post) => {
+  // Check if post has category "tools" or contains tool-related keywords
+  const isTool =
+    post.data.category === "tools" ||
+    post.data.title.toLowerCase().includes("anki") ||
+    post.data.description.toLowerCase().includes("anki") ||
+    post.data.tags.some((tag) => tag.toLowerCase().includes("tool"))
+  return isTool
+})
+
+// Example recommendations - simplified for now
+const recommendations = sortedPosts.slice(0, 3)
+
+// Fallback: If no recommendations, use all posts with AI metadata
+const finalRecommendations = recommendations
+
+// Helper function to format numbers with K, M, B suffixes
+function formatNumber(num: number): string {
+  if (num >= 1000000000) {
+    return (num / 1000000000).toFixed(1) + "B"
+  } else if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + "M"
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + "K"
+  }
+  return num.toString()
+}
+
+function formatDate(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }
+
+  // Validate input
+  if (!dateString || typeof dateString !== "string") {
+    logger.log(`Invalid date string provided: ${dateString}`, "warning")
+    return "Invalid Date"
+  }
+
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) {
+      logger.log(`Invalid date format: ${dateString}`, "warning")
+      return "Invalid Date"
+    }
+
+    return date.toLocaleDateString("id-ID", options)
+  } catch (error) {
+    logger.log(`Date formatting error: ${error}`, "error")
+    return "Invalid Date"
+  }
+}
+
+// SEO data with proper HeadSEO props
+const seoData = {
+  title: "Dokumentasi & Panduan",
+  description:
+    "Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.",
+  canonicalUrl: "https://gorakudo.org/docs",
+  pageType: "website" as const,
+  authorName: "Tim GoRakuDo",
+}
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <HeadSEO {...seoData} aiPageType="docs" enableAIOptimizations={true} />
+    <link rel="stylesheet" href="/css/homepage-styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0/dist/fuse.min.js"></script>
+
+    <!-- Global Client Logger -->
+    <script>
+      // Client-side logger for consistent console output - available globally
+      window.clientLogger = {
+        log: (message, level = "info") => {
+          const emoji = { info: "ℹ️", success: "✅", warning: "⚠️", error: "❌" }[level]
+          console.log(`${emoji} ${message}`)
+        },
+        startGroup: (title) => {
+          console.log(`\n${"=".repeat(50)}`)
+          console.log(`🚀 ${title}`)
+          console.log(`${"=".repeat(50)}`)
+        },
+        endGroup: (title) => {
+          console.log(`${"=".repeat(50)}`)
+          console.log(`✅ ${title}`)
+          console.log(`${"=".repeat(50)}\n`)
+        },
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <Navbar client:visible />
+
+    <!-- Background Elements -->
+    <canvas id="waveCanvas" class="wave-canvas"></canvas>
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="posts-page">
+        <div class="posts-container" id="postsContainer">
+          <div class="posts-header">
+            <h1>Dokumentasi & Panduan</h1>
+            <p>
+              Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari
+              langkah pertama hingga tingkat lanjut.
+            </p>
+          </div>
+
+          <!-- Breadcrumb Navigation -->
+          <Breadcrumb currentPath="/docs" showMindMap={false} />
+
+          <!-- Search Functionality -->
+          <div class="search-container">
+            <div class="search-header">
+              <span class="search-icon">🔍</span>
+              <h2 class="search-title">Cari Dokumentasi</h2>
+            </div>
+
+            <div class="search-input-group">
+              <span class="search-input-icon">📝</span>
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input search-input-loading"
+                placeholder="Memuat sistem pencarian..."
+                autocomplete="off"
+                disabled
+              />
+              <div class="search-loading-indicator" id="searchLoadingIndicator">
+                <!-- Compact Google 2025 Loading Spinner -->
+                <div class="relative inline-flex items-center justify-center size-2.5">
+                  <!-- Outer ring with subtle gradient -->
+                  <div class="absolute inset-0 rounded-full border border-primary-200/20">
+                  </div>
+                  <!-- Spinning inner ring -->
+                  <div
+                    class="absolute inset-0 rounded-full border border-transparent border-t-primary-500 animate-spin">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="search-filters">
+              {/* "Semua" button - always present */}
+              <button class="filter-button filter-button-loading active" data-filter="all"
+                >Semua ({formatNumber(totalPosts)})</button
+              >
+
+              {/* Automatically generated filter buttons from content config */}
+              {
+                ContentConfigUtils.getSortedFilters()
+                  .filter((filter) => filter.id !== "all") // Exclude "all" button as it's handled above
+                  .map((filter) => {
+                    const count = ContentConfigUtils.getFilterCount(sortedPosts, filter)
+                    return (
+                      <button
+                        class="filter-button filter-button-loading"
+                        data-filter={filter.name}
+                        data-filter-type={filter.type}
+                        data-filter-target={filter.target}
+                        title={filter.description}>
+                        {filter.icon} {filter.displayName}
+                        {count > 0 && ` (${formatNumber(count)})`}
+                      </button>
+                    )
+                  })
+              }
+            </div>
+
+            <div class="search-suggestions" id="searchSuggestions" style="display: none;">
+              <div class="suggestions-title">Saran Pencarian:</div>
+              {
+                ContentConfigUtils.getSearchSuggestions().map((suggestion) => (
+                  <span class="suggestion-tag" data-suggestion={suggestion}>
+                    {suggestion}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- Search Results - Moved to appear immediately after search input -->
+          <div id="searchResults" class="search-results hidden">
+            <div class="search-stats" id="searchStats"></div>
+            <div id="searchResultsContent"></div>
+          </div>
+
+          <!-- Loading State -->
+          <div id="loadingState" class="loading-container" style="display: none;">
+            <div class="skeleton-grid">
+              {
+                Array.from({ length: 3 }).map(() => (
+                  <div class="skeleton-card">
+                    <div class="skeleton-title" />
+                    <div class="skeleton-description" />
+                    <div class="skeleton-meta">
+                      <div class="skeleton-date" />
+                      <div class="skeleton-readtime" />
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- Content State -->
+          <div id="contentState" class="posts-grid">
+            {
+              error ? (
+                <div class="error-message">
+                  <h2>❌ Error Loading Posts</h2>
+                  <p>{error}</p>
+                  <div class="error-actions">
+                    <button onclick="window.location.reload()" class="docs-button">
+                      🔄 Coba Lagi
+                    </button>
+                    <button onclick="goHome()" class="docs-button secondary">
+                      🏠 Kembali ke Beranda
+                    </button>
+                  </div>
+                </div>
+              ) : currentPosts.length === 0 ? (
+                <div class="no-results">
+                  <div class="no-results-icon">📚</div>
+                  <h3>Belum Ada Dokumentasi</h3>
+                  <p>Dokumentasi akan segera tersedia. Tetap pantau untuk pembaruan!</p>
+                </div>
+              ) : (
+                currentPosts.map((post, index) => (
+                  <article
+                    class={`post-card post-card-${index % 4}`}
+                    data-post-slug={post.slug}
+                    data-learning-stage={
+                      post.data.aiMetadata?.contentAnalysis?.learningStage || ""
+                    }
+                    data-content-type={post.data.aiMetadata?.contentType || ""}
+                    data-is-recommended={
+                      finalRecommendations.some((rec) => rec.slug === post.slug)
+                        ? "true"
+                        : "false"
+                    }
+                    data-is-beginner={
+                      beginnerContent.some((beg) => beg.slug === post.slug)
+                        ? "true"
+                        : "false"
+                    }
+                    data-is-tool={
+                      toolContent.some((tool) => tool.slug === post.slug)
+                        ? "true"
+                        : "false"
+                    }>
+                    {/* Emoji Display */}
+                    {post.data.emoji && <div class="post-emoji">{post.data.emoji}</div>}
+                    <div class="post-card-container">
+                      <div class="post-header">
+                        <h2 class="post-title">
+                          <a href={post.resolvedPath || `/docs/${post.slug}`}>
+                            {post.data.title}
+                          </a>
+                        </h2>
+                        <div class="post-meta">
+                          <span class="post-date">
+                            {formatDate(post.data.publishedDate)}
+                          </span>
+                        </div>
+                      </div>
+                      <p class="post-description">{post.data.description}</p>
+                      <div
+                        class="post-tags"
+                        data-all-tags={JSON.stringify(post.data.tags || [])}>
+                        {post.data.tags?.slice(0, 3).map((tag: string) => (
+                          <span class="post-tag">{tag}</span>
+                        ))}
+                        {post.data.tags && post.data.tags.length > 3 && (
+                          <span
+                            class="post-tag-more"
+                            data-count={post.data.tags.length - 3}>
+                            +{post.data.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                      <a
+                        href={post.resolvedPath || `/docs/${post.slug}`}
+                        class="read-more-btn">
+                        Baca Selengkapnya →
+                      </a>
+                    </div>
+                  </article>
+                ))
+              )
+            }
+          </div>
+
+          <!-- Pagination Controls -->
+          {
+            totalPages > 1 && (
+              <div class="pagination-container" id="paginationContainer">
+                <div class="pagination-info">
+                  <span class="pagination-stats">
+                    Menampilkan {startIndex + 1}-{endIndex} dari {totalPosts} dokumentasi
+                  </span>
+                </div>
+                <div class="pagination-controls">
+                  <button
+                    class="pagination-btn prev-btn"
+                    disabled={currentPage === 1}
+                    data-page={currentPage - 1}>
+                    ← Sebelumnya
+                  </button>
+                  <div class="pagination-numbers">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (pageNum) => (
+                        <button
+                          class={`pagination-number ${pageNum === currentPage ? "active" : ""}`}
+                          data-page={pageNum}>
+                          {pageNum}
+                        </button>
+                      )
+                    )}
+                  </div>
+                  <button
+                    class="pagination-btn next-btn"
+                    disabled={currentPage === totalPages}
+                    data-page={currentPage + 1}>
+                    Selanjutnya →
+                  </button>
+                </div>
+                <div class="pagination-toggle">
+                  <label class="pagination-mode-toggle">
+                    <input type="checkbox" id="infiniteScrollToggle" />
+                    <span class="toggle-slider" />
+                    <span class="toggle-label">Infinite Scroll</span>
+                  </label>
+                </div>
+              </div>
+            )
+          }
+          <!-- Call to Action -->
+          <div class="features-cta">
+            <div class="cta-content">
+              <h3 class="cta-title">Berkontribusi pada Roadmap</h3>
+              <p class="cta-description">
+                Punya ide fitur atau dokumentasi yang ingin Anda lihat? Berikan masukan
+                Anda untuk membantu membentuk masa depan platform ini.
+              </p>
+              <button
+                class="cta-button"
+                type="button"
+                aria-label="Buka form masukan komunitas">
+                <span class="cta-button-text">Berikan Masukan</span>
+                <svg
+                  class="cta-arrow"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+
+    <!-- Search Engine Loading State Management -->
+    <script>
+      // Search Engine Loading State Management
+      class SearchLoadingManager {
+        // Property declarations for TypeScript
+        searchInput: HTMLInputElement | null
+        filterButtons: NodeListOf<HTMLButtonElement>
+        loadingIndicator: HTMLElement | null
+        isReady: boolean
+
+        constructor() {
+          this.searchInput = null
+          this.filterButtons = document.querySelectorAll(
+            ".filter-button"
+          ) as NodeListOf<HTMLButtonElement>
+          this.loadingIndicator = null
+          this.isReady = false
+          this.init()
+        }
+
+        init() {
+          // Get DOM elements
+          this.searchInput = document.getElementById("searchInput") as HTMLInputElement
+          this.filterButtons = document.querySelectorAll(
+            ".filter-button"
+          ) as NodeListOf<HTMLButtonElement>
+          this.loadingIndicator = document.getElementById("searchLoadingIndicator")
+
+          // Ensure initial loading state
+          this.setLoadingState()
+        }
+
+        setLoadingState() {
+          if (this.searchInput) {
+            this.searchInput.disabled = true
+            this.searchInput.classList.add("search-input-loading")
+            this.searchInput.classList.remove("search-input-ready")
+            this.searchInput.placeholder = "Memuat sistem pencarian..."
+          }
+
+          // Disable filter buttons
+          this.filterButtons.forEach((button) => {
+            button.disabled = true
+            button.classList.add("filter-button-loading")
+          })
+
+          // Show loading indicator
+          if (this.loadingIndicator) {
+            this.loadingIndicator.style.display = "flex"
+          }
+        }
+
+        setReadyState() {
+          if (this.searchInput) {
+            this.searchInput.disabled = false
+            this.searchInput.classList.remove("search-input-loading")
+            this.searchInput.classList.add("search-input-ready")
+            this.searchInput.placeholder = "Cari konten Indonesian (min 2 karakter)"
+          }
+
+          // Enable filter buttons
+          this.filterButtons.forEach((button) => {
+            button.disabled = false
+            button.classList.remove("filter-button-loading")
+          })
+
+          // Hide loading indicator
+          if (this.loadingIndicator) {
+            this.loadingIndicator.style.display = "none"
+          }
+
+          this.isReady = true
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Search engine ready for use", "success")
+          }
+        }
+
+        setErrorState(errorMessage = "Search temporarily unavailable") {
+          if (this.searchInput) {
+            this.searchInput.disabled = true
+            this.searchInput.classList.add("search-input-loading")
+            this.searchInput.classList.remove("search-input-ready")
+            this.searchInput.placeholder = errorMessage
+          }
+
+          // Keep filter buttons disabled
+          this.filterButtons.forEach((button) => {
+            button.disabled = true
+            button.classList.add("filter-button-loading")
+          })
+
+          // Update loading indicator to show error
+          if (this.loadingIndicator) {
+            this.loadingIndicator.innerHTML = `
+              <div class="relative inline-flex items-center justify-center size-2.5">
+                <div class="absolute inset-0 rounded-full border border-red-400/20"></div>
+                <div class="absolute inset-0 rounded-full border border-transparent border-t-red-500 animate-spin"></div>
+              </div>
+              <span class="loading-text text-xs font-normal tracking-normal" style="color: #ef4444;">${errorMessage}</span>
+            `
+          }
+        }
+      }
+
+      // Initialize loading manager
+      const searchLoadingManager = new SearchLoadingManager()
+
+      // Import the externalized search engine with loading state management
+      // Temporarily disabled for build stability
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(
+          "Docs Search Engine module loading disabled for build stability",
+          "success"
+        )
+      }
+      searchLoadingManager.setReadyState()
+
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log("Loading Enhanced Search Engine...", "info")
+      }
+    </script>
+
+    <!-- Enhanced Search Engine Implementation -->
+    <script>
+      // Enhanced Search Engine for Docs Page
+      // Google Engineering Team 2025: Fuse.js Integration with search.json.js
+      // Fixed: "Krashen" search issue by using unified search system
+
+      // Global types are now defined in src/types/global.d.ts
+
+      // Fuse.js will be available globally from the script tag
+      let Fuse: any = null
+
+      class ModernSearchEngine {
+        private fuse: any = null
+        private searchData: any[] = []
+        private searchCache = new Map()
+        private maxCacheSize = 100
+        private performanceMetrics = {
+          searchCount: 0,
+          cacheHits: 0,
+          avgSearchTime: 0,
+          totalSearchTime: 0,
+        }
+
+        constructor() {
+          // Defer initialization to ensure clientLogger is available
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => this.initialize())
+          } else {
+            this.initialize()
+          }
+        }
+
+        async initialize() {
+          try {
+            // Safety check for clientLogger
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                "Initializing Modern Search Engine with Fuse.js...",
+                "info"
+              )
+            }
+
+            // Load search data from search.json.js endpoint
+            await this.loadSearchData()
+
+            // Initialize Fuse.js with search data
+            await this.initializeFuse()
+
+            // Set up event listeners
+            this.setupEventListeners()
+
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log("Modern search engine ready!", "success")
+              window.clientLogger.log(
+                `Loaded ${this.searchData.length} posts for search`,
+                "success"
+              )
+            }
+
+            // Notify loading manager that search is ready
+            if (window.searchLoadingManager) {
+              window.searchLoadingManager.setReadyState()
+            }
+
+            return true
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Failed to initialize search engine: ${error}`,
+                "error"
+              )
+            }
+
+            // Set error state
+            if (window.searchLoadingManager) {
+              window.searchLoadingManager.setErrorState("Sistem pencarian gagal dimuat")
+            }
+
+            return false
+          }
+        }
+
+        async loadSearchData() {
+          try {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log("Loading search data from /search.json...", "info")
+            }
+
+            // Fetch search data from the JSON endpoint
+            const response = await fetch("/search.json")
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`)
+            }
+
+            this.searchData = await response.json()
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Loaded ${this.searchData.length} posts from search.json`,
+                "success"
+              )
+            }
+
+            // Debug: Check if "Keyword" content is in the search data
+            const krashenPosts = this.searchData.filter(
+              (post) =>
+                post.content?.toLowerCase().includes("krashen") ||
+                post.title?.toLowerCase().includes("krashen") ||
+                post.description?.toLowerCase().includes("krashen")
+            )
+
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Found ${krashenPosts.length} posts containing "Krashen": ${krashenPosts.map((p) => p.title).join(", ")}`,
+                "info"
+              )
+            }
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Error loading search data: ${error}`, "error")
+            }
+            throw error
+          }
+        }
+
+        async initializeFuse() {
+          try {
+            // Use global Fuse.js from script tag
+            if (typeof window !== "undefined" && window.Fuse) {
+              const Fuse = window.Fuse
+
+              // Configure Fuse.js for optimal search
+              const fuseOptions = {
+                keys: [
+                  { name: "title", weight: 0.7 },
+                  { name: "description", weight: 0.3 },
+                  { name: "content", weight: 0.2 },
+                  { name: "tags", weight: 0.1 },
+                ],
+                includeScore: true,
+                threshold: 0.4, // 0 is perfect match, 1 is all results
+                minMatchCharLength: 2,
+                shouldSort: true,
+                findAllMatches: true,
+                useExtendedSearch: false,
+                ignoreLocation: true,
+                distance: 100,
+              }
+
+              this.fuse = new Fuse(this.searchData, fuseOptions)
+              if (window.clientLogger && window.clientLogger.log) {
+                window.clientLogger.log("Fuse.js initialized with search data", "success")
+              }
+            } else {
+              if (window.clientLogger && window.clientLogger.log) {
+                window.clientLogger.log(
+                  "Fuse.js not available, using simple search fallback",
+                  "warning"
+                )
+              }
+              this.fuse = null
+            }
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Error initializing Fuse.js: ${error}`, "error")
+              window.clientLogger.log("Falling back to simple search", "warning")
+            }
+            this.fuse = null
+          }
+        }
+
+        setupEventListeners() {
+          // Search input event listener
+          const searchInput = document.getElementById("searchInput") as HTMLInputElement
+          if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+              const query = (e.target as HTMLInputElement).value
+              this.performSearch(query)
+            })
+
+            searchInput.addEventListener("keydown", (e) => {
+              if (e.key === "Enter") {
+                const query = (e.target as HTMLInputElement).value
+                this.performSearch(query)
+              }
+            })
+          }
+
+          // Filter buttons event listeners
+          const filterButtons = document.querySelectorAll(".filter-button")
+          filterButtons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+              const filterType = (e.target as HTMLElement).getAttribute("data-filter")
+              this.handleFilter(filterType)
+            })
+          })
+
+          // Clear search button - Use event delegation for dynamically created buttons
+          document.addEventListener("click", (e) => {
+            const target = e.target as HTMLElement
+            if (target && target.closest('[data-action="clear-search"]')) {
+              if (window.clientLogger && window.clientLogger.log) {
+                window.clientLogger.log("Clear search button clicked", "info")
+              }
+              this.clearSearch()
+            }
+          })
+        }
+
+        async performSearch(query: string) {
+          const startTime = performance.now()
+
+          if (!query || query.trim().length < 2) {
+            this.displayAllPosts()
+            return
+          }
+
+          try {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Searching for: "${query}"`, "info")
+            }
+
+            // Check cache first
+            const cacheKey = query.toLowerCase()
+            if (this.searchCache.has(cacheKey)) {
+              this.performanceMetrics.cacheHits++
+              const cachedResults = this.searchCache.get(cacheKey)
+              this.displaySearchResults(cachedResults)
+              return
+            }
+
+            let results: any[] = []
+            let searchStrategy = "simple"
+
+            // Perform search with Fuse.js if available, otherwise use simple search
+            if (this.fuse) {
+              try {
+                const fuseResults = this.fuse.search(query)
+                results = fuseResults.slice(0, 20).map((result) => ({
+                  ...result.item,
+                  score: result.score,
+                  relevancePercentage: Math.round((1 - result.score) * 100),
+                }))
+                searchStrategy = "fuzzy"
+              } catch (fuseError) {
+                if (window.clientLogger && window.clientLogger.log) {
+                  window.clientLogger.log(
+                    `Fuse.js search failed, falling back to simple search: ${fuseError}`,
+                    "warning"
+                  )
+                }
+                results = this.simpleSearch(query)
+              }
+            } else {
+              results = this.simpleSearch(query)
+            }
+
+            const searchResult = {
+              results: results,
+              total: results.length,
+              query: query,
+              searchStrategy: searchStrategy,
+            }
+
+            // Cache the result
+            this.cacheResult(cacheKey, searchResult)
+
+            // Update performance metrics
+            const searchTime = performance.now() - startTime
+            this.performanceMetrics.searchCount++
+            this.performanceMetrics.totalSearchTime += searchTime
+            this.performanceMetrics.avgSearchTime =
+              this.performanceMetrics.totalSearchTime /
+              this.performanceMetrics.searchCount
+
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `Search completed in ${searchTime.toFixed(2)}ms`,
+                "success"
+              )
+              window.clientLogger.log(
+                `Found ${results.length} results for "${query}" using ${searchStrategy} search`,
+                "success"
+              )
+            }
+
+            // Display results
+            this.displaySearchResults(searchResult)
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Search error: ${error}`, "error")
+            }
+            this.displayError("Terjadi kesalahan dalam pencarian")
+          }
+        }
+
+        // Simple search fallback when Fuse.js is not available
+        simpleSearch(query: string): any[] {
+          const searchQuery = query.toLowerCase()
+          const results: any[] = []
+
+          this.searchData.forEach((post) => {
+            let score = 0
+            let relevancePercentage = 0
+
+            // Search in title (highest priority)
+            if (post.title?.toLowerCase().includes(searchQuery)) {
+              score += 100
+            }
+
+            // Search in description
+            if (post.description?.toLowerCase().includes(searchQuery)) {
+              score += 50
+            }
+
+            // Search in content
+            if (post.content?.toLowerCase().includes(searchQuery)) {
+              score += 25
+            }
+
+            // Search in tags
+            if (
+              post.tags?.some((tag: string) => tag.toLowerCase().includes(searchQuery))
+            ) {
+              score += 30
+            }
+
+            if (score > 0) {
+              relevancePercentage = Math.min(score, 100)
+              results.push({
+                ...post,
+                score: 1 - relevancePercentage / 100,
+                relevancePercentage: relevancePercentage,
+              })
+            }
+          })
+
+          // Sort by relevance and return top 20
+          return results
+            .sort((a, b) => b.relevancePercentage - a.relevancePercentage)
+            .slice(0, 20)
+        }
+
+        displaySearchResults(searchResult: any) {
+          const searchResults = document.getElementById("searchResults")
+          const searchStats = document.getElementById("searchStats")
+          const searchResultsContent = document.getElementById("searchResultsContent")
+          const contentState = document.getElementById("contentState")
+
+          if (!searchResults || !searchStats || !searchResultsContent) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log("Search results elements not found", "error")
+            }
+            return
+          }
+
+          // Hide main content and show search results
+          if (contentState) {
+            contentState.classList.add("hidden")
+          }
+          searchResults.classList.remove("hidden")
+
+          if (searchResult.total === 0) {
+            // No results found
+            searchStats.innerHTML = `
+              <span class="search-results-count">
+                Tidak ada hasil ditemukan untuk "${searchResult.query}"
+              </span>
+              <button class="clear-search-btn" data-action="clear-search">
+                ✕ Hapus Pencarian
+              </button>
+            `
+
+            searchResultsContent.innerHTML = `
+              <div class="search-no-results">
+                <div class="no-results-icon">🔍</div>
+                <h3>Tidak ada hasil ditemukan</h3>
+                <p>Tidak ada dokumentasi yang cocok dengan pencarian "${searchResult.query}"</p>
+                <div class="no-results-suggestions">
+                  <p>Saran pencarian:</p>
+                  <ul>
+                    <li>Periksa ejaan kata kunci</li>
+                    <li>Coba kata kunci yang lebih umum</li>
+                    <li>Gunakan kata kunci yang berbeda</li>
+                  </ul>
+                </div>
+              </div>
+            `
+          } else {
+            // Results found
+            searchStats.innerHTML = `
+              <span class="search-results-count">
+                Ditemukan ${searchResult.total} hasil untuk "${searchResult.query}"
+              </span>
+              <button class="clear-search-btn" data-action="clear-search">
+                ✕ Hapus Pencarian
+              </button>
+            `
+
+            // Generate search results HTML using same structure as main cards
+            const resultsHTML = searchResult.results
+              .map((result: any, index: number) => {
+                const title = result.title || "Untitled"
+                const description = result.description || ""
+                const url = result.url || result.resolvedPath || `/docs/${result.slug}`
+                const relevance = result.relevancePercentage || 0
+                const pubDate = result.pubDate ? new Date(result.pubDate) : null
+                const formattedDate = pubDate
+                  ? pubDate.toLocaleDateString("id-ID", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
+                  : ""
+
+                // Get emoji from search data or use default
+                const emoji = "🔍" // Always use search emoji for search results
+
+                // Get tags for display
+                const tags = result.tags || []
+                const displayTags = tags.slice(0, 3)
+                const remainingTags = tags.length > 3 ? tags.length - 3 : 0
+
+                return `
+                  <article class="post-card post-card-${index % 4}" data-post-slug="${result.slug}" data-learning-stage data-content-type data-is-recommended="true" data-is-beginner="true" data-is-tool="false">
+                    <div class="post-emoji">${emoji}</div>
+                    <div class="post-card-container">
+                      <span class="search-relevance-compact place-self-center max-w-min min-h-auto mb-4!">${relevance}% relevan</span>
+                      <div class="post-header">
+                        <h2 class="post-title">
+                          <a href="${url}">${title}</a>
+                        </h2>
+                        <div class="post-meta">
+                          <span class="post-date">${formattedDate}</span>
+                        </div>
+                      </div>
+                      <p class="post-description">${description}</p>
+                      <div class="post-tags" data-all-tags='${JSON.stringify(tags)}'>
+                        ${displayTags.map((tag: string) => `<span class="post-tag">${tag}</span>`).join("")}
+                        ${remainingTags > 0 ? `<span class="post-tag-more" data-count="${remainingTags}">+${remainingTags}</span>` : ""}
+                      </div>
+                      <a class="read-more-btn" href="${url}">
+                        Baca Selengkapnya →
+                      </a>
+                    </div>
+                  </article>
+                `
+              })
+              .join("")
+
+            searchResultsContent.innerHTML = `
+              <div class="posts-grid">
+                ${resultsHTML}
+              </div>
+            `
+          }
+        }
+
+        displayAllPosts() {
+          const searchResults = document.getElementById("searchResults")
+          const contentState = document.getElementById("contentState")
+
+          if (searchResults) {
+            searchResults.classList.add("hidden")
+          }
+          if (contentState) {
+            contentState.classList.remove("hidden")
+          }
+        }
+
+        clearSearch() {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Clearing search...", "info")
+          }
+
+          // Clear search input
+          const searchInput = document.getElementById("searchInput") as HTMLInputElement
+          if (searchInput) {
+            searchInput.value = ""
+            // Trigger input event to ensure search is cleared
+            searchInput.dispatchEvent(new Event("input"))
+          }
+
+          // Show all posts
+          this.displayAllPosts()
+
+          // Provide user feedback
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Search cleared successfully", "success")
+          }
+        }
+
+        handleFilter(filterType: string | null) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Filter applied: ${filterType}`, "info")
+          }
+
+          // Update active filter button
+          const filterButtons = document.querySelectorAll(".filter-button")
+          filterButtons.forEach((btn) => btn.classList.remove("active"))
+
+          const activeButton = document.querySelector(`[data-filter="${filterType}"]`)
+          if (activeButton) {
+            activeButton.classList.add("active")
+          }
+
+          // Get filter configuration from content config
+          const filterConfig = this.getFilterConfig(filterType)
+          if (!filterConfig) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                `No filter configuration found for: ${filterType}`,
+                "warning"
+              )
+            }
+            return
+          }
+
+          // Apply filter based on configuration
+          this.applyContentFilter(filterConfig)
+        }
+
+        getFilterConfig(filterType: string | null) {
+          if (!filterType || filterType === "all") {
+            return { type: "custom", target: "all" }
+          }
+
+          // Find filter in content configuration
+          const filters = (window as any).contentConfig?.filters || {}
+          const filter = Object.values(filters).find((f: any) => f.name === filterType)
+
+          if (filter) {
+            return filter
+          }
+
+          // Check mind map filters
+          const mindMapFilters =
+            (window as any).contentConfig?.mindMap?.customFilters || []
+          const mindMapFilter = mindMapFilters.find((f: any) => f.name === filterType)
+
+          return mindMapFilter || null
+        }
+
+        applyContentFilter(filterConfig: any) {
+          const posts = (window as any).allPosts || []
+          let filteredPosts: any[] = []
+
+          switch (filterConfig.type) {
+            case "category":
+              filteredPosts = this.filterByCategory(posts, filterConfig.target)
+              break
+            case "tag":
+              filteredPosts = this.filterByTag(posts, filterConfig.target)
+              break
+            case "mind-map":
+              filteredPosts = this.filterByMindMap(posts, filterConfig.target)
+              break
+            case "custom":
+              if (filterConfig.target === "all") {
+                filteredPosts = posts
+              }
+              break
+            default:
+              filteredPosts = posts
+          }
+
+          this.displayFilteredPosts(filteredPosts, filterConfig)
+        }
+
+        filterByCategory(posts: any[], categoryId: string) {
+          const category = (window as any).contentConfig?.categories?.[categoryId]
+          if (!category) return posts
+
+          return posts.filter((post) => {
+            return category.keywords.some(
+              (keyword) =>
+                post.data.title?.toLowerCase().includes(keyword.toLowerCase()) ||
+                post.data.description?.toLowerCase().includes(keyword.toLowerCase()) ||
+                post.data.category === category.name ||
+                post.data.learningStage === category.name
+            )
+          })
+        }
+
+        filterByTag(posts: any[], tagId: string) {
+          const tag = (window as any).contentConfig?.tags?.[tagId]
+          if (!tag) return posts
+
+          return posts.filter((post) => {
+            return (
+              post.data.tags?.some(
+                (postTag: string) => postTag.toLowerCase() === tag.name.toLowerCase()
+              ) || false
+            )
+          })
+        }
+
+        filterByMindMap(posts: any[], branchId: string) {
+          // Placeholder for mind map filtering
+          // This would integrate with your mind map system
+          return posts.slice(0, Math.floor(posts.length / 2))
+        }
+
+        displayFilteredPosts(posts: any[], filterConfig: any) {
+          const contentState = document.getElementById("contentState")
+          if (!contentState) return
+
+          if (posts.length === 0) {
+            contentState.innerHTML = `
+              <div class="no-results">
+                <div class="no-results-icon">📚</div>
+                <h3>Tidak Ada Konten</h3>
+                <p>Tidak ada konten yang ditemukan untuk filter "${filterConfig.displayName || filterConfig.name}".</p>
+              </div>
+            `
+            return
+          }
+
+          // Display filtered posts
+          const postsHTML = posts
+            .map(
+              (post, index) => `
+            <article class="post-card post-card-${index % 4}" data-post-slug="${post.slug}">
+              ${post.data.emoji ? `<div class="post-emoji">${post.data.emoji}</div>` : ""}
+              <div class="post-card-container">
+                <div class="post-header">
+                  <h2 class="post-title">
+                    <a href="${post.resolvedPath || `/docs/${post.slug}`}">${post.data.title}</a>
+                  </h2>
+                  <div class="post-meta">
+                    <span class="post-date">${new Date(post.data.publishedDate).toLocaleDateString("id-ID")}</span>
+                    <span class="post-readtime">${post.data.readTime || "5 min read"}</span>
+                  </div>
+                </div>
+                <p class="post-description">${post.data.description}</p>
+                <div class="post-tags">
+                  ${(post.data.tags || [])
+                    .slice(0, 3)
+                    .map((tag) => `<span class="post-tag">${tag}</span>`)
+                    .join("")}
+                  ${
+                    (post.data.tags || []).length > 3
+                      ? `<span class="post-tag-more">+${(post.data.tags || []).length - 3}</span>`
+                      : ""
+                  }
+                </div>
+              </div>
+            </article>
+          `
+            )
+            .join("")
+
+          contentState.innerHTML = postsHTML
+        }
+
+        displayError(message: string) {
+          const searchResults = document.getElementById("searchResults")
+          const searchStats = document.getElementById("searchStats")
+          const searchResultsContent = document.getElementById("searchResultsContent")
+
+          if (searchResults && searchStats && searchResultsContent) {
+            searchResults.classList.remove("hidden")
+            searchStats.innerHTML = `<span class="search-results-count">Error</span>`
+            searchResultsContent.innerHTML = `
+              <div class="search-no-results">
+                <div class="no-results-icon">⚠️</div>
+                <h3>Terjadi Kesalahan</h3>
+                <p>${message}</p>
+              </div>
+            `
+          }
+        }
+
+        cacheResult(key: string, result: any) {
+          if (this.searchCache.size >= this.maxCacheSize) {
+            const firstKey = this.searchCache.keys().next().value
+            this.searchCache.delete(firstKey)
+          }
+          this.searchCache.set(key, result)
+        }
+
+        getPerformanceReport() {
+          return {
+            ...this.performanceMetrics,
+            cacheSize: this.searchCache.size,
+            searchDataSize: this.searchData.length,
+          }
+        }
+      }
+
+      // Initialize the modern search engine
+      const searchEngine = new ModernSearchEngine()
+
+      // Make search engine available globally for debugging
+      window.searchEngine = searchEngine
+
+      // FIX #132: JSON.parse error - Template literals not processed by Astro
+      // ROOT CAUSE: ${JSON.stringify(...)} causing syntax errors in build
+      // SOLUTION: Safe client-side approach with window checks
+      // STATUS: ✅ RESOLVED
+
+      // Make content configuration available globally for filtering
+      if (typeof window !== "undefined") {
+        // Load configuration from data attributes or use defaults
+        window.contentConfig = {
+          categories: {},
+          tags: {},
+          filters: {},
+          mindMap: {},
+          search: {},
+        }
+
+        // Load posts from search.json endpoint (28KB of valid JSON data)
+        window.allPosts = []
+      }
+
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(
+          "Modern Search Engine initialized with Fuse.js integration",
+          "success"
+        )
+        window.clientLogger.log(
+          "Content configuration loaded for dynamic filtering",
+          "success"
+        )
+        window.clientLogger.log(
+          `Available filters: ${Object.keys((window as any).contentConfig.filters).length}`,
+          "info"
+        )
+        window.clientLogger.log(
+          `Available categories: ${Object.keys((window as any).contentConfig.categories).length}`,
+          "info"
+        )
+        window.clientLogger.log(
+          `Available tags: ${Object.keys((window as any).contentConfig.tags).length}`,
+          "info"
+        )
+      }
+    </script>
+
+    <script>
+      // 🌊 DOCS PAGE WAVE ANIMATION INITIALIZATION
+      // Google Engineering Team 2025: Performance-optimized wave animation for docs page
+
+      let waveAnimation: { cleanup: () => void } | null = null
+      let starsContainer: HTMLElement | null = null
+
+      // Initialize wave animation for docs page
+      function initializeDocsWaveAnimation(): (() => void) | undefined {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Initializing docs page wave animation...", "info")
+        }
+
+        const canvas = document.getElementById("waveCanvas")
+        if (!canvas) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Wave canvas not found for docs page", "warning")
+          }
+          return undefined
+        }
+
+        const ctx = (canvas as HTMLCanvasElement)?.getContext("2d")
+        if (!ctx) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Canvas context not available for docs page",
+              "warning"
+            )
+          }
+          return undefined
+        }
+
+        let animationId: number | null = null
+        let time = 0
+
+        // Docs-specific wave configuration (optimized for content pages)
+        const waves = [
+          {
+            amplitude: 35,
+            frequency: 0.008,
+            speed: 0.015,
+            offset: 0,
+            color: "rgba(139, 93, 255, 0.06)",
+            y: 0.75,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+          {
+            amplitude: 45,
+            frequency: 0.006,
+            speed: -0.012,
+            offset: Math.PI / 3,
+            color: "rgba(139, 93, 255, 0.04)",
+            y: 0.8,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+          {
+            amplitude: 30,
+            frequency: 0.01,
+            speed: 0.018,
+            offset: Math.PI / 2,
+            color: "rgba(139, 93, 255, 0.03)",
+            y: 0.85,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+        ]
+
+        function resizeCanvas() {
+          const width = window.innerWidth
+          const height = window.innerHeight
+          ;(canvas as HTMLCanvasElement).width = width
+          ;(canvas as HTMLCanvasElement).height = height
+
+          // Update wave y positions based on new height
+          waves.forEach((wave) => {
+            wave.yPos = height * wave.y
+          })
+        }
+
+        function animate() {
+          if (!ctx) return
+
+          ctx.clearRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
+
+          // Create gradient background (docs-specific)
+          const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            (canvas as HTMLCanvasElement).height
+          )
+          gradient.addColorStop(0, "rgba(10, 10, 10, 1)")
+          gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)")
+          gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)")
+          ctx.fillStyle = gradient
+          ctx.fillRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
+
+          // Draw waves
+          waves.forEach((wave) => {
+            ctx.beginPath()
+
+            // Create wave path
+            for (let x = 0; x <= (canvas as HTMLCanvasElement).width + 10; x += 2) {
+              const y =
+                wave.yPos +
+                Math.sin(x * wave.frequency + time * wave.speed + wave.offset) *
+                  wave.amplitude
+
+              if (x === 0) {
+                ctx.moveTo(x, y)
+              } else {
+                ctx.lineTo(x, y)
+              }
+            }
+
+            // Close the path to create filled area
+            ctx.lineTo(
+              (canvas as HTMLCanvasElement).width,
+              (canvas as HTMLCanvasElement).height
+            )
+            ctx.lineTo(0, (canvas as HTMLCanvasElement).height)
+            ctx.closePath()
+
+            ctx.fillStyle = wave.color
+            ctx.fill()
+
+            // Add subtle stroke for more definition
+            ctx.strokeStyle = "rgba(139, 93, 255, 0.08)"
+            ctx.lineWidth = 0.5
+            ctx.stroke()
+          })
+
+          time += 0.5
+          animationId = requestAnimationFrame(animate)
+        }
+
+        // Initialize
+        resizeCanvas()
+        animate()
+
+        // Handle window resize
+        const handleResize = () => {
+          resizeCanvas()
+        }
+        window.addEventListener("resize", handleResize)
+
+        // Return cleanup function
+        return () => {
+          if (animationId) {
+            cancelAnimationFrame(animationId)
+          }
+          window.removeEventListener("resize", handleResize)
+        }
+      }
+
+      // Initialize wave animation when DOM is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        try {
+          waveAnimation = {
+            cleanup: initializeDocsWaveAnimation() || (() => {}),
+          }
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Docs page wave animation initialized successfully",
+              "success"
+            )
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Error initializing docs page wave animation: ${error}`,
+              "error"
+            )
+          }
+        }
+      })
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", function () {
+        if (waveAnimation) {
+          waveAnimation.cleanup()
+        }
+      })
+
+      // Initialize stars background
+      function initializeStars() {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log(
+            "Initializing stars background for docs page...",
+            "info"
+          )
+        }
+
+        const container = document.getElementById("starsContainer")
+        if (!container) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Stars container not found for docs page", "warning")
+          }
+          return
+        }
+
+        // Create stars (optimized for docs page)
+        const starCount = 25 // Reduced for better performance
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement("div")
+          star.className = "star"
+          star.style.left = Math.random() * 100 + "%"
+          star.style.top = Math.random() * 100 + "%"
+          star.style.animationDelay = Math.random() * 3 + "s"
+          star.style.animationDuration = 2 + Math.random() * 2 + "s"
+          container.appendChild(star)
+        }
+
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Stars background initialized", "success")
+        }
+      }
+
+      // Navigation functions for docs page
+      ;(window as any).goHome = function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Navigating to home...", "info")
+        }
+        window.location.href = "/"
+      }
+      ;(window as any).goToPosts = function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Already on docs page...", "info")
+        }
+        window.location.reload()
+      }
+      ;(window as any).goToInvitation = function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Navigating to Discord...", "info")
+        }
+        window.location.href = "/discord"
+      }
+
+      // Google UI/UX 2025: Tag Popup Functionality
+      function initializeTagPopups() {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Initializing minimalist tag popups...", "info")
+        }
+
+        const tagContainers = document.querySelectorAll(".post-tags")
+
+        tagContainers.forEach((container) => {
+          const moreButton = container.querySelector(".post-tag-more")
+          if (!moreButton) return
+
+          // Type-safe dataset access
+          const containerElement = container as HTMLElement
+          const allTags = JSON.parse(containerElement.dataset.allTags || "[]")
+          const hiddenTags = allTags.slice(3)
+
+          if (hiddenTags.length === 0) return
+
+          let popup: HTMLElement | null = null
+
+          // Create popup element
+          function createPopup(): void {
+            popup = document.createElement("div")
+            popup.className = "tag-popup"
+
+            const header = document.createElement("div")
+            header.className = "tag-popup-header"
+            header.textContent = "Tag Lain-nya:"
+
+            const content = document.createElement("div")
+            content.className = "tag-popup-content"
+
+            hiddenTags.forEach((tag: string) => {
+              const tagElement = document.createElement("span")
+              tagElement.className = "tag-popup-tag"
+              tagElement.textContent = tag
+              content.appendChild(tagElement)
+            })
+
+            popup.appendChild(header)
+            popup.appendChild(content)
+            container.appendChild(popup)
+          }
+
+          // Show popup with accessibility
+          function showPopup(): void {
+            if (!popup) createPopup()
+            if (popup) {
+              popup.classList.add("show")
+              popup.setAttribute("aria-hidden", "false")
+              moreButton?.setAttribute("aria-expanded", "true")
+            }
+          }
+
+          // Hide popup
+          function hidePopup(): void {
+            if (popup) {
+              popup.classList.remove("show")
+              popup.setAttribute("aria-hidden", "true")
+              moreButton?.setAttribute("aria-expanded", "false")
+            }
+          }
+
+          // Event listeners
+          moreButton?.addEventListener("mouseenter", showPopup)
+          moreButton?.addEventListener("mouseleave", hidePopup)
+
+          // Touch support for mobile
+          moreButton?.addEventListener("touchstart", (e) => {
+            e.preventDefault()
+            if (popup && popup.classList.contains("show")) {
+              hidePopup()
+            } else {
+              showPopup()
+            }
+          })
+
+          // Accessibility - keyboard support
+          moreButton?.addEventListener("keydown", (e) => {
+            const keyEvent = e as KeyboardEvent
+            if (keyEvent.key === "Enter" || keyEvent.key === " ") {
+              e.preventDefault()
+              if (popup && popup.classList.contains("show")) {
+                hidePopup()
+              } else {
+                showPopup()
+              }
+            }
+            if ((e as KeyboardEvent).key === "Escape") {
+              hidePopup()
+            }
+          })
+
+          // Set ARIA attributes
+          moreButton.setAttribute("role", "button")
+          moreButton.setAttribute("aria-expanded", "false")
+          moreButton.setAttribute("aria-haspopup", "true")
+          moreButton.setAttribute("tabindex", "0")
+          moreButton.setAttribute(
+            "aria-label",
+            `Tampilkan ${hiddenTags.length} tag lainnya`
+          )
+        })
+
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Tag popups initialized", "success")
+        }
+      }
+
+      // Initialize everything when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("GoRakuDo Docs Page Loading...", "info")
+        }
+
+        // Initialize wave animation
+        try {
+          const cleanupWave = initializeDocsWaveAnimation()
+          if (cleanupWave) {
+            waveAnimation = { cleanup: cleanupWave }
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                "Wave animation initialized for docs page",
+                "success"
+              )
+            }
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Wave animation failed for docs page: ${error}`,
+              "error"
+            )
+          }
+        }
+
+        // Initialize stars
+        try {
+          initializeStars()
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Stars background initialized for docs page",
+              "success"
+            )
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Stars background failed for docs page: ${error}`,
+              "error"
+            )
+          }
+        }
+
+        // Initialize tag popups
+        try {
+          initializeTagPopups()
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Tag popups initialized for docs page", "success")
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Tag popups failed for docs page: ${error}`, "error")
+          }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener("beforeunload", function () {
+          if (waveAnimation && waveAnimation.cleanup) {
+            waveAnimation.cleanup()
+          }
+        })
+
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Docs Page Loaded Successfully!", "success")
+        }
+      })
+    </script>

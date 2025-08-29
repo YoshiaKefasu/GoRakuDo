@@ -31,6 +31,35 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 };
 
+// Mock Astro modules - moved to global setup
+global.mockAstroContent = {
+  getCollection: jest.fn(),
+  getEntry: jest.fn(),
+  getDataEntryById: jest.fn(),
+  getEntries: jest.fn(),
+  getEntryBySlug: jest.fn(),
+};
+
+global.mockFsPromises = {
+  readdir: jest.fn(),
+  readFile: jest.fn(),
+  writeFile: jest.fn(),
+  stat: jest.fn(),
+  mkdir: jest.fn(),
+  access: jest.fn(),
+};
+
+global.mockPath = {
+  join: jest.fn((...args) => args.join('/')),
+  resolve: jest.fn((...args) => args.join('/')),
+  dirname: jest.fn((path) => path.split('/').slice(0, -1).join('/')),
+  basename: jest.fn((path) => path.split('/').pop()),
+  extname: jest.fn((path) => {
+    const parts = path.split('.');
+    return parts.length > 1 ? '.' + parts.pop() : '';
+  }),
+};
+
 // Mock matchMedia
 Object.defineProperty(window, "matchMedia", {
   writable: true,

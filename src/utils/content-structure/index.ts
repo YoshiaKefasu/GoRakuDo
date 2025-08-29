@@ -1,30 +1,23 @@
 // Content Structure Utilities - Index File
 // Centralized exports for all content structure and navigation utilities
 
-export {
-  MIND_MAP_BRANCHES,
-  UNDERSTANDING_LEVELS,
-  LEARNING_STAGES,
-  getMindMapBranch,
-  getUnderstandingLevel,
-  getLearningStage,
-  getSubBranch,
-  getPostsByMindMapBranch,
-  getPostsByUnderstandingLevel,
-  getPostsByLearningStage,
-  generateBreadcrumbPath,
-  getNextUnderstandingLevel,
-  getPreviousUnderstandingLevel,
-  getNextLearningStage,
-  getPreviousLearningStage,
-} from "./mind-map-structure";
+// MindMap-related functions removed - MindMap functionality deprecated
+// UNDERSTANDING_LEVELS and LEARNING_STAGES preserved for existing functionality
+export const UNDERSTANDING_LEVELS = {
+  beginner: { name: "Beginner", description: "Basic understanding level" },
+  intermediate: { name: "Intermediate", description: "Intermediate understanding level" },
+  advanced: { name: "Advanced", description: "Advanced understanding level" }
+};
 
-export type {
-  MindMapBranch,
-  MindMapSubBranch,
-  UnderstandingLevel,
-  LearningStage,
-} from "./mind-map-structure";
+export const LEARNING_STAGES = {
+  foundational: { name: "Foundational", description: "Basic learning stage" },
+  developing: { name: "Developing", description: "Developing learning stage" },
+  proficient: { name: "Proficient", description: "Proficient learning stage" }
+};
+
+// MindMap-related types removed - MindMap functionality deprecated
+export type UnderstandingLevel = typeof UNDERSTANDING_LEVELS[keyof typeof UNDERSTANDING_LEVELS];
+export type LearningStage = typeof LEARNING_STAGES[keyof typeof LEARNING_STAGES];
 
 export {
   generateSkeletonPostCard,

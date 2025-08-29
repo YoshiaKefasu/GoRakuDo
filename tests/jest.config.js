@@ -1,13 +1,15 @@
-// Simple Jest configuration for ES modules
-export default {
+// Jest configuration for CommonJS with jsdom support
+module.exports = {
   preset: null,
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   roots: ["<rootDir>/tests"],
   testMatch: ["**/__tests__/**/*.js", "**/?(*.)+(spec|test).js"],
   transform: {},
-  extensionsToTreatAsEsm: [".js"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^astro:content$": "<rootDir>/tests/mocks/astro-content.js",
+    "^fs/promises$": "<rootDir>/tests/mocks/fs-promises.js",
+    "^path$": "<rootDir>/tests/mocks/path.js",
   },
   collectCoverageFrom: [
     "src/**/*.{js,astro}",
@@ -17,4 +19,7 @@ export default {
   coverageDirectory: "tests/coverage",
   coverageReporters: ["text", "lcov", "html"],
   setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
+  testEnvironmentOptions: {
+    customExportConditions: ["node", "node-addons"],
+  },
 };

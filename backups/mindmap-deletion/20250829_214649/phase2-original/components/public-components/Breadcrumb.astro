@@ -1,0 +1,920 @@
+---
+// Fully Customizable Breadcrumb Component with Mind Map Integration
+// Google 2025 Engineering Team - Astro + Vue + Tailwind v4.1
+// Mobile-first responsive design with comprehensive customization options
+
+import type { CollectionEntry } from "astro:content"
+import { MIND_MAP_CONFIG, MindMapUtils } from "../mind-map/mind-map-config"
+import {
+  resolveContentPath,
+  getCollectionMetadata,
+} from "../../utils/content-path-resolver"
+
+// ========== COMPREHENSIVE PROPS INTERFACE ==========
+export interface Props {
+  // Core navigation props
+  post?: CollectionEntry<"docs">
+  currentPath?: string
+  showHome?: boolean
+
+  // Mind map integration
+  showMindMap?: boolean
+  mindMapContext?: {
+    branchId?: string
+    showRelationships?: boolean
+    showVisualIndicators?: boolean
+  }
+
+  // Visual customization
+  variant?: "compact" | "spacious" | "minimal" | "pill" | "underline"
+  theme?: "light" | "dark" | "auto" | "custom"
+  colorScheme?: {
+    primary?: string
+    secondary?: string
+    background?: string
+    text?: string
+    muted?: string
+    border?: string
+  }
+
+  // Typography and spacing
+  fontSize?: "xs" | "sm" | "base" | "lg" | "xl"
+  fontWeight?: "normal" | "medium" | "semibold" | "bold"
+  spacing?: "tight" | "normal" | "loose"
+
+  // Layout and behavior
+  orientation?: "horizontal" | "vertical"
+  alignment?: "left" | "center" | "right"
+  maxItems?: number
+  truncateText?: boolean
+  maxTextLength?: number
+
+  // Separators and icons
+  separator?: "chevron" | "arrow" | "slash" | "dot" | "custom"
+  customSeparator?: string
+  showIcons?: boolean
+  iconPosition?: "left" | "right" | "both"
+
+  // Interactive features
+  hoverEffects?: boolean
+  focusVisible?: boolean
+  clickHandlers?: boolean
+
+  // Accessibility
+  ariaLabel?: string
+  showCurrentPage?: boolean
+
+  // Responsive behavior
+  responsive?: {
+    mobile?: Partial<Props>
+    tablet?: Partial<Props>
+    desktop?: Partial<Props>
+  }
+
+  // CSS classes
+  className?: string
+  containerClass?: string
+  itemClass?: string
+  linkClass?: string
+  separatorClass?: string
+}
+
+// ========== DEFAULT PROPS WITH COMPREHENSIVE CUSTOMIZATION ==========
+const {
+  // Core navigation
+  post,
+  currentPath = "",
+  showHome = true,
+
+  // Mind map integration
+  showMindMap = false,
+  mindMapContext = {
+    branchId: undefined,
+    showRelationships: true,
+    showVisualIndicators: true,
+  },
+
+  // Visual customization
+  variant = "compact",
+  theme = "auto",
+  colorScheme = {},
+
+  // Typography and spacing
+  fontSize = "sm",
+  fontWeight = "medium",
+  spacing = "normal",
+
+  // Layout and behavior
+  orientation = "horizontal",
+  alignment = "left",
+  maxItems = 5,
+  truncateText = true,
+  maxTextLength = 20,
+
+  // Separators and icons
+  separator = "chevron",
+  customSeparator = "",
+  showIcons = false,
+  iconPosition = "left",
+
+  // Interactive features
+  hoverEffects = true,
+  focusVisible = true,
+  clickHandlers = false,
+
+  // Accessibility
+  ariaLabel = "Breadcrumb navigation",
+  showCurrentPage = true,
+
+  // Responsive behavior
+  responsive = {},
+
+  // CSS classes
+  className = "",
+  containerClass = "",
+  itemClass = "",
+  linkClass = "",
+  separatorClass = "",
+} = Astro.props
+
+// ========== MIND MAP INTEGRATION SYSTEM ==========
+let mindMapData: any = null
+let currentBranch: any = null
+let relatedBranches: any[] = []
+
+if (showMindMap) {
+  try {
+    mindMapData = MindMapUtils.exportData()
+
+    // Determine current branch based on post content or path
+    if (post) {
+      // Analyze post content to find matching mind map branch
+      const postContent = post.data.title + " " + (post.data.description || "")
+      const postKeywords = postContent.toLowerCase().split(/\s+/)
+
+      // Find best matching branch based on keywords
+      let bestMatch = { branch: null, score: 0 }
+
+      Object.values(mindMapData.branches).forEach((branch: any) => {
+        const branchKeywords = branch.keywords.map((k: string) => k.toLowerCase())
+        const matchScore = postKeywords.filter((keyword) =>
+          branchKeywords.some(
+            (branchKeyword) =>
+              branchKeyword.includes(keyword) || keyword.includes(branchKeyword)
+          )
+        ).length
+
+        if (matchScore > bestMatch.score) {
+          bestMatch = { branch, score: matchScore }
+        }
+      })
+
+      if (bestMatch.branch) {
+        currentBranch = bestMatch.branch
+        relatedBranches = MindMapUtils.getRelatedBranches(bestMatch.branch.id)
+          .map((id) => MindMapUtils.getBranch(id))
+          .filter(Boolean)
+      }
+    }
+  } catch (error) {
+    console.warn("Mind map integration failed:", error)
+  }
+}
+
+// ========== BREADCRUMB GENERATION WITH MIND MAP CONTEXT ==========
+let breadcrumbItems: Array<{
+  title: string
+  url: string
+  isActive: boolean
+  icon?: string
+  mindMapContext?: {
+    branchId?: string
+    branchColor?: string
+    branchIcon?: string
+    relationships?: any[]
+  }
+}> = []
+
+try {
+  if (post) {
+    // Blog post breadcrumbs with mind map context
+    if (showHome) {
+      breadcrumbItems.push({
+        title: "Home",
+        url: "/",
+        isActive: false,
+        icon: "🏠",
+        mindMapContext: undefined,
+      })
+    }
+
+    // Dynamic collection path resolution
+    const collectionMetadata = getCollectionMetadata("docs") // Default to docs for backward compatibility
+    const resolvedPath = resolveContentPath(post)
+
+    breadcrumbItems.push({
+      title: collectionMetadata.displayName,
+      url: collectionMetadata.basePath,
+      isActive: false,
+      icon: collectionMetadata.icon,
+      mindMapContext: undefined,
+    })
+
+    const postItem: {
+      title: string
+      url: string
+      isActive: boolean
+      icon: string
+      mindMapContext?: {
+        branchId?: string
+        branchColor?: string
+        branchIcon?: string
+        relationships?: any[]
+      }
+    } = {
+      title: post.data.title,
+      url: resolvedPath.path,
+      isActive: true,
+      icon: "📄",
+    }
+
+    // Add mind map context if available
+    if (currentBranch && showMindMap) {
+      postItem.mindMapContext = {
+        branchId: currentBranch.id,
+        branchColor: currentBranch.visual.color,
+        branchIcon: currentBranch.visual.icon,
+        relationships: relatedBranches.map((branch) => ({
+          id: branch.id,
+          name: branch.displayName,
+          color: branch.visual.color,
+          type: "related",
+        })),
+      }
+    }
+
+    breadcrumbItems.push(postItem)
+  } else {
+    // Path-based breadcrumbs
+    const pathSegments = currentPath.split("/").filter(Boolean)
+
+    if (showHome) {
+      breadcrumbItems.push({
+        title: "Home",
+        url: "/",
+        isActive: false,
+        icon: "🏠",
+        mindMapContext: undefined,
+      })
+    }
+
+    let currentUrl = ""
+    pathSegments.forEach((segment, index) => {
+      currentUrl += `/${segment}`
+      const isLast = index === pathSegments.length - 1
+
+      // Convert segment to readable title
+      let title = segment.charAt(0).toUpperCase() + segment.slice(1)
+      if (segment === "docs") title = "Documentation"
+
+      breadcrumbItems.push({
+        title,
+        url: currentUrl,
+        isActive: isLast,
+        icon: segment === "docs" ? "📚" : "📁",
+        mindMapContext: undefined,
+      })
+    })
+  }
+
+  // Apply max items limit
+  if (breadcrumbItems.length > maxItems) {
+    const startItems = breadcrumbItems.slice(0, 2)
+    const endItems = breadcrumbItems.slice(-2)
+    breadcrumbItems = [
+      ...startItems,
+      { title: "...", url: "#", isActive: false, icon: "⋯", mindMapContext: undefined },
+      ...endItems,
+    ]
+  }
+} catch (error) {
+  console.warn("Breadcrumb generation failed:", error)
+  breadcrumbItems = [
+    {
+      title: "Home",
+      url: "/",
+      isActive: true,
+      icon: "🏠",
+      mindMapContext: undefined,
+    },
+  ]
+}
+
+// ========== THEME AND STYLING SYSTEM ==========
+const getThemeColors = () => {
+  const baseColors = {
+    light: {
+      primary: "oklch(65% 0.18 280)",
+      secondary: "oklch(75% 0.12 65)",
+      background: "oklch(98% 0.002 270)",
+      text: "oklch(15% 0.005 270)",
+      muted: "oklch(65% 0.008 270)",
+      border: "oklch(80% 0.02 254.624)",
+    },
+    dark: {
+      primary: "oklch(65% 0.18 280)",
+      secondary: "oklch(75% 0.12 65)",
+      background: "oklch(4% 0.005 270)",
+      text: "oklch(98% 0.002 270)",
+      muted: "oklch(65% 0.008 270)",
+      border: "oklch(25% 0.015 270)",
+    },
+  }
+
+  const selectedTheme = theme === "auto" ? "dark" : theme
+  return { ...baseColors[selectedTheme], ...colorScheme }
+}
+
+const colors = getThemeColors()
+
+// ========== RESPONSIVE DESIGN SYSTEM ==========
+const getResponsiveProps = () => {
+  const responsiveConfig = {
+    mobile: {
+      fontSize: "xs",
+      spacing: "tight",
+      variant: "compact",
+      maxItems: 3,
+      truncateText: true,
+      maxTextLength: 15,
+      fontWeight: "medium",
+    },
+    tablet: {
+      fontSize: "sm",
+      spacing: "normal",
+      variant: "compact",
+      maxItems: 4,
+      truncateText: true,
+      maxTextLength: 18,
+      fontWeight: "medium",
+    },
+    desktop: {
+      fontSize: "base",
+      spacing: "normal",
+      variant: variant,
+      maxItems: maxItems,
+      truncateText: truncateText,
+      maxTextLength: maxTextLength,
+      fontWeight: fontWeight,
+    },
+  }
+
+  return {
+    ...responsiveConfig.desktop,
+    ...responsive,
+  }
+}
+
+const responsiveProps = getResponsiveProps()
+
+// ========== SEPARATOR SYSTEM ==========
+const getSeparator = () => {
+  const separators = {
+    chevron: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>`,
+    arrow: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+    </svg>`,
+    slash: "/",
+    dot: "•",
+    custom: customSeparator || ">",
+  }
+
+  return separators[separator] || separators.chevron
+}
+
+// ========== CSS CUSTOM PROPERTIES FOR THEMING ==========
+const cssVars = `
+  --breadcrumb-primary: ${colors.primary};
+  --breadcrumb-secondary: ${colors.secondary};
+  --breadcrumb-background: ${colors.background};
+  --breadcrumb-text: ${colors.text};
+  --breadcrumb-muted: ${colors.muted};
+  --breadcrumb-border: ${colors.border};
+  --breadcrumb-font-size: var(--font-size-${responsiveProps.fontSize});
+  --breadcrumb-font-weight: var(--font-weight-${responsiveProps.fontWeight});
+  --breadcrumb-spacing: ${responsiveProps.spacing === "tight" ? "0.25rem" : responsiveProps.spacing === "loose" ? "0.75rem" : "0.5rem"};
+`
+
+// ========== SEO STRUCTURED DATA ==========
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbItems.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.title,
+    item: `${Astro.site}${item.url}`,
+  })),
+}
+---
+
+<!-- ========== FULLY CUSTOMIZABLE BREADCRUMB COMPONENT ========== -->
+<nav
+  class={`breadcrumb-nav breadcrumb-${variant} breadcrumb-${orientation} breadcrumb-${alignment} ${className}`}
+  style={cssVars}
+  aria-label={ariaLabel}
+  role="navigation">
+  <ol class={`breadcrumb-list ${containerClass}`}>
+    {
+      breadcrumbItems.map((item, index) => (
+        <li class={`breadcrumb-item ${itemClass}`}>
+          {/* Separator for non-first items */}
+          {index > 0 && (
+            <span
+              class={`breadcrumb-separator ${separatorClass}`}
+              aria-hidden="true"
+              set:html={getSeparator()}
+            />
+          )}
+
+          {/* Breadcrumb item with mind map context */}
+          {item.isActive ? (
+            <span
+              class="breadcrumb-current"
+              aria-current="page"
+              style={
+                item.mindMapContext
+                  ? `--mind-map-color: ${item.mindMapContext.branchColor}`
+                  : ""
+              }>
+              {/* Mind map icon if available */}
+              {showIcons && item.mindMapContext?.branchIcon && (
+                <span class="breadcrumb-icon mind-map-icon" aria-hidden="true">
+                  {item.mindMapContext.branchIcon}
+                </span>
+              )}
+
+              {/* Regular icon */}
+              {showIcons && item.icon && !item.mindMapContext?.branchIcon && (
+                <span class="breadcrumb-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+              )}
+
+              {/* Truncated text */}
+              <span class="breadcrumb-text">
+                {responsiveProps.truncateText &&
+                item.title.length > responsiveProps.maxTextLength
+                  ? item.title.substring(0, responsiveProps.maxTextLength) + "..."
+                  : item.title}
+              </span>
+
+              {/* Mind map context indicator */}
+              {item.mindMapContext && mindMapContext.showVisualIndicators && (
+                <span
+                  class="mind-map-indicator"
+                  style={`background-color: ${item.mindMapContext.branchColor}`}
+                  title={`Mind Map Branch: ${item.mindMapContext.branchId}`}
+                  aria-label={`Mind map branch ${item.mindMapContext.branchId}`}
+                />
+              )}
+            </span>
+          ) : (
+            <a
+              href={item.url}
+              class={`breadcrumb-link ${linkClass}`}
+              style={
+                item.mindMapContext
+                  ? `--mind-map-color: ${item.mindMapContext.branchColor}`
+                  : ""
+              }>
+              {/* Mind map icon if available */}
+              {showIcons && item.mindMapContext?.branchIcon && (
+                <span class="breadcrumb-icon mind-map-icon" aria-hidden="true">
+                  {item.mindMapContext.branchIcon}
+                </span>
+              )}
+
+              {/* Regular icon */}
+              {showIcons && item.icon && !item.mindMapContext?.branchIcon && (
+                <span class="breadcrumb-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+              )}
+
+              {/* Truncated text */}
+              <span class="breadcrumb-text">
+                {responsiveProps.truncateText &&
+                item.title.length > responsiveProps.maxTextLength
+                  ? item.title.substring(0, responsiveProps.maxTextLength) + "..."
+                  : item.title}
+              </span>
+
+              {/* Mind map context indicator */}
+              {item.mindMapContext && mindMapContext.showVisualIndicators && (
+                <span
+                  class="mind-map-indicator"
+                  style={`background-color: ${item.mindMapContext.branchColor}`}
+                  title={`Mind Map Branch: ${item.mindMapContext.branchId}`}
+                  aria-label={`Mind map branch ${item.mindMapContext.branchId}`}
+                />
+              )}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<!-- Mind Map Relationships Display -->
+{
+  showMindMap &&
+    currentBranch &&
+    mindMapContext.showRelationships &&
+    relatedBranches.length > 0 && (
+      <div class="mind-map-relationships">
+        <span class="relationships-label">Related:</span>
+        <div class="relationships-list">
+          {relatedBranches.slice(0, 3).map((branch) => (
+            <a
+              href={`/mind-map#${branch.id}`}
+              class="relationship-item"
+              style={`--branch-color: ${branch.visual.color}`}
+              title={branch.description}>
+              <span class="relationship-icon">{branch.visual.icon}</span>
+              <span class="relationship-name">{branch.displayName}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )
+}
+
+<!-- SEO structured data -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+<style>
+  /* ========== COMPREHENSIVE BREADCRUMB STYLING SYSTEM ========== */
+
+  /* Base breadcrumb container */
+  .breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    font-size: var(--breadcrumb-font-size);
+    font-weight: var(--breadcrumb-font-weight);
+    color: var(--breadcrumb-text);
+    background: var(--breadcrumb-background);
+    border-radius: var(--radius-md);
+    padding: var(--breadcrumb-spacing);
+    transition: all var(--duration-normal) var(--ease-out);
+  }
+
+  /* Orientation variants */
+  .breadcrumb-horizontal {
+    flex-direction: row;
+  }
+
+  .breadcrumb-vertical {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Alignment variants */
+  .breadcrumb-left {
+    justify-content: flex-start;
+  }
+
+  .breadcrumb-center {
+    justify-content: center;
+  }
+
+  .breadcrumb-right {
+    justify-content: flex-end;
+  }
+
+  /* Breadcrumb list */
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: var(--breadcrumb-spacing);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .breadcrumb-vertical .breadcrumb-list {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Breadcrumb items */
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: var(--breadcrumb-spacing);
+  }
+
+  .breadcrumb-vertical .breadcrumb-item {
+    width: 100%;
+  }
+
+  /* Separators */
+  .breadcrumb-separator {
+    display: flex;
+    align-items: center;
+    color: var(--breadcrumb-muted);
+    opacity: 0.6;
+    transition: opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .breadcrumb-separator svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  /* Links and current page */
+  .breadcrumb-link,
+  .breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--breadcrumb-text);
+    transition: all var(--duration-fast) var(--ease-out);
+    position: relative;
+  }
+
+  /* Hover effects */
+  .breadcrumb-link:hover {
+    background: color-mix(in oklch, var(--breadcrumb-primary) 10%, transparent);
+    color: var(--breadcrumb-primary);
+    transform: translateY(-1px);
+  }
+
+  /* Focus states */
+  .breadcrumb-link:focus-visible {
+    outline: 2px solid var(--breadcrumb-primary);
+    outline-offset: 2px;
+    background: color-mix(in oklch, var(--breadcrumb-primary) 15%, transparent);
+  }
+
+  /* Current page styling */
+  .breadcrumb-current {
+    background: color-mix(in oklch, var(--breadcrumb-primary) 15%, transparent);
+    color: var(--breadcrumb-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Icons */
+  .breadcrumb-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875em;
+    opacity: 0.8;
+  }
+
+  .mind-map-icon {
+    font-size: 1em;
+  }
+
+  /* Mind map indicator */
+  .mind-map-indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    margin-left: 0.25rem;
+    opacity: 0.8;
+    transition: opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .breadcrumb-link:hover .mind-map-indicator,
+  .breadcrumb-current .mind-map-indicator {
+    opacity: 1;
+  }
+
+  /* Text truncation */
+  .breadcrumb-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 8rem;
+  }
+
+  /* ========== VARIANT STYLES ========== */
+
+  /* Compact variant */
+  .breadcrumb-compact {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .breadcrumb-compact .breadcrumb-link,
+  .breadcrumb-compact .breadcrumb-current {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875em;
+  }
+
+  /* Spacious variant */
+  .breadcrumb-spacious {
+    padding: 0.75rem 1rem;
+  }
+
+  .breadcrumb-spacious .breadcrumb-link,
+  .breadcrumb-spacious .breadcrumb-current {
+    padding: 0.5rem 1rem;
+    font-size: 1.125em;
+  }
+
+  /* Minimal variant */
+  .breadcrumb-minimal {
+    background: transparent;
+    padding: 0;
+  }
+
+  .breadcrumb-minimal .breadcrumb-link,
+  .breadcrumb-minimal .breadcrumb-current {
+    padding: 0.25rem 0;
+    background: transparent;
+  }
+
+  .breadcrumb-minimal .breadcrumb-current {
+    color: var(--breadcrumb-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Pill variant */
+  .breadcrumb-pill .breadcrumb-link,
+  .breadcrumb-pill .breadcrumb-current {
+    border-radius: var(--radius-pill);
+    padding: 0.375rem 1rem;
+    border: 1px solid var(--breadcrumb-border);
+  }
+
+  .breadcrumb-pill .breadcrumb-current {
+    background: var(--breadcrumb-primary);
+    color: var(--breadcrumb-background);
+    border-color: var(--breadcrumb-primary);
+  }
+
+  /* Underline variant */
+  .breadcrumb-underline .breadcrumb-link {
+    border-bottom: 2px solid transparent;
+    padding-bottom: 0.125rem;
+  }
+
+  .breadcrumb-underline .breadcrumb-link:hover {
+    border-bottom-color: var(--breadcrumb-primary);
+  }
+
+  .breadcrumb-underline .breadcrumb-current {
+    border-bottom: 2px solid var(--breadcrumb-primary);
+    padding-bottom: 0.125rem;
+  }
+
+  /* ========== MIND MAP RELATIONSHIPS ========== */
+
+  .mind-map-relationships {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: color-mix(in oklch, var(--breadcrumb-background) 50%, transparent);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--breadcrumb-border);
+  }
+
+  .relationships-label {
+    font-size: 0.75em;
+    color: var(--breadcrumb-muted);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .relationships-list {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+  }
+
+  .relationship-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: color-mix(
+      in oklch,
+      var(--branch-color, var(--breadcrumb-primary)) 10%,
+      transparent
+    );
+    border: 1px solid
+      color-mix(in oklch, var(--branch-color, var(--breadcrumb-primary)) 20%, transparent);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--breadcrumb-text);
+    font-size: 0.75em;
+    font-weight: var(--font-weight-medium);
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+
+  .relationship-item:hover {
+    background: color-mix(
+      in oklch,
+      var(--branch-color, var(--breadcrumb-primary)) 20%,
+      transparent
+    );
+    transform: translateY(-1px);
+  }
+
+  .relationship-icon {
+    font-size: 0.875em;
+  }
+
+  .relationship-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 4rem;
+  }
+
+  /* ========== RESPONSIVE DESIGN ========== */
+
+  /* Mobile-first approach */
+  @media (min-width: 640px) {
+    .breadcrumb-text {
+      max-width: 10rem !important;
+    }
+
+    .relationship-name {
+      max-width: 6rem !important;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .breadcrumb-text {
+      max-width: 12rem !important;
+    }
+
+    .relationship-name {
+      max-width: 8rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .breadcrumb-text {
+      max-width: 16rem !important;
+    }
+
+    .relationship-name {
+      max-width: 10rem !important;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .breadcrumb-text {
+      max-width: 20rem !important;
+    }
+
+    .relationship-name {
+      max-width: 12rem !important ;
+    }
+  }
+
+  /* ========== ACCESSIBILITY ENHANCEMENTS ========== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .breadcrumb-nav,
+    .breadcrumb-link,
+    .breadcrumb-current,
+    .relationship-item {
+      transition: none;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .breadcrumb-link:hover,
+    .breadcrumb-current {
+      background: var(--breadcrumb-primary);
+      color: var(--breadcrumb-background);
+    }
+
+    .mind-map-indicator {
+      border: 1px solid currentColor;
+    }
+  }
+
+  /* Dark mode adjustments */
+  @media (prefers-color-scheme: dark) {
+    .breadcrumb-nav {
+      background: color-mix(in oklch, var(--breadcrumb-background) 80%, transparent);
+    }
+  }
+</style>

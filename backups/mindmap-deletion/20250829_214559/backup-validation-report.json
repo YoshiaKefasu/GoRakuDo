@@ -1,0 +1,98 @@
+{
+  "validation": {
+    "timestamp": "2025-08-29T14:46:38.354Z",
+    "backupDirectory": "backups\\mindmap-deletion\\20250829_214559",
+    "results": {
+      "phase1": {
+        "src/components/mind-map/MindMapDisplay.astro": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/components/mind-map/mind-map-config.ts": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/components/mind-map/index.ts": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/components/mind-map/README.md": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/pages/mind-map.astro": {
+          "status": "VALID",
+          "hash": "1f7e4418d9eff106fa0bb339fc0a0dcb2078945df28ca9dd7d208f1af987f799"
+        },
+        "src/utils/content-structure/mind-map-structure.ts": {
+          "status": "VALID",
+          "hash": "1e12fe783f853d4ab8f138fba24b7ff8cd6315c157fb64eece4236477006099f"
+        },
+        "src/utils/ai-content/mind-map-integration.ts": {
+          "status": "VALID",
+          "hash": "e819d02f549e72ecf0713c2ea53380411919af7e570cd835610cda3b31f6c789"
+        }
+      },
+      "phase2": {
+        "src/content/content-config.ts": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/content/config.ts": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/pages/docs-new.astro": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/utils/ai-content/content-analysis.ts": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/utils/ai-content/semantic-relationships.ts": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        },
+        "src/utils/ai-content/optimized-post-processor.ts": {
+          "status": "MISSING",
+          "error": "バックアップファイルが存在しません"
+        }
+      }
+    },
+    "summary": {
+      "totalFiles": 13,
+      "validFiles": 3,
+      "invalidFiles": 0,
+      "missingFiles": 10
+    }
+  },
+  "statistics": {
+    "timestamp": "2025-08-29T14:46:38.354Z",
+    "backupDirectory": "backups\\mindmap-deletion\\20250829_214559",
+    "fileCount": {
+      "total": 13,
+      "valid": 3,
+      "invalid": 0,
+      "missing": 10
+    },
+    "integrity": {
+      "percentage": "23.08",
+      "status": "INCOMPLETE"
+    },
+    "categories": {
+      "phase1": {
+        "total": 7,
+        "valid": 3,
+        "invalid": 0,
+        "missing": 4
+      },
+      "phase2": {
+        "total": 6,
+        "valid": 0,
+        "invalid": 0,
+        "missing": 6
+      }
+    }
+  }
+}

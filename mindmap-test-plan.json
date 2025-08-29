@@ -1,0 +1,184 @@
+{
+  "timestamp": "2025-08-29T14:48:02.140Z",
+  "summary": {
+    "overallRisk": "HIGH",
+    "totalTestCases": 7,
+    "criticalTestCases": 3,
+    "highPriorityTestCases": 4,
+    "phases": {
+      "phase1": 3,
+      "phase2": 4,
+      "phase3": 1
+    }
+  },
+  "testPlan": {
+    "timestamp": "2025-08-29T14:48:02.140Z",
+    "overall": {
+      "risk": "HIGH",
+      "totalTestCases": 7,
+      "criticalTestCases": 3,
+      "highPriorityTestCases": 4
+    },
+    "phases": {
+      "phase1": {
+        "tests": [
+          {
+            "id": "P1-BUILD-001",
+            "name": "ビルド成功検証",
+            "description": "各削除ステップ後のビルド成功を確認",
+            "type": "AUTOMATED",
+            "priority": "CRITICAL",
+            "risk": "HIGH",
+            "expectedResult": "ビルドが正常に完了する",
+            "verificationMethod": "npm run build"
+          },
+          {
+            "id": "P1-REF-001",
+            "name": "参照完全性検証",
+            "description": "削除ファイルへの参照が完全に除去されていることを確認",
+            "type": "AUTOMATED",
+            "priority": "CRITICAL",
+            "risk": "HIGH",
+            "expectedResult": "参照検出ツールで0件の参照",
+            "verificationMethod": "参照検出自動化ツール"
+          },
+          {
+            "id": "P1-TS-001",
+            "name": "TypeScriptコンパイル検証",
+            "description": "TypeScriptコンパイルエラーが発生しないことを確認",
+            "type": "AUTOMATED",
+            "priority": "CRITICAL",
+            "risk": "HIGH",
+            "expectedResult": "tsc --noEmit が成功",
+            "verificationMethod": "TypeScriptコンパイラ"
+          }
+        ],
+        "risk": "HIGH"
+      },
+      "phase2": {
+        "tests": [
+          {
+            "id": "P2-FUNC-001",
+            "name": "Docsページ機能テスト",
+            "description": "docs-new.astroとdocs.astroのフィルタリング機能が正常動作することを確認",
+            "type": "MANUAL",
+            "priority": "HIGH",
+            "risk": "MEDIUM",
+            "expectedResult": "フィルタリング機能が正常に動作",
+            "verificationMethod": "ブラウザ操作テスト"
+          },
+          {
+            "id": "P2-AI-001",
+            "name": "AI機能統合テスト",
+            "description": "AIコンテンツ分析、セマンティック関連性機能が正常動作することを確認",
+            "type": "INTEGRATION",
+            "priority": "HIGH",
+            "risk": "MEDIUM",
+            "expectedResult": "AI機能がエラーなく動作",
+            "verificationMethod": "APIテスト + UIテスト"
+          },
+          {
+            "id": "P2-SYNTAX-001",
+            "name": "構文検証",
+            "description": "各参照除去後のファイル構文が正しいことを確認",
+            "type": "AUTOMATED",
+            "priority": "CRITICAL",
+            "risk": "HIGH",
+            "expectedResult": "構文エラーが0件",
+            "verificationMethod": "ESLint + TypeScriptチェック"
+          },
+          {
+            "id": "P2-IMPORT-001",
+            "name": "インポート解決検証",
+            "description": "すべてのインポートが正しく解決されることを確認",
+            "type": "AUTOMATED",
+            "priority": "CRITICAL",
+            "risk": "HIGH",
+            "expectedResult": "未解決インポートエラーが0件",
+            "verificationMethod": "ビルド検証 + 静的解析"
+          }
+        ],
+        "risk": "HIGH"
+      },
+      "phase3": {
+        "tests": [
+          {
+            "id": "P3-REGRESSION-001",
+            "name": "既存機能回帰テスト",
+            "description": "既存のdocs、tools、indexページが正常動作することを確認",
+            "type": "MANUAL",
+            "priority": "MEDIUM",
+            "risk": "LOW",
+            "expectedResult": "全ページが正常に表示・動作",
+            "verificationMethod": "ブラウザ操作テスト"
+          }
+        ],
+        "risk": "LOW"
+      }
+    },
+    "regressionTests": [
+      {
+        "id": "REG-DOCS-001",
+        "name": "Docsページ回帰テスト",
+        "description": "docs.astro, docs-new.astroの全機能を確認",
+        "type": "MANUAL",
+        "priority": "HIGH",
+        "affectedArea": "Documentation System"
+      },
+      {
+        "id": "REG-AI-001",
+        "name": "AI機能回帰テスト",
+        "description": "AI推奨機能、コンテンツ分析機能を確認",
+        "type": "INTEGRATION",
+        "priority": "HIGH",
+        "affectedArea": "AI Integration"
+      },
+      {
+        "id": "REG-NAV-001",
+        "name": "ナビゲーション回帰テスト",
+        "description": "全ページ間のナビゲーションが正常動作することを確認",
+        "type": "MANUAL",
+        "priority": "MEDIUM",
+        "affectedArea": "Navigation System"
+      }
+    ],
+    "performanceTests": [
+      {
+        "id": "PERF-BUNDLE-001",
+        "name": "バンドルサイズ測定",
+        "description": "削除前後のバンドルサイズを比較",
+        "type": "AUTOMATED",
+        "priority": "MEDIUM",
+        "metric": "Bundle Size",
+        "expectedChange": "-5% to -10%"
+      },
+      {
+        "id": "PERF-LOAD-001",
+        "name": "ページ読み込み時間測定",
+        "description": "削除前後のページ読み込み時間を比較",
+        "type": "AUTOMATED",
+        "priority": "MEDIUM",
+        "metric": "Load Time",
+        "expectedChange": "-5% to -15%"
+      }
+    ],
+    "securityTests": [
+      {
+        "id": "SEC-DELETE-001",
+        "name": "安全削除検証",
+        "description": "機密データが誤って削除されていないことを確認",
+        "type": "MANUAL",
+        "priority": "HIGH",
+        "verificationMethod": "ファイル内容検証 + バックアップ比較"
+      }
+    ]
+  },
+  "executionOrder": [
+    "Phase 1テスト実行（各削除ステップ後）",
+    "Phase 2テスト実行（参照除去完了後）",
+    "Phase 3テスト実行（全削除完了後）",
+    "回帰テスト実行（全Phase完了後）",
+    "パフォーマンステスト実行（全Phase完了後）",
+    "セキュリティテスト実行（全Phase完了後）"
+  ]
+}

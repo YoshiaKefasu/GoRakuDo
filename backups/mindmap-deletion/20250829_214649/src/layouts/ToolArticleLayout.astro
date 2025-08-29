@@ -1,0 +1,130 @@
+---
+// ToolArticleLayout.astro - Performance-optimized article layout
+// Extends BaseLayout.astro while adding custom typography and responsive design
+import BaseLayout from "./BaseLayout.astro"
+import Breadcrumb from "../components/public-components/Breadcrumb.astro"
+import "../styles/global.css"
+// Import article-specific styles separately for code splitting
+import "../styles/article-specific.css"
+
+export interface Props {
+  title: string
+  description: string
+  publishedDate?: string
+  lang?: "id" | "ja"
+  // Breadcrumb-specific props
+  showBreadcrumb?: boolean
+  currentPath?: string
+}
+
+const {
+  title,
+  description,
+  publishedDate,
+  lang,
+  showBreadcrumb = false,
+  currentPath = "",
+} = Astro.props
+
+// Security validation for currentPath
+let validatedPath = ""
+if (showBreadcrumb && currentPath) {
+  try {
+    // Validate path format and prevent path traversal
+    if (
+      currentPath.startsWith("/") &&
+      !currentPath.includes("..") &&
+      !currentPath.includes("//") &&
+      !currentPath.includes("<") &&
+      !currentPath.includes(">") &&
+      !currentPath.includes('"') &&
+      !currentPath.includes("'") &&
+      !currentPath.includes("&")
+    ) {
+      // Additional validation for tool paths
+      const validToolPaths = ["/tools/anki", "/tools/migaku", "/tools/yomitan"]
+      if (currentPath.startsWith("/tools/")) {
+        const pathParts = currentPath.split("/")
+        if (pathParts.length >= 3 && pathParts.length <= 4) {
+          const toolName = pathParts[2]
+          if (validToolPaths.some((path) => path.includes(toolName))) {
+            validatedPath = currentPath
+          }
+        }
+      } else {
+        validatedPath = currentPath
+      }
+    }
+
+    if (!validatedPath) {
+      console.warn("🚨 Security: Invalid breadcrumb path detected:", currentPath)
+    }
+  } catch (error) {
+    console.error("🚨 Security validation error:", error)
+  }
+}
+
+// Ensure validatedPath is properly defined for script context
+const scriptValidatedPath = validatedPath || ""
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  pageType="article"
+  publishedDate={publishedDate}
+  lang={lang}>
+  <!-- Article Container with Responsive Design -->
+  <div class="min-h-screen bg-background">
+    <!-- Breadcrumb Navigation -->
+    {
+      showBreadcrumb && validatedPath && (
+        <div class="mx-auto max-w-4xl px-4 py-4 sm:px-6 lg:px-8 xl:px-12">
+          <Breadcrumb
+            currentPath={validatedPath}
+            showHome={true}
+            variant="compact"
+            theme="auto"
+            fontSize="sm"
+            fontWeight="medium"
+            spacing="normal"
+            orientation="horizontal"
+            alignment="left"
+            separator="chevron"
+            showIcons={false}
+            hoverEffects={true}
+            focusVisible={true}
+            ariaLabel="Tool navigation breadcrumb"
+            className="mb-4"
+          />
+        </div>
+      )
+    }
+
+    <!-- Performance monitoring for breadcrumb -->
+    {
+      showBreadcrumb && scriptValidatedPath && (
+        <script define:vars={{ scriptValidatedPath }}>
+          {`
+          try {
+            console.log("✅ Breadcrumb integrated successfully");
+            console.log("📊 Current path:", scriptValidatedPath);
+          } catch (error) {
+            console.warn("⚠️ Breadcrumb logging failed:", error);
+          }
+        `}
+        </script>
+      )
+    }
+
+    <!-- Main Content Area -->
+    <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
+      <!-- Article Content with Custom Typography -->
+      <article class="article-content max-w-none">
+        <slot />
+      </article>
+    </main>
+  </div>
+</BaseLayout>
+
+<!-- Article-specific styles moved to article-specific.css for code splitting -->

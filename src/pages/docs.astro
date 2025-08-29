@@ -533,7 +533,7 @@ function formatDate(dateString: string): string {
           </div>
 
           <!-- Breadcrumb Navigation -->
-          <Breadcrumb currentPath="/docs" showMindMap={false} />
+          <Breadcrumb currentPath="/docs" />
 
           <!-- Search Functionality -->
           <div class="search-container">
@@ -1467,9 +1467,7 @@ function formatDate(dateString: string): string {
             case "tag":
               filteredPosts = this.filterByTag(posts, filterConfig.target)
               break
-            case "mind-map":
-              filteredPosts = this.filterByMindMap(posts, filterConfig.target)
-              break
+
             case "custom":
               if (filterConfig.target === "all") {
                 filteredPosts = posts
@@ -1510,11 +1508,7 @@ function formatDate(dateString: string): string {
           })
         }
 
-        filterByMindMap(posts: any[], branchId: string) {
-          // Placeholder for mind map filtering
-          // This would integrate with your mind map system
-          return posts.slice(0, Math.floor(posts.length / 2))
-        }
+
 
         displayFilteredPosts(posts: any[], filterConfig: any) {
           const contentState = document.getElementById("contentState")

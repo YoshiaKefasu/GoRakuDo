@@ -18,7 +18,7 @@ export interface Props {
   category: string
   tags: string[]
   featured: boolean
-  mindMapBranch: string
+  mindMapBranch?: string // Optional - MindMap functionality deprecated
   understandingLevel: string
   learningStage: string
   aiMetadata?: {
@@ -42,7 +42,7 @@ const {
   category,
   tags,
   featured,
-  mindMapBranch,
+  mindMapBranch = "general", // Default value for backward compatibility
   understandingLevel,
   learningStage,
   aiMetadata,
@@ -73,9 +73,14 @@ const getDifficultyColor = (difficulty: string) => {
   }
 }
 
-// Get mind map branch info
+// Get mind map branch info - Updated for MindMap deprecation
 const getBranchInfo = (branch: string) => {
   const branches = {
+    "general": {
+      name: "General Content",
+      icon: "📄",
+      color: "bg-gray-500",
+    },
     "landasan-filosofi": {
       name: "Landasan & Filosofi",
       icon: "🏛️",

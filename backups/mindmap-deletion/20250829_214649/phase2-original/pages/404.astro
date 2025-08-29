@@ -1,0 +1,346 @@
+---
+// 404 Error Page with Automatic Redirects
+import HeadSEO from "../components/public-components/HeadSEO.astro"
+
+// SEO data for 404 page
+const seoData = {
+  title: "Halaman Tidak Ditemukan - GoRakuDo",
+  description:
+    "Halaman yang Anda cari tidak ditemukan. Kembali ke beranda atau cari dokumentasi yang tersedia.",
+  canonicalUrl: "https://gorakudo.org/404",
+  pageType: "website" as const,
+  authorName: "Tim GoRakuDo",
+}
+
+// Redirect mapping for old URLs with dynamic path support
+import { getCollectionMetadata } from "../utils/content-path-resolver"
+
+const collectionMetadata = getCollectionMetadata("blog")
+const defaultPath = collectionMetadata.basePath
+
+const redirectMap = {
+  "/docs/posts": defaultPath,
+  "/docs/post": defaultPath,
+  "/posts": defaultPath,
+  "/post": defaultPath,
+  "/blog": defaultPath,
+  "/articles": defaultPath,
+  "/guide": defaultPath,
+  "/guides": defaultPath,
+  "/tutorial": defaultPath,
+  "/tutorials": defaultPath,
+}
+
+// Get current path for potential redirect
+const currentPath = Astro.url.pathname
+const redirectTarget = redirectMap[currentPath]
+
+// If we have a redirect target, perform the redirect
+if (redirectTarget) {
+  return Astro.redirect(redirectTarget, 301) // Permanent redirect
+}
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <HeadSEO {...seoData} />
+    <link rel="stylesheet" href="/css/post-styles.css" />
+    <style>
+      /* 404 Page Specific Styles */
+      .error-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .error-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 20% 80%, rgba(139, 93, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(228, 180, 59, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(139, 93, 255, 0.05) 0%, transparent 50%);
+        z-index: 1;
+      }
+
+      .error-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 600px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(139, 93, 255, 0.1);
+        border-radius: 20px;
+        padding: 60px 40px;
+        backdrop-filter: blur(10px);
+      }
+
+      .error-icon {
+        font-size: 120px;
+        margin-bottom: 30px;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .error-title {
+        font-size: 48px;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #8b5dff 0%, #e4b43b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .error-subtitle {
+        font-size: 20px;
+        color: var(--color-text-secondary);
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .error-description {
+        font-size: 16px;
+        color: var(--color-text-muted);
+        margin-bottom: 40px;
+        line-height: 1.6;
+      }
+
+      .error-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+      }
+
+      .error-btn {
+        padding: 15px 30px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .error-btn.primary {
+        background: linear-gradient(135deg, #8b5dff 0%, #7b4def 100%);
+        color: white;
+      }
+
+      .error-btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(139, 93, 255, 0.3);
+      }
+
+      .error-btn.secondary {
+        background: rgba(139, 93, 255, 0.1);
+        border: 1px solid rgba(139, 93, 255, 0.2);
+        color: var(--color-text-primary);
+      }
+
+      .error-btn.secondary:hover {
+        background: rgba(139, 93, 255, 0.2);
+        border-color: var(--color-accent-purple);
+      }
+
+      .error-suggestions {
+        background: rgba(139, 93, 255, 0.05);
+        border: 1px solid rgba(139, 93, 255, 0.1);
+        border-radius: 12px;
+        padding: 30px;
+        margin-top: 40px;
+      }
+
+      .suggestions-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        margin-bottom: 20px;
+      }
+
+      .suggestions-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .suggestions-list li {
+        margin-bottom: 10px;
+        color: var(--color-text-secondary);
+      }
+
+      .suggestions-list li:before {
+        content: "🔍 ";
+        margin-right: 10px;
+      }
+
+      .error-path {
+        background: rgba(139, 93, 255, 0.1);
+        border: 1px solid rgba(139, 93, 255, 0.2);
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: monospace;
+        font-size: 14px;
+        color: var(--color-text-secondary);
+        margin: 20px 0;
+        word-break: break-all;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .error-content {
+          padding: 40px 20px;
+        }
+
+        .error-title {
+          font-size: 36px;
+        }
+
+        .error-subtitle {
+          font-size: 18px;
+        }
+
+        .error-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .error-btn {
+          width: 100%;
+          max-width: 300px;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="error-container">
+      <div class="error-background"></div>
+      <div class="error-content">
+        <div class="error-icon">🚀</div>
+        <h1 class="error-title">404</h1>
+        <h2 class="error-subtitle">Halaman Tidak Ditemukan</h2>
+        <p class="error-description">
+          Maaf, halaman yang Anda cari tidak ditemukan. Mungkin halaman tersebut telah
+          dipindahkan atau dihapus.
+        </p>
+
+        <div class="error-path">
+          Path yang diminta: <strong>{currentPath}</strong>
+        </div>
+
+        <div class="error-actions">
+          <a href="/" class="error-btn primary"> 🏠 Kembali ke Beranda </a>
+          <a href="/docs" class="error-btn secondary"> 📚 Lihat Dokumentasi </a>
+          <button onclick="goBack()" class="error-btn secondary"> ⬅️ Kembali </button>
+        </div>
+
+        <div class="error-suggestions">
+          <h3 class="suggestions-title">💡 Saran Pencarian</h3>
+          <ul class="suggestions-list">
+            <li>Periksa URL yang Anda ketik</li>
+            <li>Gunakan fitur pencarian di halaman dokumentasi</li>
+            <li>Kunjungi halaman beranda untuk navigasi</li>
+            <li>Hubungi tim kami jika masalah berlanjut</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Navigation functions
+      function goHome() {
+        window.location.href = "/"
+      }
+
+      function goToDocs() {
+        window.location.href = "/docs"
+      }
+
+      function goBack() {
+        if (window.history.length > 1) {
+          window.history.back()
+        } else {
+          window.location.href = "/"
+        }
+      }
+
+      // Auto-redirect for common old URLs (client-side fallback)
+      const currentPath = window.location.pathname
+      const redirectMap = {
+        "/docs/posts": "/docs",
+        "/docs/post": "/docs",
+        "/posts": "/docs",
+        "/post": "/docs",
+        "/blog": "/docs",
+        "/articles": "/docs",
+        "/guide": "/docs",
+        "/guides": "/docs",
+        "/tutorial": "/docs",
+        "/tutorials": "/docs",
+      }
+
+      if (redirectMap[currentPath]) {
+        console.log(`🔄 Redirecting ${currentPath} to ${redirectMap[currentPath]}`)
+        window.location.href = redirectMap[currentPath]
+      }
+
+      // Add some interactive elements
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add click handlers for buttons
+        const primaryBtn = document.querySelector(".error-btn.primary")
+        const secondaryBtns = document.querySelectorAll(".error-btn.secondary")
+
+        if (primaryBtn) {
+          primaryBtn.addEventListener("click", goHome)
+        }
+
+        secondaryBtns.forEach((btn) => {
+          const btnText = btn.textContent || ""
+          if (btnText.includes("Dokumentasi")) {
+            btn.addEventListener("click", goToDocs)
+          } else if (btnText.includes("Kembali")) {
+            btn.addEventListener("click", goBack)
+          }
+        })
+
+        // Add some subtle animations
+        const errorIcon = document.querySelector(".error-icon")
+        if (errorIcon) {
+          errorIcon.addEventListener("mouseenter", function () {
+            this.style.transform = "scale(1.1) rotate(5deg)"
+          })
+
+          errorIcon.addEventListener("mouseleave", function () {
+            this.style.transform = "scale(1) rotate(0deg)"
+          })
+        }
+      })
+    </script>
+  </body>
+</html>
