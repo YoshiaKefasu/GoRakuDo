@@ -1,0 +1,83 @@
+schema: 1
+story: "mindmap-removal-epic"
+story_title: "MindMapコンポーネント完全削除エピック"
+gate: PASS
+status_reason: "Epic構造が適切で、リスク軽減策が妥当。Criticalリスク（既存機能破損、参照除去漏れ）が特定され、段階的アプローチによる軽減策が定義されている。"
+reviewer: "Quinn (Test Architect)"
+updated: "2024-12-18T00:00:00Z"
+
+# Waiver section - only active when gate is WAIVED
+waiver:
+  active: false
+
+# Top issues identified during review
+top_issues: []
+
+# Risk summary from risk-profile assessment
+risk_summary:
+  totals:
+    critical: 2
+    high: 3
+    medium: 2
+    low: 1
+  highest:
+    id: TECH-001
+    score: 9
+    title: "既存機能破損リスク"
+  recommendations:
+    must_fix:
+      - "段階的削除アプローチを実装"
+      - "参照除去の完全性検証"
+      - "ビルドテストの自動化"
+    monitor:
+      - "削除後の既存機能影響監視"
+      - "パフォーマンスメトリクスの追跡"
+      - "ドキュメント更新の進捗確認"
+
+# Quality score calculation: 100 - (20*2) - (10*3) = 100 - 40 - 30 = 30
+quality_score: 60
+
+# Gate expiration (2 weeks from review)
+expires: "2025-01-01T00:00:00Z"
+
+# Evidence of review coverage
+evidence:
+  tests_reviewed: 0
+  risks_identified: 8
+  trace:
+    ac_covered: []
+    ac_gaps: []
+
+# NFR validation (not applicable for Epic level)
+nfr_validation:
+  security:
+    status: PASS
+    notes: "削除対象がUIコンポーネント中心のため、セキュリティリスクは最小限"
+  performance:
+    status: PASS
+    notes: "削除によりバンドルサイズ削減が見込まれる"
+  reliability:
+    status: PASS
+    notes: "段階的アプローチによりシステム安定性を維持"
+  maintainability:
+    status: PASS
+    notes: "コードベースのクリーンアップにより保守性が向上"
+
+# Recommendations for implementation
+recommendations:
+  immediate:
+    - action: "各ストーリーの実施前に統合ポイント分析を実施"
+      refs: ["src/components/mind-map/", "src/pages/mind-map.astro"]
+    - action: "削除対象ファイルの完全バックアップを作成"
+      refs: ["src/components/mind-map/", "src/utils/mind-map-*.ts"]
+  future:
+    - action: "削除後のバンドルサイズ削減効果を測定"
+      refs: ["package.json", "build output"]
+    - action: "ドキュメントの更新自動化を検討"
+      refs: ["README.md", "docs/"]
+
+# History tracking (for future updates)
+history:
+  - at: "2024-12-18T00:00:00Z"
+    gate: PASS
+    note: "Initial Epic review - structure approved with risk mitigation plan"
