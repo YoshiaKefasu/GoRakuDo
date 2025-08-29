@@ -21,6 +21,7 @@ import {
   resolveContentPath,
   getCollectionMetadata,
 } from "../../utils/content-path-resolver"
+import { MIND_MAP_CONFIG, MindMapUtils } from "../../components/mind-map/mind-map-config"
 
 // Import global CSS with essential variables and base styles
 import "../../styles/global.css"
@@ -94,7 +95,42 @@ let relatedContent: any = null
 let internalLinks: any = null
 let enhancedContent: string = post.body
 
+// Mind map integration
+let currentBranch: any = null
+let relatedBranches: any[] = []
+
 try {
+  // Determine current branch based on post content
+  const mindMapData = MindMapUtils.exportData()
+  
+  // Analyze post content to find matching mind map branch
+  const postContent = post.data.title + " " + (post.data.description || "")
+  const postKeywords = postContent.toLowerCase().split(/\s+/)
+  
+  // Find best matching branch based on keywords
+  let bestMatch = { branch: null, score: 0 }
+  
+  Object.values(mindMapData.branches).forEach((branch: any) => {
+    const branchKeywords = branch.keywords.map((k: string) => k.toLowerCase())
+    const matchScore = postKeywords.filter((keyword) =>
+      branchKeywords.some(
+        (branchKeyword) =>
+          branchKeyword.includes(keyword) || keyword.includes(branchKeyword)
+      )
+    ).length
+    
+    if (matchScore > bestMatch.score) {
+      bestMatch = { branch, score: matchScore }
+    }
+  })
+  
+  if (bestMatch.branch) {
+    currentBranch = bestMatch.branch
+    relatedBranches = MindMapUtils.getRelatedBranches(bestMatch.branch.id)
+      .map((id) => MindMapUtils.getBranch(id))
+      .filter(Boolean)
+  }
+  
   // Use optimized post processor that checks for existing metadata
   const result = await processPostWithOptimization(post)
 
@@ -160,30 +196,10 @@ try {
     <!-- Main Content -->
     <main class="post-page" role="main">
       <div class="post-container">
-        <!-- Navigation Section -->
-        <nav class="post-navigation-top" aria-label="Post navigation">
-          <a
-            href={collectionMetadata.basePath}
-            class="back-to-docs"
-            aria-label={`Kembali ke ${collectionMetadata.displayName}`}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true">
-              <path d="M19 12H5M12 19l-7-7 7-7"></path>
-            </svg>
-            Kembali ke {collectionMetadata.displayName}
-          </a>
-        </nav>
-
-        <!-- Breadcrumb Navigation -->
-        <Breadcrumb post={post} showMindMap={true} />
+        <!-- Breadcrumb Navigation and Related Content Container -->
+        <div class="breadcrumb-with-related">
+          <Breadcrumb post={post} showMindMap={true} className="breadcrumb-transparent" />
+        </div>
 
         <!-- Article Header -->
         <header class="post-header">
@@ -206,12 +222,28 @@ try {
         </header>
 
         <!-- Article Content -->
-        <article class="post-content" id="postContent" aria-label="Post content">
-          <!-- Content will be rendered here -->
-        </article>
+        <article class="post-content" id="postContent" aria-label="Post content" set:html={enhancedContent} />
 
         <!-- Post Actions -->
         <footer class="post-actions">
+          <a
+            href={collectionMetadata.basePath}
+            class="back-to-docs"
+            aria-label={`Kembali ke ${collectionMetadata.displayName}`}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Kembali ke {collectionMetadata.displayName}
+          </a>
           <div class="share-buttons">
             <button class="share-btn" onclick="sharePost()" aria-label="Bagikan post ini">
               <svg
