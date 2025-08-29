@@ -161,9 +161,7 @@
 /* Post Actions - Improved layout and organization */
 .post-actions {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   gap: 1rem;
   margin-top: 2rem;
   padding: 1.5rem;
@@ -260,93 +258,6 @@
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   gap: 1.5rem;
-}
-
-/* Breadcrumb transparent styling for docs pages */
-.breadcrumb-transparent {
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  position: relative;
-  transform: translateZ(0);
-  will-change: auto;
-}
-
-/* Adjust breadcrumb position on mobile screens */
-@media (max-width: 770px) {
-  .breadcrumb-transparent {
-    margin-left: -0.5rem;
-  }
-}
-
-/* Container for breadcrumb and related content with minimal gap */
-.breadcrumb-with-related {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-}
-
-/* Mind Map Relationships for docs pages */
-.mind-map-relationships {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-top: 0rem;
-  margin-bottom: 0rem;
-  margin-left: 0.5rem;
-  padding: 0.125rem;
-  background: transparent;
-  border-radius: var(--radius-sm);
-  border: none;
-}
-
-.relationships-label {
-  font-size: 0.75em;
-  color: var(--color-muted-foreground);
-  font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.relationships-list {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  flex-wrap: wrap;
-}
-
-.relationship-item {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  background: transparent;
-  border: 1px solid
-    color-mix(in oklch, var(--branch-color, var(--color-primary)) 20%, transparent);
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  color: var(--color-foreground);
-  font-size: 0.75em;
-  font-weight: var(--font-weight-medium);
-  transition: all var(--duration-fast) var(--ease-out);
-}
-
-.relationship-item:hover {
-  background: color-mix(in oklch, var(--branch-color, var(--color-primary)) 10%, transparent);
-  transform: translateY(-1px);
-}
-
-.relationship-icon {
-  font-size: 0.875em;
-}
-
-.relationship-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 8rem;
 }
 
 /* ========== BREADCRUMB LAYOUT FIX ========== */
@@ -906,37 +817,6 @@
   outline: 2px solid #8b5dff; /* PX for precise focus outline */
   outline-offset: 2px; /* PX for precise outline offset */
   box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
-}
-
-/* Back to Docs Button in Footer */
-.post-actions .back-to-docs {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-primary);
-  background: rgba(139, 93, 255, 0.1);
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  transition: all 0.3s ease;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  outline: none;
-}
-
-.post-actions .back-to-docs:hover {
-  color: var(--color-accent-purple-dark);
-  background: rgba(139, 93, 255, 0.15);
-  border-color: rgba(139, 93, 255, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 93, 255, 0.2);
-}
-
-.post-actions .back-to-docs:focus-visible {
-  outline: 2px solid #8b5dff;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(139, 93, 255, 0.3);
 }
 
 /* Skeleton Loading Styles - Enhanced Performance & Visual Effects */
