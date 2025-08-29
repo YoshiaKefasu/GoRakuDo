@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-08-29T14:48:40.748Z",
+  "phase": "baseline",
+  "step": "phase-0",
+  "buildResult": {
+    "success": true,
+    "duration": "12.03"
+  },
+  "analysis": {
+    "warnings": 0,
+    "errors": [],
+    "buildStats": {
+      "pagesBuilt": null,
+      "buildTime": "Completed in 6.65s"
+    },
+    "generatedFiles": [],
+    "performance": {
+      "error": "Failed to parse performance metrics"
+    }
+  },
+  "comparison": null
+}

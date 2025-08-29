@@ -1,7 +1,6 @@
 import { defineCollection, z } from "astro:content";
 
 // Simplified Content Schema for Indonesian Immersion Learning
-// Aligned with mind-map-config.ts branch structure
 // AI metadata handled by separate files (e.g., anki-guide-metadata.json)
 const docsCollection = defineCollection({
   type: "content",
@@ -23,16 +22,7 @@ const docsCollection = defineCollection({
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
 
-    // Mind Map Integration - Using actual branch IDs from mind-map-config.ts
-    mindMapBranch: z
-      .enum([
-        "A", // Landasan & Filosofi (Foundation & Philosophy)
-        "B", // Tahap Pembelajaran (Learning Stages)
-        "C", // Kerangka Pemahaman 7 Tingkat (7 Levels Framework)
-        "D", // Tools & Resource (Tools & Resources)
-        "E", // Praktik & Aplikasi (Practical Application)
-      ])
-      .default("A"),
+
 
     // Simplified Content Type Classification
     contentType: z
@@ -123,8 +113,7 @@ const toolArticlesCollection = defineCollection({
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
 
-    // Mind Map Integration
-    mindMapBranch: z.enum(["D"]).default("D"),
+
 
     // Content Type
     contentType: z

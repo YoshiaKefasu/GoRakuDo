@@ -36,7 +36,7 @@ export {
 export { discordErrorReporter, errorHandler } from "./error-handling";
 
 export {
-  MIND_MAP_BRANCHES,
+  // MindMap functionality deprecated - MIND_MAP_BRANCHES removed
   UNDERSTANDING_LEVELS,
   LEARNING_STAGES,
   generateSkeletonPostCard,

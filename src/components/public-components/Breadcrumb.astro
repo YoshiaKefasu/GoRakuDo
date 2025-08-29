@@ -4,7 +4,7 @@
 // Mobile-first responsive design with comprehensive customization options
 
 import type { CollectionEntry } from "astro:content"
-import { MIND_MAP_CONFIG, MindMapUtils } from "../mind-map/mind-map-config"
+// import { MIND_MAP_CONFIG, MindMapUtils } from "../mind-map/mind-map-config" // Removed - MindMap functionality deprecated
 import {
   resolveContentPath,
   getCollectionMetadata,
@@ -17,13 +17,13 @@ export interface Props {
   currentPath?: string
   showHome?: boolean
 
-  // Mind map integration
-  showMindMap?: boolean
-  mindMapContext?: {
-    branchId?: string
-    showRelationships?: boolean
-    showVisualIndicators?: boolean
-  }
+  // Mind map integration - REMOVED: MindMap functionality deprecated
+  // showMindMap?: boolean
+  // mindMapContext?: {
+  //   branchId?: string
+  //   showRelationships?: boolean
+  //   showVisualIndicators?: boolean
+  // }
 
   // Visual customization
   variant?: "compact" | "spacious" | "minimal" | "pill" | "underline"
@@ -86,13 +86,9 @@ const {
   currentPath = "",
   showHome = true,
 
-  // Mind map integration
-  showMindMap = false,
-  mindMapContext = {
-    branchId: undefined,
-    showRelationships: true,
-    showVisualIndicators: true,
-  },
+  // Mind map integration - DISABLED: MindMap functionality deprecated
+  // showMindMap = false,
+  // mindMapContext = undefined, // Disabled MindMap functionality
 
   // Visual customization
   variant = "compact",
@@ -137,12 +133,19 @@ const {
   separatorClass = "",
 } = Astro.props
 
-// ========== MIND MAP INTEGRATION SYSTEM ==========
+// ========== MIND MAP INTEGRATION SYSTEM (DEPRECATED) ==========
+/**
+ * @deprecated MindMap functionality has been removed.
+ * These variables are kept for backward compatibility but should not be used.
+ * All MindMap features have been safely disabled to prevent runtime errors.
+ */
 let mindMapData: any = null
 let currentBranch: any = null
 let relatedBranches: any[] = []
 
-if (showMindMap) {
+// MindMap functionality disabled - Phase 4 treatment
+/*
+if (showMindMap && typeof MindMapUtils !== 'undefined') {
   try {
     mindMapData = MindMapUtils.exportData()
 
@@ -169,7 +172,7 @@ if (showMindMap) {
         }
       })
 
-      if (bestMatch.branch) {
+      if (bestMatch.branch && typeof MindMapUtils !== 'undefined') {
         currentBranch = bestMatch.branch
         relatedBranches = MindMapUtils.getRelatedBranches(bestMatch.branch.id)
           .map((id) => MindMapUtils.getBranch(id))
@@ -180,6 +183,7 @@ if (showMindMap) {
     console.warn("Mind map integration failed:", error)
   }
 }
+*/
 
 // ========== BREADCRUMB GENERATION WITH MIND MAP CONTEXT ==========
 let breadcrumbItems: Array<{
@@ -238,7 +242,8 @@ try {
       icon: "📄",
     }
 
-    // Add mind map context if available
+    // Add mind map context if available - DISABLED: MindMap functionality deprecated
+    /*
     if (currentBranch && showMindMap) {
       postItem.mindMapContext = {
         branchId: currentBranch.id,
@@ -252,6 +257,7 @@ try {
         })),
       }
     }
+    */
 
     breadcrumbItems.push(postItem)
   } else {
@@ -471,15 +477,17 @@ const structuredData = {
                   : item.title}
               </span>
 
-              {/* Mind map context indicator */}
-              {item.mindMapContext && mindMapContext.showVisualIndicators && (
+              {/* Mind map context indicator - DISABLED: MindMap functionality deprecated */}
+              {/*
+              item.mindMapContext && mindMapContext?.showVisualIndicators && (
                 <span
                   class="mind-map-indicator"
                   style={`background-color: ${item.mindMapContext.branchColor}`}
                   title={`Mind Map Branch: ${item.mindMapContext.branchId}`}
                   aria-label={`Mind map branch ${item.mindMapContext.branchId}`}
                 />
-              )}
+              )
+              */}
             </span>
           ) : (
             <a
@@ -512,15 +520,17 @@ const structuredData = {
                   : item.title}
               </span>
 
-              {/* Mind map context indicator */}
-              {item.mindMapContext && mindMapContext.showVisualIndicators && (
+              {/* Mind map context indicator - DISABLED: MindMap functionality deprecated */}
+              {/*
+              item.mindMapContext && mindMapContext?.showVisualIndicators && (
                 <span
                   class="mind-map-indicator"
                   style={`background-color: ${item.mindMapContext.branchColor}`}
                   title={`Mind Map Branch: ${item.mindMapContext.branchId}`}
                   aria-label={`Mind map branch ${item.mindMapContext.branchId}`}
                 />
-              )}
+              )
+              */}
             </a>
           )}
         </li>
@@ -529,11 +539,11 @@ const structuredData = {
   </ol>
 </nav>
 
-<!-- Mind Map Relationships Display -->
-{
+<!-- Mind Map Relationships Display - DISABLED: MindMap functionality deprecated -->
+{/*
   showMindMap &&
     currentBranch &&
-    mindMapContext.showRelationships &&
+    mindMapContext?.showRelationships &&
     relatedBranches.length > 0 && (
       <div class="mind-map-relationships">
         <span class="relationships-label">Related:</span>
@@ -551,7 +561,7 @@ const structuredData = {
         </div>
       </div>
     )
-}
+*/}
 
 <!-- SEO structured data -->
 <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

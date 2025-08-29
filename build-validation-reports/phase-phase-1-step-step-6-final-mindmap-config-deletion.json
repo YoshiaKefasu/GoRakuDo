@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-08-29T15:06:02.282Z",
+  "phase": "phase-1",
+  "step": "step-6-final-mindmap-config-deletion",
+  "buildResult": {
+    "success": false,
+    "duration": "N/A"
+  },
+  "analysis": {
+    "warnings": [],
+    "errors": [
+      "Command failed: npm run build",
+      "22:06:01 [ERROR] [vite] \u001b[31m✗\u001b[39m Build failed in 4.35s",
+      "Could not resolve \"../../components/mind-map/mind-map-config\" from \"src/utils/ai-content/content-analysis.ts\"",
+      "file: D:/Libraries/Documents/GitHub/GoRakuDo/src/utils/ai-content/content-analysis.ts",
+      "  Stack trace:"
+    ],
+    "buildStats": {},
+    "generatedFiles": [],
+    "performance": {}
+  },
+  "comparison": null
+}

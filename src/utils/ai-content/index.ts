@@ -5,7 +5,7 @@
 export {
   analyzeContent,
   generateInternalLinks,
-  MIND_MAP_BRANCHES,
+  // MindMap functionality deprecated - MIND_MAP_BRANCHES removed
 } from "./content-analysis";
 
 export type { ContentAnalysis, LinkSuggestion } from "./content-analysis";

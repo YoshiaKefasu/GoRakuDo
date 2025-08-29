@@ -3,7 +3,7 @@
 // Reduced complexity while maintaining core AI functionality
 
 import type { CollectionEntry } from "astro:content";
-import { MIND_MAP_BRANCHES } from "./content-analysis";
+// import { MIND_MAP_BRANCHES } from "./content-analysis"; // Removed - MindMap functionality deprecated
 
 // Simplified relationship types
 export interface ContentRelationship {
@@ -66,18 +66,18 @@ export function getRelatedContent(
         targetSlug: post.slug,
         targetTitle: post.data.title,
         strength: relevance,
-        reason: `Related ${MIND_MAP_BRANCHES[analysis.mindMapBranch as keyof typeof MIND_MAP_BRANCHES]?.name || "content"}`,
+        reason: `Related content`, // MIND_MAP_BRANCHES reference removed - MindMap functionality deprecated
       };
 
       relationships.relatedContent.push(relationship);
 
-      // Add to similar content if same branch (high relevance)
-      if (analysis.mindMapBranch === currentAnalysis.mindMapBranch) {
-        relationships.similarContent.push({
-          ...relationship,
-          type: "similar-content",
-        });
-      }
+      // Add to similar content if same branch (high relevance) - REMOVED: MindMap functionality deprecated
+      // if (analysis.mindMapBranch === currentAnalysis.mindMapBranch) {
+      //   relationships.similarContent.push({
+      //     ...relationship,
+      //     type: "similar-content",
+      //   });
+      // }
 
       // Add to next steps if higher difficulty
       if (
@@ -128,30 +128,29 @@ function analyzePost(post: CollectionEntry<"docs">) {
   // Add safety checks for post data
   if (!post || !post.data) {
     return {
-      mindMapBranch: "A",
+      // mindMapBranch: "A", // Removed - MindMap functionality deprecated
       difficulty: "beginner",
     };
   }
 
-  const { title, description, tags } = post.data;
+  // const { title, description, tags } = post.data; // Removed - not used after MindMap cleanup
   const content = post.body || "";
-  const text =
-    `${title || ""} ${description || ""} ${(tags || []).join(" ")} ${content}`.toLowerCase();
+  // const text = `${title || ""} ${description || ""} ${(tags || []).join(" ")} ${content}`.toLowerCase(); // Removed - not used after MindMap cleanup
 
-  // Simplified branch detection
-  let bestBranch = "A";
-  let maxScore = 0;
+  // MindMap branch detection removed - functionality deprecated
+  // let bestBranch = "A";
+  // let maxScore = 0;
 
-  for (const [branch, config] of Object.entries(MIND_MAP_BRANCHES)) {
-    const score = config.keywords.filter((keyword) =>
-      text.includes(keyword.toLowerCase()),
-    ).length;
+  // for (const [branch, config] of Object.entries(MIND_MAP_BRANCHES)) {
+  //   const score = config.keywords.filter((keyword: string) =>
+  //     text.includes(keyword.toLowerCase()),
+  //   ).length;
 
-    if (score > maxScore) {
-      maxScore = score;
-      bestBranch = branch;
-    }
-  }
+  //   if (score > maxScore) {
+  //     maxScore = score;
+  //     bestBranch = branch;
+  //   }
+  // }
 
   // Simplified difficulty detection
   const difficulty =
@@ -162,7 +161,7 @@ function analyzePost(post: CollectionEntry<"docs">) {
         : "beginner";
 
   return {
-    mindMapBranch: bestBranch,
+    // mindMapBranch: bestBranch, // Removed - MindMap functionality deprecated
     difficulty,
   };
 }
@@ -173,10 +172,10 @@ function analyzePost(post: CollectionEntry<"docs">) {
 function calculateRelevance(current: any, target: any): number {
   let score = 0;
 
-  // Same mind map branch (high weight)
-  if (current.mindMapBranch === target.mindMapBranch) {
-    score += 0.7;
-  }
+  // Same mind map branch (high weight) - REMOVED: MindMap functionality deprecated
+  // if (current.mindMapBranch === target.mindMapBranch) {
+  //   score += 0.7;
+  // }
 
   // Similar difficulty level
   if (current.difficulty === target.difficulty) {
@@ -232,7 +231,7 @@ export function getLearningPathRecommendations(
       targetSlug: post.slug,
       targetTitle: post.data.title,
       strength: relevance,
-      reason: `Recommended next step in ${MIND_MAP_BRANCHES[analyzePost(post).mindMapBranch as keyof typeof MIND_MAP_BRANCHES]?.name || "learning path"}`,
+      reason: `Recommended next step in learning path`, // MIND_MAP_BRANCHES reference removed - MindMap functionality deprecated
     }));
 }
 

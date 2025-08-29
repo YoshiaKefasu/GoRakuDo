@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-08-29T15:02:46.119Z",
+  "phase": "phase-1",
+  "step": "step-5-mindmap-index-deletion",
+  "buildResult": {
+    "success": true,
+    "duration": "10.14"
+  },
+  "analysis": {
+    "warnings": 0,
+    "errors": [],
+    "buildStats": {
+      "pagesBuilt": null,
+      "buildTime": "Completed in 5.51s"
+    },
+    "generatedFiles": [],
+    "performance": {
+      "error": "Failed to parse performance metrics"
+    }
+  },
+  "comparison": null
+}

@@ -232,7 +232,7 @@ export class OptimizedPostProcessor {
           category: post.data.category || "general",
           tags: post.data.tags || [],
           featured: post.data.featured || false,
-          mindMapBranch: post.data.mindMapBranch || "landasan-filosofi",
+          // mindMapBranch: post.data.mindMapBranch || "landasan-filosofi", // Removed - MindMap functionality deprecated
           // understandingLevel: post.data.understandingLevel || "tingkat-0", // Property doesn't exist in docs schema
           // learningStage: post.data.learningStage || "pemanasan", // Property doesn't exist in docs schema
         },

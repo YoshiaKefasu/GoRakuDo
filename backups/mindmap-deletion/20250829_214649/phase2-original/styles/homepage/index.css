@@ -1,0 +1,192 @@
+/* Import Tailwind CSS v4 */
+@import "tailwindcss";
+
+/* ========== HOMEPAGE VIEW TRANSITIONS API STYLES ========== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-from-bottom {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* View Transitions API support for homepage */
+@supports (view-transition-name: none) {
+  /* Smooth transitions for main content */
+  ::view-transition-old(main-content),
+  ::view-transition-new(main-content) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-in-out;
+  }
+
+  /* Hero section transitions */
+  ::view-transition-old(hero-section),
+  ::view-transition-new(hero-section) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Button transitions */
+  ::view-transition-old(cta-button),
+  ::view-transition-new(cta-button) {
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
+  }
+
+  /* Feature cards staggered animation */
+  ::view-transition-old(feature-card-1),
+  ::view-transition-new(feature-card-1) {
+    animation-duration: 0.3s;
+    animation-delay: 0s;
+  }
+
+  ::view-transition-old(feature-card-2),
+  ::view-transition-new(feature-card-2) {
+    animation-duration: 0.3s;
+    animation-delay: 0.05s;
+  }
+
+  ::view-transition-old(feature-card-3),
+  ::view-transition-new(feature-card-3) {
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+  }
+
+  ::view-transition-old(feature-card-4),
+  ::view-transition-new(feature-card-4) {
+    animation-duration: 0.3s;
+    animation-delay: 0.15s;
+  }
+
+  /* Hero-specific transitions */
+  ::view-transition-old(hero-content),
+  ::view-transition-new(hero-content) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  ::view-transition-old(hero-title),
+  ::view-transition-new(hero-title) {
+    animation-duration: 0.35s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(hero-buttons),
+  ::view-transition-new(hero-buttons) {
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+  }
+
+  /* Slideshow section transitions */
+  ::view-transition-old(slideshow-section),
+  ::view-transition-new(slideshow-section) {
+    animation-duration: 0.4s;
+    animation-timing-function: ease-in-out;
+  }
+
+  /* Mission section transitions */
+  ::view-transition-old(mission-section),
+  ::view-transition-new(mission-section) {
+    animation-duration: 0.35s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(mission-title),
+  ::view-transition-new(mission-title) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+  }
+
+  /* Features section transitions */
+  ::view-transition-old(features-section),
+  ::view-transition-new(features-section) {
+    animation-duration: 0.4s;
+    animation-timing-function: ease-in-out;
+  }
+
+  ::view-transition-old(features-title),
+  ::view-transition-new(features-title) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+  }
+
+  /* Docs section transitions */
+  ::view-transition-old(docs-section),
+  ::view-transition-new(docs-section) {
+    animation-duration: 0.35s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(docs-title),
+  ::view-transition-new(docs-title) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(docs-button),
+  ::view-transition-new(docs-button) {
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
+  }
+}
+
+/* Fallback animations for browsers without View Transitions API */
+@supports not (view-transition-name: none) {
+  .main-content {
+    animation: fade-in 0.3s ease-in-out;
+  }
+
+  .feature-card {
+    animation: slide-from-bottom 0.4s ease-out;
+  }
+
+  .feature-card:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .feature-card:nth-child(2) {
+    animation-delay: 0.05s;
+  }
+  .feature-card:nth-child(3) {
+    animation-delay: 0.1s;
+  }
+  .feature-card:nth-child(4) {
+    animation-delay: 0.15s;
+  }
+
+  .cta-button,
+  .docs-button {
+    animation: slide-from-right 0.25s ease-out;
+  }
+
+  /* Hero fallback animations */
+  #hero-content {
+    animation: fade-in 0.8s ease-out;
+  }
+
+  .hero-buttons {
+    animation: slide-from-bottom 0.6s ease-out 0.2s both;
+  }
+}

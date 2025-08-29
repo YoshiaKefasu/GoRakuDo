@@ -42,8 +42,8 @@ export interface ContentFilter {
   id: string;
   name: string;
   displayName: string;
-  type: "category" | "tag" | "mind-map" | "custom";
-  target: string; // category ID, tag ID, mind map branch ID, or custom logic
+  type: "category" | "tag" | "custom";
+  target: string; // category ID, tag ID, or custom logic
   color: string;
   icon: string;
   description: string;
@@ -52,12 +52,7 @@ export interface ContentFilter {
   priority: number;
 }
 
-export interface MindMapIntegration {
-  enabled: boolean;
-  branches: string[]; // Array of mind map branch IDs to include
-  autoGenerateFilters: boolean;
-  customFilters: ContentFilter[];
-}
+
 
 export interface SearchSuggestions {
   enabled: boolean;
@@ -71,7 +66,7 @@ export interface ContentConfig {
   categories: Record<string, ContentCategory>;
   tags: Record<string, ContentTag>;
   filters: Record<string, ContentFilter>;
-  mindMap: MindMapIntegration;
+
   search: SearchSuggestions;
   metadata: {
     lastUpdated: string;
@@ -313,79 +308,7 @@ export const CONTENT_CONFIG: ContentConfig = {
     },
   },
 
-  // Mind Map Integration - Using actual branch IDs from mind-map-config.ts
-  mindMap: {
-    enabled: true,
-    branches: ["A", "B", "C", "D", "E"], // Actual branch IDs from mind-map-config.ts
-    autoGenerateFilters: true,
-    customFilters: [
-      {
-        id: "mind_map_foundation",
-        name: "mind-map-foundation",
-        displayName: "Landasan & Filosofi",
-        type: "mind-map",
-        target: "A", // Landasan & Filosofi
-        color: "#8B5DFF",
-        icon: "🏛️",
-        description: "Foundation & Philosophy content",
-        isActive: true,
-        showCount: true,
-        priority: 8,
-      },
-      {
-        id: "mind_map_learning_stages",
-        name: "mind-map-learning-stages",
-        displayName: "Tahap Pembelajaran",
-        type: "mind-map",
-        target: "B", // Tahap Pembelajaran
-        color: "#E4B43B",
-        icon: "📚",
-        description: "Learning stages content",
-        isActive: true,
-        showCount: true,
-        priority: 9,
-      },
-      {
-        id: "mind_map_understanding_framework",
-        name: "mind-map-understanding-framework",
-        displayName: "Kerangka Pemahaman",
-        type: "mind-map",
-        target: "C", // Kerangka Pemahaman 7 Tingkat
-        color: "#10B981",
-        icon: "🎯",
-        description: "Understanding framework content",
-        isActive: true,
-        showCount: true,
-        priority: 10,
-      },
-      {
-        id: "mind_map_tools_resources",
-        name: "mind-map-tools-resources",
-        displayName: "Tools & Resources",
-        type: "mind-map",
-        target: "D", // Tools & Resource
-        color: "#F59E0B",
-        icon: "🛠️",
-        description: "Tools and resources content",
-        isActive: true,
-        showCount: true,
-        priority: 11,
-      },
-      {
-        id: "mind_map_practice_application",
-        name: "mind-map-practice-application",
-        displayName: "Praktik & Aplikasi",
-        type: "mind-map",
-        target: "E", // Praktik & Aplikasi
-        color: "#EF4444",
-        icon: "🔥",
-        description: "Practical application content",
-        isActive: true,
-        showCount: true,
-        priority: 12,
-      },
-    ],
-  },
+
 
   // Search Suggestions - Based on actual content themes
   search: {
@@ -479,14 +402,7 @@ export const ContentConfigUtils = {
     return this.getActiveTags().filter((tag) => tag.category === categoryId);
   },
 
-  /**
-   * Get mind map filters
-   */
-  getMindMapFilters(): ContentFilter[] {
-    return CONTENT_CONFIG.mindMap.customFilters.filter(
-      (filter) => filter.isActive,
-    );
-  },
+
 
   /**
    * Get search suggestions
@@ -547,12 +463,7 @@ export const ContentConfigUtils = {
     }).length;
   },
 
-  /**
-   * Count posts by mind map branch
-   */
-  countPostsByMindMapBranch(posts: any[], branchId: string): number {
-    return posts.filter((post) => post.data.mindMapBranch === branchId).length;
-  },
+
 
   /**
    * Filter posts by category
@@ -590,11 +501,11 @@ export const ContentConfigUtils = {
   },
 
   /**
-   * Filter posts by mind map branch
+   * Filter posts by mind map branch - REMOVED: MindMap functionality deprecated
    */
-  filterPostsByMindMapBranch(posts: any[], branchId: string): any[] {
-    return posts.filter((post) => post.data.mindMapBranch === branchId);
-  },
+  // filterPostsByMindMapBranch(posts: any[], branchId: string): any[] {
+  //   return posts.filter((post) => post.data.mindMapBranch === branchId);
+  // },
 
   /**
    * Get filter count for display
@@ -605,8 +516,7 @@ export const ContentConfigUtils = {
         return this.countPostsByCategory(posts, filter.target);
       case "tag":
         return this.countPostsByTag(posts, filter.target);
-      case "mind-map":
-        return this.countPostsByMindMapBranch(posts, filter.target);
+
       case "custom":
         if (filter.target === "all") return posts.length;
         return 0;
@@ -624,8 +534,7 @@ export const ContentConfigUtils = {
         return this.filterPostsByCategory(posts, filter.target);
       case "tag":
         return this.filterPostsByTag(posts, filter.target);
-      case "mind-map":
-        return this.filterPostsByMindMapBranch(posts, filter.target);
+
       case "custom":
         if (filter.target === "all") return posts;
         return [];
@@ -677,14 +586,7 @@ export const ContentConfigUtils = {
             errors.push(`Filter ${id}: Invalid tag target '${filter.target}'`);
           }
           break;
-        case "mind-map":
-          // Validate mind map branch exists
-          if (!CONTENT_CONFIG.mindMap.branches.includes(filter.target)) {
-            errors.push(
-              `Filter ${id}: Invalid mind map branch target '${filter.target}'`,
-            );
-          }
-          break;
+
       }
     });
 
