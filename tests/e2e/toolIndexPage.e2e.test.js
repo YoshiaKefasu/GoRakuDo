@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { describe, test, expect, beforeEach, afterEach } from "@jest/globals";
+const { describe, test, expect, beforeEach, afterEach } = require("@jest/globals");
 
 // Mock browser APIs for E2E testing
 const mockBrowser = {
