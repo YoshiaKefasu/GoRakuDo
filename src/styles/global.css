@@ -175,6 +175,9 @@
     line-height: 1.6; /* Preserved from legacy */
     letter-spacing: -0.01em; /* Slightly tighter for modern feel */
     flex-direction: column;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
 
     /* Critical theme colors - mapped from legacy hex to OKLCH */
     background-color: transparent; /* Transparent to allow canvas animation to show through */
