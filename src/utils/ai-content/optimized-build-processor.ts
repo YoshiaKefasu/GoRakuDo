@@ -3,7 +3,6 @@
 // Handles build-time content analysis and optimization
 
 import type { CollectionEntry } from "astro:content";
-import { logger } from "../logging/console-logger";
 
 // Build processing statistics interface
 export interface BuildProcessingStats {

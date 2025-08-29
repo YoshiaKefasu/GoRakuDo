@@ -243,6 +243,7 @@ const tools = [
             offset: 0,
             color: "rgba(139, 93, 255, 0.08)",
             y: 0.7,
+            yPos: 0, // Will be set in resizeCanvas
           },
           {
             amplitude: 60,
@@ -251,6 +252,7 @@ const tools = [
             offset: Math.PI / 3,
             color: "rgba(139, 93, 255, 0.06)",
             y: 0.75,
+            yPos: 0, // Will be set in resizeCanvas
           },
           {
             amplitude: 35,
@@ -268,6 +270,7 @@ const tools = [
             offset: Math.PI,
             color: "rgba(139, 93, 255, 0.03)",
             y: 0.85,
+            yPos: 0, // Will be set in resizeCanvas
           },
         ]
 
@@ -338,7 +341,7 @@ const tools = [
               x += waveStep
             ) {
               const y =
-                wave.yPos +
+                (wave.yPos as number) +
                 Math.sin(x * wave.frequency + time * wave.speed + wave.offset) *
                   wave.amplitude
 

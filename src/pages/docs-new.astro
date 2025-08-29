@@ -1,24 +1,9 @@
 ---
-// TypeScript declarations for global objects in this file
-declare global {
-  interface Window {
-    clientLogger: {
-      log: (message: string, level?: "info" | "success" | "warning" | "error") => void
-      startGroup: (title: string) => void
-      endGroup: (title: string) => void
-    }
-    searchLoadingManager?: any
-    searchEngine?: any
-    contentConfig?: any
-    allPosts?: any[]
-    Fuse?: any
-  }
-}
-
 import { getCollection } from "astro:content"
 import HeadSEO from "../components/public-components/HeadSEO.astro"
 import Breadcrumb from "../components/public-components/Breadcrumb.astro"
 import Navbar from "../components/public-components/Navbar.vue"
+import "../styles/global.css"
 import "../styles/docs/docs.css"
 import { resolveContentPath, getCollectionMetadata } from "../utils/content-path-resolver"
 import {
@@ -38,7 +23,6 @@ import {
 } from "../utils/ai-content"
 import { searchDataGenerator } from "../utils/content/search-data-generator"
 import { CONTENT_CONFIG, ContentConfigUtils } from "../content/content-config"
-
 import { logger, ConsoleLogger } from "../utils/logging/console-logger"
 
 // Set global build mode to suppress console output during build
@@ -83,12 +67,10 @@ logger.logPaginationInfo(totalPosts, POSTS_PER_PAGE, currentPage)
 // Demonstrate automatic AI metadata generation (using all posts for metadata)
 // AI metadata generation started - temporarily disabled for build stability
 const postsWithAI = sortedPosts // Use regular posts for now
-// Posts with AI metadata: ${postsWithAI.length}
 
 const beginnerContent = sortedPosts.filter(
   (post) => post.data.learningStage === "pemanasan" || post.data.difficulty === "beginner"
 )
-// Beginner content found: ${beginnerContent.length}
 
 // Use the working content analysis system instead
 const toolContent = sortedPosts.filter((post) => {
@@ -100,343 +82,12 @@ const toolContent = sortedPosts.filter((post) => {
     post.data.tags.some((tag) => tag.toLowerCase().includes("tool"))
   return isTool
 })
-// Tool content found: ${toolContent.length}
 
 // Example recommendations - simplified for now
 const recommendations = sortedPosts.slice(0, 3)
 
 // Fallback: If no recommendations, use all posts with AI metadata
 const finalRecommendations = recommendations
-
-// Generate semantic relationships (using all posts for relationships)
-const aiMetadataMap = new Map(
-  postsWithAI.map((post) => [
-    post.slug,
-    { contentType: "guide", learningStage: "alphabet" },
-  ])
-)
-
-// Dynamic content path resolution for all posts
-const postsWithDynamicPaths = sortedPosts.map((post) => {
-  const resolvedPath = resolveContentPath(post)
-  return {
-    ...post,
-    resolvedPath: resolvedPath.path,
-    collectionMetadata: getCollectionMetadata("blog"),
-  }
-})
-const postsWithRelationships = getPostsWithSemanticRelationships(
-  sortedPosts[0], // Pass first post as current post
-  sortedPosts // Pass the actual posts array
-)
-const learningPathRecommendations = getLearningPathRecommendations(
-  sortedPosts[0], // Pass first post as current post
-  sortedPosts // Pass the actual posts array
-)
-
-// AI Metadata Generated Automatically
-
-// Individual Post Complexity Scores processed
-
-// Category counts and individual posts processed
-
-// Data attributes processed for post cards
-// Semantic Relationships Generated
-
-// Indonesian-focused article content processing for comprehensive search
-function processArticleContent(content: string) {
-  if (!content) return { 
-    cleanedText: "", 
-    sections: [] as Array<{
-      level: number;
-      title: string;
-      type: string;
-      position: number;
-      isIndonesian: boolean;
-    }>, 
-    codeBlocks: [] as Array<{
-      content: string;
-      type: string;
-      position: number;
-    }>, 
-    images: [] as Array<{
-      alt: string;
-      src: string;
-      type: string;
-      position: number;
-      priority: string;
-    }> 
-  }
-
-  // Extract different content types for specialized search
-  const codeBlocks: Array<{
-    content: string;
-    type: string;
-    position: number;
-  }> = []
-  const images: Array<{
-    alt: string;
-    src: string;
-    type: string;
-    position: number;
-    priority: string;
-  }> = []
-  const sections: Array<{
-    level: number;
-    title: string;
-    type: string;
-    position: number;
-    isIndonesian: boolean;
-  }> = []
-
-  // Extract code blocks (focus on text content, not code)
-  const codeBlockRegex = /```[\s\S]*?```/g
-  let codeMatch
-  while ((codeMatch = codeBlockRegex.exec(content)) !== null) {
-    codeBlocks.push({
-      content: codeMatch[0],
-      type: "code",
-      position: codeMatch.index,
-    })
-  }
-
-  // Extract images with Indonesian alt text (prioritize Indonesian content)
-  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g
-  let imageMatch
-  while ((imageMatch = imageRegex.exec(content)) !== null) {
-    const altText = imageMatch[1]
-    // Prioritize Indonesian alt text for search
-    if (
-      altText &&
-      (altText.includes("gambar") ||
-        altText.includes("foto") ||
-        altText.includes("ilustrasi"))
-    ) {
-      images.push({
-        alt: altText,
-        src: imageMatch[2],
-        type: "image",
-        position: imageMatch.index,
-        priority: "high", // Indonesian alt text gets higher priority
-      })
-    } else {
-      images.push({
-        alt: altText,
-        src: imageMatch[2],
-        type: "image",
-        position: imageMatch.index,
-        priority: "normal",
-      })
-    }
-  }
-
-  // Extract sections (headers) with Indonesian content focus
-  const sectionRegex = /^(#{1,6})\s+(.+)$/gm
-  let sectionMatch
-  while ((sectionMatch = sectionRegex.exec(content)) !== null) {
-    const title = sectionMatch[2]
-    sections.push({
-      level: sectionMatch[1].length,
-      title: title,
-      type: "section",
-      position: sectionMatch.index,
-      // Prioritize Indonesian section titles
-      isIndonesian: /[a-z]/.test(title) && !/[a-z]{3,}/.test(title), // Simple Indonesian detection
-    })
-  }
-
-  // Clean text for search (focus on text content and images, remove markdown)
-  const cleanedText = content
-    .replace(/---[\s\S]*?---/, "") // Remove frontmatter
-    .replace(/```[\s\S]*?```/g, " [kode] ") // Replace code blocks with [kode]
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, " [gambar: $1] ") // Replace images with [gambar: alt]
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1") // Remove links, keep text
-    .replace(/#{1,6}\s+/g, "") // Remove header markers
-    .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove bold formatting
-    .replace(/\*([^*]+)\*/g, "$1") // Remove italic formatting
-    .replace(/`([^`]+)`/g, "$1") // Remove inline code formatting
-    .replace(/\n+/g, " ") // Replace newlines with spaces
-    .replace(/\s+/g, " ") // Normalize spaces
-    .trim()
-
-  return {
-    cleanedText,
-    sections,
-    codeBlocks,
-    images,
-    hasCode: codeBlocks.length > 0,
-    hasImages: images.length > 0,
-    hasSections: sections.length > 0,
-    // Enhanced metadata for Indonesian content
-    indonesianContentRatio: calculateIndonesianContentRatio(cleanedText),
-    hasIndonesianImages: images.some((img) => img.priority === "high"),
-    hasIndonesianSections: sections.some((sec) => sec.isIndonesian),
-  }
-}
-
-// Calculate Indonesian content ratio for better search prioritization
-function calculateIndonesianContentRatio(text: string): number {
-  if (!text) return 0
-
-  const words = text.toLowerCase().split(/\s+/)
-  const indonesianWords = words.filter(
-    (word) =>
-      // Common Indonesian words and patterns
-      /^(yang|dan|atau|dengan|di|ke|dari|untuk|dalam|pada|oleh|karena|adalah|akan|sudah|belum|tidak|bukan|juga|saja|hanya|masih|pernah|selalu|kadang|sering|jarang|segera|nanti|kemarin|hari|ini|itu|sana|sini|mana|apa|siapa|kapan|bagaimana|mengapa|berapa|belajar|pembelajaran|bahasa|jepang|immersion|metodologi|filosofi|praktik|latihan|konten|anime|manga|grammar|vocabulary|kanji|hiragana|katakana)$/.test(
-        word
-      ) ||
-      // Indonesian word patterns
-      /^(mem|men|meng|meny|pe|per|ber|ter|se|ke|di|ke|dari|untuk|dalam|pada|oleh|karena|adalah|akan|sudah|belum|tidak|bukan|juga|saja|hanya|masih|pernah|selalu|kadang|sering|jarang|segera|nanti|kemarin|hari|ini|itu|sana|sini|mana|apa|siapa|kapan|bagaimana|mengapa|berapa)$/.test(
-        word
-      ) ||
-      // Japanese words
-      /^(hiragana|katakana|kanji|nihongo|japanese|anime|manga|srs|anki|immersion|grammar|vocabulary|reading|writing|listening|speaking)$/.test(
-        word
-      )
-  )
-
-  return indonesianWords.length / words.length
-}
-
-// Generate comprehensive search data at build time
-// Full article parsing with robust Indonesian-focused search capabilities
-const enhancedSearchData = sortedPosts.map((post) => {
-  // Extract FULL article content for comprehensive search (no character limit)
-  const fullContent = post.body || ""
-
-  // Process full article content for comprehensive search
-  const processedContent = processArticleContent(fullContent)
-
-  // Extract comprehensive metadata for Indonesian-focused search
-  const searchMetadata = {
-    // Core post data
-    title: post.data.title,
-    description: post.data.description,
-    tags: post.data.tags || [],
-    category: post.data.category,
-    difficulty: post.data.difficulty,
-    learningStage: post.data.learningStage,
-
-    // Full article content processing
-    fullContent: processedContent.cleanedText,
-    rawContent: fullContent, // Keep original for exact matching
-    contentPreview: processedContent.cleanedText.substring(0, 500),
-    contentLength: fullContent.length,
-    processedLength: processedContent.cleanedText.length,
-
-    // Comprehensive AI metadata
-    aiMetadata: post.data.aiMetadata || {},
-    contentType: post.data.aiMetadata?.contentType || post.data.category,
-    learningPath: post.data.aiMetadata?.learningPath || [],
-    aiRecommendations: post.data.aiMetadata?.recommendations || [],
-    contentComplexity: post.data.aiMetadata?.complexity || "medium",
-    semanticKeywords: post.data.aiMetadata?.semanticKeywords || [],
-    learningObjectives: post.data.aiMetadata?.learningObjectives || [],
-
-    // Enhanced searchable fields
-    keywords: [
-      ...(post.data.tags || []),
-      post.data.category,
-      post.data.difficulty,
-      post.data.learningStage,
-      post.data.aiMetadata?.contentType,
-      ...(post.data.aiMetadata?.keywords || []),
-      ...(post.data.aiMetadata?.semanticKeywords || []),
-      ...(post.data.aiMetadata?.learningObjectives || []),
-      post.data.aiMetadata?.complexity,
-    ].filter(Boolean),
-
-    // Enhanced searchable text with full article content
-    searchableText: [
-      post.data.title,
-      post.data.description,
-      processedContent.cleanedText,
-      ...(post.data.tags || []),
-      post.data.category,
-      post.data.difficulty,
-      post.data.learningStage,
-      post.data.aiMetadata?.contentType,
-      ...(post.data.aiMetadata?.keywords || []),
-      ...(post.data.aiMetadata?.semanticKeywords || []),
-      ...(post.data.aiMetadata?.learningObjectives || []),
-      post.data.aiMetadata?.complexity,
-      ...(post.data.aiMetadata?.learningPath || []),
-      // Add section titles for better search
-      ...processedContent.sections.map((section) => section.title),
-      // Add image alt texts for visual content search
-      ...processedContent.images.map((img) => img.alt),
-    ]
-      .join(" ")
-      .toLowerCase(),
-
-    // Content analysis metadata
-    isRecommended: post.data.aiMetadata?.isRecommended || false,
-    isBeginner:
-      post.data.difficulty === "beginner" || post.data.learningStage === "pemanasan",
-    isTool:
-      post.data.category === "tools" || post.data.title.toLowerCase().includes("anki"),
-    hasCodeBlocks: processedContent.hasCode,
-    hasImages: processedContent.hasImages,
-    hasSections: processedContent.hasSections,
-    wordCount: processedContent.cleanedText.split(/\s+/).filter((word) => word.length > 0)
-      .length,
-
-    // Processed content for advanced search
-    processedContent: {
-      sections: processedContent.sections,
-      codeBlocks: processedContent.codeBlocks,
-      images: processedContent.images,
-      hasCode: processedContent.hasCode,
-      hasImages: processedContent.hasImages,
-      hasSections: processedContent.hasSections,
-    },
-  }
-
-  return {
-    slug: post.slug,
-    url: post.resolvedPath || `/docs/${post.slug}`,
-    publishedDate: post.data.publishedDate,
-    readTime: post.data.readTime,
-    emoji: post.data.emoji,
-    ...searchMetadata,
-  }
-})
-
-logger.log(
-  `Enhanced search data generated for ${enhancedSearchData.length} posts`,
-  "success"
-)
-
-// Automated content extraction started
-const searchData = await searchDataGenerator.generateSearchData()
-const clientSearchData = searchDataGenerator.exportForClient()
-// Automated content extraction completed
-
-// Trigger optimized AI processing during build
-if (shouldEnableOptimizedProcessing()) {
-  logger.startGroup("Optimized Build Processing")
-  logger.log("Running optimized build processing...")
-  const result = await runOptimizedBuildProcessing(sortedPosts)
-  logger.logSummary("Processing Results", {
-    "Processed posts": result.stats.processedPosts,
-    "Skipped posts": result.stats.skippedPosts,
-    "Total posts": result.stats.totalPosts,
-  })
-  logger.endGroup()
-} else {
-  logger.log("Optimized processing disabled - using fallback", "warning")
-  await triggerAIBuildProcessing()
-}
-
-// SEO data with proper HeadSEO props
-const seoData = {
-  title: "Dokumentasi & Panduan",
-  description:
-    "Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.",
-  canonicalUrl: "https://gorakudo.org/docs",
-  pageType: "website" as const,
-  authorName: "Tim GoRakuDo",
-}
 
 // Helper function to format numbers with K, M, B suffixes
 function formatNumber(num: number): string {
@@ -449,7 +100,6 @@ function formatNumber(num: number): string {
   }
   return num.toString()
 }
-
 
 function formatDate(dateString: string): string {
   const options: Intl.DateTimeFormatOptions = {
@@ -476,6 +126,16 @@ function formatDate(dateString: string): string {
     logger.log(`Date formatting error: ${error}`, "error")
     return "Invalid Date"
   }
+}
+
+// SEO data with proper HeadSEO props
+const seoData = {
+  title: "Dokumentasi & Panduan",
+  description:
+    "Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.",
+  canonicalUrl: "https://gorakudo.org/docs",
+  pageType: "website" as const,
+  authorName: "Tim GoRakuDo",
 }
 ---
 
@@ -790,10 +450,11 @@ function formatDate(dateString: string): string {
         </div>
       </div>
     </main>
+  </body>
+</html>
 
+    <!-- Search Engine Loading State Management -->
     <script>
-      // Search Engine Loading State Management
-
       // Search Engine Loading State Management
       class SearchLoadingManager {
         // Property declarations for TypeScript
@@ -2079,5 +1740,3 @@ function formatDate(dateString: string): string {
         }
       })
     </script>
-  </body>
-</html>

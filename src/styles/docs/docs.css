@@ -1,8 +1,6 @@
-@import "tailwindcss";
-
 /* Google UI/UX Team 2025: Docs Page Styles - Tailwind v4 Conversion */
 /* Converted from post-styles.css with accessibility-first approach */
-
+@import "../global.css";
 /* --- Background Elements --- */
 
 /* Posts/Documentation page styles */
@@ -2412,4 +2410,128 @@
     align-items: flex-start;
     gap: 0.3rem;
   }
+}
+
+/* Page-specific styles only - reusable styles moved to docs.css */
+/* Critical inline styles and page-specific overrides remain here */
+
+/* Search Results Styles */
+.search-results {
+margin-top: 2rem;
+}
+
+.search-stats {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1.5rem;
+padding: 1rem;
+background: rgba(139, 93, 255, 0.05);
+border-radius: var(--radius-lg);
+border: 1px solid rgba(139, 93, 255, 0.1);
+}
+
+.search-results-count {
+font-weight: 500;
+color: var(--color-text-primary);
+}
+
+.clear-search-btn {
+background: none;
+border: 1px solid var(--color-border);
+color: var(--color-text-secondary);
+padding: 0.5rem 1rem;
+border-radius: var(--radius-md);
+cursor: pointer;
+transition: all var(--duration-normal) var(--ease-out);
+font-size: var(--font-size-sm);
+}
+
+.clear-search-btn:hover {
+background: var(--color-background-secondary);
+border-color: var(--color-border-hover);
+color: var(--color-text-primary);
+}
+
+.search-results-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+gap: 1.5rem;
+}
+
+/* Design #17: Search result cards now use enhanced CSS styling */
+
+/* All search result card styles now use enhanced CSS from docs.css */
+
+.search-no-results {
+text-align: center;
+padding: 3rem 1rem;
+background: var(--color-background-card);
+border: 1px solid var(--color-border);
+border-radius: var(--radius-lg);
+margin-top: 2rem;
+}
+
+.search-no-results .no-results-icon {
+font-size: 3rem;
+margin-bottom: 1rem;
+opacity: 0.5;
+}
+
+.search-no-results h3 {
+font-size: var(--font-size-xl);
+font-weight: 600;
+margin-bottom: 0.5rem;
+color: var(--color-text-primary);
+}
+
+.search-no-results p {
+color: var(--color-text-secondary);
+margin-bottom: 1.5rem;
+}
+
+.search-suggestions {
+margin: 1.5rem 0;
+}
+
+.suggestion-text {
+font-size: var(--font-size-sm);
+color: var(--color-text-secondary);
+margin-bottom: 0.75rem;
+}
+
+.suggestion-tags {
+display: flex;
+gap: 0.5rem;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+.suggestion-tag {
+background: rgba(139, 93, 255, 0.1);
+color: var(--color-accent-purple-glow-medium);
+padding: 0.5rem 1rem;
+border-radius: var(--radius-md);
+cursor: pointer;
+transition: all var(--duration-normal) var(--ease-out);
+font-size: var(--font-size-sm);
+font-weight: 500;
+border: 1px solid rgba(139, 93, 255, 0.2);
+}
+
+.suggestion-tag:hover {
+background: rgba(139, 93, 255, 0.2);
+transform: translateY(-1px);
+box-shadow: var(--shadow-sm);
+}
+
+/* Search Input Enhancement */
+.search-input-ready {
+border-color: var(--color-accent-purple-glow-medium) !important;
+background: var(--color-background-input) !important;
+}
+
+.search-input-ready:focus {
+border-color: var(--color-primary) !important;
+box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1) !important;
 }
