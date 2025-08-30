@@ -1,44 +1,20 @@
-import { GeminiAIService } from "./gemini-api";
 import type {
   ContentRecommendationRequest,
   ContentRecommendation,
 } from "./types";
 
 export class ContentRecommendationSystem {
-  private geminiService: GeminiAIService;
   private cache: Map<string, ContentRecommendation[]>;
 
-  constructor(geminiService: GeminiAIService) {
-    this.geminiService = geminiService;
+  constructor() {
     this.cache = new Map();
   }
 
   async generateRecommendations(
     request: ContentRecommendationRequest,
   ): Promise<ContentRecommendation[]> {
-    const cacheKey = this.generateCacheKey(request);
-
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
-    }
-
-    try {
-      // Generate AI-powered recommendations
-      const recommendedTitles =
-        await this.geminiService.generateContentRecommendations(request);
-
-      // Convert to structured recommendations
-      const recommendations = this.structureRecommendations(
-        recommendedTitles,
-        request,
-      );
-
-      this.cache.set(cacheKey, recommendations);
-      return recommendations;
-    } catch (error) {
-      console.warn("AI content recommendations failed, using fallback:", error);
-      return this.generateFallbackRecommendations(request);
-    }
+    // AI processing disabled for security
+    return this.generateFallbackRecommendations(request);
   }
 
   private structureRecommendations(

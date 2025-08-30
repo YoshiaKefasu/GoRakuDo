@@ -1,41 +1,17 @@
-import { GeminiAIService } from "./gemini-api";
 import type { MetaDescriptionRequest, SEOOptimizedMeta } from "./types";
 
 export class MetaDescriptionGenerator {
-  private geminiService: GeminiAIService;
   private cache: Map<string, SEOOptimizedMeta>;
 
-  constructor(geminiService: GeminiAIService) {
-    this.geminiService = geminiService;
+  constructor() {
     this.cache = new Map();
   }
 
   async generateOptimizedMetaDescription(
     request: MetaDescriptionRequest,
   ): Promise<SEOOptimizedMeta> {
-    const cacheKey = this.generateCacheKey(request);
-
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
-    }
-
-    try {
-      // Generate AI-powered meta description
-      const aiDescription =
-        await this.geminiService.generateMetaDescription(request);
-
-      // Optimize for SEO
-      const optimizedMeta = this.optimizeForSEO(aiDescription, request);
-
-      this.cache.set(cacheKey, optimizedMeta);
-      return optimizedMeta;
-    } catch (error) {
-      console.warn(
-        "AI meta description generation failed, using fallback:",
-        error,
-      );
-      return this.generateFallbackMetaDescription(request);
-    }
+    // AI processing disabled for security
+    return this.generateFallbackMetaDescription(request);
   }
 
   private optimizeForSEO(

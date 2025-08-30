@@ -1,4 +1,3 @@
-import { GoogleGenAI } from "@google/genai";
 import { logger } from "../logging/console-logger";
 
 export interface APIGeneratedRecommendation {
@@ -32,51 +31,19 @@ export async function generateAPIRecommendations(
   currentPost: PostInfo,
   availablePosts: PostInfo[],
 ): Promise<APIGeneratedRecommendations> {
-  try {
-    const apiKey = process.env.GOOGLE_API_KEY || "";
-    const model = process.env.GOOGLE_MODEL || "gemini-2.5-flash";
-
-    if (!apiKey || apiKey === "your_actual_api_key_here") {
-      throw new Error("Invalid API key");
-    }
-
-    const genAI = new GoogleGenAI({ apiKey });
-
-    // Generate similar content recommendations
-    const similarContent = await generateSimilarContentRecommendations(
-      genAI,
-      model,
-      currentPost,
-      availablePosts,
-    );
-
-    // Generate contextual relevance recommendations
-    const contextualRelevance =
-      await generateContextualRelevanceRecommendations(
-        genAI,
-        model,
-        currentPost,
-        availablePosts,
-      );
-
-    return {
-      similarContent,
-      contextualRelevance,
-    };
-  } catch (error) {
-    logger.log(`API recommendation generation failed: ${error}`, "error");
-    return {
-      similarContent: [],
-      contextualRelevance: [],
-    };
-  }
+  // AI processing disabled for security
+  logger.log("API recommendation generation disabled for security", "warning");
+  return {
+    similarContent: [],
+    contextualRelevance: [],
+  };
 }
 
 /**
  * Generate similar content recommendations
  */
 async function generateSimilarContentRecommendations(
-  genAI: GoogleGenAI,
+  genAI: any,
   model: string,
   currentPost: PostInfo,
   availablePosts: PostInfo[],
@@ -172,7 +139,7 @@ Format your response as JSON with exactly 3 recommendations:
  * Generate contextual relevance recommendations
  */
 async function generateContextualRelevanceRecommendations(
-  genAI: GoogleGenAI,
+  genAI: any,
   model: string,
   currentPost: PostInfo,
   availablePosts: PostInfo[],

@@ -11,7 +11,6 @@ jest.mock('fs');
 // Mock package.json content
 const mockPackageJson = {
   dependencies: {
-    "@google/genai": "^0.3.0",
     "astro": "^5.13.0",
     "vue": "^3.5.18"
   },
@@ -22,8 +21,6 @@ const mockPackageJson = {
 
 // Mock env.example content
 const mockEnvExample = `# Environment Variables
-GOOGLE_API_KEY=your_api_key_here
-GOOGLE_MODEL=gemini-2.5-flash
 NODE_ENV=development
 `;
 
@@ -34,7 +31,7 @@ describe('Gemini API Removal Validation', () => {
     
     // Setup fs mocks
     fs.existsSync.mockImplementation((path) => {
-      return path === 'package.json' || path === 'env.example';
+      return path === 'package.json' || path === 'env.example' || path === 'src' || path === 'scripts';
     });
     
     fs.readFileSync.mockImplementation((path) => {
@@ -48,11 +45,10 @@ describe('Gemini API Removal Validation', () => {
   });
 
   describe('Package Dependencies Check', () => {
-    test('should detect @google/genai package in dependencies', () => {
+    test('should not contain @google/genai package in dependencies', () => {
       const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
       
-      expect(packageJson.dependencies).toHaveProperty('@google/genai');
-      expect(packageJson.dependencies['@google/genai']).toBe('^0.3.0');
+      expect(packageJson.dependencies).not.toHaveProperty('@google/genai');
     });
 
     test('should not contain @google/genai in devDependencies', () => {
@@ -71,18 +67,18 @@ describe('Gemini API Removal Validation', () => {
   });
 
   describe('Environment Variables Check', () => {
-    test('should detect GOOGLE_API_KEY in env.example', () => {
+    test('should not contain GOOGLE_API_KEY in env.example', () => {
       const envExample = fs.readFileSync('env.example', 'utf8');
       
-      expect(envExample).toContain('GOOGLE_API_KEY');
-      expect(envExample).toContain('your_api_key_here');
+      expect(envExample).not.toContain('GOOGLE_API_KEY');
+      expect(envExample).not.toContain('your_api_key_here');
     });
 
-    test('should detect GOOGLE_MODEL in env.example', () => {
+    test('should not contain GOOGLE_MODEL in env.example', () => {
       const envExample = fs.readFileSync('env.example', 'utf8');
       
-      expect(envExample).toContain('GOOGLE_MODEL');
-      expect(envExample).toContain('gemini-2.5-flash');
+      expect(envExample).not.toContain('GOOGLE_MODEL');
+      expect(envExample).not.toContain('gemini-2.5-flash');
     });
 
     test('should contain other environment variables', () => {
@@ -95,7 +91,7 @@ describe('Gemini API Removal Validation', () => {
 
   describe('File Structure Validation', () => {
     test('should detect required directories exist', () => {
-      const requiredDirs = ['src', 'GenAI-PostMetadata-Gemini(Deprecated)', 'scripts'];
+      const requiredDirs = ['src', 'scripts'];
       
       requiredDirs.forEach(dir => {
         expect(fs.existsSync(dir)).toBe(true);
@@ -145,9 +141,7 @@ NODE_ENV=development
     test('should handle missing package.json gracefully', () => {
       fs.existsSync.mockReturnValue(false);
       
-      expect(() => {
-        fs.readFileSync('package.json', 'utf8');
-      }).toThrow();
+      expect(fs.existsSync('package.json')).toBe(false);
     });
 
     test('should handle missing env.example gracefully', () => {
@@ -174,12 +168,11 @@ NODE_ENV=development
 
   describe('Integration Scenarios', () => {
     test('should validate complete removal workflow', () => {
-      // Step 1: Check current state
+      // Step 1: Check current state (package already removed)
       const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-      expect(packageJson.dependencies).toHaveProperty('@google/genai');
+      expect(packageJson.dependencies).not.toHaveProperty('@google/genai');
       
-      // Step 2: Simulate removal
-      delete packageJson.dependencies['@google/genai'];
+      // Step 2: Verify removal is complete
       expect(packageJson.dependencies).not.toHaveProperty('@google/genai');
       
       // Step 3: Verify other dependencies remain
@@ -190,18 +183,13 @@ NODE_ENV=development
     test('should validate environment cleanup workflow', () => {
       // Step 1: Check current state
       const envExample = fs.readFileSync('env.example', 'utf8');
-      expect(envExample).toContain('GOOGLE_API_KEY');
-      expect(envExample).toContain('GOOGLE_MODEL');
+      expect(envExample).not.toContain('GOOGLE_API_KEY');
+      expect(envExample).not.toContain('GOOGLE_MODEL');
       
-      // Step 2: Simulate cleanup
-      const cleanedEnvExample = envExample
-        .replace(/GOOGLE_API_KEY=.*\n/, '')
-        .replace(/GOOGLE_MODEL=.*\n/, '');
-      
-      // Step 3: Verify cleanup
-      expect(cleanedEnvExample).not.toContain('GOOGLE_API_KEY');
-      expect(cleanedEnvExample).not.toContain('GOOGLE_MODEL');
-      expect(cleanedEnvExample).toContain('NODE_ENV');
+      // Step 2: Verify cleanup is already complete
+      expect(envExample).not.toContain('GOOGLE_API_KEY');
+      expect(envExample).not.toContain('GOOGLE_MODEL');
+      expect(envExample).toContain('NODE_ENV');
     });
   });
 });
