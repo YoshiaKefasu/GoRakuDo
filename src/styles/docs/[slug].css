@@ -167,6 +167,7 @@
   align-items: center;
   gap: 1rem;
   margin-top: 2rem;
+  margin-bottom: 2rem; /* Added bottom margin to create gap */
   padding: 1.5rem;
   background: rgba(25, 25, 25, 0.3);
   backdrop-filter: blur(10px);
@@ -235,8 +236,8 @@
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  /* FIXED: Remove border-radius that might affect full-width display */
-  border-radius: 0;
+  /* Add rounded corners */
+  border-radius: 1rem;
   overflow: hidden; 
 }
 
@@ -261,6 +262,8 @@
   gap: 1.5rem;
   /* FIXED: Ensure proper box sizing */
   box-sizing: border-box;
+  /* Add rounded corners */
+  border-radius: 1rem;
 }
 
 /* Breadcrumb transparent styling for docs pages */

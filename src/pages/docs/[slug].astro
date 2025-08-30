@@ -223,6 +223,23 @@ try {
 
         <!-- Article Content -->
         <article class="post-content" id="postContent" aria-label="Post content" set:html={enhancedContent} />
+        
+        {/* AI-Powered Content Recommendations Section */}
+        {
+          relatedContent && (
+            <section
+              class="ai-recommendations-section"
+              aria-label="Rekomendasi konten terkait">
+              <AIRecommendations
+                relatedContent={relatedContent}
+                maxRecommendations={3}
+                showHeader={true}
+                className=""
+                showFallback={true}
+              />
+            </section>
+          )
+        }
 
         <!-- Post Actions -->
         <footer class="post-actions">
@@ -265,22 +282,6 @@ try {
           </div>
         </footer>
 
-        {/* AI-Powered Content Recommendations Section */}
-        {
-          relatedContent && (
-            <section
-              class="ai-recommendations-section"
-              aria-label="Rekomendasi konten terkait">
-              <AIRecommendations
-                relatedContent={relatedContent}
-                maxRecommendations={3}
-                showHeader={true}
-                className=""
-                showFallback={true}
-              />
-            </section>
-          )
-        }
       </div>
     </main>
 
