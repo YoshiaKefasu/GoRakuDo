@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { describe, test, expect, beforeEach } from "@jest/globals";
+const { describe, test, expect, beforeEach } = require("@jest/globals");
 
 // Mock ArticleCard component for testing
 const mockArticleCard = {

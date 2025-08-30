@@ -5,7 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://gorakudo.org",
-  base: "/",
 
   // GitHub Pages Optimization
   output: "static",
@@ -66,10 +65,6 @@ export default defineConfig({
               // ROOT CAUSE: File referenced but not actually loaded
               // SOLUTION: Removed reference, search handled inline
               // STATUS: ✅ RESOLVED
-            ],
-            "scripts-core": [
-              "./src/scripts/core/hompage-script.js",
-              "./src/scripts/core/post-script.js",
             ],
             // AI content utilities (load on demand)
             "ai-content": ["./src/utils/ai-content/content-analysis.js"],

@@ -25,6 +25,22 @@ import { searchDataGenerator } from "../utils/content/search-data-generator"
 import { CONTENT_CONFIG, ContentConfigUtils } from "../content/content-config"
 import { logger, ConsoleLogger } from "../utils/logging/console-logger"
 
+// TypeScript declarations for global objects in this file
+declare global {
+  interface Window {
+    clientLogger: {
+      log: (message: string, level?: "info" | "success" | "warning" | "error") => void
+      startGroup: (title: string) => void
+      endGroup: (title: string) => void
+    }
+    searchLoadingManager?: any
+    searchEngine?: any
+    contentConfig?: any
+    allPosts?: any[]
+    Fuse?: any
+  }
+}
+
 // Set global build mode to suppress console output during build
 ConsoleLogger.setGlobalBuildMode(true)
 // Set critical errors only mode - only show critical errors
@@ -193,7 +209,7 @@ const seoData = {
           </div>
 
           <!-- Breadcrumb Navigation -->
-          <Breadcrumb currentPath="/docs" showMindMap={false} />
+          <Breadcrumb currentPath="/docs" />
 
           <!-- Search Functionality -->
           <div class="search-container">
@@ -1128,9 +1144,7 @@ const seoData = {
             case "tag":
               filteredPosts = this.filterByTag(posts, filterConfig.target)
               break
-            case "mind-map":
-              filteredPosts = this.filterByMindMap(posts, filterConfig.target)
-              break
+
             case "custom":
               if (filterConfig.target === "all") {
                 filteredPosts = posts
@@ -1171,11 +1185,7 @@ const seoData = {
           })
         }
 
-        filterByMindMap(posts: any[], branchId: string) {
-          // Placeholder for mind map filtering
-          // This would integrate with your mind map system
-          return posts.slice(0, Math.floor(posts.length / 2))
-        }
+
 
         displayFilteredPosts(posts: any[], filterConfig: any) {
           const contentState = document.getElementById("contentState")

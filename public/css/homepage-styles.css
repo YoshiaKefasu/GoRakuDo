@@ -67,6 +67,7 @@ body {
   color: var(--clr-text-primary);
   overflow-x: hidden;
   line-height: 1.6;
+  padding: 0 !important;
 }
 
 body.modal-open {

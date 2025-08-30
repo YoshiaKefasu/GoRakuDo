@@ -1,0 +1,470 @@
+[
+  {
+    "file": "src\\components\\content\\ContentCard.astro",
+    "references": [
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 21,
+        "column": 4
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 45,
+        "column": 4
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 147,
+        "column": 35
+      }
+    ]
+  },
+  {
+    "file": "src\\components\\docs\\ai-recommendations\\AI-Recommendations.astro",
+    "references": [
+      {
+        "pattern": "/MindMapIntegration/g",
+        "match": "MindMapIntegration",
+        "line": 8,
+        "column": 14
+      },
+      {
+        "pattern": "/MindMapIntegration/g",
+        "match": "MindMapIntegration",
+        "line": 64,
+        "column": 12
+      }
+    ]
+  },
+  {
+    "file": "src\\components\\public-components\\Breadcrumb.astro",
+    "references": [
+      {
+        "pattern": "/mind-map\\//g",
+        "match": "mind-map/",
+        "line": 7,
+        "column": 55
+      }
+    ]
+  },
+  {
+    "file": "src\\content\\config.ts",
+    "references": [
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 26,
+        "column": 9
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 126,
+        "column": 6
+      }
+    ]
+  },
+  {
+    "file": "src\\content\\content-config.ts",
+    "references": [
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 549,
+        "column": 49
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 591,
+        "column": 49
+      },
+      {
+        "pattern": "/MindMapIntegration/g",
+        "match": "MindMapIntegration",
+        "line": 55,
+        "column": 5
+      },
+      {
+        "pattern": "/MindMapIntegration/g",
+        "match": "MindMapIntegration",
+        "line": 69,
+        "column": 16
+      },
+      {
+        "pattern": "/getMindMapFilters/g",
+        "match": "getMindMapFilters",
+        "line": 480,
+        "column": 7
+      },
+      {
+        "pattern": "/countPostsByMindMapBranch/g",
+        "match": "countPostsByMindMapBranch",
+        "line": 548,
+        "column": 7
+      },
+      {
+        "pattern": "/countPostsByMindMapBranch/g",
+        "match": "countPostsByMindMapBranch",
+        "line": 604,
+        "column": 25
+      },
+      {
+        "pattern": "/filterPostsByMindMapBranch/g",
+        "match": "filterPostsByMindMapBranch",
+        "line": 590,
+        "column": 7
+      },
+      {
+        "pattern": "/filterPostsByMindMapBranch/g",
+        "match": "filterPostsByMindMapBranch",
+        "line": 623,
+        "column": 25
+      },
+      {
+        "pattern": "/mind-map-config\\.ts/g",
+        "match": "mind-map-config.ts",
+        "line": 314,
+        "column": 72
+      },
+      {
+        "pattern": "/case\\s+['\"`]mind-map['\"`]/g",
+        "match": "case \"mind-map\"",
+        "line": 603,
+        "column": 11
+      },
+      {
+        "pattern": "/case\\s+['\"`]mind-map['\"`]/g",
+        "match": "case \"mind-map\"",
+        "line": 622,
+        "column": 11
+      },
+      {
+        "pattern": "/case\\s+['\"`]mind-map['\"`]/g",
+        "match": "case \"mind-map\"",
+        "line": 675,
+        "column": 13
+      },
+      {
+        "pattern": "/['\"`]mind-map['\"`]\\s*:/g",
+        "match": "\"mind-map\":",
+        "line": 603,
+        "column": 16
+      },
+      {
+        "pattern": "/['\"`]mind-map['\"`]\\s*:/g",
+        "match": "\"mind-map\":",
+        "line": 622,
+        "column": 16
+      },
+      {
+        "pattern": "/['\"`]mind-map['\"`]\\s*:/g",
+        "match": "\"mind-map\":",
+        "line": 675,
+        "column": 18
+      }
+    ]
+  },
+  {
+    "file": "src\\pages\\docs-new.astro",
+    "references": [
+      {
+        "pattern": "/filterByMindMap/g",
+        "match": "filterByMindMap",
+        "line": 1148,
+        "column": 40
+      },
+      {
+        "pattern": "/filterByMindMap/g",
+        "match": "filterByMindMap",
+        "line": 1190,
+        "column": 13
+      },
+      {
+        "pattern": "/case\\s+['\"`]mind-map['\"`]/g",
+        "match": "case \"mind-map\"",
+        "line": 1147,
+        "column": 17
+      },
+      {
+        "pattern": "/['\"`]mind-map['\"`]\\s*:/g",
+        "match": "\"mind-map\":",
+        "line": 1147,
+        "column": 22
+      }
+    ]
+  },
+  {
+    "file": "src\\pages\\docs.astro",
+    "references": [
+      {
+        "pattern": "/filterByMindMap/g",
+        "match": "filterByMindMap",
+        "line": 1471,
+        "column": 40
+      },
+      {
+        "pattern": "/filterByMindMap/g",
+        "match": "filterByMindMap",
+        "line": 1513,
+        "column": 13
+      },
+      {
+        "pattern": "/case\\s+['\"`]mind-map['\"`]/g",
+        "match": "case \"mind-map\"",
+        "line": 1470,
+        "column": 17
+      },
+      {
+        "pattern": "/['\"`]mind-map['\"`]\\s*:/g",
+        "match": "\"mind-map\":",
+        "line": 1470,
+        "column": 22
+      }
+    ]
+  },
+  {
+    "file": "src\\utils\\ai-content\\content-analysis.ts",
+    "references": [
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 25,
+        "column": 4
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 26,
+        "column": 7
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 123,
+        "column": 8
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 124,
+        "column": 11
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 199,
+        "column": 6
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 200,
+        "column": 9
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 248,
+        "column": 19
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 248,
+        "column": 53
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 252,
+        "column": 26
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 253,
+        "column": 19
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 281,
+        "column": 40
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 282,
+        "column": 33
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 20,
+        "column": 18
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 21,
+        "column": 15
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 124,
+        "column": 30
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 137,
+        "column": 21
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 155,
+        "column": 59
+      },
+      {
+        "pattern": "/MindMapCustomization/g",
+        "match": "MindMapCustomization",
+        "line": 65,
+        "column": 22
+      },
+      {
+        "pattern": "/MindMapConfig/g",
+        "match": "MindMapConfig",
+        "line": 82,
+        "column": 22
+      },
+      {
+        "pattern": "/mind-map\\//g",
+        "match": "mind-map/",
+        "line": 16,
+        "column": 55
+      },
+      {
+        "pattern": "/mind-map\\//g",
+        "match": "mind-map/",
+        "line": 26,
+        "column": 51
+      },
+      {
+        "pattern": "/mind-map\\//g",
+        "match": "mind-map/",
+        "line": 414,
+        "column": 52
+      }
+    ]
+  },
+  {
+    "file": "src\\utils\\ai-content\\index.ts",
+    "references": [
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 8,
+        "column": 7
+      }
+    ]
+  },
+  {
+    "file": "src\\utils\\ai-content\\optimized-post-processor.ts",
+    "references": [
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 235,
+        "column": 15
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 235,
+        "column": 40
+      }
+    ]
+  },
+  {
+    "file": "src\\utils\\ai-content\\semantic-relationships.ts",
+    "references": [
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 75,
+        "column": 24
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 75,
+        "column": 58
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 131,
+        "column": 11
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 165,
+        "column": 9
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 177,
+        "column": 19
+      },
+      {
+        "pattern": "/mindMapBranch/g",
+        "match": "mindMapBranch",
+        "line": 177,
+        "column": 44
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 6,
+        "column": 11
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 69,
+        "column": 40
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 145,
+        "column": 50
+      },
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 235,
+        "column": 61
+      }
+    ]
+  },
+  {
+    "file": "src\\utils\\index.ts",
+    "references": [
+      {
+        "pattern": "/MIND_MAP_BRANCHES/g",
+        "match": "MIND_MAP_BRANCHES",
+        "line": 39,
+        "column": 7
+      }
+    ]
+  }
+]

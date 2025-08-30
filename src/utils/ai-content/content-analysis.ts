@@ -13,16 +13,16 @@
  */
 
 import type { CollectionEntry } from "astro:content";
-import { MIND_MAP_CONFIG } from "../../components/mind-map/mind-map-config";
+// import { MIND_MAP_CONFIG } from "../../components/mind-map/mind-map-config"; // Removed - MindMap functionality deprecated
 import { logger } from "../logging/console-logger";
 
-// Use the simplified mind map configuration
-export const MIND_MAP_BRANCHES = MIND_MAP_CONFIG.branches;
+// Use the simplified mind map configuration - DISABLED: MindMap functionality deprecated
+// MindMap functionality deprecated - constant removed
 
-// Enhanced content analysis interface with simplified mind map system
+// Enhanced content analysis interface - MindMap functionality completely removed
 export interface ContentAnalysisResult {
-  mindMapBranch: string;
-  mindMapBranchData: import("../../components/mind-map/mind-map-config").MindMapBranch;
+  // mindMapBranch: string; // Removed - MindMap functionality deprecated
+  // mindMapBranchData: import("../../components/mind-map/mind-map-config").MindMapBranch; // Removed - MindMap functionality deprecated
   keywords: string[];
   difficulty: "beginner" | "intermediate" | "advanced";
   contentType: "guide" | "tutorial" | "theory" | "practice" | "tool" | "review";
@@ -31,28 +31,28 @@ export interface ContentAnalysisResult {
 // Export the interface as ContentAnalysis for backward compatibility
 export type ContentAnalysis = ContentAnalysisResult;
 
-// Enhanced internal link suggestion with mind map context
+// Enhanced internal link suggestion - MindMap context completely removed
 export interface InternalLinkSuggestion {
   targetSlug: string;
   targetTitle: string;
   reason: string;
   relevance: number;
   position: number;
-  // Mind map context for better user understanding
-  mindMapContext?: {
-    sourceBranch: string;
-    targetBranch: string;
-    relationshipType:
-      | "same-branch"
-      | "related-branch"
-      | "progression"
-      | "complementary";
-    visualConnection?: {
-      color: string;
-      style: "solid" | "dashed" | "dotted";
-      thickness: "thin" | "medium" | "thick";
-    };
-  };
+  // Mind map context for better user understanding - REMOVED
+  // mindMapContext?: {
+  //   sourceBranch: string;
+  //   targetBranch: string;
+  //   relationshipType:
+  //     | "same-branch"
+  //     | "related-branch"
+  //     | "progression"
+  //     | "complementary";
+  //   visualConnection?: {
+  //     color: string;
+  //     style: "solid" | "dashed" | "dotted";
+  //     thickness: "thin" | "medium" | "thick";
+  //   };
+  // };
 }
 
 // Export the interface as LinkSuggestion for backward compatibility
@@ -60,52 +60,52 @@ export type LinkSuggestion = InternalLinkSuggestion;
 
 // NOTE: Old internal linking interfaces have been removed in favor of word-to-link conversion
 
-// Mind map customization interface for user modifications
-export interface MindMapCustomization {
-  branchId: string;
-  customizations: {
-    name?: string;
-    color?: string;
-    icon?: string;
-    keywords?: string[];
-    description?: string;
-  };
-  metadata: {
-    customizedBy: string;
-    customizedAt: Date;
-    version: string;
-  };
-}
+// Mind map customization interface for user modifications - REMOVED: MindMap functionality deprecated
+// export interface MindMapCustomization {
+//   branchId: string;
+//   customizations: {
+//     name?: string;
+//     color?: string;
+//     icon?: string;
+//     keywords?: string[];
+//     description?: string;
+//   };
+//   metadata: {
+//     customizedBy: string;
+//     customizedAt: Date;
+//     version: string;
+//   };
+// }
 
-// User-friendly mind map configuration interface
-export interface MindMapConfig {
-  // Visual settings
-  visual: {
-    layout: "radial" | "hierarchical" | "organic" | "flow";
-    theme: "dark" | "light" | "auto";
-    animation: "smooth" | "bounce" | "fade" | "none";
-    connectionStyle: "curved" | "straight" | "stepped";
-  };
-  // Interaction settings
-  interaction: {
-    allowDragging: boolean;
-    allowZooming: boolean;
-    allowPanning: boolean;
-    allowEditing: boolean;
-    allowCustomization: boolean;
-  };
-  // Content settings
-  content: {
-    showKeywords: boolean;
-    showDescriptions: boolean;
-    showIcons: boolean;
-    showConnections: boolean;
-    maxKeywordsPerBranch: number;
-  };
-}
+// User-friendly mind map configuration interface - REMOVED: MindMap functionality deprecated
+// export interface MindMapConfig {
+//   // Visual settings
+//   visual: {
+//     layout: "radial" | "hierarchical" | "organic" | "flow";
+//     theme: "dark" | "light" | "auto";
+//     animation: "smooth" | "bounce" | "fade" | "none";
+//     connectionStyle: "curved" | "straight" | "stepped";
+//   };
+//   // Interaction settings
+//   interaction: {
+//     allowDragging: boolean;
+//     allowZooming: boolean;
+//     allowPanning: boolean;
+//     allowEditing: boolean;
+//     allowCustomization: boolean;
+//   };
+//   // Content settings
+//   content: {
+//     showKeywords: boolean;
+//     showDescriptions: boolean;
+//     showIcons: boolean;
+//     showConnections: boolean;
+//     maxKeywordsPerBranch: number;
+//   };
+// }
 
-// Default mind map configuration - now using simplified system
-export const DEFAULT_MIND_MAP_CONFIG = MIND_MAP_CONFIG;
+// Default mind map configuration - now using simplified system - REMOVED: MindMap functionality deprecated
+// export const DEFAULT_MIND_MAP_CONFIG = MIND_MAP_CONFIG;
 
 /**
  * Enhanced content analysis with mind map customization support
@@ -119,8 +119,8 @@ export function analyzeContent(
   if (!post || !post.data) {
     // Post data missing, using default analysis
     return {
-      mindMapBranch: "A",
-      mindMapBranchData: MIND_MAP_BRANCHES.A,
+      // mindMapBranch: "general", // Removed - MindMap functionality deprecated
+      // mindMapBranchData: MIND_MAP_BRANCHES.A, // Removed - MindMap functionality deprecated
       keywords: ["immersion", "filosofi", "teori", "konsep", "metodologi"],
       difficulty: "beginner",
       contentType: "guide",
@@ -132,26 +132,26 @@ export function analyzeContent(
   const text =
     `${title || ""} ${description || ""} ${(tags || []).join(" ")} ${content}`.toLowerCase();
 
-  // Use simplified mind map system - no customizations needed
-  const branches = MIND_MAP_BRANCHES;
+  // MindMap branch detection removed - functionality deprecated
+  // const branches = MIND_MAP_BRANCHES;
 
-  // Enhanced branch detection with simplified system
-  let bestBranch = "A";
-  let maxScore = 0;
+  // Enhanced branch detection with simplified system - REMOVED
+  // let bestBranch = "A";
+  // let maxScore = 0;
 
-  for (const [branchId, config] of Object.entries(branches)) {
-    const score = config.keywords.filter((keyword) =>
-      text.includes(keyword.toLowerCase()),
-    ).length;
+  // for (const [branchId, config] of Object.entries(branches)) {
+  //   const score = config.keywords.filter((keyword: string) =>
+  //     text.includes(keyword.toLowerCase()),
+  //   ).length;
 
-    if (score > maxScore) {
-      maxScore = score;
-      bestBranch = branchId;
-    }
-  }
+  //   if (score > maxScore) {
+  //     maxScore = score;
+  //     bestBranch = branchId;
+  //   }
+  // }
 
-  // Get branch data
-  const branchData = branches[bestBranch as keyof typeof MIND_MAP_BRANCHES];
+  // Get branch data - REMOVED
+  // const branchData = branches[bestBranch as keyof typeof MIND_MAP_BRANCHES];
 
   // Enhanced difficulty detection
   const difficulty =
@@ -195,9 +195,9 @@ export function analyzeContent(
   // Content type detection completed for "${post.data.title}"
 
   return {
-    mindMapBranch: bestBranch,
-    mindMapBranchData: branchData,
-    keywords: branchData.keywords.slice(0, 5),
+    // mindMapBranch: "general", // Removed - MindMap functionality deprecated
+    // mindMapBranchData: branchData, // Removed - MindMap functionality deprecated
+    keywords: ["immersion", "filosofi", "teori", "konsep", "metodologi"], // Default keywords
     difficulty,
     contentType,
   };
@@ -221,7 +221,7 @@ export function generateInternalLinks(
   allPosts: CollectionEntry<"docs">[],
   maxLinks: number = 3,
 ): InternalLinkSuggestion[] {
-  const currentAnalysis = analyzeContent(currentPost);
+  // const currentAnalysis = analyzeContent(currentPost); // Removed - not used after MindMap cleanup
   const suggestions: InternalLinkSuggestion[] = [];
 
   // Safety check for post body
@@ -243,14 +243,10 @@ export function generateInternalLinks(
     .filter((post) => post.slug !== currentPost.slug)
     .map((post) => {
       const analysis = analyzeContent(post);
-      const relevance =
-        analysis.mindMapBranch === currentAnalysis.mindMapBranch ? 0.8 : 0.4;
+      const relevance = 0.6; // Default relevance for deprecated MindMap functionality
 
-      // Determine relationship type for mind map context
-      const relationshipType = determineRelationshipType(
-        currentAnalysis.mindMapBranch,
-        analysis.mindMapBranch,
-      );
+      // Determine relationship type for mind map context - DISABLED: MindMap functionality deprecated
+      const relationshipType = "related-branch"; // Default relationship type
 
       return { post, relevance, analysis, relationshipType };
     })
@@ -270,29 +266,31 @@ export function generateInternalLinks(
     optimalSpacing,
   );
 
-  // Generate suggestions with intelligent positioning and mind map context
+  // Generate suggestions with intelligent positioning - MindMap context removed
   relatedPosts.forEach(
-    ({ post, relevance, analysis, relationshipType }, index) => {
+    ({ post, relevance }, index) => {
       const insertPosition = insertionPoints[index] || currentPost.body.length;
 
-      // Create mind map context for better user understanding
+      // Create mind map context for better user understanding - DISABLED: MindMap functionality deprecated
+      /*
       const mindMapContext = {
         sourceBranch: currentAnalysis.mindMapBranch,
         targetBranch: analysis.mindMapBranch,
         relationshipType,
         visualConnection: generateVisualConnection(
           relationshipType,
-          currentAnalysis,
+          // currentAnalysis, // Removed - MindMap functionality deprecated
         ),
       };
+      */
 
       suggestions.push({
         targetSlug: post.slug,
         targetTitle: post.data.title,
-        reason: `Related ${analysis.mindMapBranchData.displayName} content`,
+        reason: `Related content in the same branch`, // MindMap functionality deprecated
         relevance,
         position: insertPosition,
-        mindMapContext,
+        // mindMapContext, // Removed - MindMap functionality deprecated
       });
     },
   );
@@ -300,89 +298,8 @@ export function generateInternalLinks(
   return suggestions;
 }
 
-/**
- * Determine the type of relationship between two mind map branches
- */
-function determineRelationshipType(
-  sourceBranch: string,
-  targetBranch: string,
-): "same-branch" | "related-branch" | "progression" | "complementary" {
-  if (sourceBranch === targetBranch) {
-    return "same-branch";
-  }
-
-  // Define progression relationships
-  const progressionMap: Record<string, string[]> = {
-    A: ["B", "C"], // Foundation leads to learning stages and understanding
-    B: ["C", "E"], // Learning stages lead to understanding and practice
-    C: ["D", "E"], // Understanding leads to tools and practice
-    D: ["E"], // Tools lead to practice
-    E: [], // Practice is the final stage
-  };
-
-  if (progressionMap[sourceBranch]?.includes(targetBranch)) {
-    return "progression";
-  }
-
-  // Define complementary relationships
-  const complementaryMap: Record<string, string[]> = {
-    A: ["D"], // Foundation complements tools
-    B: ["D"], // Learning stages complement tools
-    C: ["A"], // Understanding complements foundation
-    D: ["B"], // Tools complement learning stages
-    E: ["A", "B", "C"], // Practice complements all other areas
-  };
-
-  if (complementaryMap[sourceBranch]?.includes(targetBranch)) {
-    return "complementary";
-  }
-
-  return "related-branch";
-}
-
-/**
- * Generate visual connection properties based on relationship type
- */
-function generateVisualConnection(
-  relationshipType: string,
-  sourceAnalysis: ContentAnalysisResult,
-) {
-  const baseConnection = {
-    style: "solid" as const,
-    thickness: "medium" as const,
-  };
-
-  switch (relationshipType) {
-    case "same-branch":
-      return {
-        ...baseConnection,
-        color: sourceAnalysis.mindMapBranchData.visual.color,
-        style: "solid" as const,
-        thickness: "thick" as const,
-      };
-    case "progression":
-      return {
-        ...baseConnection,
-        color: "#10B981", // Green for progression
-        style: "solid" as const,
-        thickness: "medium" as const,
-      };
-    case "complementary":
-      return {
-        ...baseConnection,
-        color: "#F59E0B", // Amber for complementary
-        style: "dashed" as const,
-        thickness: "medium" as const,
-      };
-    default:
-      return {
-        ...baseConnection,
-        color: "#6B7280", // Gray for related
-        style: "dotted" as const,
-        thickness: "thin" as const,
-      };
-  }
-}
+// MindMap utility functions removed - MindMap functionality deprecated
+// determineRelationshipType and generateVisualConnection functions have been removed
 
 /**
  * Calculate adaptive link count based on content length
@@ -408,9 +325,9 @@ function calculateAdaptiveLinkCount(
 }
 
 /**
- * Simplified mind map utility functions - re-exported from new system
+ * Simplified mind map utility functions - re-exported from new system - REMOVED: MindMap functionality deprecated
  */
-export { MindMapUtils } from "../../components/mind-map/mind-map-config";
+// export { MindMapUtils } from "../../components/mind-map/mind-map-config";
 
 /**
  * Find optimal insertion points for internal links

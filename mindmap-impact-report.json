@@ -1,0 +1,120 @@
+{
+  "timestamp": "2025-08-29T14:44:00.316Z",
+  "impact": {
+    "phases": {
+      "phase1": {
+        "files": [
+          "src/components/mind-map/MindMapDisplay.astro",
+          "src/components/mind-map/mind-map-config.ts",
+          "src/components/mind-map/index.ts",
+          "src/pages/mind-map.astro",
+          "src/utils/content-structure/mind-map-structure.ts",
+          "src/utils/ai-content/mind-map-integration.ts"
+        ],
+        "risk": "HIGH",
+        "impact": "HIGH"
+      },
+      "phase2": {
+        "files": [
+          "src/content/content-config.ts",
+          "src/content/config.ts",
+          "src/pages/docs-new.astro",
+          "src/utils/ai-content/content-analysis.ts",
+          "src/utils/ai-content/semantic-relationships.ts",
+          "src/utils/ai-content/optimized-post-processor.ts"
+        ],
+        "risk": "HIGH",
+        "impact": "HIGH"
+      },
+      "phase3": {
+        "files": [],
+        "risk": "LOW",
+        "impact": "NONE"
+      }
+    },
+    "overall": {
+      "risk": "HIGH",
+      "impact": "HIGH",
+      "confidence": "HIGH"
+    },
+    "recommendations": [
+      "Phase 1ファイルの削除前に、必ず完全バックアップを作成してください",
+      "各削除ステップ後にビルド検証を実行してください",
+      "Phase 2ファイルの参照除去は慎重に行ってください",
+      "各参照の除去後に構文チェックを実行してください"
+    ],
+    "mitigation": [
+      "Gitコミットベースのバージョン管理バックアップを準備",
+      "ファイルシステムレベルの完全バックアップを作成",
+      "自動参照検出ツールを使用した完全性検証",
+      "複数手法によるクロス検証"
+    ],
+    "specificImpacts": {
+      "build": {
+        "risk": "HIGH",
+        "expectedChanges": [
+          "TypeScriptコンパイルエラーの可能性",
+          "未解決のインポートエラーの可能性",
+          "参照除去によるコンパイルエラーの可能性",
+          "条件分岐や関数呼び出しの失敗"
+        ],
+        "recommendations": [
+          "Phase 1削除後に必ずビルド検証を実行",
+          "各参照除去後に構文チェックを実行"
+        ]
+      },
+      "functionality": {
+        "risk": "MEDIUM",
+        "affectedFeatures": [
+          "ドキュメントページのフィルタリング機能",
+          "MindMap関連コンテンツの表示",
+          "AIコンテンツ分析機能",
+          "セマンティック関連性分析"
+        ],
+        "criticalPaths": [
+          "docsページの正常動作",
+          "AI推奨機能の動作"
+        ],
+        "recommendations": [
+          "削除後にdocsページとAI機能を重点的にテスト",
+          "既存機能の回帰テストを実行"
+        ]
+      },
+      "performance": {
+        "risk": "LOW",
+        "expectedChanges": [
+          "バンドルサイズの削減（推定5-10%）"
+        ],
+        "benefits": [
+          "ページ読み込み時間の改善",
+          "ビルド時間の短縮"
+        ],
+        "recommendations": [
+          "削除前後のパフォーマンス測定を実施",
+          "Core Web Vitalsの監視を継続"
+        ]
+      },
+      "maintenance": {
+        "risk": "LOW",
+        "expectedChanges": [
+          "コードベースの大幅な簡素化"
+        ],
+        "benefits": [
+          "保守コストの削減",
+          "技術的負債の解消"
+        ],
+        "recommendations": [
+          "削除完了後にコードベース全体のレビューを実施",
+          "ドキュメントの更新を忘れずに行う"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "overallRisk": "HIGH",
+    "overallImpact": "HIGH",
+    "confidence": "HIGH",
+    "totalRecommendations": 4,
+    "totalMitigations": 4
+  }
+}

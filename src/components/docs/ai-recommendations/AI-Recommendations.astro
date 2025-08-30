@@ -14,7 +14,7 @@ import {
 
 interface Props extends AIRecommendationsProps {
   sourcePost?: any // Add source post for mind map integration
-  enableMindMapContext?: boolean // Enable mind map context features
+  enableMindMapContext?: boolean // Enable mind map context features - DEPRECATED
 }
 
 const {
@@ -24,7 +24,7 @@ const {
   className = "",
   showFallback = true,
   sourcePost = null,
-  enableMindMapContext = true,
+  enableMindMapContext = false, // Disabled - MindMap functionality deprecated
 } = Astro.props
 
 // Process recommendations with error handling and mind map integration
@@ -56,7 +56,7 @@ const processRecommendations = () => {
       .slice(0, maxRecommendations)
 
     // Enhance with mind map context if enabled and source post is available
-    // Temporarily disabled due to build issues
+    // PERMANENTLY DISABLED: MindMap functionality deprecated and removed
     /*
     if (enableMindMapContext && sourcePost) {
       try {

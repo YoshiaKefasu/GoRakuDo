@@ -2,40 +2,12 @@
  * @jest-environment jsdom
  */
 
-import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
-
-// Mock the Astro content collection
-jest.mock('astro:content', () => ({
-  getCollection: jest.fn(),
-  type CollectionEntry: jest.fn()
-}));
-
-// Mock readdir and path utilities
-jest.mock('fs/promises', () => ({
-  readdir: jest.fn()
-}));
-
-jest.mock('path', () => ({
-  join: jest.fn((...args) => args.join('/'))
-}));
+const { describe, test, expect, beforeEach, afterEach } = require('@jest/globals');
 
 describe('Tool Index Page Integration Tests - P0 & P1 Tests', () => {
 
-  let mockGetCollection;
-  let mockReaddir;
-  let mockJoin;
-
   beforeEach(() => {
-    // Setup mocks
-    const astroContent = require('astro:content');
-    const fsPromises = require('fs/promises');
-    const path = require('path');
-
-    mockGetCollection = astroContent.getCollection;
-    mockReaddir = fsPromises.readdir;
-    mockJoin = path.join;
-
-    // Reset mocks
+    // Reset mocks from setup.js
     jest.clearAllMocks();
   });
 
