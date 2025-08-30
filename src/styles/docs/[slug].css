@@ -67,9 +67,10 @@
 
   /* Golden ratio container sizing - Preserved mathematical precision */
   --golden-ratio: 1.618;
-  --golden-ratio-left: calc(100vw * 0.236);
-  --golden-ratio-content: calc(100vw * 0.382);
-  --golden-ratio-right: calc(100vw * 0.236);
+  --golden-ratio-left: calc(100vh * 0.236);
+  --golden-ratio-content: calc(100vh * 0.382);
+  --golden-ratio-right: calc(100vh * 0.236);
+
 
   /* Readability-optimized spacing - Enhanced with accessibility focus */
   --readability-padding-large: 4rem;
@@ -199,6 +200,7 @@
 
 /* Post Page Container - Enhanced with unified design system */
 .post-page {
+  width: 100%;
   min-height: 100vh;
   background: var(--color-post-background);
   /* ENHANCED: Add grainy noise texture for improved readability */
@@ -233,29 +235,25 @@
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  border-radius: 1rem;
+  overflow: hidden; 
 }
 
-.post-container {
-  /* Responsive max-width with proper constraints - FIXED for better readability */
+/* Base styles - Full width on mobile */
+.post-page .post-container {
   width: 100%;
-  max-width: 100%; /* Edge-to-edge on small screens */
+  max-width: 100%; /* Full width on small screens */
   margin: 0 auto;
-  padding: 0 var(--post-padding-x-small); /* Use custom variable for better control */
+  padding: 0 var(--post-padding-x-small);
   background: transparent;
-  /* Enhanced layout positioning */
   display: flex;
   flex-direction: column;
-  min-height: calc(
-    100vh - 6rem
-  ); /* Convert to REM for responsive navbar height calculation */
+  min-height: calc(100vh - 6rem);
   justify-content: flex-start;
   align-items: stretch;
-  /* Enhanced performance */
   contain: layout style paint;
   will-change: transform;
-  container-type: inline-size;
   position: relative;
-  /* Enable hardware acceleration */
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -1099,7 +1097,7 @@
 
 /* Responsive container sizing - FIXED for better readability */
 @media (min-width: 640px) {
-  .post-container {
+  .post-page .post-container {
     padding: 0 var(--post-padding-x-medium) !important; /* Use custom variable for better spacing */
     max-width: var(
       --post-max-width-medium
@@ -1117,7 +1115,7 @@
 }
 
 @media (min-width: 768px) {
-  .post-container {
+  .post-page .post-container {
     max-width: 92% !important; /* INCREASED from 85% for less restriction */
   }
 
@@ -1146,7 +1144,7 @@
     gap: 3rem !important;
   }
 
-  .post-content {
+  .post-header {
     padding: 2rem !important;
   }
 
@@ -1155,7 +1153,7 @@
   }
 
   .post-navigation-top {
-    padding: 1.5rem 2.5rem !important;
+    padding: 1.25rem 2rem !important;
   }
 
   .post-actions {
@@ -1176,6 +1174,7 @@
     gap: 3.5rem !important;
   }
 }
+
 
 /* Enhanced Mobile Navigation */
 @media (max-width: 768px) {
@@ -1355,7 +1354,7 @@
 
 /* Enhanced Mobile Breakpoints - Improved spacing and typography */
 @media (min-width: 768px) {
-  .post-container {
+  .post-page .post-container {
     padding: 0 1.25rem; /* REM for responsive padding */
   }
 
