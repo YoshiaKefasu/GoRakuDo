@@ -235,7 +235,8 @@
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  border-radius: 1rem;
+  /* FIXED: Remove border-radius that might affect full-width display */
+  border-radius: 0;
   overflow: hidden; 
 }
 
@@ -258,6 +259,8 @@
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   gap: 1.5rem;
+  /* FIXED: Ensure proper box sizing */
+  box-sizing: border-box;
 }
 
 /* Breadcrumb transparent styling for docs pages */
@@ -476,13 +479,18 @@
   /* Improved header layout */
   width: 100%;
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 1.5rem;
   background: rgba(25, 25, 25, 0.2);
   backdrop-filter: blur(6px);
   border-radius: 0.75rem;
   /* GitHub Pages optimized border - more subtle and fallback */
   border: 1px solid rgba(139, 93, 255, 0.1);
+  /* FIXED: Ensure proper centering */
+  box-sizing: border-box;
 }
 
 .post-header h1 {
@@ -497,6 +505,9 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
+  /* FIXED: Ensure proper centering */
+  text-align: center;
+  width: 100%;
 }
 
 .post-meta {
@@ -508,14 +519,56 @@
   font-size: 0.875rem; /* REM for responsive typography */
   color: var(--color-post-meta); /* ENHANCED: Better contrast for meta text */
   flex-wrap: wrap; /* Allow wrapping on small screens */
+  /* FIXED: Ensure proper centering both horizontally and vertically */
+  width: 100%;
+  text-align: center;
+  /* Reset default browser styles */
+  margin: 0;
+  padding: 0;
+  border: none;
+  list-style: none;
 }
 
+/* FIXED: Ensure post-date and post-author are properly centered */
 .post-date,
-.post-author,
-.post-read-time {
-  color: var(
-    --color-post-meta
-  ); /* ENHANCED: Better contrast for meta elements */
+.post-author {
+  color: var(--color-post-meta);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Add explicit width to ensure proper centering */
+  width: auto;
+  /* Reset default browser styles */
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* FIXED: Ensure the time element is properly styled */
+.post-date time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Reset default browser styles */
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* Add more specific selectors */
+div.post-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-meta .post-date,
+.post-meta .post-author {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .post-tags {
@@ -523,6 +576,17 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem; /* REM for responsive spacing */
+  /* FIXED: Ensure proper centering */
+  width: 100%;
+}
+
+.post-tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem; /* REM for responsive spacing */
+  /* FIXED: Ensure proper centering */
+  width: 100%;
 }
 
 .difficulty-badge {
@@ -1135,9 +1199,10 @@
 }
 
 @media (min-width: 1024px) {
-  .post-container {
-    /* SIMPLIFIED Golden Ratio - More Readable and Less Restrictive */
-    max-width: min(85%, var(--post-max-width-large)) !important;
+  .post-page .post-container {
+    /* FIXED: Make container properly responsive and full-width on larger screens */
+    max-width: var(--post-max-width-large) !important; /* Use the defined large max-width */
+    width: 100% !important; /* Ensure full width */
     margin-left: auto !important;
     margin-right: auto !important;
     padding: 0 var(--post-padding-x-large) !important; /* Use custom variable for optimal spacing */
@@ -1146,10 +1211,6 @@
 
   .post-header {
     padding: 2rem !important;
-  }
-
-  .post-header {
-    padding: 2.5rem !important;
   }
 
   .post-navigation-top {
@@ -1162,12 +1223,13 @@
 }
 
 @media (min-width: 1280px) {
-  .post-container {
+  .post-page .post-container {
     /* FIXED max-width with readability optimization - Less Restrictive */
     max-width: min(
-      85%,
-      68rem
-    ) !important; /* Convert 1024px to REM for responsive max-width */
+      90%,
+      72rem
+    ) !important; /* Increased from 68rem for better use of space */
+    width: 100% !important; /* Ensure full width */
     margin-left: auto !important;
     margin-right: auto !important;
     padding: 0 var(--post-padding-x-large) !important; /* Use custom variable for optimal spacing */
