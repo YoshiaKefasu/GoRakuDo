@@ -649,6 +649,8 @@ RULES FOR MODIFICATION:
 
 /* === CORRECTED STYLES ARE HERE === */
 .mission-section::before {
+  max-width: 100% !important;
+  padding: 0 !important;
   background: 
     /* Primary buttery smooth gradient */
     linear-gradient(
@@ -675,6 +677,8 @@ RULES FOR MODIFICATION:
 }
 
 .features-section::before {
+  max-width: 100% !important;
+  padding: 0 !important;
   background: 
     /* Primary buttery smooth wave gradient */
     radial-gradient(
@@ -709,6 +713,8 @@ RULES FOR MODIFICATION:
 }
 
 .docs-preview-section::before {
+  max-width: 100% !important;
+  padding: 0 !important;
   background: 
     /* Primary buttery smooth gradient */
     linear-gradient(
