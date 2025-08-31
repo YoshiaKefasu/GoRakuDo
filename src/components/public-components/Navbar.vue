@@ -120,7 +120,7 @@
 </template>
 
 <style scoped>
-/* ---------- Navbar component - Google UI/UX Team 2025 CSS Unit Optimization ---------- */
+    /* ---------- Navbar component - GoRakuDo UI/UX Team 2025 CSS Unit Optimization ---------- */
 .navbar-wrapper {
   /* Wrapper for single root element - ensure proper layout */
   display: block !important;
