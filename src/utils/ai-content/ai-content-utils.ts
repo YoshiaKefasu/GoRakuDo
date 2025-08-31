@@ -1,6 +1,6 @@
 // AI Content Utilities for GoRakuDo
 // TEMPORARILY SIMPLIFIED: AI features disabled until aiMetadata schema is added
-// Google Engineering Team 2025: Advanced AI-powered content management
+// GoRakuDo Engineering Team 2025: Advanced AI-powered content management
 
 import type { CollectionEntry } from "astro:content";
 

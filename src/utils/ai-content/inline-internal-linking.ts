@@ -11,7 +11,7 @@
  * - Strategic positioning that respects reading flow
  * - Integration with existing mind map and content analysis system
  *
- * @author Google 2025 Engineering Team
+ * @author GoRakuDo Engineering Team 2025
  * @version 1.0.0
  * @framework Astro SSG with Vue and Tailwind v4.1
  */
