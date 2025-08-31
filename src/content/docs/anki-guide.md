@@ -12,9 +12,6 @@ featured: false
 mindMapBranch: "D"
 contentType: "resource"
 ---
-
-# SAMPLE POST ASAL: Panduan Menggunakan Anki
-
 ## Apa itu Anki?
 
 Anki adalah aplikasi flashcard menggunakan sistem **Spaced Repetition System (SRS)**.
