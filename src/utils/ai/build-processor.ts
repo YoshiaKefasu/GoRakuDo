@@ -62,10 +62,6 @@ export class BuildProcessor {
   ): Promise<AIProcessingResult | null> {
     try {
       // AI processing disabled for security
-      // const geminiConfig = this.environment.getGeminiConfig();
-      // if (!geminiConfig.apiKey) {
-      //   throw new Error("No API key available for AI processing");
-      // }
       const aiSystem = new AISystem();
 
       const result = await aiSystem.processContent(

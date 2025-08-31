@@ -50,7 +50,7 @@ export class AISystem {
     return {
       metaDescriptionCache: 0,
       recommendationsCache: 0,
-      geminiCache: 0,
+      aiCache: 0,
     };
   }
 
