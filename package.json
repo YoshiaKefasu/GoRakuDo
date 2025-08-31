@@ -6,7 +6,13 @@
     "dev": "astro dev",
     "build": "astro build && astro check",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "backup:create": "node scripts/backup/backup-utils.js create",
+    "backup:list": "node scripts/backup/backup-utils.js list",
+    "backup:validate": "node scripts/backup/backup-utils.js validate",
+    "backup:rollback": "node scripts/backup/backup-utils.js rollback",
+    "backup:phases": "node scripts/backup/backup-utils.js phases",
+    "backup:manager": "node scripts/backup/backup-manager.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
