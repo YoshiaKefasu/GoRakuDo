@@ -1,8 +1,5 @@
 // Core AI System
 export { AISystem } from "./ai-system";
-export { GeminiAIService } from "./gemini-api";
-export { MetaDescriptionGenerator } from "./meta-description-generator";
-export { ContentRecommendationSystem } from "./content-recommendations";
 export { SEOOptimizer } from "./seo-optimizer";
 export { RateLimiter } from "./rate-limiter";
 
@@ -17,7 +14,6 @@ export { FileDetector } from "./file-detector";
 
 // Node.js Environment Setup
 export { NodeEnvSetup, nodeEnvSetup } from "./node-env-setup";
-export { GeminiAIServiceNew } from "./gemini-api-new";
 
 // Build Trigger (New)
 export { triggerAIBuildProcessing, testAIFunctionality } from "./build-trigger";

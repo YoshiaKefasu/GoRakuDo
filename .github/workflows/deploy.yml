@@ -46,10 +46,6 @@ jobs:
           GITHUB_ACTIONS: true
           BUILD_ENVIRONMENT: github-actions
           ENABLE_AI_PROCESSING: false
-          GOOGLE_API_KEY: ""
-          GOOGLE_MODEL: ""
-          GOOGLE_RATE_LIMIT_RPD: 0
-          GOOGLE_RATE_LIMIT_RPM: 0
           SITE_URL: https://gorakudo.org
           SITE_TITLE: GoRakuDo - Komunitas Immersion Bahasa Jepang
           SITE_DESCRIPTION: Komunitas immersion bahasa Jepang terbesar Indonesia

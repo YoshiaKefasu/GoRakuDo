@@ -1,9 +1,4 @@
-export interface GeminiConfig {
-  apiKey: string;
-  model: string;
-  rateLimitRPD: number;
-  rateLimitRPM: number;
-}
+
 
 export interface AIResponse {
   response: string;
@@ -69,24 +64,4 @@ export interface AIProcessingResult {
   apiCallsUsed: number;
 }
 
-// New types for Google GenAI package
-export interface GoogleGenAIConfig {
-  apiKey: string;
-  model: string;
-  rateLimitRPD: number;
-  rateLimitRPM: number;
-}
 
-export interface GenerationConfig {
-  temperature?: number;
-  maxOutputTokens?: number;
-  topP?: number;
-  topK?: number;
-}
-
-export interface EnvironmentInfo {
-  hasApiKey: boolean;
-  model: string;
-  rateLimits: { rpd: number; rpm: number };
-  isInitialized: boolean;
-}

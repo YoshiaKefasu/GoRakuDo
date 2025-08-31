@@ -1,89 +1,64 @@
-import { GeminiAIService } from "./gemini-api";
 import type { MetaDescriptionRequest, SEOOptimizedMeta } from "./types";
 
 export class MetaDescriptionGenerator {
-  private geminiService: GeminiAIService;
   private cache: Map<string, SEOOptimizedMeta>;
 
-  constructor(geminiService: GeminiAIService) {
-    this.geminiService = geminiService;
+  constructor() {
     this.cache = new Map();
   }
 
   async generateOptimizedMetaDescription(
     request: MetaDescriptionRequest,
   ): Promise<SEOOptimizedMeta> {
-    const cacheKey = this.generateCacheKey(request);
-
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
-    }
-
-    try {
-      // Generate AI-powered meta description
-      const aiDescription =
-        await this.geminiService.generateMetaDescription(request);
-
-      // Optimize for SEO
-      const optimizedMeta = this.optimizeForSEO(aiDescription, request);
-
-      this.cache.set(cacheKey, optimizedMeta);
-      return optimizedMeta;
-    } catch (error) {
-      console.warn(
-        "AI meta description generation failed, using fallback:",
-        error,
-      );
-      return this.generateFallbackMetaDescription(request);
-    }
+    // AI processing disabled for security
+    return this.generateFallbackMetaDescription(request);
   }
 
-  private optimizeForSEO(
-    description: string,
-    request: MetaDescriptionRequest,
-  ): SEOOptimizedMeta {
-    // Ensure proper length (150-160 characters for optimal CTR)
-    let optimized = description;
-    if (optimized.length > 160) {
-      optimized = optimized.substring(0, 157) + "...";
-    }
+  // private optimizeForSEO(
+  //   description: string,
+  //   request: MetaDescriptionRequest,
+  // ): SEOOptimizedMeta {
+  //   // Ensure proper length (150-160 characters for optimal CTR)
+  //   let optimized = description;
+  //   if (optimized.length > 160) {
+  //     optimized = optimized.substring(0, 157) + "...";
+  //   }
 
-    // Add primary keywords if missing
-    if (request.keywords && request.keywords.length > 0) {
-      const primaryKeyword = request.keywords[0];
-      if (!optimized.toLowerCase().includes(primaryKeyword.toLowerCase())) {
-        optimized = `${primaryKeyword} - ${optimized}`;
-        if (optimized.length > 160) {
-          optimized = optimized.substring(0, 157) + "...";
-        }
-      }
-    }
+  //   // Add primary keywords if missing
+  //   if (request.keywords && request.keywords.length > 0) {
+  //     const primaryKeyword = request.keywords[0];
+  //     if (!optimized.toLowerCase().includes(primaryKeyword.toLowerCase())) {
+  //       optimized = `${primaryKeyword} - ${optimized}`;
+  //       optimized = optimized.substring(0, 157) + "...";
+  //       }
+  //     }
+  //   }
 
-    // Add call-to-action for better CTR
-    if (
-      !optimized.includes("Belajar") &&
-      !optimized.includes("Pelajari") &&
-      !optimized.includes("学習")
-    ) {
-      if (request.language === "ja") {
-        optimized = `${optimized} 日本語を学びましょう。`;
-      } else {
-        optimized = `${optimized} Belajar bahasa Jepang sekarang.`;
-      }
-      if (optimized.length > 160) {
-        optimized = optimized.substring(0, 157) + "...";
-      }
-    }
+  //   // Add call-to-action for better CTR
+  //   if (
+  //     !optimized.includes("Belajar") &&
+  //     !optimized.includes("Pelajari") &&
+  //     !optimized.includes("学習")
+  //   ) {
+  //     if (request.language === "ja") {
+  //       optimized = `${optimized} 日本語を学びましょう。`;
+  //     } else {
+  //       optimized = `${optimized} Belajar bahasa Jepang sekarang.`;
+  //     }
+  //     if (optimized.length > 160) {
+  //       optimized = optimized.substring(0, 157) + "...";
+  //     }
+  //   }
 
-    return {
-      description: optimized,
-      length: optimized.length,
-      hasKeywords: this.checkKeywordPresence(optimized, request.keywords || []),
-      hasCTA: this.checkCTAPresence(optimized, request.language),
-      language: request.language || "id",
-      generatedAt: new Date().toISOString(),
-    };
-  }
+  //   return {
+  //     description: optimized,
+  //     length: optimized.length,
+  //     hasKeywords: this.checkKeywordPresence(optimized, request.keywords || []),
+  //     hasCTA: this.checkCTAPresence(optimized, request.language),
+  //     language: request.language || "id",
+  //     generatedAt: new Date().toISOString(),
+  //   };
+  // }
 
   private generateFallbackMetaDescription(
     request: MetaDescriptionRequest,
@@ -127,23 +102,23 @@ export class MetaDescriptionGenerator {
     );
   }
 
-  private checkCTAPresence(
-    description: string,
-    language?: "id" | "ja",
-  ): boolean {
-    const ctaWords =
-      language === "ja"
-        ? ["学び", "学習", "始め", "参加", "登録"]
-        : ["belajar", "pelajari", "mulai", "gabung", "daftar"];
+  // private checkCTAPresence(
+  //   description: string,
+  //   language?: "id" | "ja",
+  // ): boolean {
+  //   const ctaWords =
+  //     language === "ja"
+  //       ? ["学び", "学習", "始め", "参加", "登録"]
+  //       : ["belajar", "pelajari", "mulai", "gabung", "daftar"];
 
-    return ctaWords.some((word) =>
-      description.toLowerCase().includes(word.toLowerCase()),
-    );
-  }
+  //   return ctaWords.some((word) =>
+  //     description.toLowerCase().includes(word.toLowerCase()),
+  //   );
+  // }
 
-  private generateCacheKey(request: MetaDescriptionRequest): string {
-    return `meta_${request.title.substring(0, 50)}_${request.content.substring(0, 100)}_${request.language || "id"}`;
-  }
+  // private generateCacheKey(request: MetaDescriptionRequest): string {
+  //   return `meta_${request.title.substring(0, 50)}_${request.content.substring(0, 100)}_${request.language || "id"}`;
+  // }
 
   clearCache() {
     this.cache.clear();
