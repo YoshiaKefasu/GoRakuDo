@@ -1,7 +1,7 @@
 ---
-// ========== TOOL INDEX PAGE IMPLEMENTATION ==========
-// Story 2.5: Create Dynamic Tool Index Page
-// Purpose: Display all articles for a specific tool category
+// ========== ENHANCED TOOL INDEX PAGE IMPLEMENTATION ==========
+// Enhanced to match Docs Page layout structure
+// Purpose: Display all articles for a specific tool category with enhanced UI
 // File: src/pages/tools/[tool]/index.astro
 
 // Import required dependencies
@@ -9,7 +9,12 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import { readdir } from "fs/promises";
 import { join } from "path";
 import ArticleCard from "../../../components/content/ArticleCard.astro";
-import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro";
+import Navbar from "../../../components/public-components/Navbar.vue";
+import Breadcrumb from "../../../components/public-components/Breadcrumb.astro";
+import HeadSEO from "../../../components/public-components/HeadSEO.astro"
+
+// Import CSS styles
+import "../../../styles/docs/docs.css";
 
 // ========== PERFORMANCE MONITORING ==========
 // Subtask 8.1: Build time measurement for index page generation
@@ -31,7 +36,7 @@ export async function getStaticPaths() {
         .map(entry => entry.name);
     } catch (error) {
       console.warn("⚠️ Warning: Could not read tool-articles directory:", error);
-      // Subtask 2.3: Fallback to empty array if directory doesn't exist
+      // Subtask 2.3: Fallback to empty array if directory doesn\'t exist
       return [];
     }
 
@@ -91,7 +96,6 @@ try {
 }
 
 // Task 5: Filter articles for current tool using tag-based filtering
-// REPLACE EXISTING SLUG-BASED FILTERING (lines 84-95)
 const toolArticles = articles.filter(article => {
   try {
     // Validate tags exist and are in correct format
@@ -100,7 +104,7 @@ const toolArticles = articles.filter(article => {
       return false;
     }
 
-    // Check if current tool is in article's tags array
+    // Check if current tool is in article\'s tags array
     return article.data.tags.includes(tool);
   } catch (error) {
     console.warn("⚠️ Error processing article tags:", article.id, error);
@@ -196,169 +200,500 @@ if (performanceMetrics.cachingMetrics.cacheEfficiency < 50) {
 if (performanceMetrics.cachingMetrics.cacheSize > 100) {
   console.warn("⚠️ Caching: Cache size exceeds 100 entries - consider cache cleanup");
 }
+
+// ========== PAGINATION LOGIC ==========
+// Add pagination similar to Docs Page
+const ARTICLES_PER_PAGE = 6; // Match docs page
+const totalArticles = toolArticles.length;
+const totalPages = Math.ceil(totalArticles / ARTICLES_PER_PAGE);
+const currentPage = 1; // Static generation
+const startIndex = 0;
+const endIndex = Math.min(ARTICLES_PER_PAGE, totalArticles);
+const currentArticles = toolArticles.slice(startIndex, endIndex);
+
+// ========== TOOL METADATA ==========
+// Get tool information for display
+import { toolsData } from "../../../utils/toolMetadata";
+
+const currentTool = toolsData[tool] || {
+  name: tool.charAt(0).toUpperCase() + tool.slice(1),
+  icon: "🛠️",
+  description: `Panduan dan artikel untuk ${tool}`,
+  image: "/img/tools/default-icon.png"
+};
 ---
 
-<ToolArticleLayout
-  title={`${tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo`}
-  description={`All articles and guides for ${tool} tool`}
+<!doctype html>
+<html lang="id">
+  <head>
+    <HeadSEO
+      title={`${currentTool.name} - Panduan & Artikel - GoRakuDo`}
+      description={`${currentTool.description} Kumpulan panduan lengkap dan artikel untuk ${currentTool.name}.`}
   lang="id"
-  showBreadcrumb={true}
-  currentPath={validatedCurrentPath}>
-  <!-- Page Header -->
-  <header class="tool-index-header">
-    <h1 class="tool-index-title">{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>
-    <p class="tool-index-description">Browse all available documentation for {tool}</p>
-  </header>
+      aiPageType="docs"
+      enableAIOptimizations={true}
+    />
+    <link rel="stylesheet" href="/css/homepage-styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Row 1: Global Navbar -->
+    <Navbar client:visible />
 
-  <!-- Navigation -->
-  <nav>
-    <a href="/tools">← Back to Tools</a>
-  </nav>
+    <!-- Background Elements -->
+    <canvas id="waveCanvas" class="wave-canvas"></canvas>
+    <div class="stars" id="starsContainer"></div>
 
   <!-- Main Content -->
-  <main>
-    {hasArticles ? (
-      <!-- Responsive Grid Layout for Articles -->
-      <div class="articles-grid">
-        {toolArticles.map((article, index) => {
-          // Task 7: Render article cards with comprehensive error handling
-          // Subtask 7.1: Safe data extraction with fallbacks
+    <main class="main-content">
+      <div class="posts-page pt-20">
+        <div class="posts-container py-6" id="postsContainer">
+          
+          <!-- Row 2: Tool Header Section -->
+          <div class="posts-header">
+            <div class="flex flex-col md:flex-row items-center gap-8 mb-8 p-10">
+              <!-- Column 1: Tool Image -->
+              <div class="flex-shrink-0">
+                <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-2xl flex items-center justify-center text-4xl md:text-5xl border border-purple-500/20">
+                  {currentTool.icon}
+                </div>
+              </div>
+              
+              <!-- Column 2: Tool Info -->
+              <div class="flex-1 text-center md:text-left">
+                <!-- Row 1: Tool Name -->
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-semibold text-white mb-4">
+                  {currentTool.name}
+                </h1>
+                
+                <!-- Row 2: Tool Badge -->
+                <div class="flex justify-center md:justify-start gap-3 mb-4">
+                  <span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm border border-primary/30">
+                    Tool Guide
+                  </span>
+                  <span class="bg-accent/20 text-accent px-3 py-1 rounded-full text-sm border border-accent/30">
+                    {totalArticles} Article{totalArticles !== 1 ? 's' : ''}
+                  </span>
+                </div>
+                
+                <!-- Row 3: Tool Description -->
+                <p class="text-lg leading-relaxed text-gray-300 max-w-2xl">
+                  {currentTool.description}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Breadcrumb Navigation -->
+          <Breadcrumb currentPath={validatedCurrentPath} />
+
+          <!-- Row 3: Articles List with post-grid class -->
+          <div id="contentState" class="posts-grid">
+            {
+              !hasArticles ? (
+                <div class="col-span-full no-results">
+                  <div class="no-results-icon">📚</div>
+                  <h3>Belum Ada Artikel</h3>
+                  <p>Artikel untuk {currentTool.name} akan segera tersedia. Tetap pantau untuk pembaruan!</p>
+                  <div class="mt-6">
+                    <a href="/tools" class="docs-button">← Kembali ke Tools</a>
+                  </div>
+                </div>
+              ) : (
+                currentArticles.map((article, index) => {
+                  // Safe data extraction with fallbacks
           try {
             const articleSlug = article.slug || article.id || "";
             const articleTitle = article.data?.title || `Article ${article.id}`;
             const articleDescription = article.data?.description || "";
             const articleTags = Array.isArray(article.data?.tags) ? article.data.tags : [];
+                    const publishedDate = article.data?.publishedDate || "";
+                    const readTime = article.data?.readTime || 5;
 
-            // Optimize first 3 articles for above-the-fold loading (Subtask 4.4: Lazy loading)
-            const isPriority = index < 3;
+                    // Format date
+                    const formattedDate = publishedDate 
+                      ? new Date(publishedDate).toLocaleDateString("id-ID", {
+                          year: "numeric",
+                          month: "long", 
+                          day: "numeric"
+                        })
+                      : "";
+
+                    // Generate article URL
+                    const articleUrl = `/tools/${tool}/${articleSlug.replace(new RegExp(`^${tool}/`), "")}`;
 
             return (
-              <div class="article-grid-item">
-                <ArticleCard
-                  title={articleTitle}
-                  description={articleDescription}
-                  slug={articleSlug}
-                  tags={articleTags}
-                  tool={tool}
-                  priority={isPriority}
-                />
+                      <article class={`post-card post-card-${index % 4}`} data-post-slug={articleSlug}>
+                        <div class="post-emoji">{currentTool.icon}</div>
+                        <div class="post-card-container">
+                          <div class="post-header">
+                            <h2 class="post-title">
+                              <a href={articleUrl}>
+                                {articleTitle}
+                              </a>
+                            </h2>
+                            <div class="post-meta">
+                              <span class="post-date">{formattedDate}</span>
+                              <span class="post-readtime">{readTime} min read</span>
+                            </div>
+                          </div>
+                          <p class="post-description">{articleDescription}</p>
+                          <div class="post-tags" data-all-tags={JSON.stringify(articleTags)}>
+                            {articleTags.slice(0, 3).map((tag: string) => (
+                              <span class="post-tag">{tag}</span>
+                            ))}
+                            {articleTags.length > 3 && (
+                              <span class="post-tag-more" data-count={articleTags.length - 3}>
+                                +{articleTags.length - 3}
+                              </span>
+                            )}
+                          </div>
+                          <a href={articleUrl} class="read-more-btn">
+                            Baca Selengkapnya →
+                          </a>
               </div>
+                      </article>
             );
           } catch (error) {
-            // Subtask 7.4: Comprehensive error handling for malformed article data
             console.warn("⚠️ Error processing article:", article.id, error);
             return (
-              <div class="article-grid-item">
-                <ArticleCard
-                  title={`Article ${article.id}`}
-                  description="Content unavailable"
-                  slug={article.id || ""}
-                  tags={[]}
-                  tool={tool}
-                  priority={false}
-                />
+                      <article class={`post-card post-card-${index % 4}`} data-post-slug={article.id}>
+                        <div class="post-emoji">⚠️</div>
+                        <div class="post-card-container">
+                          <div class="post-header">
+                            <h2 class="post-title">
+                              <a href={`/tools/${tool}/${article.id}`}>
+                                Article {article.id}
+                              </a>
+                            </h2>
+                            <div class="post-meta">
+                              <span class="post-date">-</span>
+                            </div>
+                          </div>
+                          <p class="post-description">Content unavailable</p>
+                          <div class="post-tags"></div>
+                          <a href={`/tools/${tool}/${article.id}`} class="read-more-btn">
+                            Baca Selengkapnya →
+                          </a>
+                        </div>
+                      </article>
+                    );
+                  }
+                })
+              )
+            }
+          </div>
+
+          <!-- Row 4: Pagination -->
+          {
+            totalPages > 1 && (
+              <div class="pagination-container" id="paginationContainer">
+                <div class="pagination-info">
+                  <span class="pagination-stats">
+                    Menampilkan {startIndex + 1}-{endIndex} dari {totalArticles} artikel
+                  </span>
+                </div>
+                <div class="pagination-controls">
+                  <button
+                    class="pagination-btn prev-btn"
+                    disabled={currentPage === 1}
+                    data-page={currentPage - 1}>
+                    ← Sebelumnya
+                  </button>
+                  <div class="pagination-numbers">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (pageNum) => (
+                        <button
+                          class={`pagination-number ${pageNum === currentPage ? "active" : ""}`}
+                          data-page={pageNum}>
+                          {pageNum}
+                        </button>
+                      )
+                    )}
+                  </div>
+                  <button
+                    class="pagination-btn next-btn"
+                    disabled={currentPage === totalPages}
+                    data-page={currentPage + 1}>
+                    Selanjutnya →
+                  </button>
+                </div>
+                <div class="pagination-toggle">
+                  <label class="pagination-mode-toggle">
+                    <input type="checkbox" id="infiniteScrollToggle" />
+                    <span class="toggle-slider" />
+                    <span class="toggle-label">Infinite Scroll</span>
+                  </label>
+                </div>
               </div>
-            );
+            )
           }
-        })}
+
+          <!-- Call to Action -->
+          <div class="features-cta">
+            <div class="cta-content">
+              <h3 class="cta-title">Butuh Bantuan dengan {currentTool.name}?</h3>
+              <p class="cta-description">
+                Bergabunglah dengan komunitas kami di Discord untuk mendapatkan bantuan dan berbagi pengalaman menggunakan {currentTool.name}.
+              </p>
+              <button
+                class="cta-button"
+                type="button"
+                onclick="window.location.href='/discord'"
+                aria-label="Bergabung dengan komunitas Discord">
+                <span class="cta-button-text">Bergabung Discord</span>
+                <svg
+                  class="cta-arrow"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
       </div>
-    ) : (
-      <!-- Subtask 5.2: No articles found fallback message -->
-      <div>
-        <p>No articles available for {tool} yet. Check back soon for new content!</p>
-        <p>Available tools: <a href="/tools/anki">anki</a>, <a href="/tools/migaku">migaku</a>, <a href="/tools/yomitan">yomitan</a></p>
       </div>
-    )}
   </main>
 
-  <!-- Error Handling Fallback -->
-  {!hasArticles && articles.length === 0 && (
-    <div>
-      <p>Unable to load tool articles. Please try refreshing the page.</p>
-      <a href="/tools">Return to Tools Page</a>
-    </div>
-  )}
-</ToolArticleLayout>
+    <!-- Scripts from Docs page for consistency -->
+    <script>
+      // 🌊 DOCS PAGE WAVE ANIMATION INITIALIZATION
+      // Google Engineering Team 2025: Performance-optimized wave animation for docs page
 
-<style>
-/* ========== PAGE HEADER STYLES ========== */
-/* Using design system tokens for consistent typography and spacing */
+      let waveAnimation: { cleanup: () => void } | null = null
+      let starsContainer: HTMLElement | null = null
 
-.tool-index-header {
-  text-align: center;
-  margin-bottom: var(--spacing-8);
-}
+      // Initialize wave animation for docs page
+      function initializeDocsWaveAnimation(): (() => void) | undefined {
+        console.log("🌊 Initializing docs page wave animation...")
 
-.tool-index-title {
-  font-size: var(--fs-h1);
-  font-weight: 700;
-  color: var(--clr-text-primary);
-  margin: 0 0 var(--spacing-4) 0;
-  line-height: 1.2;
-}
+        const canvas = document.getElementById("waveCanvas")
+        if (!canvas) {
+          console.warn("Wave canvas not found for docs page")
+          return undefined
+        }
 
-.tool-index-description {
-  font-size: var(--fs-base);
-  color: var(--clr-text-secondary);
-  max-width: 50ch;
-  margin: 0 auto;
-  line-height: 1.7;
-}
+        const ctx = (canvas as HTMLCanvasElement)?.getContext("2d")
+        if (!ctx) {
+          console.warn("Canvas context not available for docs page")
+          return undefined
+        }
 
-/* ========== ARTICLES GRID LAYOUT ========== */
-/* Mobile-first responsive grid following design system patterns */
+        let animationId: number | null = null
+        let time = 0
 
-.articles-grid {
-  --grid-gap: var(--spacing-6);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--grid-gap);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
+        // Docs-specific wave configuration (optimized for content pages)
+        const waves = [
+          {
+            amplitude: 35,
+            frequency: 0.008,
+            speed: 0.015,
+            offset: 0,
+            color: "rgba(139, 93, 255, 0.06)",
+            y: 0.75,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+          {
+            amplitude: 45,
+            frequency: 0.006,
+            speed: -0.012,
+            offset: Math.PI / 3,
+            color: "rgba(139, 93, 255, 0.04)",
+            y: 0.8,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+          {
+            amplitude: 30,
+            frequency: 0.01,
+            speed: 0.018,
+            offset: Math.PI / 2,
+            color: "rgba(139, 93, 255, 0.03)",
+            y: 0.85,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+        ]
 
-.article-grid-item {
-  display: contents; /* Allows grid item to be transparent */
-}
+        function resizeCanvas() {
+          const width = window.innerWidth
+          const height = window.innerHeight
+          ;(canvas as HTMLCanvasElement).width = width
+          ;(canvas as HTMLCanvasElement).height = height
 
-/* ArticleCard component provides its own styling */
+          // Update wave y positions based on new height
+          waves.forEach((wave) => {
+            wave.yPos = height * wave.y
+          })
+        }
 
-/* ========== RESPONSIVE BREAKPOINTS ========== */
-/* Following mobile-first approach with all specified breakpoints */
+        function animate() {
+          if (!ctx) return
 
-/* Small devices (640px) - Enhanced mobile experience */
-@media (min-width: 640px) {
-  .articles-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-6);
-  }
-}
+          ctx.clearRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
 
-/* Tablet devices (768px) - Improved readability */
-@media (min-width: 768px) {
-  .articles-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-8);
-  }
-}
+          // Create gradient background (docs-specific)
+          const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            (canvas as HTMLCanvasElement).height
+          )
+          gradient.addColorStop(0, "rgba(10, 10, 10, 1)")
+          gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)")
+          gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)")
+          ctx.fillStyle = gradient
+          ctx.fillRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
 
-/* Laptops (1024px) - Desktop optimization */
-@media (min-width: 1024px) {
-  .articles-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-8);
-  }
-}
+          // Draw waves
+          waves.forEach((wave) => {
+            ctx.beginPath()
 
-/* Large desktops (1280px+) - Enhanced spacing */
-@media (min-width: 1280px) {
-  .articles-grid {
-    gap: var(--spacing-12);
-  }
-}
+            // Create wave path
+            for (let x = 0; x <= (canvas as HTMLCanvasElement).width + 10; x += 2) {
+              const y =
+                wave.yPos +
+                Math.sin(x * wave.frequency + time * wave.speed + wave.offset) *
+                  wave.amplitude
 
-/* ========== ACCESSIBILITY ENHANCEMENTS ========== */
+              if (x === 0) {
+                ctx.moveTo(x, y)
+              } else {
+                ctx.lineTo(x, y)
+              }
+            }
 
-/* Accessibility enhancements handled by ArticleCard component */
-</style>
+            // Close the path to create filled area
+            ctx.lineTo(
+              (canvas as HTMLCanvasElement).width,
+              (canvas as HTMLCanvasElement).height
+            )
+            ctx.lineTo(0, (canvas as HTMLCanvasElement).height)
+            ctx.closePath()
+
+            ctx.fillStyle = wave.color
+            ctx.fill()
+
+            // Add subtle stroke for more definition
+            ctx.strokeStyle = "rgba(139, 93, 255, 0.08)"
+            ctx.lineWidth = 0.5
+            ctx.stroke()
+          })
+
+          time += 0.5
+          animationId = requestAnimationFrame(animate)
+        }
+
+        // Initialize
+        resizeCanvas()
+        animate()
+
+        // Handle window resize
+        const handleResize = () => {
+          resizeCanvas()
+        }
+        window.addEventListener("resize", handleResize)
+
+        // Return cleanup function
+        return () => {
+          if (animationId) {
+            cancelAnimationFrame(animationId)
+          }
+          window.removeEventListener("resize", handleResize)
+        }
+      }
+
+      // Initialize wave animation when DOM is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        try {
+          waveAnimation = {
+            cleanup: initializeDocsWaveAnimation() || (() => {}),
+          }
+          console.log("✅ Docs page wave animation initialized successfully")
+        } catch (error) {
+          console.error("Error initializing docs page wave animation:", error)
+        }
+      })
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", function () {
+        if (waveAnimation) {
+          waveAnimation.cleanup()
+        }
+      })
+
+      // Initialize stars background
+      function initializeStars() {
+        console.log("Initializing stars background for docs page...")
+
+        const container = document.getElementById("starsContainer")
+        if (!container) {
+          console.warn("Stars container not found for docs page")
+          return
+        }
+
+        // Create stars (optimized for docs page)
+        const starCount = 25 // Reduced for better performance
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement("div")
+          star.className = "star"
+          star.style.left = Math.random() * 100 + "%"
+          star.style.top = Math.random() * 100 + "%"
+          star.style.animationDelay = Math.random() * 3 + "s"
+          star.style.animationDuration = 2 + Math.random() * 2 + "s"
+          container.appendChild(star)
+        }
+
+        console.log("Stars background initialized")
+      }
+
+      // Initialize everything when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("GoRakuDo Tools Page Loading...")
+
+        // Initialize wave animation
+        try {
+          const cleanupWave = initializeDocsWaveAnimation()
+          if (cleanupWave) {
+            waveAnimation = { cleanup: cleanupWave }
+            console.log("Wave animation initialized for tools page")
+          }
+        } catch (error) {
+          console.error(`Wave animation failed for tools page: ${error}`)
+        }
+
+        // Initialize stars
+        try {
+          initializeStars()
+          console.log("Stars background initialized for tools page")
+        } catch (error) {
+          console.error(`Stars background failed for tools page: ${error}`)
+        }
+
+        // Cleanup on page unload
+        window.addEventListener("beforeunload", function () {
+          if (waveAnimation && waveAnimation.cleanup) {
+            waveAnimation.cleanup()
+          }
+        })
+
+        console.log("Tools Page Loaded Successfully!")
+      })
+    </script>
+  </body>
+</html>

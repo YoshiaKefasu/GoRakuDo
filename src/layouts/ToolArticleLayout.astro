@@ -1,11 +1,14 @@
 ---
 // ToolArticleLayout.astro - Performance-optimized article layout
-// Extends BaseLayout.astro while adding custom typography and responsive design
-import BaseLayout from "./BaseLayout.astro"
+// Updated to match Docs Page structure and styling
+import HeadSEO from "../components/public-components/HeadSEO.astro"
 import Breadcrumb from "../components/public-components/Breadcrumb.astro"
+import Navbar from "../components/public-components/Navbar.vue"
 import "../styles/global.css"
+import "../styles/docs/docs.css"
 // Import article-specific styles separately for code splitting
 import "../styles/article-specific.css"
+import { toolsData } from "../utils/toolMetadata"
 
 export interface Props {
   title: string
@@ -15,6 +18,10 @@ export interface Props {
   // Breadcrumb-specific props
   showBreadcrumb?: boolean
   currentPath?: string
+  // Tool-specific props
+  toolName?: string
+  toolIcon?: string
+  toolDescription?: string
 }
 
 const {
@@ -24,7 +31,32 @@ const {
   lang,
   showBreadcrumb = false,
   currentPath = "",
+  toolName = "",
+  toolIcon = "🛠️",
+  toolDescription = "",
 } = Astro.props
+
+// Extract tool name from currentPath if not provided
+let displayToolName = toolName
+let displayToolIcon = toolIcon
+let displayToolDescription = toolDescription
+
+if (!toolName && currentPath) {
+  const pathParts = currentPath.split("/")
+  if (pathParts.length >= 3 && pathParts[1] === "tools") {
+    const tool = pathParts[2]
+    
+    const toolData = toolsData[tool] || {
+      name: tool.charAt(0).toUpperCase() + tool.slice(1),
+      icon: "🛠️",
+      description: `Panduan dan artikel untuk ${tool}`
+    }
+    
+    displayToolName = toolData.name
+    displayToolIcon = toolData.icon
+    displayToolDescription = toolData.description
+  }
+}
 
 // Security validation for currentPath
 let validatedPath = ""
@@ -68,38 +100,87 @@ if (showBreadcrumb && currentPath) {
 const scriptValidatedPath = validatedPath || ""
 ---
 
-<BaseLayout
+<!doctype html>
+<html lang={lang || "id"}>
+  <head>
+    <HeadSEO
   title={title}
   description={description}
   pageType="article"
   publishedDate={publishedDate}
-  lang={lang}>
-  <!-- Article Container with Responsive Design -->
-  <div class="min-h-screen bg-background">
+      lang={lang}
+      aiPageType="docs"
+      enableAIOptimizations={true}
+    />
+    <link rel="stylesheet" href="/css/homepage-styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <Navbar client:visible />
+
+    <!-- Background Elements -->
+    <canvas id="waveCanvas" class="wave-canvas"></canvas>
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="posts-page pt-20">
+        <div class="posts-container py-6" id="postsContainer">
+          
+          <!-- Row 2: Tool Header Section -->
+          {
+            displayToolName && (
+              <div class="posts-header">
+                <div class="flex flex-col md:flex-row items-center gap-8 mb-8">
+                  <!-- Column 1: Tool Image -->
+                  <div class="flex-shrink-0">
+                    <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-2xl flex items-center justify-center text-4xl md:text-5xl border border-purple-500/20">
+                      {displayToolIcon}
+                    </div>
+                  </div>
+                  
+                  <!-- Column 2: Tool Info -->
+                  <div class="flex-1 text-center md:text-left">
+                    <!-- Row 1: Tool Name -->
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-semibold text-white mb-4">
+                      {displayToolName}
+                    </h1>
+                    
+                    <!-- Row 2: Tool Badge -->
+                    <div class="flex justify-center md:justify-start gap-3 mb-4">
+                      <span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm border border-primary/30">
+                        Tool Article
+                      </span>
+                      <span class="bg-accent/20 text-accent px-3 py-1 rounded-full text-sm border border-accent/30">
+                        Documentation
+                      </span>
+                    </div>
+                    
+                    <!-- Row 3: Tool Description -->
+                    <p class="">
+                      {displayToolDescription}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          }
+
     <!-- Breadcrumb Navigation -->
     {
       showBreadcrumb && validatedPath && (
-        <div class="mx-auto max-w-4xl px-4 py-4 sm:px-6 lg:px-8 xl:px-12">
-          <Breadcrumb
-            currentPath={validatedPath}
-            showHome={true}
-            variant="compact"
-            theme="auto"
-            fontSize="sm"
-            fontWeight="medium"
-            spacing="normal"
-            orientation="horizontal"
-            alignment="left"
-            separator="chevron"
-            showIcons={false}
-            hoverEffects={true}
-            focusVisible={true}
-            ariaLabel="Tool navigation breadcrumb"
-            className="mb-4"
-          />
-        </div>
-      )
-    }
+              <Breadcrumb currentPath={validatedPath} />
+            )
+          }
+
+          <!-- Row 3: Article Content -->
+          <article class="article-content max-w-none">
+            <slot />
+          </article>
 
     <!-- Performance monitoring for breadcrumb -->
     {
@@ -116,15 +197,224 @@ const scriptValidatedPath = validatedPath || ""
         </script>
       )
     }
-
-    <!-- Main Content Area -->
-    <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
-      <!-- Article Content with Custom Typography -->
-      <article class="article-content max-w-none">
-        <slot />
-      </article>
+        </div>
+      </div>
     </main>
-  </div>
-</BaseLayout>
+
+    <!-- Scripts from Docs page for consistency -->
+    <script>
+      // 🌊 DOCS PAGE WAVE ANIMATION INITIALIZATION
+      // Google Engineering Team 2025: Performance-optimized wave animation for docs page
+
+      let waveAnimation: { cleanup: () => void } | null = null
+
+      // Initialize wave animation for docs page
+      function initializeDocsWaveAnimation(): (() => void) | undefined {
+        console.log("🌊 Initializing docs page wave animation...")
+
+        const canvas = document.getElementById("waveCanvas")
+        if (!canvas) {
+          console.warn("Wave canvas not found for docs page")
+          return undefined
+        }
+
+        const ctx = (canvas as HTMLCanvasElement)?.getContext("2d")
+        if (!ctx) {
+          console.warn("Canvas context not available for docs page")
+          return undefined
+        }
+
+        let animationId: number | null = null
+        let time = 0
+
+        // Docs-specific wave configuration (optimized for content pages)
+        const waves = [
+          {
+            amplitude: 35,
+            frequency: 0.008,
+            speed: 0.015,
+            offset: 0,
+            color: "rgba(139, 93, 255, 0.06)",
+            y: 0.75,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+          {
+            amplitude: 45,
+            frequency: 0.006,
+            speed: -0.012,
+            offset: Math.PI / 3,
+            color: "rgba(139, 93, 255, 0.04)",
+            y: 0.8,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+          {
+            amplitude: 30,
+            frequency: 0.01,
+            speed: 0.018,
+            offset: Math.PI / 2,
+            color: "rgba(139, 93, 255, 0.03)",
+            y: 0.85,
+            yPos: 0, // Will be set in resizeCanvas
+          },
+        ]
+
+        function resizeCanvas() {
+          const width = window.innerWidth
+          const height = window.innerHeight
+          ;(canvas as HTMLCanvasElement).width = width
+          ;(canvas as HTMLCanvasElement).height = height
+
+          // Update wave y positions based on new height
+          waves.forEach((wave) => {
+            wave.yPos = height * wave.y
+          })
+        }
+
+        function animate() {
+          if (!ctx) return
+
+          ctx.clearRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
+
+          // Create gradient background (docs-specific)
+          const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            (canvas as HTMLCanvasElement).height
+          )
+          gradient.addColorStop(0, "rgba(10, 10, 10, 1)")
+          gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)")
+          gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)")
+          ctx.fillStyle = gradient
+          ctx.fillRect(
+            0,
+            0,
+            (canvas as HTMLCanvasElement).width,
+            (canvas as HTMLCanvasElement).height
+          )
+
+          // Draw waves
+          waves.forEach((wave) => {
+            ctx.beginPath()
+
+            // Create wave path
+            for (let x = 0; x <= (canvas as HTMLCanvasElement).width + 10; x += 2) {
+              const y =
+                wave.yPos +
+                Math.sin(x * wave.frequency + time * wave.speed + wave.offset) *
+                  wave.amplitude
+
+              if (x === 0) {
+                ctx.moveTo(x, y)
+              } else {
+                ctx.lineTo(x, y)
+              }
+            }
+
+            // Close the path to create filled area
+            ctx.lineTo(
+              (canvas as HTMLCanvasElement).width,
+              (canvas as HTMLCanvasElement).height
+            )
+            ctx.lineTo(0, (canvas as HTMLCanvasElement).height)
+            ctx.closePath()
+
+            ctx.fillStyle = wave.color
+            ctx.fill()
+
+            // Add subtle stroke for more definition
+            ctx.strokeStyle = "rgba(139, 93, 255, 0.08)"
+            ctx.lineWidth = 0.5
+            ctx.stroke()
+          })
+
+          time += 0.5
+          animationId = requestAnimationFrame(animate)
+        }
+
+        // Initialize
+        resizeCanvas()
+        animate()
+
+        // Handle window resize
+        const handleResize = () => {
+          resizeCanvas()
+        }
+        window.addEventListener("resize", handleResize)
+
+        // Return cleanup function
+        return () => {
+          if (animationId) {
+            cancelAnimationFrame(animationId)
+          }
+          window.removeEventListener("resize", handleResize)
+        }
+      }
+
+      // Initialize wave animation when DOM is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("GoRakuDo Tool Article Page Loading...")
+
+        // Initialize wave animation
+        try {
+          const cleanupWave = initializeDocsWaveAnimation()
+          if (cleanupWave) {
+            waveAnimation = { cleanup: cleanupWave }
+            console.log("Wave animation initialized for tool article page")
+          }
+        } catch (error) {
+          console.error(`Wave animation failed for tool article page: ${error}`)
+        }
+
+        // Initialize stars
+        try {
+          initializeStars()
+          console.log("Stars background initialized for tool article page")
+        } catch (error) {
+          console.error(`Stars background failed for tool article page: ${error}`)
+        }
+
+        // Cleanup on page unload
+        window.addEventListener("beforeunload", function () {
+          if (waveAnimation && waveAnimation.cleanup) {
+            waveAnimation.cleanup()
+          }
+        })
+
+        console.log("Tool Article Page Loaded Successfully!")
+      })
+
+      // Initialize stars background
+      function initializeStars() {
+        console.log("Initializing stars background for docs page...")
+
+        const container = document.getElementById("starsContainer")
+        if (!container) {
+          console.warn("Stars container not found for docs page")
+          return
+        }
+
+        // Create stars (optimized for docs page)
+        const starCount = 25 // Reduced for better performance
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement("div")
+          star.className = "star"
+          star.style.left = Math.random() * 100 + "%"
+          star.style.top = Math.random() * 100 + "%"
+          star.style.animationDelay = Math.random() * 3 + "s"
+          star.style.animationDuration = 2 + Math.random() * 2 + "s"
+          container.appendChild(star)
+        }
+
+        console.log("Stars background initialized")
+      }
+    </script>
+  </body>
+</html>
 
 <!-- Article-specific styles moved to article-specific.css for code splitting -->
