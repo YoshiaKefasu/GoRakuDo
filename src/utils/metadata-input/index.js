@@ -12,6 +12,48 @@ export {
   extractKeywords 
 } from './metadata-reader.js';
 
+// Fallback system functionality
+export { 
+  ContentExtractor, 
+  createContentExtractor, 
+  extractTitle, 
+  extractDescription, 
+  extractTags 
+} from './content-extractor.js';
+
+export { 
+  QualityEvaluator, 
+  createQualityEvaluator, 
+  evaluateTextQuality, 
+  isTextQualityAcceptable, 
+  getTextQualityRecommendations 
+} from './quality-evaluator.js';
+
+export { 
+  PriorityManager, 
+  createPriorityManager, 
+  compareSourcePriorities, 
+  selectHighestPrioritySource, 
+  mergeMetadataByPriority 
+} from './priority-manager.js';
+
+export { 
+  TitleAnalyzer, 
+  createTitleAnalyzer, 
+  extractTitleKeywords, 
+  analyzeTitle 
+} from './title-analyzer.js';
+
+export { 
+  ConfigManager, 
+  createConfigManager, 
+  getConfig, 
+  setConfig, 
+  resetConfig, 
+  exportConfig, 
+  importConfig 
+} from './config-manager.js';
+
 // Enhanced keyword management functionality
 export { 
   KeywordManager, 

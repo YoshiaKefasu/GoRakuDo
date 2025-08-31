@@ -339,6 +339,91 @@ export class MetadataReader {
       categories: Array.from(stats.categories)
     };
   }
+
+  /**
+   * Detect metadata gaps for fallback system
+   * @param {Object} metadata - Metadata object to analyze
+   * @returns {Array} Array of MetadataGap objects
+   */
+  detectMetadataGaps(metadata) {
+    const gaps = [];
+    const requiredFields = ['title', 'description', 'tags'];
+    
+    for (const field of requiredFields) {
+      const value = metadata[field];
+      if (this.isFieldIncomplete(field, value)) {
+        gaps.push({
+          field,
+          type: this.determineGapType(field, value),
+          priority: this.calculateGapPriority(field, value),
+          suggestedValue: this.generateSuggestedValue(field, metadata)
+        });
+      }
+    }
+    
+    return gaps;
+  }
+
+  /**
+   * Check if a field is incomplete
+   * @param {string} field - Field name
+   * @param {*} value - Field value
+   * @returns {boolean} True if field is incomplete
+   */
+  isFieldIncomplete(field, value) {
+    switch (field) {
+      case 'title':
+        return typeof value !== 'string' || value.trim().length === 0;
+      case 'description':
+        return typeof value !== 'string' || value.trim().length === 0;
+      case 'tags':
+        return !Array.isArray(value) || value.length === 0;
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Determine the type of gap
+   * @param {string} field - Field name
+   * @param {*} value - Field value
+   * @returns {string} Gap type
+   */
+  determineGapType(field, value) {
+    if (value === undefined || value === null) return 'missing';
+    if (this.isFieldIncomplete(field, value)) return 'incomplete';
+    return 'invalid';
+  }
+
+  /**
+   * Calculate gap priority
+   * @param {string} field - Field name
+   * @param {*} value - Field value
+   * @returns {string} Priority level
+   */
+  calculateGapPriority(field, value) {
+    if (field === 'title') return 'critical';
+    if (field === 'description') return 'high';
+    if (field === 'tags') return 'medium';
+    return 'low';
+  }
+
+  /**
+   * Generate suggested value for a field
+   * @param {string} field - Field name
+   * @param {Object} metadata - Existing metadata
+   * @returns {string|undefined} Suggested value
+   */
+  generateSuggestedValue(field, metadata) {
+    switch (field) {
+      case 'description':
+        return metadata.title ? `${metadata.title}に関する詳細情報` : undefined;
+      case 'tags':
+        return metadata.category ? [metadata.category, metadata.difficulty].join(', ') : undefined;
+      default:
+        return undefined;
+    }
+  }
 }
 
 // ========== UTILITY FUNCTIONS ==========
