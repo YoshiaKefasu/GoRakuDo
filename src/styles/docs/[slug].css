@@ -69,9 +69,9 @@
 
   /* Golden ratio container sizing - Preserved mathematical precision */
   --golden-ratio: 1.618;
-  --golden-ratio-left: calc(100vw * 0.236);
-  --golden-ratio-content: calc(100vw * 0.382);
-  --golden-ratio-right: calc(100vw * 0.236);
+  --golden-ratio-left: calc(100vh * 0.236);
+  --golden-ratio-content: calc(100vh * 0.382);
+  --golden-ratio-right: calc(100vh * 0.236);
 
   /* Readability-optimized spacing - Enhanced with accessibility focus */
   --readability-padding-large: 4rem;
@@ -163,14 +163,18 @@
 /* Post Actions - Improved layout and organization */
 .post-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row !important; /* Ensure items stay side by side */
+  justify-content: space-between;
+  align-items: center;
   gap: 1rem;
   margin-top: 2rem;
+  margin-bottom: 2rem; /* Added bottom margin to create gap */
   padding: 1.5rem;
   background: rgba(25, 25, 25, 0.3);
   backdrop-filter: blur(10px);
   border-radius: 0.75rem;
   border: 1px solid var(--color-border);
+  flex-wrap: nowrap; /* Prevent wrapping */
 }
 
 /* ========== POST PAGE SPECIFIC STYLES ========== */
@@ -200,7 +204,6 @@
 /* Post Page Container - Enhanced with unified design system */
 .post-page {
   width: 100%;
-  max-width: 100%;
   min-height: 100vh;
   background: var(--color-post-background);
   /* ENHANCED: Add grainy noise texture for improved readability */
@@ -235,12 +238,15 @@
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  /* Add rounded corners */
+  border-radius: 1rem;
+  overflow: hidden; 
 }
 
-.post-container {
-  /* Responsive max-width with proper constraints - FIXED for better readability */
+/* Base styles - Full width on mobile */
+.post-page .post-container {
   width: 100%;
-  max-width: 100%; /* Edge-to-edge on small screens */
+  max-width: 100%; /* Full width on small screens */
   margin: 0 auto;
   padding: 0 var(--post-padding-x-small); /* Use custom variable for better control */
   background: transparent;
@@ -263,6 +269,17 @@
   backface-visibility: hidden;
   gap: 1.5rem;
 }
+
+/* Breadcrumb transparent styling */
+.breadcrumb-transparent {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
 
 /* ========== BREADCRUMB LAYOUT FIX ========== */
 /* Fix breadcrumb container to prevent overflow and cut-off issues */
@@ -393,13 +410,18 @@
   /* Improved header layout */
   width: 100%;
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 1.5rem;
   background: rgba(25, 25, 25, 0.2);
   backdrop-filter: blur(6px);
   border-radius: 0.75rem;
   /* GitHub Pages optimized border - more subtle and fallback */
   border: 1px solid rgba(139, 93, 255, 0.1);
+  /* FIXED: Ensure proper centering */
+  box-sizing: border-box;
 }
 
 .post-header h1 {
@@ -414,6 +436,9 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
+  /* FIXED: Ensure proper centering */
+  text-align: center;
+  width: 100%;
 }
 
 .post-meta {
@@ -425,14 +450,56 @@
   font-size: 0.875rem; /* REM for responsive typography */
   color: var(--color-post-meta); /* ENHANCED: Better contrast for meta text */
   flex-wrap: wrap; /* Allow wrapping on small screens */
+  /* FIXED: Ensure proper centering both horizontally and vertically */
+  width: 100%;
+  text-align: center;
+  /* Reset default browser styles */
+  margin: 0;
+  padding: 0;
+  border: none;
+  list-style: none;
 }
 
+/* FIXED: Ensure post-date and post-author are properly centered */
 .post-date,
-.post-author,
-.post-read-time {
-  color: var(
-    --color-post-meta
-  ); /* ENHANCED: Better contrast for meta elements */
+.post-author {
+  color: var(--color-post-meta);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Add explicit width to ensure proper centering */
+  width: auto;
+  /* Reset default browser styles */
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* FIXED: Ensure the time element is properly styled */
+.post-date time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Reset default browser styles */
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* Add more specific selectors */
+div.post-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-meta .post-date,
+.post-meta .post-author {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .post-tags {
@@ -440,6 +507,17 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem; /* REM for responsive spacing */
+  /* FIXED: Ensure proper centering */
+  width: 100%;
+}
+
+.post-tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem; /* REM for responsive spacing */
+  /* FIXED: Ensure proper centering */
+  width: 100%;
 }
 
 .difficulty-badge {
@@ -791,6 +869,8 @@
   display: flex;
   gap: 0.75rem;
   align-items: center;
+  flex-shrink: 0; /* Don't shrink the button group */
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .share-btn {
@@ -808,6 +888,8 @@
   outline: none; /* Remove default outline */
   border: 1px solid rgba(139, 93, 255, 0.2); /* PX for precise border */
   cursor: pointer;
+  white-space: nowrap; /* Prevent text wrapping */
+  flex-shrink: 0; /* Don't shrink the button */
 }
 
 .share-btn:hover {
@@ -821,6 +903,37 @@
   outline: 2px solid #8b5dff; /* PX for precise focus outline */
   outline-offset: 2px; /* PX for precise outline offset */
   box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
+}
+
+/* Back to Docs Button in Footer */
+.post-actions .back-to-docs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-primary);
+  background: rgba(139, 93, 255, 0.1);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(139, 93, 255, 0.2);
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  outline: none;
+}
+
+.post-actions .back-to-docs:hover {
+  color: var(--color-accent-purple-dark);
+  background: rgba(139, 93, 255, 0.15);
+  border-color: rgba(139, 93, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 93, 255, 0.2);
+}
+
+.post-actions .back-to-docs:focus-visible {
+  outline: 2px solid #8b5dff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(139, 93, 255, 0.3);
 }
 
 /* Skeleton Loading Styles - Enhanced Performance & Visual Effects */
@@ -983,7 +1096,7 @@
 
 /* Responsive container sizing - FIXED for better readability */
 @media (min-width: 640px) {
-  .post-container {
+  .post-page .post-container {
     padding: 0 var(--post-padding-x-medium) !important; /* Use custom variable for better spacing */
     max-width: var(
       --post-max-width-medium
@@ -1001,7 +1114,7 @@
 }
 
 @media (min-width: 768px) {
-  .post-container {
+  .post-page .post-container {
     max-width: 92% !important; /* INCREASED from 85% for less restriction */
   }
 
@@ -1021,7 +1134,7 @@
 }
 
 @media (min-width: 1024px) {
-  .post-container {
+  .post-page .post-container {
     /* SIMPLIFIED Golden Ratio - More Readable and Less Restrictive */
     max-width: min(85%, var(--post-max-width-large)) !important;
     margin-left: auto !important;
@@ -1048,7 +1161,7 @@
 }
 
 @media (min-width: 1280px) {
-  .post-container {
+  .post-page .post-container {
     /* FIXED max-width with readability optimization - Less Restrictive */
     max-width: min(
       85%,
@@ -1060,6 +1173,7 @@
     gap: 3.5rem !important;
   }
 }
+
 
 /* Enhanced Mobile Navigation */
 @media (max-width: 768px) {
@@ -1077,6 +1191,8 @@
     margin-top: 1.5rem !important;
     padding: 1rem !important;
     gap: 0.75rem !important;
+    flex-direction: row !important; /* Ensure items stay side by side */
+    flex-wrap: nowrap !important; /* Prevent wrapping */
   }
 
   .nav-btn {
@@ -1239,7 +1355,7 @@
 
 /* Enhanced Mobile Breakpoints - Improved spacing and typography */
 @media (min-width: 768px) {
-  .post-container {
+  .post-page .post-container {
     padding: 0 1.25rem; /* REM for responsive padding */
   }
 

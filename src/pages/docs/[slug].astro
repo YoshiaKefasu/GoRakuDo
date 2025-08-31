@@ -22,8 +22,12 @@ import {
   getCollectionMetadata,
 } from "../../utils/content-path-resolver"
 
-// Import post[slug]-specific styles with Tailwind v4 optimization
+// Import global CSS with essential variables and base styles
+import "../../styles/global.css"
+// Import post-specific styles with Tailwind v4 optimization
 import "../../styles/docs/[slug].css"
+// Import word internal links styles (replaces inline system)
+import "../../styles/docs/word-internal-links.css"
 
 // Generate static paths for all docs posts
 export async function getStaticPaths() {
@@ -123,7 +127,7 @@ try {
       href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
       as="script"
     />
-    <script src="/core/post-script.js" is:inline></script>
+    <link rel="preload" href="/src/scripts/core/post-script.js" as="script" />
 
     <!-- Fonts with display=swap for better performance -->
     <link
@@ -154,32 +158,10 @@ try {
     </div>
 
     <!-- Main Content -->
-    <main class="post-page w-full max-w-full flex flex-col" role="main">
+    <main class="post-page" role="main">
       <div class="post-container">
-        <!-- Navigation Section -->
-        <nav class="post-navigation-top" aria-label="Post navigation">
-          <a
-            href={collectionMetadata.basePath}
-            class="back-to-docs"
-            aria-label={`Kembali ke ${collectionMetadata.displayName}`}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true">
-              <path d="M19 12H5M12 19l-7-7 7-7"></path>
-            </svg>
-            Kembali ke {collectionMetadata.displayName}
-          </a>
-        </nav>
-
         <!-- Breadcrumb Navigation -->
-        <Breadcrumb post={post} />
+        <Breadcrumb post={post} className="breadcrumb-transparent" />
 
         <!-- Article Header -->
         <header class="post-header">
@@ -202,12 +184,45 @@ try {
         </header>
 
         <!-- Article Content -->
-        <article class="post-content" id="postContent" aria-label="Post content">
-          <!-- Content will be rendered here -->
-        </article>
+        <article class="post-content" id="postContent" aria-label="Post content" set:html={enhancedContent} />
+        
+        {/* AI-Powered Content Recommendations Section */}
+        {
+          relatedContent && (
+            <section
+              class="ai-recommendations-section"
+              aria-label="Rekomendasi konten terkait">
+              <AIRecommendations
+                relatedContent={relatedContent}
+                maxRecommendations={3}
+                showHeader={true}
+                className=""
+                showFallback={true}
+              />
+            </section>
+          )
+        }
 
         <!-- Post Actions -->
         <footer class="post-actions">
+          <a
+            href={collectionMetadata.basePath}
+            class="back-to-docs"
+            aria-label={`Kembali ke ${collectionMetadata.displayName}`}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Kembali ke {collectionMetadata.displayName}
+          </a>
           <div class="share-buttons">
             <button class="share-btn" onclick="sharePost()" aria-label="Bagikan post ini">
               <svg
@@ -229,28 +244,12 @@ try {
           </div>
         </footer>
 
-        {/* AI-Powered Content Recommendations Section */}
-        {
-          relatedContent && (
-            <section
-              class="ai-recommendations-section"
-              aria-label="Rekomendasi konten terkait">
-              <AIRecommendations
-                relatedContent={relatedContent}
-                maxRecommendations={3}
-                showHeader={true}
-                className=""
-                showFallback={true}
-              />
-            </section>
-          )
-        }
       </div>
     </main>
 
     <!-- Scripts Section - Organized and Optimized -->
-    <script is:inline src="/core/post-script.js"></script>
-    <script src="/scripts/ui/post-skeleton-loader.js" is:inline></script>
+    <script is:inline src="/src/scripts/core/post-script.js"></script>
+    <script src="/src/scripts/ui/post-skeleton-loader.js" is:inline></script>
 
     <!-- Main Application Script -->
     <script define:vars={{ postData, enhancedContent }}>
