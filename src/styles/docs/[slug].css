@@ -628,7 +628,7 @@ div.post-meta {
     var(--color-primary),
     var(--color-primary-dark)
   );
-  transform: translateY(-50%);
+  transform: translateY(calc(-50% + 11px)); 
 }
 
 .post-content h3 {

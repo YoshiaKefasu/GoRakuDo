@@ -17,12 +17,14 @@
   box-sizing: border-box; /* Include padding in width calculation */
   margin-left: 0 !important; /* Explicitly set margin to prevent issues */
   margin-right: 0 !important; /* Explicitly set margin to prevent issues */
+  margin-bottom: 2rem; /* Add consistent bottom margin */
+  max-width: 100%; /* Ensure no max-width constraints */
 }
 
 .ai-recommendations-container {
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0; /* Removed all padding for maximum width */
   width: 100%; /* Ensure full width */
   box-sizing: border-box; /* Include padding in width calculation */
   position: relative; /* Ensure proper positioning */
@@ -76,16 +78,25 @@
   .ai-recommendations-grid {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem; /* Increased gap between cards */
     width: 100%;
+    padding: 0 1rem; /* Add some padding for mobile */
+    margin: 0; /* Ensure no margins */
+  }
+  
+  .ai-recommendations-container {
+    padding: 0 1rem; /* Add padding for mobile */
   }
   
   .ai-recommendation-card {
     width: 100%;
     /* Maintain consistent height on mobile but allow some flexibility */
     height: auto;
-    min-height: 180px;
+    min-height: 280px; /* Increased minimum height */
     max-height: none;
+    padding: 1.5rem; /* Increased padding for better spacing */
+    margin: 0; /* Remove any default margins */
+    box-sizing: border-box;
   }
   
   .ai-card-title {
@@ -103,7 +114,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
-    gap: 1.5rem;
+    gap: 2rem; /* Increased gap */
     width: 100%;
   }
   
@@ -131,9 +142,10 @@
   
   .ai-recommendation-card {
     /* Fixed height for consistent layout */
-    height: 220px;
-    min-height: 220px;
-    max-height: 220px;
+    height: 260px; /* Increased height */
+    min-height: 260px;
+    max-height: 260px;
+    padding: 1.75rem; /* Increased padding */
   }
   
   .ai-card-title {
@@ -148,14 +160,15 @@
 /* Large Desktop - Wider grid */
 @media (min-width: 1024px) {
   .ai-recommendations-grid {
-    gap: 2rem;
+    gap: 2.5rem; /* Increased gap */
   }
   
   .ai-recommendation-card {
     /* Slightly taller cards for desktop */
-    height: 240px;
-    min-height: 240px;
-    max-height: 240px;
+    height: 280px; /* Increased height */
+    min-height: 280px;
+    max-height: 280px;
+    padding: 2rem; /* Increased padding */
   }
 }
 
@@ -163,20 +176,23 @@
 .ai-recommendation-card {
   display: flex;
   flex-direction: column;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--color-accent-purple-glow-faint);
-  border-radius: var(--radius-md);
+  padding: 1.5rem; /* Increased padding for better spacing */
+  background: rgba(255, 255, 255, 0.08); /* Lighter background */
+  border: 1px solid var(--color-accent-purple-glow-medium); /* More visible border */
+  border-radius: var(--radius-lg); /* Larger border radius */
   text-decoration: none;
   color: inherit;
   transition: all var(--duration-normal) var(--ease-out);
   position: relative;
   overflow: hidden;
   /* Fixed height for consistency across all cards */
-  height: 200px;
-  min-height: 200px;
-  max-height: 200px;
+  height: 220px;
+  min-height: 220px;
+  max-height: 220px;
   box-sizing: border-box;
+  width: 100%; /* Ensure full width */
+  margin: 0; /* Remove any default margins */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Add subtle shadow */
 }
 
 .ai-recommendation-card::before {
@@ -426,6 +442,7 @@
   .ai-recommendations-container {
     max-width: 1400px;
     padding: 0 3rem;
+    margin: 0 auto;
   }
 
   .ai-recommendations-grid {
@@ -439,7 +456,7 @@
     min-width: 0; /* Allow shrinking */                                                             
     min-height: 220px; /* Slightly taller cards */                                                  
     width: 100%; /* Take full width of grid cell */                                                 
-    height: 100%; /* Take full height of grid cell */                                               
+    height: 100%; /* Take full height of grid cell */                                              
   }                                                                                                    
 } 
 
@@ -454,17 +471,18 @@
   .ai-recommendations-grid {
     gap: 3rem;
     grid-template-columns: 1fr 1fr;          
-    }                                                                                                    
-                                                                                                 
-   .ai-recommendation-card {                                                                     
-     /* Ensure consistent card behavior */                                                       
-     flex: none; /* Reset flex properties */                                                     
-     max-width: 100%; /* Prevent overflow */                                                     
-     min-width: 0; /* Allow shrinking */                                                         
-     min-height: 240px; /* Taller cards */                                                       
-     width: 100%; /* Take full width of grid cell */                                             
-     height: 100%; /* Take full height of grid cell */                                           
-    }                                                                                                   
+  }                                                                                                    
+                                                                                              
+  .ai-recommendation-card {                                                                     
+    /* Ensure consistent card behavior */                                                      
+    flex: none; /* Reset flex properties */                                                     
+    max-width: 100%; /* Prevent overflow */                                                     
+    min-width: 0; /* Allow shrinking */                                                         
+    min-height: 300px; /* Taller cards */                                                      
+    width: 100%; /* Take full width of grid cell */                                             
+    height: 100%; /* Take full height of grid cell */                                           
+    padding: 2.25rem; /* Increased padding */
+  }                                                                                                   
 
   
 }
@@ -507,6 +525,25 @@
     height: 12px;
     flex-shrink: 0;
     min-width: 12px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 479px) {
+  .ai-recommendations-container {
+    padding: 0.5rem;
+  }
+  
+  .ai-recommendations-grid {
+    min-width: 250px;
+    padding: 0.5rem;
+    margin: 0;
+  }
+  
+  .ai-recommendation-card {
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -639,4 +676,12 @@
 .mind-map-badge:hover {
   animation: mindMapPulse 1s ease-in-out;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Additional override for ultra-wide screens */
+@media (min-width: 1600px) {
+  .ai-recommendation-card {
+    min-height: 300px;
+    padding: 2.25rem;
+  }
 }
