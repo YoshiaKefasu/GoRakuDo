@@ -184,14 +184,12 @@ export class SmartProcessor {
     try {
       // Initialize AI system if needed
       if (!this.aiSystem) {
-        const geminiConfig = this.environment.getGeminiConfig();
-        if (!geminiConfig.apiKey) {
-          throw new Error("No Gemini API key available");
-        }
-        this.aiSystem = new AISystem({
-          ...geminiConfig,
-          apiKey: geminiConfig.apiKey,
-        });
+        // AI processing disabled for security
+        // const geminiConfig = this.environment.getGeminiConfig();
+        // if (!geminiConfig.apiKey) {
+        //   throw new Error("No Gemini API key available");
+        // }
+        this.aiSystem = new AISystem();
       }
 
       logger.log("Processing with Gemini AI...");

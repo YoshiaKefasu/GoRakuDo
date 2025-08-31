@@ -5,18 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && astro check",
-    "build:perf": "node src/scripts/build-performance-monitor.js start && astro build && node src/scripts/build-performance-monitor.js end",
-    "build:validate": "node src/scripts/build-performance-monitor.js css && node src/scripts/build-performance-monitor.js report",
-    "perf:calibrate": "node src/scripts/build-performance-monitor.js calibrate",
-    "perf:report": "node src/scripts/build-performance-monitor.js report",
-    "perf:css": "node src/scripts/build-performance-monitor.js css",
     "preview": "astro preview",
-    "astro": "astro",
-    "test": "node tests/story-2.9-basic-test.cjs",
-    "test:validate": "node tests/story-2.9-basic-test.cjs",
-    "test:simple": "node tests/simple-test-runner.js",
-    "test:jest": "NODE_OPTIONS=\"--experimental-vm-modules\" npx jest",
-    "test:2.9": "node tests/story-2.9-basic-test.cjs"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

@@ -1,22 +1,21 @@
 import { SEOOptimizer } from "./seo-optimizer";
 import type {
-  MetaDescriptionRequest,
-  ContentRecommendationRequest,
   AIProcessingResult,
   SEOOptimizedMeta,
   ContentRecommendation,
 } from "./types";
 
 export class AISystem {
-  constructor() {
+  constructor(_config?: any) {
     // AI processing disabled for security
+    // Config parameter kept for compatibility but not used
   }
 
   async processContent(
-    title: string,
-    content: string,
-    availablePosts: any[],
-    language: "id" | "ja" = "id",
+    _title: string,
+    _content: string,
+    _availablePosts: any[],
+    _language: "id" | "ja" = "id",
   ): Promise<AIProcessingResult> {
     // AI processing disabled for security
     throw new Error("AI processing disabled for security");
@@ -32,7 +31,7 @@ export class AISystem {
   }
 
   async generateRecommendationsOnly(
-    currentPost: any,
+    _currentPost: any,
     availablePosts: any[],
   ): Promise<ContentRecommendation[]> {
     // AI processing disabled for security

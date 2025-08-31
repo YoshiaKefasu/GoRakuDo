@@ -61,14 +61,12 @@ export class BuildProcessor {
     language: "id" | "ja",
   ): Promise<AIProcessingResult | null> {
     try {
-      const geminiConfig = this.environment.getGeminiConfig();
-      if (!geminiConfig.apiKey) {
-        throw new Error("No API key available for AI processing");
-      }
-      const aiSystem = new AISystem({
-        ...geminiConfig,
-        apiKey: geminiConfig.apiKey,
-      });
+      // AI processing disabled for security
+      // const geminiConfig = this.environment.getGeminiConfig();
+      // if (!geminiConfig.apiKey) {
+      //   throw new Error("No API key available for AI processing");
+      // }
+      const aiSystem = new AISystem();
 
       const result = await aiSystem.processContent(
         title,
@@ -166,9 +164,10 @@ export class BuildProcessor {
   }
 
   async cleanupOldData(): Promise<void> {
-    if (this.environment.getConfig().isDevelopment) {
-      await this.dataPersistence.cleanupOldData();
-    }
+    // if (this.environment.getConfig().isDevelopment) {
+    //   await this.dataPersistence.cleanupOldData();
+    // }
+    // AI processing disabled for security
   }
 
   async validateContent(): Promise<void> {

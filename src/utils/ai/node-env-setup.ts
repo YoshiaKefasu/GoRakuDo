@@ -20,10 +20,10 @@ export class NodeEnvSetup {
     return NodeEnvSetup.instance;
   }
 
-  private loadConfig() {
-    // AI processing disabled for security
-    return {};
-  }
+  // private loadConfig() {
+  //   AI processing disabled for security
+  //   return {};
+  // }
 
   async initializeAI(): Promise<any> {
     // AI processing disabled for security
@@ -52,49 +52,17 @@ export class NodeEnvSetup {
     return false;
   }
 
-  async generateContent(prompt: string): Promise<string> {
-    if (!this.ai) {
-      await this.initializeAI();
-    }
-
-    try {
-      const response = await this.ai!.models.generateContent({
-        model: this.config.model,
-        contents: prompt,
-      });
-
-      return response.text || "No response generated";
-    } catch (error) {
-      console.error("❌ Content generation failed:", error);
-      throw error;
-    }
+  async generateContent(_prompt: string): Promise<string> {
+    // AI processing disabled for security
+    throw new Error("AI processing disabled for security");
   }
 
   async generateContentWithOptions(
-    prompt: string,
-    options: GenerationConfig = {},
+    _prompt: string,
+    _options: any = {},
   ): Promise<string> {
-    if (!this.ai) {
-      await this.initializeAI();
-    }
-
-    try {
-      const response = await this.ai!.models.generateContent({
-        model: this.config.model,
-        contents: prompt,
-        config: {
-          temperature: options.temperature || 0.7,
-          maxOutputTokens: options.maxOutputTokens || 1024,
-          topP: options.topP || 0.8,
-          topK: options.topK || 40,
-        },
-      });
-
-      return response.text || "No response generated";
-    } catch (error) {
-      console.error("❌ Content generation with options failed:", error);
-      throw error;
-    }
+    // AI processing disabled for security
+    throw new Error("AI processing disabled for security");
   }
 }
 

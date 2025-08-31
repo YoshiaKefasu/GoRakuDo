@@ -21,20 +21,232 @@ This document defines the actual coding standards and patterns used in the GoRak
 
 ## General Principles
 
-### 1. Consistency Over Perfection
+### 1. DRY (Don't Repeat Yourself - 繰り返しを避ける)
+- **MANDATORY**: コードの重複を避けます
+- 共通の機能は再利用可能な関数やクラスに抽象化します
+- 同様のロジックが3回以上出現する場合は、必ず共通化を検討します
+- 設定値や定数は一箇所で管理し、複数箇所でハードコーディングしないでください
+
+### 2. KISS (Keep It Simple, Stupid - シンプルにしておけ)
+- **MANDATORY**: 複雑な解決策よりもシンプルな解決策を優先します
+- 過度に抽象化したり、パターンを適用しすぎないでください
+- 読みやすく理解しやすいコードを書いてください
+- 複雑なロジックが必要な場合は、必ずコメントで理由を説明してください
+
+### 3. Consistency Over Perfection
 - Follow established patterns in the codebase
 - Maintain consistency across similar components
 - Prefer readability over cleverness
 
-### 2. Progressive Enhancement
+### 4. Progressive Enhancement
 - Ensure core functionality works without JavaScript
 - Enhance with interactive features progressively
 - Maintain accessibility standards
 
-### 3. Performance First
+### 5. Performance First
 - Optimize for Core Web Vitals
 - Minimize bundle size
 - Implement lazy loading where appropriate
+
+### 6. Modern JavaScript Standards
+- **MANDATORY**: Use ES Modules (ESM) for all JavaScript files
+- **MANDATORY**: Use Strict TypeScript mode for all TypeScript files
+- No CommonJS (`require`/`module.exports`) allowed
+- Always use `import`/`export` statements
+
+### 7. Test Artifact Cleanup
+- **MANDATORY**: Clean up redundant test artifacts immediately after completing work
+- Remove temporary test files, mock data, and debug code
+- Ensure test environment is clean before committing
+- No test artifacts should remain in production code
+
+## DRY & KISS Principles in Practice
+
+### DRY Principle Examples
+
+#### ❌ Bad - Code Duplication
+```typescript
+// Multiple functions with similar logic
+function validateUserEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function validateAdminEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function validateGuestEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+```
+
+#### ✅ Good - DRY Principle Applied
+```typescript
+// Single, reusable validation function
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateEmail(email: string): boolean {
+  return EMAIL_REGEX.test(email);
+}
+
+// Use the same function everywhere
+const isUserEmailValid = validateEmail(userEmail);
+const isAdminEmailValid = validateEmail(adminEmail);
+const isGuestEmailValid = validateEmail(guestEmail);
+```
+
+#### ❌ Bad - Hardcoded Values
+```typescript
+// Values repeated throughout the code
+function calculateTax(amount: number): number {
+  return amount * 0.08; // 8% tax rate
+}
+
+function calculateDiscount(amount: number): number {
+  return amount * 0.15; // 15% discount
+}
+
+function calculateTip(amount: number): number {
+  return amount * 0.18; // 18% tip
+}
+```
+
+#### ✅ Good - Centralized Constants
+```typescript
+// Constants defined in one place
+const TAX_RATE = 0.08;
+const DISCOUNT_RATE = 0.15;
+const TIP_RATE = 0.18;
+
+function calculateTax(amount: number): number {
+  return amount * TAX_RATE;
+}
+
+function calculateDiscount(amount: number): number {
+  return amount * DISCOUNT_RATE;
+}
+
+function calculateTip(amount: number): number {
+  return amount * TIP_RATE;
+}
+```
+
+### KISS Principle Examples
+
+#### ❌ Bad - Over-Engineering
+```typescript
+// Unnecessarily complex abstraction
+interface ValidationStrategy<T> {
+  validate(data: T): ValidationResult;
+}
+
+class EmailValidationStrategy implements ValidationStrategy<string> {
+  validate(email: string): ValidationResult {
+    // Complex validation logic
+    return this.performAdvancedValidation(email);
+  }
+  
+  private performAdvancedValidation(email: string): ValidationResult {
+    // Overly complex validation
+    return this.validateDomain(email) && this.validateFormat(email);
+  }
+}
+
+// Usage requires complex setup
+const validator = new EmailValidationStrategy();
+const result = validator.validate(userEmail);
+```
+
+#### ✅ Good - Simple and Direct
+```typescript
+// Simple, direct validation
+function validateEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Usage is straightforward
+const isValid = validateEmail(userEmail);
+```
+
+#### ❌ Bad - Complex State Management
+```typescript
+// Overly complex state management
+class UserStateManager {
+  private state: Map<string, any> = new Map();
+  private observers: Set<Function> = new Set();
+  
+  setState(key: string, value: any): void {
+    this.state.set(key, value);
+    this.notifyObservers(key, value);
+  }
+  
+  private notifyObservers(key: string, value: any): void {
+    this.observers.forEach(observer => observer(key, value));
+  }
+  
+  subscribe(observer: Function): () => void {
+    this.observers.add(observer);
+    return () => this.observers.delete(observer);
+  }
+}
+```
+
+#### ✅ Good - Simple State Management
+```typescript
+// Simple state management with Vue reactivity
+import { ref, computed } from 'vue';
+
+const userState = ref({
+  name: '',
+  email: '',
+  isLoggedIn: false
+});
+
+const userName = computed(() => userState.value.name);
+const userEmail = computed(() => userState.value.email);
+```
+
+### When to Apply DRY vs KISS
+
+#### Apply DRY When:
+- **3回以上**同じロジックが出現する場合
+- 設定値や定数が複数箇所で使用される場合
+- 同様のデータ処理ロジックが複数箇所にある場合
+- 共通のUIコンポーネントパターンがある場合
+
+#### Apply KISS When:
+- シンプルな解決策で十分な場合
+- 過度な抽象化が可読性を損なう場合
+- パフォーマンスが重要な場合
+- チームの理解レベルに合わせる必要がある場合
+
+#### Balance Both Principles:
+```typescript
+// Good balance: DRY for common patterns, KISS for implementation
+const VALIDATION_RULES = {
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  phone: /^\d{3}-\d{3}-\d{4}$/,
+  zipCode: /^\d{5}(-\d{4})?$/
+};
+
+// Simple validation function (KISS)
+function validateField(value: string, rule: RegExp): boolean {
+  return rule.test(value);
+}
+
+// Reusable validation (DRY)
+function validateEmail(email: string): boolean {
+  return validateField(email, VALIDATION_RULES.email);
+}
+
+function validatePhone(phone: string): boolean {
+  return validateField(phone, VALIDATION_RULES.phone);
+}
+```
 
 ## File Organization
 
@@ -126,6 +338,19 @@ const maxRetryAttempts = 3;
 ## Code Style
 
 ### JavaScript/TypeScript
+
+#### ES Modules (MANDATORY)
+```typescript
+// ✅ Good - ES Modules (ESM)
+import { defineConfig } from 'astro/config';
+import type { User } from '../types/user';
+export { default as Navbar } from '../components/Navbar.astro';
+
+// ❌ Bad - CommonJS (NOT ALLOWED)
+const { defineConfig } = require('astro/config');
+const User = require('../types/user');
+module.exports = Navbar;
+```
 
 #### Indentation
 - Use 2 spaces for indentation
@@ -260,6 +485,15 @@ onMounted(() => {
 ### What is TypeScript?
 TypeScript is like adding labels to everything in your code. Instead of just saying "this is a box," you say "this is a box that contains books." This helps catch mistakes before they happen.
 
+### Strict TypeScript Mode (MANDATORY)
+GoRakuDo requires **Strict TypeScript mode** for all TypeScript files. This means:
+- `strict: true` in tsconfig.json
+- No implicit `any` types
+- Strict null checks
+- Strict function types
+- No implicit returns
+- Strict property initialization
+
 ### Type Definitions (GoRakuDo Style)
 ```typescript
 // ✅ Good - Explicit types with detailed comments
@@ -295,9 +529,24 @@ function processUser(user: User | null): string {
   }
   return user.name;
 }
+
+// ✅ Good - Explicit return types (required in strict mode)
+function getUserById(id: string): User | null {
+  // Implementation
+}
+
+// ✅ Good - No implicit any (strict mode requirement)
+function processData(data: unknown): string {
+  if (typeof data === 'string') {
+    return data.toUpperCase();
+  }
+  return 'Invalid data';
+}
 ```
 
 **Why TypeScript?**: It's like having a spell-checker for your code - it catches mistakes before you even run the program.
+
+**Why Strict Mode?**: It's like having an even better spell-checker that catches more types of mistakes, making your code more reliable and easier to maintain.
 
 ## CSS/Tailwind Standards
 
@@ -620,6 +869,11 @@ const CONTENT_PATH_CONFIG: ContentPathConfig[] = [
 Before submitting code for review, ensure:
 
 - [ ] Code follows GoRakuDo established patterns
+- [ ] **MANDATORY**: All JavaScript files use ES Modules (import/export)
+- [ ] **MANDATORY**: All TypeScript files use Strict TypeScript mode
+- [ ] **MANDATORY**: All test artifacts have been cleaned up (no temporary files, mock data, or debug code)
+- [ ] **MANDATORY**: DRY principle applied - no code duplication (3+ similar logic instances require abstraction)
+- [ ] **MANDATORY**: KISS principle applied - simple solutions preferred over complex abstractions
 - [ ] TypeScript types are properly defined with comments
 - [ ] Components are properly documented with purpose and usage
 - [ ] Performance considerations are addressed (bundle size, loading speed)
@@ -634,7 +888,25 @@ Before submitting code for review, ensure:
 
 ## Tools and Configuration
 
-### Prettier Configuration
+#### TypeScript Configuration (Strict Mode Required)
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "strictPropertyInitialization": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  }
+}
+```
+
+#### Prettier Configuration
 ```json
 {
   "semi": true,
@@ -646,10 +918,12 @@ Before submitting code for review, ensure:
 ```
 
 ### ESLint Rules
-- Enforce TypeScript strict mode
+- **MANDATORY**: Enforce TypeScript strict mode
+- **MANDATORY**: Enforce ES Modules (no CommonJS)
 - Require explicit return types for functions
 - Prohibit unused variables
 - Enforce consistent import ordering
+- Prohibit `require()` and `module.exports` statements
 
 ### Git Hooks
 - Pre-commit: Run linting and formatting
@@ -660,12 +934,17 @@ Before submitting code for review, ensure:
 These coding standards reflect the actual patterns and conventions used in the GoRakuDo project. They ensure consistency, maintainability, and quality across the codebase while being accessible to developers of all skill levels.
 
 ### Key Takeaways:
-1. **Naming conventions** are like grammar rules for code
-2. **Comments** explain the "why" behind your decisions
-3. **Error handling** is like having a backup plan
-4. **Performance** matters for user experience
-5. **Documentation** helps others understand your code
-6. **Organization** makes code easier to find and maintain
+1. **DRY principle** prevents code duplication and promotes reusability
+2. **KISS principle** keeps code simple and maintainable
+3. **Naming conventions** are like grammar rules for code
+4. **Comments** explain the "why" behind your decisions
+5. **Error handling** is like having a backup plan
+6. **Performance** matters for user experience
+7. **Documentation** helps others understand your code
+8. **Organization** makes code easier to find and maintain
+9. **ES Modules** are mandatory for all JavaScript files
+10. **Strict TypeScript** mode is required for all TypeScript files
+11. **Test artifact cleanup** is mandatory after completing work
 
 ### For Questions or Suggestions:
 - Open an issue on GitHub
