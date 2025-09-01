@@ -297,6 +297,15 @@ export function generateQualityImprovements(
     }
   });
 
+  // メトリクスベースの改善提案（DRY原則）
+  Object.entries(metrics).forEach(([metricName, metricValue]) => {
+    if (metricValue < 50) {
+      improvements.push(`Critical: ${metricName} needs immediate attention (current: ${metricValue})`);
+    } else if (metricValue < 80) {
+      improvements.push(`Warning: ${metricName} could be improved (current: ${metricValue})`);
+    }
+  });
+
   return improvements;
 }
 

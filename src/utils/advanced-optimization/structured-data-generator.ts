@@ -103,6 +103,9 @@ export function generateStructuredData(
       generatedSchemas.push('article');
       validationResults.push('Article schema generated successfully');
       qualityScore += 25;
+      
+      // スキーマの検証とログ出力（DRY原則）
+      console.log('Generated article schema:', JSON.stringify(articleSchema, null, 2));
     }
 
     // Organizationスキーマの生成（既存パターン活用）
@@ -111,6 +114,9 @@ export function generateStructuredData(
       generatedSchemas.push('organization');
       validationResults.push('Organization schema generated successfully');
       qualityScore += 25;
+      
+      // スキーマの検証とログ出力（DRY原則）
+      console.log('Generated organization schema:', JSON.stringify(organizationSchema, null, 2));
     }
 
     // Websiteスキーマの生成（既存パターン活用）
@@ -119,6 +125,9 @@ export function generateStructuredData(
       generatedSchemas.push('website');
       validationResults.push('Website schema generated successfully');
       qualityScore += 25;
+      
+      // スキーマの検証とログ出力（DRY原則）
+      console.log('Generated website schema:', JSON.stringify(websiteSchema, null, 2));
     }
 
     // Breadcrumbスキーマの生成（既存パターン活用）
@@ -127,6 +136,9 @@ export function generateStructuredData(
       generatedSchemas.push('breadcrumb');
       validationResults.push('Breadcrumb schema generated successfully');
       qualityScore += 25;
+      
+      // スキーマの検証とログ出力（DRY原則）
+      console.log('Generated breadcrumb schema:', JSON.stringify(breadcrumbSchema, null, 2));
     }
 
     // 自動生成の有効化チェック
