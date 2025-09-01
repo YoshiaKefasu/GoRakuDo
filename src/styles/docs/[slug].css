@@ -10,7 +10,9 @@
  * - REM: Used for responsive typography, spacing, and layout
  * - EM: Used for relative scaling elements like code font-size
  */
-@import "tailwindcss";
+@import "../global.css";
+/* Import word internal links styles (replaces inline system) */
+@import "./word-internal-links.css";
 
 /* ========== FONT LOADING OPTIMIZATION ========== */
 /* Optimize font loading for better performance */
@@ -197,6 +199,8 @@
 
 /* Post Page Container - Enhanced with unified design system */
 .post-page {
+  width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   background: var(--color-post-background);
   /* ENHANCED: Add grainy noise texture for improved readability */

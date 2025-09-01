@@ -1,116 +1,24 @@
-import { GeminiAIService } from "./gemini-api";
-import { MetaDescriptionGenerator } from "./meta-description-generator";
-import { ContentRecommendationSystem } from "./content-recommendations";
 import { SEOOptimizer } from "./seo-optimizer";
 import type {
-  GeminiConfig,
-  MetaDescriptionRequest,
-  ContentRecommendationRequest,
   AIProcessingResult,
   SEOOptimizedMeta,
   ContentRecommendation,
 } from "./types";
 
 export class AISystem {
-  private geminiService: GeminiAIService;
-  private metaDescriptionGenerator: MetaDescriptionGenerator;
-  private contentRecommendationSystem: ContentRecommendationSystem;
-
-  constructor(config: GeminiConfig) {
-    this.geminiService = new GeminiAIService(config);
-    this.metaDescriptionGenerator = new MetaDescriptionGenerator(
-      this.geminiService,
-    );
-    this.contentRecommendationSystem = new ContentRecommendationSystem(
-      this.geminiService,
-    );
+  constructor(_config?: any) {
+    // AI processing disabled for security
+    // Config parameter kept for compatibility but not used
   }
 
   async processContent(
-    title: string,
-    content: string,
-    availablePosts: any[],
-    language: "id" | "ja" = "id",
+    _title: string,
+    _content: string,
+    _availablePosts: any[],
+    _language: "id" | "ja" = "id",
   ): Promise<AIProcessingResult> {
-    const startTime = Date.now();
-    let apiCallsUsed = 0;
-
-    try {
-      // Extract keywords
-      const keywords = await this.geminiService.generateKeywords(
-        content,
-        title,
-      );
-      apiCallsUsed++;
-
-      // Generate meta description
-      const metaDescriptionRequest: MetaDescriptionRequest = {
-        title,
-        content,
-        keywords,
-        language,
-      };
-      const metaDescription =
-        await this.metaDescriptionGenerator.generateOptimizedMetaDescription(
-          metaDescriptionRequest,
-        );
-      apiCallsUsed++;
-
-      // Generate content recommendations
-      const recommendationRequest: ContentRecommendationRequest = {
-        currentPost: {
-          id: title.toLowerCase().replace(/\s+/g, "-"),
-          title,
-          content,
-          tags: keywords,
-        },
-        availablePosts: availablePosts.map((post) => ({
-          id: post.slug || post.id,
-          title: post.title,
-          description: post.description || post.excerpt || "",
-          tags: post.tags || [],
-        })),
-      };
-      const recommendations =
-        await this.contentRecommendationSystem.generateRecommendations(
-          recommendationRequest,
-        );
-      apiCallsUsed++;
-
-      // Calculate SEO score
-      const seoScore = SEOOptimizer.calculateSEOScore(
-        title,
-        metaDescription.description,
-        keywords,
-      );
-
-      const processingTime = Date.now() - startTime;
-
-      return {
-        metaDescription,
-        recommendations,
-        keywords,
-        seoScore,
-        processingTime,
-        apiCallsUsed,
-      };
-    } catch (error) {
-      console.error("AI processing failed:", error);
-
-      // Return fallback results
-      return {
-        metaDescription: this.generateFallbackMetaDescription(
-          title,
-          content,
-          language,
-        ),
-        recommendations: this.generateFallbackRecommendations(availablePosts),
-        keywords: SEOOptimizer.extractKeywords(content, title),
-        seoScore: 50, // Default fallback score
-        processingTime: Date.now() - startTime,
-        apiCallsUsed,
-      };
-    }
+    // AI processing disabled for security
+    throw new Error("AI processing disabled for security");
   }
 
   async generateMetaDescriptionOnly(
@@ -118,59 +26,31 @@ export class AISystem {
     content: string,
     language: "id" | "ja" = "id",
   ): Promise<SEOOptimizedMeta> {
-    const keywords = SEOOptimizer.extractKeywords(content, title);
-
-    const request: MetaDescriptionRequest = {
-      title,
-      content,
-      keywords,
-      language,
-    };
-
-    return await this.metaDescriptionGenerator.generateOptimizedMetaDescription(
-      request,
-    );
+    // AI processing disabled for security
+    return this.generateFallbackMetaDescription(title, content, language);
   }
 
   async generateRecommendationsOnly(
-    currentPost: any,
+    _currentPost: any,
     availablePosts: any[],
   ): Promise<ContentRecommendation[]> {
-    const request: ContentRecommendationRequest = {
-      currentPost: {
-        id: currentPost.slug || currentPost.id,
-        title: currentPost.title,
-        content: currentPost.content || currentPost.body || "",
-        tags: currentPost.tags || [],
-      },
-      availablePosts: availablePosts.map((post) => ({
-        id: post.slug || post.id,
-        title: post.title,
-        description: post.description || post.excerpt || "",
-        tags: post.tags || [],
-      })),
-    };
-
-    return await this.contentRecommendationSystem.generateRecommendations(
-      request,
-    );
+    // AI processing disabled for security
+    return this.generateFallbackRecommendations(availablePosts);
   }
 
   getRateLimitStats() {
-    return this.geminiService.getRateLimitStats();
+    return { rpd: 0, rpm: 0 }; // AI processing disabled
   }
 
   clearAllCaches() {
-    this.metaDescriptionGenerator.clearCache();
-    this.contentRecommendationSystem.clearCache();
-    this.geminiService.clearCache();
+    // AI processing disabled
   }
 
   getCacheStats() {
     return {
-      metaDescriptionCache: this.metaDescriptionGenerator.getCacheSize(),
-      recommendationsCache: this.contentRecommendationSystem.getCacheSize(),
-      geminiCache: this.geminiService.getCacheSize(),
+      metaDescriptionCache: 0,
+      recommendationsCache: 0,
+      aiCache: 0,
     };
   }
 

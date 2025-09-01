@@ -22,12 +22,8 @@ import {
   getCollectionMetadata,
 } from "../../utils/content-path-resolver"
 
-// Import global CSS with essential variables and base styles
-import "../../styles/global.css"
-// Import post-specific styles with Tailwind v4 optimization
+// Import post[slug]-specific styles with Tailwind v4 optimization
 import "../../styles/docs/[slug].css"
-// Import word internal links styles (replaces inline system)
-import "../../styles/docs/word-internal-links.css"
 
 // Generate static paths for all docs posts
 export async function getStaticPaths() {
@@ -127,7 +123,7 @@ try {
       href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
       as="script"
     />
-    <link rel="preload" href="/src/scripts/core/post-script.js" as="script" />
+    <script src="/core/post-script.js" is:inline></script>
 
     <!-- Fonts with display=swap for better performance -->
     <link
@@ -158,7 +154,7 @@ try {
     </div>
 
     <!-- Main Content -->
-    <main class="post-page" role="main">
+    <main class="post-page w-full max-w-full flex flex-col" role="main">
       <div class="post-container">
         <!-- Navigation Section -->
         <nav class="post-navigation-top" aria-label="Post navigation">
@@ -253,8 +249,8 @@ try {
     </main>
 
     <!-- Scripts Section - Organized and Optimized -->
-    <script is:inline src="/src/scripts/core/post-script.js"></script>
-    <script src="/src/scripts/ui/post-skeleton-loader.js" is:inline></script>
+    <script is:inline src="/core/post-script.js"></script>
+    <script src="/scripts/ui/post-skeleton-loader.js" is:inline></script>
 
     <!-- Main Application Script -->
     <script define:vars={{ postData, enhancedContent }}>

@@ -164,6 +164,205 @@ class ValidationDiagnostic {
     }
   }
 
+  // 6. Gemini API依存関係の検証
+  validateGeminiApiDependencies() {
+    this.log('Gemini API依存関係の検証を開始...', 'info');
+
+    // 1. package.jsonでの依存関係チェック
+    this.validatePackageDependencies();
+    
+    // 2. 環境変数での設定チェック
+    this.validateEnvironmentVariables();
+    
+    // 3. ソースコードでの参照チェック
+    this.validateSourceCodeReferences();
+    
+    // 4. 設定ファイルでの参照チェック
+    this.validateConfigurationFiles();
+  }
+
+  validatePackageDependencies() {
+    this.log('package.jsonでのGemini API依存関係をチェック中...', 'info');
+    
+    try {
+      const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+      
+      // @google/genaiパッケージの確認
+      if (packageJson.dependencies && packageJson.dependencies['@google/genai']) {
+        this.log(`@google/genai v${packageJson.dependencies['@google/genai']} - 依存関係が存在します`, 'warning');
+      } else {
+        this.log('@google/genai - 依存関係なし ✓', 'success');
+      }
+      
+      // devDependenciesもチェック
+      if (packageJson.devDependencies && packageJson.devDependencies['@google/genai']) {
+        this.log(`@google/genai v${packageJson.devDependencies['@google/genai']} - dev依存関係が存在します`, 'warning');
+      }
+      
+    } catch (error) {
+      this.log(`package.json読み込みエラー: ${error.message}`, 'error');
+    }
+  }
+
+  validateEnvironmentVariables() {
+    this.log('環境変数でのGemini API設定をチェック中...', 'info');
+    
+    try {
+      // env.exampleファイルの確認
+      if (fs.existsSync('env.example')) {
+        const envExample = fs.readFileSync('env.example', 'utf8');
+        
+        if (envExample.includes('GOOGLE_API_KEY')) {
+          this.log('env.example - GOOGLE_API_KEY設定が存在します', 'warning');
+        } else {
+          this.log('env.example - GOOGLE_API_KEY設定なし ✓', 'success');
+        }
+        
+        if (envExample.includes('GOOGLE_MODEL')) {
+          this.log('env.example - GOOGLE_MODEL設定が存在します', 'warning');
+        } else {
+          this.log('env.example - GOOGLE_MODEL設定なし ✓', 'success');
+        }
+      } else {
+        this.log('env.example - ファイルが存在しません', 'warning');
+      }
+      
+      // 実際の環境変数の確認
+      if (process.env.GOOGLE_API_KEY) {
+        this.log('環境変数 - GOOGLE_API_KEYが設定されています', 'warning');
+      } else {
+        this.log('環境変数 - GOOGLE_API_KEY未設定 ✓', 'success');
+      }
+      
+    } catch (error) {
+      this.log(`環境変数チェックエラー: ${error.message}`, 'error');
+    }
+  }
+
+  validateSourceCodeReferences() {
+    this.log('ソースコードでのGemini API参照をチェック中...', 'info');
+    
+    const searchPatterns = [
+      /@google\/genai/,
+      /GoogleGenAI/,
+      /GeminiAIService/,
+      /GeminiAIServiceNew/,
+      /GOOGLE_API_KEY/,
+      /GOOGLE_MODEL/
+    ];
+    
+    const excludePatterns = [
+      /\.git\//,
+      /node_modules\//,
+      /dist\//,
+      /\.backup$/,
+      /validation-diagnostic-report\.json$/
+    ];
+    
+    const searchDirectories = [
+      'src',
+      'GenAI-PostMetadata-Gemini(Deprecated)',
+      'scripts'
+    ];
+    
+    let totalReferences = 0;
+    
+    searchDirectories.forEach(dir => {
+      if (!fs.existsSync(dir)) {
+        this.log(`${dir} - ディレクトリが存在しません`, 'warning');
+        return;
+      }
+      
+      const files = this.getAllFiles(dir);
+      
+      files.forEach(file => {
+        // 除外パターンをチェック
+        if (excludePatterns.some(pattern => pattern.test(file))) {
+          return;
+        }
+        
+        try {
+          const content = fs.readFileSync(file, 'utf8');
+          let fileReferences = 0;
+          
+          searchPatterns.forEach(pattern => {
+            const matches = content.match(pattern);
+            if (matches) {
+              fileReferences += matches.length;
+              this.log(`${file} - ${pattern} 参照を検出 (${matches.length}件)`, 'warning');
+            }
+          });
+          
+          if (fileReferences > 0) {
+            totalReferences += fileReferences;
+          }
+          
+        } catch (error) {
+          // バイナリファイルなどはスキップ
+          if (error.code !== 'ENOENT') {
+            this.log(`${file} - 読み込みエラー: ${error.message}`, 'warning');
+          }
+        }
+      });
+    });
+    
+    if (totalReferences === 0) {
+      this.log('ソースコード - Gemini API参照なし ✓', 'success');
+    } else {
+      this.log(`ソースコード - 合計${totalReferences}件のGemini API参照を検出`, 'warning');
+    }
+  }
+
+  validateConfigurationFiles() {
+    this.log('設定ファイルでのGemini API参照をチェック中...', 'info');
+    
+    const configFiles = [
+      'astro.config.mjs',
+      'tailwind.config.mjs',
+      'tsconfig.json',
+      'jest.config.js'
+    ];
+    
+    configFiles.forEach(file => {
+      if (!fs.existsSync(file)) {
+        this.log(`${file} - ファイルが存在しません`, 'warning');
+        return;
+      }
+      
+      try {
+        const content = fs.readFileSync(file, 'utf8');
+        
+        if (content.includes('@google/genai') || content.includes('GOOGLE_API_KEY')) {
+          this.log(`${file} - Gemini API関連設定を検出`, 'warning');
+        } else {
+          this.log(`${file} - Gemini API関連設定なし ✓`, 'success');
+        }
+        
+      } catch (error) {
+        this.log(`${file} - 読み込みエラー: ${error.message}`, 'error');
+      }
+    });
+  }
+
+  getAllFiles(dir) {
+    const files = [];
+    
+    const items = fs.readdirSync(dir);
+    
+    items.forEach(item => {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
+      
+      if (stat.isDirectory()) {
+        files.push(...this.getAllFiles(fullPath));
+      } else {
+        files.push(fullPath);
+      }
+    });
+    
+    return files;
+  }
+
   // 回復手順の生成
   generateRecoverySteps() {
     this.log('回復手順を生成中...', 'info');
@@ -235,6 +434,7 @@ class ValidationDiagnostic {
       this.validateBuildProcess();
       this.validateTestInfrastructure();
       this.establishPerformanceBaseline();
+      this.validateGeminiApiDependencies(); // 追加
 
       const report = this.generateReport();
 

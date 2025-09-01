@@ -12,7 +12,7 @@
  * - Integration with existing content analysis
  * - Performance optimized with caching and reduced processing
  *
- * @author Google 2025 Engineering Team
+ * @author GoRakuDo Engineering Team 2025
  * @version 1.1.0
  * @framework Astro SSG with Vue and Tailwind v4.1
  */

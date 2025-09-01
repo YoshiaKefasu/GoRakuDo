@@ -66,10 +66,6 @@ export default defineConfig({
               // SOLUTION: Removed reference, search handled inline
               // STATUS: ✅ RESOLVED
             ],
-            "scripts-core": [
-              "./src/scripts/core/hompage-script.js",
-              "./src/scripts/core/post-script.js",
-            ],
             // AI content utilities (load on demand)
             "ai-content": ["./src/utils/ai-content/content-analysis.js"],
             // Semantic relationships (load on demand)
