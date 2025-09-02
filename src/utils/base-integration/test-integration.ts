@@ -25,11 +25,11 @@ async function testBaseIntegration(): Promise<void> {
       performance: result.quality.performance
     });
     
-    if (result.issues.length > 0) {
+    if (result.issues && result.issues.length > 0) {
       console.log('⚠️ Issues Found:', result.issues);
     }
     
-    if (result.warnings.length > 0) {
+    if (result.warnings && result.warnings.length > 0) {
       console.log('⚠️ Warnings:', result.warnings);
     }
     

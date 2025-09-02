@@ -1,5 +1,7 @@
 ---
-import Head from "../components/public-components/HeadSEO.astro"
+import HeadSEO from "../components/public-components/HeadSEO.astro"
+import BasicSEO from "../components/public-components/BasicSEO.astro"
+import MetaManager from "../components/public-components/MetaManager.astro"
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Navbar from "../components/public-components/Navbar.vue"
 
@@ -9,6 +11,16 @@ import "../styles/tools/tools.css"
 
 // Import images
 import homepageOgImage from "../assets/images/Logo Discord.png"
+
+// Tools page SEO configuration
+const seoData = {
+  title: "Tools - GoRakuDo",
+  description: "Useful tools for Japanese learning and language study",
+  keywords: ["tools", "utilities", "japanese", "learning", "resources"],
+  articleType: "tool",
+  learningStage: "intermediate",
+  searchIntent: "transactional"
+}
 
 // Tools data - structured for easy management and expansion
 const tools = [
@@ -70,19 +82,33 @@ const tools = [
 ]
 ---
 
-<!doctype html>
-<!-- eslint-disable-next-line compat-api/html, compat-api/css -->
-<html lang="id">
+<html lang="ja">
   <head>
-    <Head
-      title="Tools Immersion - Alat Pembelajaran Bahasa Jepang"
-      description="Kumpulan tools dan aplikasi terbaik untuk pembelajaran bahasa Jepang dengan metode immersion. Setup dan panduan lengkap."
-      ogImage={homepageOgImage}
-      pageType="website"
-      publishedDate="2025/08/10"
-      lang="id"
-      aiPageType="docs"
-      enableAIOptimizations={true}
+    <HeadSEO
+      title={seoData.title}
+      description={seoData.description}
+      lang="ja"
+      canonicalUrl="https://example.com/tools"
+    />
+
+    <BasicSEO
+      title={seoData.title}
+      description={seoData.description}
+      primaryKeywords={seoData.keywords}
+      seoProperties={{
+        articleType: seoData.articleType,
+        learningStage: seoData.learningStage,
+        searchIntent: seoData.searchIntent
+      }}
+    />
+
+    <MetaManager
+      performanceOptimization={{
+        preload: [
+          { href: "/css/tools.css", as: "style" },
+          { href: "/js/tools.js", as: "script" }
+        ]
+      }}
     />
     <!-- Prefetch critical resources -->
     <link fetchpriority="low" rel="prefetch" href="/docs" />

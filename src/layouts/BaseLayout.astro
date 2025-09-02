@@ -1,5 +1,7 @@
 ---
-import Head from "../components/public-components/HeadSEO.astro";
+import HeadSEO from "../components/public-components/HeadSEO.astro";
+import BasicSEO from "../components/public-components/BasicSEO.astro";
+import MetaManager from "../components/public-components/MetaManager.astro";
 import "../styles/global.css";
 import homepageOgImage from "../assets/images/Logo Discord.png";
 
@@ -12,10 +14,16 @@ export interface Props {
   publishedDate?: string;
   // langプロパティを追加
   lang?: "id" | "ja";
+  keywords?: string[];
+  seoProperties?: {
+    articleType?: string;
+    learningStage?: string;
+    searchIntent?: string;
+  };
 }
 
 // propsを受け取ります
-const { title, description, ogImage, pageType, publishedDate, lang } =
+const { title, description, ogImage, pageType, publishedDate, lang, keywords, seoProperties } =
   Astro.props;
 ---
 
@@ -23,15 +31,49 @@ const { title, description, ogImage, pageType, publishedDate, lang } =
 <!-- <html>タグのlang属性も動的に設定 -->
 <html lang={lang || "id"}>
   <head>
-    <!-- HeadSEOコンポーネントに、受け取ったpropsをすべて渡します -->
-    <Head
+    <!-- Basic HTML head elements -->
+    <HeadSEO
       title={title}
       description={description}
-      ogImage={homepageOgImage}
-      pageType={pageType}
-      publishedDate={publishedDate}
-      lang={lang}
+      lang={lang || "id"}
+      canonicalUrl={new URL(Astro.request.url).toString()}
+      favicon="/favicon.svg"
     />
+
+    <!-- SEO-specific meta tags -->
+    <BasicSEO
+      title={title}
+      description={description}
+      primaryKeywords={keywords || []}
+      seoProperties={{
+        articleType: seoProperties?.articleType || "guide",
+        learningStage: seoProperties?.learningStage || "intermediate",
+        searchIntent: seoProperties?.searchIntent || "informational"
+      }}
+      socialMedia={{
+        openGraph: {
+          type: pageType || "website",
+          image: ogImage || homepageOgImage
+        }
+      }}
+    />
+
+    <!-- Performance and security optimization -->
+    <MetaManager
+      performanceOptimization={{
+        preload: [
+          { href: "/css/global.css", as: "style" }
+        ]
+      }}
+      securityHeaders={{
+        csp: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        hsts: "max-age=31536000; includeSubDomains; preload"
+      }}
+      analytics={{
+        googleAnalytics: "GA_MEASUREMENT_ID"
+      }}
+    />
+
     <!-- スタイルシートの<link>タグは不要です。上のimport文がその役割を果たします。 -->
   </head>
   <body>

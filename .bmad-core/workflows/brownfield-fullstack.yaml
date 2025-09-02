@@ -19,7 +19,7 @@ workflow:
       notes: |
         Determine enhancement complexity to route to appropriate path:
         - Single story (< 4 hours) → Use brownfield-create-story task
-        - Small feature (1-3 stories) → Use brownfield-create-epic task  
+        - Small feature (1-6 stories) → Use brownfield-create-epic task  
         - Major enhancement (multiple epics) → Continue with full workflow
 
         Ask user: "Can you describe the enhancement scope? Is this a small fix, a feature addition, or a major enhancement requiring architectural changes?"
@@ -34,7 +34,7 @@ workflow:
         small_feature:
           agent: pm
           uses: brownfield-create-epic
-          notes: "Create focused epic with 1-3 stories. Exit workflow after epic creation."
+          notes: "Create focused epic with 1-6 stories. Exit workflow after epic creation."
         major_enhancement:
           continue: to_next_step
           notes: "Continue with comprehensive planning workflow below."
@@ -192,7 +192,7 @@ workflow:
         B --> C{Enhancement Size?}
         
         C -->|Single Story| D[pm: brownfield-create-story]
-        C -->|1-3 Stories| E[pm: brownfield-create-epic]
+        C -->|1-6 Stories| E[pm: brownfield-create-epic]
         C -->|Major Enhancement| F[analyst: check documentation]
         
         D --> END1[To Dev Implementation]

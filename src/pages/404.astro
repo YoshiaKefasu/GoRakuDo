@@ -1,15 +1,17 @@
 ---
 // 404 Error Page with Automatic Redirects
 import HeadSEO from "../components/public-components/HeadSEO.astro"
+import BasicSEO from "../components/public-components/BasicSEO.astro"
+import MetaManager from "../components/public-components/MetaManager.astro"
 
-// SEO data for 404 page
+// 404 error page SEO configuration
 const seoData = {
-  title: "Halaman Tidak Ditemukan - GoRakuDo",
-  description:
-    "Halaman yang Anda cari tidak ditemukan. Kembali ke beranda atau cari dokumentasi yang tersedia.",
-  canonicalUrl: "https://gorakudo.org/404",
-  pageType: "website" as const,
-  authorName: "Tim GoRakuDo",
+  title: "Page Not Found - GoRakuDo",
+  description: "The page you're looking for doesn't exist. Return to GoRakuDo homepage.",
+  keywords: ["404", "error", "not found", "page missing"],
+  articleType: "website",
+  learningStage: "all",
+  searchIntent: "informational"
 }
 
 // Redirect mapping for old URLs with dynamic path support
@@ -41,10 +43,31 @@ if (redirectTarget) {
 }
 ---
 
-<!doctype html>
-<html lang="id">
+<html lang="ja">
   <head>
-    <HeadSEO {...seoData} />
+    <HeadSEO
+      title={seoData.title}
+      description={seoData.description}
+      lang="ja"
+      canonicalUrl="https://example.com/404"
+    />
+
+    <BasicSEO
+      title={seoData.title}
+      description={seoData.description}
+      primaryKeywords={seoData.keywords}
+      seoProperties={{
+        articleType: seoData.articleType,
+        learningStage: seoData.learningStage,
+        searchIntent: seoData.searchIntent
+      }}
+    />
+
+    <MetaManager
+      advancedMeta={{
+        robots: "noindex, nofollow"  // 404 pages shouldn't be indexed
+      }}
+    />
     <link rel="stylesheet" href="/css/post-styles.css" />
     <style>
       /* 404 Page Specific Styles */

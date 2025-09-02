@@ -1,19 +1,47 @@
 ---
 import HeadSEO from "../../components/public-components/HeadSEO.astro";
+import BasicSEO from "../../components/public-components/BasicSEO.astro";
+import MetaManager from "../../components/public-components/MetaManager.astro";
 
+// Admin settings page SEO configuration
 const seoData = {
-  title: "Admin Settings | GoRakuDo",
-  description: "Advanced system settings and diagnostics",
-  canonicalUrl: "https://gorakudo.org/admin/settings",
-  pageType: "website" as const,
-  authorName: "Tim GoRakuDo",
+  title: "Admin Settings - GoRakuDo",
+  description: "Administrative settings and configuration",
+  keywords: ["admin", "settings", "administration", "configuration"],
+  articleType: "website",
+  learningStage: "advanced",
+  searchIntent: "transactional"
 };
 ---
 
-<!doctype html>
-<html lang="id">
+<html lang="ja">
   <head>
-    <HeadSEO {...seoData} />
+    <HeadSEO
+      title={seoData.title}
+      description={seoData.description}
+      lang="ja"
+      canonicalUrl="https://example.com/admin/settings"
+    />
+
+    <BasicSEO
+      title={seoData.title}
+      description={seoData.description}
+      primaryKeywords={seoData.keywords}
+      seoProperties={{
+        articleType: seoData.articleType,
+        learningStage: seoData.learningStage,
+        searchIntent: seoData.searchIntent
+      }}
+    />
+
+    <MetaManager
+      advancedMeta={{
+        robots: "noindex, nofollow"  // Admin pages never indexed
+      }}
+      securityHeaders={{
+        csp: "default-src 'self'; script-src 'self'"
+      }}
+    />
     <link rel="stylesheet" href="/css/post-styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"

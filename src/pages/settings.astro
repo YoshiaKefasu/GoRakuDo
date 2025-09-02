@@ -1,13 +1,16 @@
 ---
 import HeadSEO from "../components/public-components/HeadSEO.astro";
+import BasicSEO from "../components/public-components/BasicSEO.astro";
+import MetaManager from "../components/public-components/MetaManager.astro";
 
-// SEO data for settings page
+// Settings page SEO configuration
 const seoData = {
-  title: "Pengaturan Sistem - GoRakuDo",
-  description: "Pengaturan sistem dan preferensi pengguna untuk GoRakuDo",
-  canonicalUrl: "https://gorakudo.org/settings",
-  pageType: "website" as const,
-  authorName: "Tim GoRakuDo",
+  title: "Settings - GoRakuDo",
+  description: "Customize your GoRakuDo learning experience",
+  keywords: ["settings", "preferences", "customization", "account"],
+  articleType: "website",
+  learningStage: "all",
+  searchIntent: "transactional"
 };
 
 // Settings configuration
@@ -35,10 +38,31 @@ const settingsConfig = {
 };
 ---
 
-<!doctype html>
-<html lang="id">
+<html lang="ja">
   <head>
-    <HeadSEO {...seoData} />
+    <HeadSEO
+      title={seoData.title}
+      description={seoData.description}
+      lang="ja"
+      canonicalUrl="https://example.com/settings"
+    />
+
+    <BasicSEO
+      title={seoData.title}
+      description={seoData.description}
+      primaryKeywords={seoData.keywords}
+      seoProperties={{
+        articleType: seoData.articleType,
+        learningStage: seoData.learningStage,
+        searchIntent: seoData.searchIntent
+      }}
+    />
+
+    <MetaManager
+      advancedMeta={{
+        robots: "noindex, nofollow"  // Settings pages typically not indexed
+      }}
+    />
     <link rel="stylesheet" href="/css/post-styles.css" />
     <style>
       .settings-container {

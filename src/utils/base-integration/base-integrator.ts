@@ -2,14 +2,14 @@
 // Main integration system following DRY + KISS principles
 // Integrates existing SEO system, Fallback system, and data flow
 
-import type { 
-  BaseIntegrationConfig, 
-  BaseIntegrationResult, 
-  SEOIntegrationResult, 
-  FallbackIntegrationResult, 
+import type {
+  IntegrationConfig,
+  IntegrationResult,
+  SEOIntegrationResult,
+  FallbackIntegrationResult,
   DataFlowResult,
-  IntegrationQualityResult 
-} from '../../types/base-integration.js';
+  IntegrationQualityResult
+} from '../../types/new-seo-system/integration-types.js';
 
 import { SEOConnector } from './seo-connector.js';
 import { FallbackConnector } from './fallback-connector.js';
@@ -21,13 +21,13 @@ import { QualityMeasurer } from './quality-measurer.js';
  * 既存システムとの安全な基盤統合を実現
  */
 export class BaseIntegrator {
-  private config: BaseIntegrationConfig;
+  private config: IntegrationConfig;
   private seoConnector: SEOConnector;
   private fallbackConnector: FallbackConnector;
   private dataFlowBuilder: DataFlowBuilder;
   private qualityMeasurer: QualityMeasurer;
 
-  constructor(config: BaseIntegrationConfig) {
+  constructor(config: IntegrationConfig) {
     this.config = config;
     this.seoConnector = new SEOConnector(config.seoSystem);
     this.fallbackConnector = new FallbackConnector(config.fallbackSystem);
@@ -39,7 +39,7 @@ export class BaseIntegrator {
    * 基盤統合の実行
    * 既存システムとの安全な統合を段階的に実行
    */
-  async integrateBaseSystems(): Promise<BaseIntegrationResult> {
+  async integrateBaseSystems(): Promise<IntegrationResult> {
     try {
       // Phase 1: SEOシステム統合
       const seoIntegration = await this.integrateSEOSystem();
@@ -58,16 +58,15 @@ export class BaseIntegrator {
       });
 
       // 統合結果の生成
-      const result: BaseIntegrationResult = {
+      const result: IntegrationResult = {
         success: quality.overall >= 80 && quality.stability >= 80,
+        status: 'connected',
+        timestamp: new Date(),
         seoIntegration,
         fallbackIntegration,
         dataFlow,
         quality,
-        timestamp: new Date(),
-        version: this.config.version,
-        issues: this.collectIssues(seoIntegration, fallbackIntegration, dataFlow),
-        warnings: this.collectWarnings(seoIntegration, fallbackIntegration, dataFlow)
+        version: this.config.version
       };
 
       return result;
@@ -82,15 +81,30 @@ export class BaseIntegrator {
    * 既存のSEO最適化システムとの基盤連携
    */
   private async integrateSEOSystem(): Promise<SEOIntegrationResult> {
+    const timestamp = new Date();
     if (!this.config.seoSystem.enabled) {
-      return { status: 'disabled' };
+      return {
+        success: false,
+        status: 'disabled',
+        timestamp
+      };
     }
 
     try {
-      return await this.seoConnector.connect();
+      const result = await this.seoConnector.connect();
+      return {
+        success: result.status === 'connected',
+        status: result.status,
+        timestamp,
+        endpoint: result.endpoint,
+        lastConnected: result.lastConnected,
+        errorMessage: result.errorMessage
+      };
     } catch (error) {
       return {
+        success: false,
         status: 'error',
+        timestamp,
         errorMessage: error instanceof Error ? error.message : 'Unknown error'
       };
     }
@@ -101,15 +115,30 @@ export class BaseIntegrator {
    * Story 4B Fallbackシステムとの基盤連携
    */
   private async integrateFallbackSystem(): Promise<FallbackIntegrationResult> {
+    const timestamp = new Date();
     if (!this.config.fallbackSystem.enabled) {
-      return { status: 'disabled' };
+      return {
+        success: false,
+        status: 'disabled',
+        timestamp
+      };
     }
 
     try {
-      return await this.fallbackConnector.connect();
+      const result = await this.fallbackConnector.connect();
+      return {
+        success: result.status === 'connected',
+        status: result.status,
+        timestamp,
+        endpoint: result.endpoint,
+        lastConnected: result.lastConnected,
+        errorMessage: result.errorMessage
+      };
     } catch (error) {
       return {
+        success: false,
         status: 'error',
+        timestamp,
         errorMessage: error instanceof Error ? error.message : 'Unknown error'
       };
     }
@@ -120,10 +149,27 @@ export class BaseIntegrator {
    * 既存のデータフローパターンを活用した基盤構築
    */
   private async buildDataFlow(): Promise<DataFlowResult> {
+    const timestamp = new Date();
     try {
-      return await this.dataFlowBuilder.build();
+      const result = await this.dataFlowBuilder.build();
+      return {
+        success: result.flowStatus === 'active',
+        status: result.flowStatus === 'active' ? 'connected' : 'error',
+        timestamp,
+        metadataFlow: result.metadataFlow,
+        seoFlow: result.seoFlow,
+        validation: result.validation,
+        flowStatus: result.flowStatus,
+        lastProcessed: result.lastProcessed,
+        processedCount: result.processedCount,
+        errorCount: result.errorCount
+      };
     } catch (error) {
       return {
+        success: false,
+        status: 'error',
+        timestamp,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
         metadataFlow: false,
         seoFlow: false,
         validation: false,
@@ -146,74 +192,37 @@ export class BaseIntegrator {
     return this.qualityMeasurer.measure(params);
   }
 
-  /**
-   * 問題点の収集
-   * 統合時の問題点を収集
-   */
-  private collectIssues(
-    seo: SEOIntegrationResult,
-    fallback: FallbackIntegrationResult,
-    dataFlow: DataFlowResult
-  ): string[] {
-    const issues: string[] = [];
 
-    if (seo.status === 'error') {
-      issues.push(`SEO system integration failed: ${seo.errorMessage}`);
-    }
 
-    if (fallback.status === 'error') {
-      issues.push(`Fallback system integration failed: ${fallback.errorMessage}`);
-    }
 
-    if (dataFlow.flowStatus === 'error') {
-      issues.push('Data flow construction failed');
-    }
-
-    return issues;
-  }
-
-  /**
-   * 警告の収集
-   * 統合時の警告を収集
-   */
-  private collectWarnings(
-    seo: SEOIntegrationResult,
-    fallback: FallbackIntegrationResult,
-    dataFlow: DataFlowResult
-  ): string[] {
-    const warnings: string[] = [];
-
-    if (seo.status === 'disconnected') {
-      warnings.push('SEO system is disconnected');
-    }
-
-    if (fallback.status === 'disconnected') {
-      warnings.push('Fallback system is disconnected');
-    }
-
-    if (dataFlow.errorCount > 0) {
-      warnings.push(`Data flow has ${dataFlow.errorCount} errors`);
-    }
-
-    return warnings;
-  }
 
   /**
    * 統合フォールバック生成
    * 統合失敗時のフォールバック処理
    */
-  private generateIntegrationFallback(error: Error): BaseIntegrationResult {
+  private generateIntegrationFallback(error: Error): IntegrationResult {
+    const timestamp = new Date();
     return {
       success: false,
-      seoIntegration: { 
-        status: 'error', 
-        errorMessage: error.message 
+      status: 'error',
+      timestamp,
+      seoIntegration: {
+        success: false,
+        status: 'error',
+        timestamp,
+        errorMessage: error.message
       },
-      fallbackIntegration: { 
-        status: 'error', 
-        errorMessage: error.message 
+      fallbackIntegration: {
+        success: false,
+        status: 'error',
+        timestamp,
+        errorMessage: error.message
       },
-      dataFlow: { 
+      dataFlow: {
+        success: false,
+        status: 'error',
+        timestamp,
+        errorMessage: error.message,
         metadataFlow: false,
         seoFlow: false,
         validation: false,
@@ -228,13 +237,10 @@ export class BaseIntegrator {
         dataFlowQuality: 0,
         stability: 0,
         performance: 0,
-        lastMeasured: new Date(),
+        lastMeasured: timestamp,
         recommendations: ['Check system configuration', 'Verify existing system status']
       },
-      timestamp: new Date(),
-      version: this.config.version,
-      issues: [error.message],
-      warnings: ['Integration fallback mode activated']
+      version: this.config.version
     };
   }
 
@@ -242,7 +248,7 @@ export class BaseIntegrator {
    * 設定の更新
    * 統合設定の動的更新
    */
-  updateConfig(newConfig: Partial<BaseIntegrationConfig>): void {
+  updateConfig(newConfig: Partial<IntegrationConfig>): void {
     this.config = { ...this.config, ...newConfig };
     
     // 各コンポーネントの設定を更新
@@ -280,7 +286,7 @@ export class BaseIntegrator {
  * 基盤統合関数
  * 既存の統合パターンを活用した統合関数
  */
-export async function integrateBaseSystems(config: BaseIntegrationConfig): Promise<BaseIntegrationResult> {
+export async function integrateBaseSystems(config: IntegrationConfig): Promise<IntegrationResult> {
   const integrator = new BaseIntegrator(config);
   return integrator.integrateBaseSystems();
 }

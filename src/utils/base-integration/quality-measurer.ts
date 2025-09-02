@@ -2,12 +2,12 @@
 // Measures integration quality using existing patterns following DRY principle
 // Integrates with existing quality measurement patterns
 
-import type { 
-  IntegrationQualityResult, 
-  SEOIntegrationResult, 
-  FallbackIntegrationResult, 
-  DataFlowResult 
-} from '../../types/base-integration.js';
+import type {
+  IntegrationQualityResult,
+  SEOIntegrationResult,
+  FallbackIntegrationResult,
+  DataFlowResult
+} from '../../types/new-seo-system/integration-types.js';
 
 /**
  * 品質測定モジュール
@@ -516,16 +516,8 @@ export class QualityMeasurer {
           score = 0;
       }
       
-      // タイムアウト設定によるパフォーマンス評価
-      if (system.timeout) {
-        if (system.timeout <= 3000) {
-          score += 10; // 高速応答
-        } else if (system.timeout <= 10000) {
-          score += 5;  // 中程度応答
-        } else {
-          score = Math.max(0, score - 10); // 低速応答
-        }
-      }
+      // パフォーマンス評価 (timeout 設定は統合設定から取得)
+      // Note: timeout 評価は統合設定の品質測定で別途行われる
       
       return Math.min(100, score);
     } catch (error) {

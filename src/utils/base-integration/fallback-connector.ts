@@ -2,8 +2,8 @@
 // Connects to Story 4B Fallback system following DRY principle
 // Integrates with existing fallback system patterns
 
-import type { FallbackIntegrationConfig, FallbackIntegrationResult } from '../../types/base-integration.js';
-import type { FallbackResult, FallbackMetadata } from '../../types/fallback-system.js';
+import type { FallbackIntegrationConfig, FallbackIntegrationResult } from '../../types/new-seo-system/integration-types.js';
+import type { FallbackResult, FallbackMetadata } from '../../types/new-seo-system/validation-types.js';
 
 // 既存のFallbackシステムをインポート（DRY原則）
 import { AISystem } from '../ai/ai-system.js';
@@ -52,18 +52,23 @@ export class FallbackConnector {
         this.isConnected = true;
         this.connectionErrors = [];
         
+        const timestamp = new Date();
         return {
+          success: true,
           status: 'connected',
+          timestamp,
           endpoint: this.config.fallbackEndpoint,
-          timeout: this.config.timeout,
-          lastConnected: new Date()
+          lastConnected: timestamp
         };
       } else {
         this.isConnected = false;
         this.connectionErrors.push(connectionTest.error || 'Connection test failed');
         
+        const timestamp = new Date();
         return {
+          success: false,
           status: 'error',
+          timestamp,
           endpoint: this.config.fallbackEndpoint,
           errorMessage: connectionTest.error || 'Connection test failed'
         };
@@ -73,8 +78,11 @@ export class FallbackConnector {
       const errorMessage = error instanceof Error ? error.message : 'Unknown connection error';
       this.connectionErrors.push(errorMessage);
       
+      const timestamp = new Date();
       return {
+        success: false,
         status: 'error',
+        timestamp,
         endpoint: this.config.fallbackEndpoint,
         errorMessage
       };

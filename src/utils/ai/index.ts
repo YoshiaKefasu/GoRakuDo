@@ -1,6 +1,5 @@
 // Core AI System
 export { AISystem } from "./ai-system";
-export { SEOOptimizer } from "./seo-optimizer";
 export { RateLimiter } from "./rate-limiter";
 
 // Environment & Build Management

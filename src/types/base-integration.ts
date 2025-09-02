@@ -1,223 +1,159 @@
 // ========== BASE INTEGRATION TYPE DEFINITIONS ==========
 // Strict TypeScript mode compliant type definitions for base integration system
-// Extends existing types.ts and fallback-system.ts patterns (DRY principle)
+// Now imports from new unified integration system (DRY principle)
 
-import type { SEOAnalysis, AIProcessingResult } from '../utils/ai/types.js';
-import type { FallbackResult, FallbackMetadata } from './fallback-system.js';
+// Import types from unified system
+import type {
+  SEOIntegrationConfig,
+  FallbackIntegrationConfig,
+  DataFlowConfig,
+  IntegrationConfig,
+  SEOIntegrationResult,
+  FallbackIntegrationResult,
+  DataFlowResult,
+  IntegrationResult,
+  IntegrationQualityResult,
+  IntegrationValidationRule,
+  IntegrationValidationResult,
+  ValidationError,
+  ValidationWarning,
+  IntegrationErrorContext
+} from './new-seo-system/integration-types.js';
+
+// Import values from unified system
+import {
+  DEFAULT_INTEGRATION_CONFIG
+} from './new-seo-system/integration-types.js';
+
+// Import base types
+import type { ValidationResult } from './new-seo-system/base-types.js';
+
+// Legacy imports for backward compatibility during migration
+// Note: These imports are kept for potential future use but currently unused
+
+// ========== LEGACY TYPE ALIASES ==========
+// These types are now imported from the unified integration system
+// Maintained for backward compatibility during migration (DRY principle)
 
 /**
  * SEOシステム統合設定
  * 既存のSEO最適化システムとの連携設定
+ * @deprecated Use SEOIntegrationConfig from new-seo-system/integration-types.ts
  */
-export interface SEOIntegrationConfig {
-  readonly enabled: boolean;                    // 既存SEOシステムとの連携有効化
-  readonly apiEndpoint: string;                 // 既存SEOシステムのAPIエンドポイント
-  readonly timeout: number;                     // 連携タイムアウト設定
-  readonly maxRetries: number;                  // 最大リトライ回数
-  readonly qualityThreshold: number;            // 品質閾値（0-100）
-}
+export type SEOIntegrationConfigLegacy = SEOIntegrationConfig;
 
 /**
  * Fallbackシステム統合設定
  * Story 4B Fallbackシステムとの連携設定
+ * @deprecated Use FallbackIntegrationConfig from new-seo-system/integration-types.ts
  */
-export interface FallbackIntegrationConfig {
-  readonly enabled: boolean;                    // Fallbackシステムとの連携有効化
-  readonly fallbackEndpoint: string;            // Fallbackシステムのエンドポイント
-  readonly timeout: number;                     // 連携タイムアウト設定
-  readonly priority: 'manual' | 'auto' | 'fallback' | 'default';
-  readonly confidenceThreshold: number;         // 信頼度閾値（0-1）
-}
+export type FallbackIntegrationConfigLegacy = FallbackIntegrationConfig;
 
 /**
  * データフロー設定
  * メタデータとSEO最適化データの流れ設定
+ * @deprecated Use DataFlowConfig from new-seo-system/integration-types.ts
  */
-export interface DataFlowConfig {
-  readonly metadataFlow: boolean;               // メタデータフローの有効化
-  readonly seoFlow: boolean;                    // SEO最適化フローの有効化
-  readonly validation: boolean;                 // データ検証の有効化
-  readonly fallbackEnabled: boolean;            // Fallback機能の有効化
-  readonly qualityMonitoring: boolean;          // 品質監視の有効化
-}
+export type DataFlowConfigLegacy = DataFlowConfig;
 
 /**
  * 基盤統合設定
  * 既存システムとの統合設定の完全な定義
+ * @deprecated Use IntegrationConfig from new-seo-system/integration-types.ts
  */
-export interface BaseIntegrationConfig {
-  readonly seoSystem: SEOIntegrationConfig;
-  readonly fallbackSystem: FallbackIntegrationConfig;
-  readonly dataFlow: DataFlowConfig;
-  readonly environment: 'development' | 'staging' | 'production';
-  readonly version: string;
-}
+export type BaseIntegrationConfigLegacy = IntegrationConfig;
+
+// ========== LEGACY RESULT TYPE ALIASES ==========
+// Result types are now imported from the unified integration system
+// Maintained for backward compatibility during migration (DRY principle)
 
 /**
  * SEOシステム統合結果
  * 既存SEOシステムとの連携結果
+ * @deprecated Use SEOIntegrationResult from new-seo-system/integration-types.ts
  */
-export interface SEOIntegrationResult {
-  readonly status: 'connected' | 'disconnected' | 'error' | 'disabled';
-  readonly endpoint?: string;
-  readonly timeout?: number;
-  readonly lastConnected?: Date;
-  readonly errorMessage?: string;
-  readonly seoAnalysis?: SEOAnalysis;
-  readonly processingResult?: AIProcessingResult;
-}
+export type SEOIntegrationResultLegacy = SEOIntegrationResult;
 
 /**
  * Fallbackシステム統合結果
  * Story 4B Fallbackシステムとの連携結果
+ * @deprecated Use FallbackIntegrationResult from new-seo-system/integration-types.ts
  */
-export interface FallbackIntegrationResult {
-  readonly status: 'connected' | 'disconnected' | 'error' | 'disabled';
-  readonly endpoint?: string;
-  readonly timeout?: number;
-  readonly lastConnected?: Date;
-  readonly errorMessage?: string;
-  readonly fallbackResult?: FallbackResult;
-  readonly metadata?: FallbackMetadata;
-}
+export type FallbackIntegrationResultLegacy = FallbackIntegrationResult;
 
 /**
  * データフロー結果
  * メタデータとSEO最適化データの流れ結果
+ * @deprecated Use DataFlowResult from new-seo-system/integration-types.ts
  */
-export interface DataFlowResult {
-  readonly metadataFlow: boolean;
-  readonly seoFlow: boolean;
-  readonly validation: boolean;
-  readonly flowStatus: 'active' | 'inactive' | 'error';
-  readonly lastProcessed?: Date;
-  readonly processedCount: number;
-  readonly errorCount: number;
-}
+export type DataFlowResultLegacy = DataFlowResult;
 
 /**
  * 統合品質測定結果
  * 基盤統合の品質と安定性の測定結果
+ * @deprecated Use IntegrationQualityResult from new-seo-system/integration-types.ts
  */
-export interface IntegrationQualityResult {
-  readonly overall: number;                     // 総合品質スコア（0-100）
-  readonly seoQuality: number;                  // SEO統合品質（0-100）
-  readonly fallbackQuality: number;             // Fallback統合品質（0-100）
-  readonly dataFlowQuality: number;             // データフロー品質（0-100）
-  readonly stability: number;                   // 統合安定性スコア（0-100）
-  readonly performance: number;                 // パフォーマンススコア（0-100）
-  readonly lastMeasured: Date;
-  readonly recommendations: readonly string[];
-}
+export type IntegrationQualityResultLegacy = IntegrationQualityResult;
 
 /**
  * 基盤統合結果
  * 完全な統合結果と品質測定結果
+ * @deprecated Use IntegrationResult from new-seo-system/integration-types.ts
  */
-export interface BaseIntegrationResult {
-  readonly success: boolean;                    // 統合成功フラグ
-  readonly seoIntegration: SEOIntegrationResult;
-  readonly fallbackIntegration: FallbackIntegrationResult;
-  readonly dataFlow: DataFlowResult;
-  readonly quality: IntegrationQualityResult;
-  readonly timestamp: Date;
-  readonly version: string;
-  readonly issues: readonly string[];           // 統合時の問題点
-  readonly warnings: readonly string[];         // 統合時の警告
-}
+export type BaseIntegrationResultLegacy = IntegrationResult;
+
+// ========== LEGACY VALIDATION TYPE ALIASES ==========
+// Validation types are now imported from the unified system
+// Maintained for backward compatibility during migration (DRY principle)
 
 /**
  * 統合エラーコンテキスト
  * 既存のErrorContextパターンを活用（DRY原則）
+ * @deprecated Use IntegrationErrorContext from new-seo-system/integration-types.ts
  */
-export interface IntegrationErrorContext {
-  readonly system: 'seo' | 'fallback' | 'dataFlow';
-  readonly action: string;
-  readonly timestamp: number;
-  readonly component: string;
-}
+export type IntegrationErrorContextLegacy = IntegrationErrorContext;
 
 /**
  * 統合バリデーションルール
  * 既存のValidationRuleパターンを活用（DRY原則）
+ * @deprecated Use IntegrationValidationRule from new-seo-system/integration-types.ts
  */
-export interface IntegrationValidationRule {
-  readonly system: 'seo' | 'fallback' | 'dataFlow';
-  readonly validator: (config: unknown) => boolean;
-  readonly message: string;
-  readonly isRequired: boolean;
-}
+export type IntegrationValidationRuleLegacy = IntegrationValidationRule;
 
 /**
  * 統合バリデーション結果
  * 既存のMetadataValidationResultパターンを活用（DRY原則）
+ * @deprecated Use IntegrationValidationResult from new-seo-system/integration-types.ts
  */
-export interface IntegrationValidationResult {
-  readonly isValid: boolean;
-  readonly errors: IntegrationValidationError[];
-  readonly warnings: IntegrationValidationWarning[];
-  readonly seoSystem: ValidationResult;
-  readonly fallbackSystem: ValidationResult;
-  readonly dataFlow: ValidationResult;
-}
+export type IntegrationValidationResultLegacy = IntegrationValidationResult;
 
 /**
  * 統合バリデーションエラー
  * 既存のValidationErrorパターンを活用（DRY原則）
+ * @deprecated Use ValidationError from new-seo-system/integration-types.ts
  */
-export interface IntegrationValidationError {
-  readonly system: 'seo' | 'fallback' | 'dataFlow';
-  readonly field: string;
-  readonly message: string;
-  readonly code: string;
-}
+export type IntegrationValidationErrorLegacy = ValidationError;
 
 /**
  * 統合バリデーション警告
  * 既存のValidationWarningパターンを活用（DRY原則）
+ * @deprecated Use ValidationWarning from new-seo-system/integration-types.ts
  */
-export interface IntegrationValidationWarning {
-  readonly system: 'seo' | 'fallback' | 'dataFlow';
-  readonly field: string;
-  readonly message: string;
-  readonly code: string;
-}
+export type IntegrationValidationWarningLegacy = ValidationWarning;
 
 /**
  * 個別システムバリデーション結果
  * 既存のValidationResultパターンを活用（DRY原則）
+ * @deprecated Use ValidationResult from new-seo-system/integration-types.ts
  */
-export interface ValidationResult {
-  readonly isValid: boolean;
-  readonly errors: string[];
-  readonly warnings: string[];
-}
+export type ValidationResultLegacy = ValidationResult;
 
-// ========== DEFAULT CONFIGURATION ==========
-// Centralized configuration values following DRY principle
+// ========== LEGACY DEFAULT CONFIGURATION ==========
+// Default configuration now imported from unified integration system
+// Maintained for backward compatibility during migration (DRY principle)
 
-export const DEFAULT_BASE_INTEGRATION_CONFIG: BaseIntegrationConfig = {
-  seoSystem: {
-    enabled: true,
-    apiEndpoint: '/api/seo',
-    timeout: 5000,
-    maxRetries: 3,
-    qualityThreshold: 80
-  },
-  fallbackSystem: {
-    enabled: true,
-    fallbackEndpoint: '/api/fallback',
-    timeout: 5000,
-    priority: 'fallback',
-    confidenceThreshold: 0.8
-  },
-  dataFlow: {
-    metadataFlow: true,
-    seoFlow: true,
-    validation: true,
-    fallbackEnabled: true,
-    qualityMonitoring: true
-  },
-  environment: 'development',
-  version: '1.0.0'
-};
+/**
+ * Legacy default configuration
+ * @deprecated Use DEFAULT_INTEGRATION_CONFIG from new-seo-system/integration-types.ts
+ */
+export const DEFAULT_BASE_INTEGRATION_CONFIG: IntegrationConfig = DEFAULT_INTEGRATION_CONFIG;

@@ -13,10 +13,10 @@ export { FallbackConnector } from "./fallback-connector.js";
 export { DataFlowBuilder } from "./data-flow-builder.js";
 export { QualityMeasurer } from "./quality-measurer.js";
 
-// Types
+// Types from unified integration system
 export type {
-  BaseIntegrationConfig,
-  BaseIntegrationResult,
+  IntegrationConfig as BaseIntegrationConfig,
+  IntegrationResult as BaseIntegrationResult,
   SEOIntegrationConfig,
   SEOIntegrationResult,
   FallbackIntegrationConfig,
@@ -27,10 +27,10 @@ export type {
   IntegrationErrorContext,
   IntegrationValidationRule,
   IntegrationValidationResult,
-  IntegrationValidationError,
-  IntegrationValidationWarning,
+  ValidationError as IntegrationValidationError,
+  ValidationWarning as IntegrationValidationWarning,
   ValidationResult
-} from "../../types/base-integration.js";
+} from "../../types/new-seo-system/integration-types.js";
 
 // Default Configuration
-export { DEFAULT_BASE_INTEGRATION_CONFIG } from "../../types/base-integration.js";
+export { DEFAULT_INTEGRATION_CONFIG as DEFAULT_BASE_INTEGRATION_CONFIG } from "../../types/new-seo-system/integration-types.js";

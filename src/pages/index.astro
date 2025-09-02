@@ -1,5 +1,7 @@
 ---
-import Head from "../components/public-components/HeadSEO.astro"
+import HeadSEO from "../components/public-components/HeadSEO.astro"
+import BasicSEO from "../components/public-components/BasicSEO.astro"
+import MetaManager from "../components/public-components/MetaManager.astro"
 import CeritaImmersion from "../components/homepage/Slideshow/ImageSlideshow.astro"
 import BaseLayout from "../layouts/BaseLayout.astro"
 
@@ -15,21 +17,69 @@ import "../styles/homepage/index.css"
 
 // 画像をインポート
 import homepageOgImage from "../assets/images/Logo Discord.png"
+
+// Homepage-specific SEO configuration
+const seoData = {
+  title: "Komunitas Immersion Terbesar JP-Indonesia",
+  description: "Komunitas immersion bahasa Jepang terbesar Indonesia. Belajar alami, kuasai seperti penutur asli.",
+  keywords: ["belajar", "bahasa", "jepang", "immersion", "komunitas"],
+  articleType: "guide",
+  learningStage: "intermediate",
+  searchIntent: "informational"
+}
 ---
 
 <!doctype html>
 <html lang="id">
   <head>
-    <Head
-      title="Komunitas Immersion Terbesar JP-Indonesia"
-      description="Komunitas immersion bahasa Jepang terbesar Indonesia. Belajar alami, kuasai seperti penutur asli."
-      ogImage={homepageOgImage}
-      pageType="website"
-      publishedDate="2025/08/10"
+    <!-- Basic HTML head elements -->
+    <HeadSEO
+      title={seoData.title}
+      description={seoData.description}
       lang="id"
-      aiPageType="home"
-      enableAIOptimizations={true}
+      canonicalUrl="https://gorakudo.org"
+      favicon="/favicon.svg"
     />
+
+    <!-- SEO-specific meta tags -->
+    <BasicSEO
+      title={seoData.title}
+      description={seoData.description}
+      primaryKeywords={seoData.keywords}
+      seoProperties={{
+        articleType: seoData.articleType,
+        learningStage: seoData.learningStage,
+        searchIntent: seoData.searchIntent
+      }}
+      socialMedia={{
+        openGraph: {
+          type: "website",
+          image: homepageOgImage
+        },
+        twitterCard: {
+          card: "summary_large_image",
+          image: homepageOgImage
+        }
+      }}
+    />
+
+    <!-- Performance and security optimization -->
+    <MetaManager
+      performanceOptimization={{
+        preload: [
+          { href: "/_astro/client.BOM-Xz5v.js", as: "script", crossorigin: "anonymous" },
+          { href: "/css/homepage-styles.css", as: "style" }
+        ]
+      }}
+      securityHeaders={{
+        csp: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        hsts: "max-age=31536000; includeSubDomains; preload"
+      }}
+      analytics={{
+        googleAnalytics: "GA_MEASUREMENT_ID"
+      }}
+    />
+
     <!-- Prefetch non-critical resources (Enhanced) -->
     <link fetchpriority="low" rel="prefetch" href="/docs" />
     <link fetchpriority="low" rel="prefetch" href="/discord" />

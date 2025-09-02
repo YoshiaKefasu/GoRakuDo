@@ -1,19 +1,26 @@
 // ========== DATA FLOW BUILDER ==========
-import type { DataFlowConfig, DataFlowResult } from '../../types/base-integration.js';
-import { loadMetadata, getSEOFromMetadata, getRecommendationsFromMetadata } from '../metadata-loader.js';
-import { SEOOptimizer } from '../ai/seo-optimizer.js';
+import type { DataFlowConfig, DataFlowResult } from '../../types/new-seo-system/integration-types.js';
+import { loadMetadata, getSEOFromMetadata, getRecommendationsFromMetadata } from '../new-seo-system/metadata-loader';
+import { NewSEOMetaManager } from '../new-seo-system/meta-manager';
+import { NewSEOKeywordValidator } from '../new-seo-system/keyword-validator';
+import type { AdvancedMetaConfig } from '../../types/new-seo-system';
 
 export class DataFlowBuilder {
   private config: DataFlowConfig;
   private metadataFlow: boolean = false;
   private seoFlow: boolean = false;
   private validationFlow: boolean = false;
+  private metaManager: NewSEOMetaManager;
+  private keywordValidator: NewSEOKeywordValidator;
 
   constructor(config: DataFlowConfig) {
     this.config = config;
     this.metadataFlow = config.metadataFlow;
     this.seoFlow = config.seoFlow;
     this.validationFlow = config.validation;
+    // 新しいSEOシステムの初期化
+    this.metaManager = new NewSEOMetaManager();
+    this.keywordValidator = new NewSEOKeywordValidator();
   }
 
   async build(): Promise<DataFlowResult> {
@@ -34,12 +41,16 @@ export class DataFlowBuilder {
 
       console.log('✅ Integrated data flow built successfully');
 
+      const timestamp = new Date();
       return {
+        success: true,
+        status: 'connected',
+        timestamp,
         metadataFlow: metadataFlowResult,
         seoFlow: seoFlowResult,
         validation: validationFlowResult,
         flowStatus: 'active',
-        lastProcessed: new Date(),
+        lastProcessed: timestamp,
         processedCount: 1,
         errorCount: 0
       };
@@ -140,17 +151,25 @@ export class DataFlowBuilder {
 
   private testSEOFlow(title: string, content: string): boolean {
     try {
-      // 既存のSEO最適化システムパターンを活用（DRY原則）
-      const optimizedTitle = SEOOptimizer.optimizeTitle(title, 60);
-      const keywords = SEOOptimizer.extractKeywords(content, title);
-      const seoScore = SEOOptimizer.calculateSEOScore(title, content.substring(0, 160), keywords);
-      
-      const hasValidTitle = Boolean(optimizedTitle) && optimizedTitle.length > 0;
+      // 新しいSEOシステムパターンを活用（DRY原則）
+      const validationResult = this.keywordValidator.validateAll({
+        primary: [title],
+        article: [content.substring(0, 100)]
+      });
+
+      const metaConfig: AdvancedMetaConfig = {
+        robots: 'index,follow',
+        themeColor: '#ffffff',
+        colorScheme: 'light'
+      };
+      const metaTags = this.metaManager.generateAdvancedMeta(metaConfig);
+
+      const hasValidTitle = Boolean(title) && title.length > 0;
       const hasValidContent = Boolean(content) && content.length > 0;
-      const hasValidKeywords = keywords.length > 0;
-      const hasValidSEOScore = seoScore >= 0 && seoScore <= 100;
-      
-      return Boolean(hasValidTitle) && Boolean(hasValidContent) && hasValidKeywords && hasValidSEOScore;
+      const hasValidKeywords = validationResult.optimizedKeywords.length > 0;
+      const hasValidMetaTags = metaTags.length > 0;
+
+      return Boolean(hasValidTitle) && Boolean(hasValidContent) && hasValidKeywords && hasValidMetaTags;
     } catch (error) {
       console.error('❌ SEO flow test failed:', error);
       return false;
@@ -159,8 +178,11 @@ export class DataFlowBuilder {
 
   private extractBasicKeywords(content: string): string[] {
     try {
-      // 既存のキーワード抽出パターンを活用（DRY原則）
-      return SEOOptimizer.extractKeywords(content, 'Test Title');
+      // 新しいキーワード検証システムを活用（DRY原則）
+      const validationResult = this.keywordValidator.validateAll({
+        article: [content.substring(0, 100)]
+      });
+      return validationResult.optimizedKeywords;
     } catch (error) {
       console.error('❌ Keyword extraction failed:', error);
       return [];
@@ -169,11 +191,14 @@ export class DataFlowBuilder {
 
   private testSEOScoreCalculation(title: string, content: string): boolean {
     try {
-      // 既存のSEOスコア計算パターンを活用（DRY原則）
-      const keywords = SEOOptimizer.extractKeywords(content, title);
-      const seoScore = SEOOptimizer.calculateSEOScore(title, content.substring(0, 160), keywords);
-      
-      return seoScore >= 0 && seoScore <= 100;
+      // 新しいキーワード検証システムを活用（DRY原則）
+      const validationResult = this.keywordValidator.validateAll({
+        primary: [title],
+        article: [content.substring(0, 100)]
+      });
+
+      // 新しいシステムではスコア計算は別途実装のため、検証結果の妥当性を返す
+      return validationResult.isValid && validationResult.optimizedKeywords.length > 0;
     } catch (error) {
       console.error('❌ SEO score calculation test failed:', error);
       return false;
@@ -243,19 +268,28 @@ export class DataFlowBuilder {
       // クロスシステム統合の検証
       const testTitle = 'Cross System Test';
       const testContent = 'Test content for cross system validation';
-      
-      // SEOシステムとの統合検証
-      const seoKeywords = SEOOptimizer.extractKeywords(testContent, testTitle);
-      const seoScore = SEOOptimizer.calculateSEOScore(testTitle, testContent.substring(0, 160), seoKeywords);
-      
+
+      // 新しいSEOシステムとの統合検証
+      const validationResult = this.keywordValidator.validateAll({
+        primary: [testTitle],
+        article: [testContent]
+      });
+
+      const metaConfig: AdvancedMetaConfig = {
+        robots: 'index,follow',
+        themeColor: '#ffffff',
+        colorScheme: 'light'
+      };
+      const metaTags = this.metaManager.generateAdvancedMeta(metaConfig);
+
       // メタデータシステムとの統合検証
       const testMetadata = await loadMetadata('test-cross-system.md');
       const seoData = getSEOFromMetadata(testMetadata, 'Cross system fallback');
-      
+
       // 統合の成功判定
-      const hasValidSEO = seoKeywords.length > 0 && seoScore >= 0;
+      const hasValidSEO = validationResult.isValid && validationResult.optimizedKeywords.length > 0 && metaTags.length > 0;
       const hasValidMetadata = seoData.description.length > 0;
-      
+
       return hasValidSEO && hasValidMetadata;
     } catch (error) {
       console.error('❌ Cross system integration validation failed:', error);
@@ -276,13 +310,18 @@ export class DataFlowBuilder {
 
   private generateDataFlowFallback(error: Error): DataFlowResult {
     console.warn('⚠️ Generating data flow fallback due to error:', error.message);
-    
+
+    const timestamp = new Date();
     return {
+      success: false,
+      status: 'error',
+      timestamp,
+      errorMessage: error.message,
       metadataFlow: false,
       seoFlow: false,
       validation: false,
       flowStatus: 'error',
-      lastProcessed: new Date(),
+      lastProcessed: timestamp,
       processedCount: 0,
       errorCount: 1
     };

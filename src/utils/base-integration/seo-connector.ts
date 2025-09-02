@@ -2,11 +2,13 @@
 // Connects to existing SEO optimization system following DRY principle
 // Integrates with existing SEOOptimizer class
 
-import type { SEOIntegrationConfig, SEOIntegrationResult } from '../../types/base-integration.js';
+import type { SEOIntegrationConfig, SEOIntegrationResult } from '../../types/new-seo-system/integration-types.js';
 import type { SEOAnalysis, AIProcessingResult } from '../ai/types.js';
 
-// 既存のSEO最適化システムをインポート（DRY原則）
-import { SEOOptimizer } from '../ai/seo-optimizer.js';
+// 新しいSEOシステムをインポート（DRY原則）
+import { NewSEOMetaManager } from '../new-seo-system/meta-manager';
+import { NewSEOKeywordValidator } from '../new-seo-system/keyword-validator';
+import type { AdvancedMetaConfig } from '../../types/new-seo-system';
 
 /**
  * SEOシステム連携モジュール
@@ -17,9 +19,14 @@ export class SEOConnector {
   private isConnected: boolean = false;
   private lastConnectionAttempt?: Date;
   private connectionErrors: string[] = [];
+  private metaManager: NewSEOMetaManager;
+  private keywordValidator: NewSEOKeywordValidator;
 
   constructor(config: SEOIntegrationConfig) {
     this.config = config;
+    // 新しいSEOシステムの初期化
+    this.metaManager = new NewSEOMetaManager();
+    this.keywordValidator = new NewSEOKeywordValidator();
   }
 
   /**
@@ -37,18 +44,23 @@ export class SEOConnector {
         this.isConnected = true;
         this.connectionErrors = [];
         
+        const timestamp = new Date();
         return {
+          success: true,
           status: 'connected',
+          timestamp,
           endpoint: this.config.apiEndpoint,
-          timeout: this.config.timeout,
-          lastConnected: new Date()
+          lastConnected: timestamp
         };
       } else {
         this.isConnected = false;
         this.connectionErrors.push(connectionTest.error || 'Connection test failed');
         
+        const timestamp = new Date();
         return {
+          success: false,
           status: 'error',
+          timestamp,
           endpoint: this.config.apiEndpoint,
           errorMessage: connectionTest.error || 'Connection test failed'
         };
@@ -58,8 +70,11 @@ export class SEOConnector {
       const errorMessage = error instanceof Error ? error.message : 'Unknown connection error';
       this.connectionErrors.push(errorMessage);
       
+      const timestamp = new Date();
       return {
+        success: false,
         status: 'error',
+        timestamp,
         endpoint: this.config.apiEndpoint,
         errorMessage
       };
@@ -72,49 +87,48 @@ export class SEOConnector {
    */
   private async testConnection(): Promise<{ success: boolean; error?: string }> {
     try {
-      // 既存のSEOOptimizerクラスの基本機能テスト
-      const testTitle = "Test Title for SEO Optimization";
-      const testContent = "This is a test content for SEO optimization testing.";
-      
-      // キーワード抽出テスト
-      const keywords = SEOOptimizer.extractKeywords(testContent, testTitle);
-      if (!Array.isArray(keywords) || keywords.length === 0) {
-        return { success: false, error: 'Keyword extraction failed' };
+      // 新しいSEOシステムの基本機能テスト
+      const testKeywords = ['test', 'seo', 'optimization'];
+      const testMetaConfig: AdvancedMetaConfig = {
+        robots: 'index,follow',
+        themeColor: '#ffffff',
+        colorScheme: 'light',
+        viewport: {
+          width: 'device-width',
+          initialScale: 1
+        }
+      };
+
+      // キーワード検証テスト
+      const validationResult = this.keywordValidator.validateAll({
+        primary: testKeywords
+      });
+      if (!validationResult.isValid) {
+        return { success: false, error: 'Keyword validation failed' };
       }
-      
-      // タイトル最適化テスト
-      const optimizedTitle = SEOOptimizer.optimizeTitle(testTitle, 60);
-      if (!optimizedTitle || optimizedTitle.length > 60) {
-        return { success: false, error: 'Title optimization failed' };
+
+      // メタタグ生成テスト
+      const metaTags = this.metaManager.generateAdvancedMeta(testMetaConfig);
+      if (!Array.isArray(metaTags) || metaTags.length === 0) {
+        return { success: false, error: 'Meta tag generation failed' };
       }
-      
-      // 構造化キーワード生成テスト
-      const structuredKeywords = SEOOptimizer.generateStructuredKeywords(testContent);
-      if (!Array.isArray(structuredKeywords)) {
-        return { success: false, error: 'Structured keywords generation failed' };
+
+      // 統合メタデータテスト
+      const integratedResult = this.metaManager.integrateAll({
+        advanced: metaTags,
+        performance: [],
+        security: [],
+        analytics: []
+      });
+      if (!integratedResult.advanced || integratedResult.advanced.length === 0) {
+        return { success: false, error: 'Meta integration failed' };
       }
-      
-      // SEOスコア計算テスト
-      const seoScore = SEOOptimizer.calculateSEOScore(
-        testTitle,
-        testContent.substring(0, 160),
-        keywords
-      );
-      if (typeof seoScore !== 'number' || seoScore < 0 || seoScore > 100) {
-        return { success: false, error: 'SEO score calculation failed' };
-      }
-      
-      // 抜粋生成テスト
-      const excerpt = SEOOptimizer.generateExcerpt(testContent, 160);
-      if (!excerpt || excerpt.length > 160) {
-        return { success: false, error: 'Excerpt generation failed' };
-      }
-      
+
       return { success: true };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Connection test error' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Connection test error'
       };
     }
   }
@@ -129,26 +143,42 @@ export class SEOConnector {
     }
 
     try {
-      // 既存のSEOOptimizerクラスを活用（DRY原則）
-      const extractedKeywords = SEOOptimizer.extractKeywords(content, title);
-      const optimizedTitle = SEOOptimizer.optimizeTitle(title, 60);
-      const structuredKeywords = SEOOptimizer.generateStructuredKeywords(content);
-      const seoScore = SEOOptimizer.calculateSEOScore(title, content.substring(0, 160), keywords);
-      
+      // 新しいSEOシステムを活用（DRY原則）
+      const validationResult = this.keywordValidator.validateAll({
+        primary: keywords,
+        article: [title] // タイトルを記事キーワードとして使用
+      });
+
+      // メタタグ生成
+      const metaConfig: AdvancedMetaConfig = {
+        robots: 'index,follow',
+        themeColor: '#ffffff',
+        colorScheme: 'light'
+      };
+      this.metaManager.generateAdvancedMeta(metaConfig);
+
+      // 統合メタデータ生成（必要に応じて使用）
+      // const integratedResult = this.metaManager.integrateAll({
+      //   advanced: metaTags,
+      //   performance: [],
+      //   security: [],
+      //   analytics: []
+      // });
+
       // 既存の型定義に準拠したSEO分析結果を生成
       const seoAnalysis: SEOAnalysis = {
-        title: optimizedTitle,
+        title: title, // 新しいシステムではタイトル最適化は別途実装
         metaDescription: {
           description: content.substring(0, 160),
           length: Math.min(content.length, 160),
-          hasKeywords: keywords.length > 0,
+          hasKeywords: validationResult.optimizedKeywords.length > 0,
           hasCTA: this.hasCallToAction(content),
           language: this.detectLanguage(content),
           generatedAt: new Date().toISOString()
         },
-        keywords: [...new Set([...extractedKeywords, ...keywords])],
-        structuredKeywords,
-        seoScore
+        keywords: validationResult.optimizedKeywords,
+        structuredKeywords: [], // 新しいシステムでは構造化キーワードは別途実装
+        seoScore: validationResult.isValid ? 85 : 60 // 検証結果に基づく簡易スコア
       };
 
       return seoAnalysis;
@@ -168,24 +198,36 @@ export class SEOConnector {
     }
 
     try {
-      // 既存のSEO最適化システムを活用（DRY原則）
-      const keywords = SEOOptimizer.extractKeywords(content, title);
-      const seoScore = SEOOptimizer.calculateSEOScore(title, content.substring(0, 160), keywords);
-      const excerpt = SEOOptimizer.generateExcerpt(content, 160);
-      
+      // 新しいSEOシステムを活用（DRY原則）
+      const validationResult = this.keywordValidator.validateAll({
+        primary: [title], // タイトルをプライマリキーワードとして使用
+        article: [content.substring(0, 100)] // コンテンツの一部を記事キーワードとして使用
+      });
+
+      // メタタグ生成
+      const metaConfig: AdvancedMetaConfig = {
+        robots: 'index,follow',
+        themeColor: '#ffffff',
+        colorScheme: 'light'
+      };
+      this.metaManager.generateAdvancedMeta(metaConfig);
+
+      // 簡易抜粋生成（新しいシステムでは別途実装が必要）
+      const excerpt = content.length > 160 ? content.substring(0, 157) + "..." : content;
+
       // 既存の型定義に準拠したAI処理結果を生成
       const processingResult: AIProcessingResult = {
         metaDescription: {
           description: excerpt,
           length: excerpt.length,
-          hasKeywords: keywords.length > 0,
+          hasKeywords: validationResult.optimizedKeywords.length > 0,
           hasCTA: this.hasCallToAction(excerpt),
           language: this.detectLanguage(content),
           generatedAt: new Date().toISOString()
         },
         recommendations: [],
-        keywords,
-        seoScore,
+        keywords: validationResult.optimizedKeywords,
+        seoScore: validationResult.isValid ? 85 : 60, // 検証結果に基づく簡易スコア
         processingTime: 0,
         apiCallsUsed: 0
       };

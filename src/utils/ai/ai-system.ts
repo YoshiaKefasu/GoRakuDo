@@ -1,4 +1,4 @@
-import { SEOOptimizer } from "./seo-optimizer";
+import { NewSEOKeywordValidator } from "../new-seo-system/keyword-validator";
 import type {
   AIProcessingResult,
   SEOOptimizedMeta,
@@ -6,9 +6,12 @@ import type {
 } from "./types";
 
 export class AISystem {
+  private keywordValidator: NewSEOKeywordValidator;
+
   constructor(_config?: any) {
     // AI processing disabled for security
     // Config parameter kept for compatibility but not used
+    this.keywordValidator = new NewSEOKeywordValidator();
   }
 
   async processContent(
@@ -59,7 +62,15 @@ export class AISystem {
     content: string,
     language: "id" | "ja",
   ): SEOOptimizedMeta {
-    const excerpt = SEOOptimizer.generateExcerpt(content, 120);
+    // 新しいシステムでの簡易抜粋生成
+    const excerpt = content.length > 120 ? content.substring(0, 117) + "..." : content;
+
+    // キーワード検証
+    const validationResult = this.keywordValidator.validateAll({
+      primary: [title],
+      article: [excerpt]
+    });
+
     const description =
       language === "ja"
         ? `${title} - ${excerpt} イマージョン法による日本語学習。`
@@ -71,7 +82,7 @@ export class AISystem {
           ? description.substring(0, 157) + "..."
           : description,
       length: Math.min(description.length, 160),
-      hasKeywords: true,
+      hasKeywords: validationResult.optimizedKeywords.length > 0,
       hasCTA: true,
       language,
       generatedAt: new Date().toISOString(),

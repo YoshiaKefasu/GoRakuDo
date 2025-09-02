@@ -1,25 +1,55 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import HeadSEO from "../components/public-components/HeadSEO.astro";
+import BasicSEO from "../components/public-components/BasicSEO.astro";
+import MetaManager from "../components/public-components/MetaManager.astro";
+
+// Discord community page SEO configuration
+const seoData = {
+  title: "Discord Community - GoRakuDo",
+  description: "Join our Japanese learning community on Discord",
+  keywords: ["discord", "community", "japanese", "learning", "chat"],
+  articleType: "website",
+  learningStage: "all",
+  searchIntent: "transactional"
+}
 ---
 
-<!doctype html>
 <html lang="id">
   <head>
     <HeadSEO
-      title="Undangan Discord GoRakuDo"
-      description="Bergabung dengan komunitas immersion bahasa Jepang terbesar Indonesia di Discord"
-      pageType="website"
-      lang="id"
-      aiPageType="discord"
-      enableAIOptimizations={true}
+      title={seoData.title}
+      description={seoData.description}
+      lang="ja"
+      canonicalUrl="https://example.com/discord"
     />
-    <!-- Favicon script removed - file not found -->
+
+    <BasicSEO
+      title={seoData.title}
+      description={seoData.description}
+      primaryKeywords={seoData.keywords}
+      seoProperties={{
+        articleType: seoData.articleType,
+        learningStage: seoData.learningStage,
+        searchIntent: seoData.searchIntent
+      }}
+      socialMedia={{
+        openGraph: {
+          type: "website",
+          image: "/discord-og.png"
+        }
+      }}
+    />
+
+    <MetaManager
+      advancedMeta={{
+        robots: "index, follow"
+      }}
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
       rel="stylesheet"
     />
-    <ViewTransitions />
     <style>
       * {
         margin: 0;

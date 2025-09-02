@@ -1,6 +1,8 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
-import Head from "../../components/public-components/HeadSEO.astro"
+import HeadSEO from "../../components/public-components/HeadSEO.astro"
+import BasicSEO from "../../components/public-components/BasicSEO.astro"
+import MetaManager from "../../components/public-components/MetaManager.astro"
 import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
 import Navbar from "../../components/public-components/Navbar.vue"
 import { AIRecommendations } from "../../components/docs/ai-recommendations"
@@ -16,7 +18,7 @@ import {
   loadMetadata,
   getSEOFromMetadata,
   getRecommendationsFromMetadata,
-} from "../../utils/metadata-loader"
+} from "../../utils/new-seo-system/metadata-loader"
 import {
   resolveContentPath,
   getCollectionMetadata,
@@ -47,14 +49,17 @@ if (!post) {
 const resolvedPath = resolveContentPath(post)
 const collectionMetadata = getCollectionMetadata("docs") // Default to docs for backward compatibility
 
-// SEO data with proper optional prop handling
+// Dynamic SEO data based on document content
 const seoData = {
-  title: post.data.title,
-  description: String(post.data.description),
-  canonicalUrl: `https://gorakudo.org${resolvedPath.path}`,
-  pageType: "article" as const,
-  authorName: String(post.data.author),
-  publishedDate: String(post.data.publishedDate),
+  title: post.data.title || `Documentation - ${post.slug}`,
+  description: post.data.description || `Learn about ${post.slug} in GoRakuDo documentation`,
+  keywords: post.data.keywords || ["documentation", post.slug, "guide"],
+  articleType: "guide",
+  learningStage: post.data.level || "intermediate",
+  searchIntent: "informational",
+  publishedDate: post.data.publishedDate,
+  modifiedDate: post.data.modifiedDate,
+  isDraft: post.data.isDraft || false
 }
 
 // Helper function to format date
@@ -112,10 +117,45 @@ try {
 }
 ---
 
-<!doctype html>
-<html lang="id">
+<html lang="ja">
   <head>
-    <Head {...seoData} aiPageType="post" enableAIOptimizations={true} />
+    <HeadSEO
+      title={seoData.title}
+      description={seoData.description}
+      lang="id"
+      canonicalUrl={`https://example.com/docs/${post.slug}`}
+    />
+
+    <BasicSEO
+      title={seoData.title}
+      description={seoData.description}
+      primaryKeywords={seoData.keywords}
+      seoProperties={{
+        articleType: seoData.articleType,
+        learningStage: seoData.learningStage,
+        searchIntent: seoData.searchIntent
+      }}
+      socialMedia={{
+        openGraph: {
+          type: "article",
+          image: "/docs-og.png",
+          publishedTime: seoData.publishedDate,
+          modifiedTime: seoData.modifiedDate
+        }
+      }}
+    />
+
+    <MetaManager
+      advancedMeta={{
+        robots: seoData.isDraft ? "noindex, nofollow" : "index, follow"
+      }}
+      performanceOptimization={{
+        preload: [
+          { href: "/css/docs.css", as: "style" },
+          { href: "/js/docs.js", as: "script" }
+        ]
+      }}
+    />
 
     <!-- Preload critical resources for better performance -->
     <link

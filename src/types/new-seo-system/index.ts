@@ -585,6 +585,16 @@ export namespace SEOUtils {
   export type SchemaReport = import('./utils').SchemaReport;
 }
 
+// ========== META MANAGER INTEGRATION TYPES ==========
+// Types for MetaManager.astro integration
+
+export interface IntegratedMetaResult {
+  advanced: string[];
+  performance: string[];
+  security: string[];
+  analytics: string[];
+}
+
 // ========== DEFAULT EXPORT FOR CONVENIENCE ==========
 // Default export containing all namespaces for easy access
 // Note: Namespaces cannot be used as values in default exports
