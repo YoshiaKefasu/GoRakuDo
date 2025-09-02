@@ -18,6 +18,7 @@ Before marking a story as 'Review', please validate your work against every item
 - [ ] **Zero-JS by Default:** All new components render to static HTML with no client-side JavaScript unless explicitly required.
 - [ ] **Islands Architecture:** Any client-side interactivity is opt-in and uses appropriate `client:*` directives (e.g., `client:load`, `client:idle`).
 - [ ] **File-Based Routing:** All pages are created in the correct location within `src/pages/` to match the desired URL structure.
+- [ ] **Relative Pathing:** All internal links (`<a>`), image sources (`<img>`), and component imports use relative or root-relative paths. No hardcoded absolute URLs to the site's own domain are present.
 - [ ] **Content Collections:** Type-safe Markdown/MDX content is managed through Astro's content collections (`src/content/`).
 - [ ] **Asset Handling:** Static assets (images, fonts) are correctly placed in `public/` and referenced from the root (e.g., `/image.png`).
 - [ ] **Image Optimization:** Astro's built-in `<Image />` component is used for all local images to ensure optimization.

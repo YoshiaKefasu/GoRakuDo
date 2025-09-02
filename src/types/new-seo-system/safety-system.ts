@@ -66,7 +66,7 @@ export class SafetyChecker {
     return result;
   }
 
-  private static hasModifications(path: string): boolean {
+  private static hasModifications(_path: string): boolean {
     // 実際のファイルシステムチェック実装
     // 変更禁止ゾーンの変更検出ロジック
     return false; // 実装時は実際のチェック

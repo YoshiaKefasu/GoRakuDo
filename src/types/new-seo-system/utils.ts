@@ -23,7 +23,7 @@ export type ExcludeProperties<T, K extends keyof T> = Omit<T, K>;
 
 // ========== MERGE OBJECTS HELPER ==========
 // Helper type for merging multiple objects (simplified for compatibility)
-export type Merge<T extends Record<string, any>[]> = Record<string, any>;
+export type Merge<_T extends Record<string, any>[]> = Record<string, any>;
 
 // ========== DEEP PARTIAL HELPER ==========
 // Helper type for making nested properties optional
@@ -121,30 +121,30 @@ export type StringSuffix<T extends string, S extends string> = `${T}${S}`;
 
 // ========== STRING TEMPLATE HELPER ==========
 // Helper type for string template literals (simplified for compatibility)
-export type StringTemplate<T extends string, U extends Record<string, any>> = string;
+export type StringTemplate<_T extends string, _U extends Record<string, any>> = string;
 
 // ========== NUMBER UTILITY TYPES ==========
 // Number manipulation utility types
 
 // ========== NUMBER RANGE HELPER ==========
 // Helper type for number ranges (simplified for compatibility)
-export type NumberRange<Start extends number, End extends number> = number;
+export type NumberRange<_Start extends number, _End extends number> = number;
 
 // ========== ADD NUMBERS HELPER ==========
 // Helper type for adding numbers (simplified for compatibility)
-export type Add<A extends number, B extends number> = number;
+export type Add<_A extends number, _B extends number> = number;
 
 // ========== SUBTRACT NUMBERS HELPER ==========
 // Helper type for subtracting numbers (simplified for compatibility)
-export type Subtract<A extends number, B extends number> = number;
+export type Subtract<_A extends number, _B extends number> = number;
 
 // ========== MULTIPLY NUMBERS HELPER ==========
 // Helper type for multiplying numbers (simplified for compatibility)
-export type Multiply<A extends number, B extends number> = number;
+export type Multiply<_A extends number, _B extends number> = number;
 
 // ========== DIVIDE NUMBERS HELPER ==========
 // Helper type for dividing numbers (simplified for compatibility)
-export type Divide<A extends number, B extends number> = number;
+export type Divide<_A extends number, _B extends number> = number;
 
 // ========== ARRAY UTILITY TYPES ==========
 // Array manipulation utility types
@@ -187,7 +187,7 @@ export type ArrayConcat<T extends readonly any[], U extends readonly any[]> = [.
 
 // ========== ARRAY SLICE HELPER ==========
 // Helper type for slicing arrays (simplified for compatibility)
-export type ArraySlice<T extends readonly any[], Start extends number, End extends number> = T;
+export type ArraySlice<T extends readonly any[], _Start extends number, _End extends number> = T;
 
 // ========== OBJECT UTILITY TYPES ==========
 // Object manipulation utility types
@@ -245,7 +245,7 @@ export type FunctionCompose<T extends readonly ((...args: any[]) => any)[]> = T 
 ]
   ? First extends (...args: any[]) => any
     ? Rest extends readonly ((...args: any[]) => any)[]
-      ? FunctionCompose<Rest> extends (...args: infer Args) => infer R
+      ? FunctionCompose<Rest> extends (...args: infer _Args) => infer R
         ? (arg: R) => ReturnType<First>
         : never
       : never

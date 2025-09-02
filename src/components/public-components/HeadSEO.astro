@@ -1,484 +1,112 @@
 ---
-// [修正] ImageMetadataは不要。代わりにimportした画像の型を直接使う。
-import defaultOgImage from "../../assets/images/Logo Discord.png";
-import type { ImageMetadata } from "astro";
-import { generatePageSpecificAIOptimizations } from "../../utils/performance";
+// ========== IMPORTS ==========
+// Internal utilities (DRY principle)
+import { 
+  generateMetaTag, 
+  generateLinkTag, 
+  generateFaviconTags,
+  generateResourceHintTags 
+} from '../../utils/new-seo-system/common-helpers';
 
-// [修正] Propsの型定義を修正。importした画像の型を使う。
-export interface Props {
-  title: string;
-  description: string;
-  ogImage?: ImageMetadata;
+// ========== PROPS INTERFACE ==========
+// Simple props interface to avoid type definition issues
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
   canonicalUrl?: string;
-  pageType?: "website" | "article";
-  publishedDate?: string;
-  modifiedDate?: string;
-  authorName?: string;
-  lang?: "id" | "ja";
+  favicon?: string;
+  resourceHints?: Record<string, any>;
   noIndex?: boolean;
-  alternateUrl?: string;
-  // AI Optimization props
-  aiPageType?: "home" | "docs" | "post" | "discord";
-  enableAIOptimizations?: boolean;
+  robots?: {
+    follow?: boolean;
+    noarchive?: boolean;
+    nosnippet?: boolean;
+  };
 }
 
-// --- Default Props ---
+// ========== PROPS DESTRUCTURING ==========
+// Clear default values for better developer experience (KISS principle)
 const {
-  title,
-  description,
-  ogImage,
-  canonicalUrl = Astro.url.href,
-  pageType = "website",
-  publishedDate,
-  modifiedDate,
-  authorName = "Tim GoRakuDo",
-  lang = "id",
+  title = "GoRakuDo",
+  description = "日本語学習プラットフォーム",
+  lang = "ja",
+  canonicalUrl,
+  favicon = "/favicon.svg",
+  resourceHints = {},
   noIndex = false,
-  alternateUrl,
-  // AI Optimization props
-  aiPageType = "home",
-  enableAIOptimizations = true,
-} = Astro.props;
+  robots = {}
+}: Props = Astro.props;
 
-// --- Site-wide Constants (最初に定義) ---
-const siteUrl = Astro.site
-  ? Astro.site.toString().slice(0, -1)
-  : "https://gorakudo.org";
-const siteTitle = "GoRakuDo";
-const twitterHandle = "@yoshiakefasu";
-const siteLogoUrl = new URL(
-  "../assets/images/Logo Discord.png",
-  siteUrl
-).toString();
-
-// --- Image Logic (依存関係を解決) ---
-const imageToUse = ogImage || defaultOgImage;
-const finalOgImage = new URL(imageToUse.src, siteUrl).toString();
-const imageWidth = imageToUse.width;
-const imageHeight = imageToUse.height;
-
-// --- Other Dynamic Variables ---
-const formattedTitle = `${title} | ${siteTitle}`; // 区切り文字を'|'に変更
-const robotsContent = noIndex ? "noindex, follow" : "index, follow";
-const locale = lang === "ja" ? "ja_JP" : "id_ID";
-const alternateLocaleLang = lang === "ja" ? "id" : "ja";
-const alternateLocale = lang === "ja" ? "id_ID" : "ja_JP";
-const isoPublishedDate = publishedDate
-  ? new Date(publishedDate).toISOString()
-  : null;
-const isoModifiedDate = modifiedDate
-  ? new Date(modifiedDate).toISOString()
-  : isoPublishedDate;
-
-// --- Enhanced Structured Data with Additional Entities ---
-const structuredData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": `${siteUrl}/#organization`,
-      name: siteTitle,
-      url: siteUrl,
-      logo: {
-        "@type": "ImageObject",
-        url: siteLogoUrl,
-        width: imageWidth,
-        height: imageHeight,
-      },
-      description:
-        lang === "ja"
-          ? "インドネシア最大の日本語独学コミュニティ"
-          : "Komunitas immersion bahasa Jepang terbesar Indonesia",
-      foundingDate: "2024",
-      sameAs: [
-        "https://discord.gg/gorakudo",
-        "https://twitter.com/yoshiakefasu",
-        "https://youtube.com/yosiakefas",
-      ],
-      contactPoint: {
-        "@type": "ContactPoint",
-        contactType: lang === "ja" ? "カスタマーサービス" : "layanan pelanggan",
-        availableLanguage: ["id", "ja"],
-      },
-    },
-    {
-      "@type": "WebSite",
-      "@id": `${siteUrl}/#website`,
-      url: siteUrl,
-      name: siteTitle,
-      description:
-        lang === "ja"
-          ? "インドネシア最大の日本語イマージョンコミュニティ"
-          : "Komunitas immersion bahasa Jepang terbesar Indonesia",
-      publisher: {
-        "@id": `${siteUrl}/#organization`,
-      },
-      inLanguage: lang,
-      potentialAction: {
-        "@type": "SearchAction",
-        target: `${siteUrl}/search?q={search_term_string}`,
-        "query-input": "required name=search_term_string",
-      },
-    },
-    {
-      "@type": pageType === "article" ? "Article" : "WebPage",
-      "@id": canonicalUrl,
-      url: canonicalUrl,
-      name: title,
-      description: description,
-      isPartOf: {
-        "@id": `${siteUrl}/#website`,
-      },
-      about: {
-        "@type": "Thing",
-        name: lang === "ja" ? "日本語学習" : "Belajar Bahasa Jepang",
-      },
-      audience: {
-        "@type": "Audience",
-        audienceType:
-          lang === "ja" ? "日本語学習者" : "Pembelajar bahasa Jepang",
-      },
-      educationalLevel: lang === "ja" ? "初級〜上級" : "Pemula hingga Mahir",
-      primaryImageOfPage: {
-        "@id": `${canonicalUrl}#primaryImage`,
-      },
-      datePublished: isoPublishedDate,
-      dateModified: isoModifiedDate,
-      breadcrumb: {
-        "@type": "BreadcrumbList",
-        "@id": `${canonicalUrl}#breadcrumb`,
-      },
-      inLanguage: lang,
-      potentialAction: [
-        {
-          "@type": "ReadAction",
-          target: [canonicalUrl],
-        },
-      ],
-      // Enhanced content for articles
-      ...(pageType === "article" && {
-        mainEntity: {
-          "@type": "Course",
-          name:
-            lang === "ja"
-              ? "日本語イマージョン学習プログラム"
-              : "Program Pembelajaran Bahasa Jepang (Immersion)",
-          description:
-            lang === "ja"
-              ? "イマージョン手法で日本語を総合的に学ぶプログラム"
-              : "Program komprehensif mempelajari bahasa Jepang dengan metodologi immersion",
-          provider: {
-            "@id": `${siteUrl}#organization`,
-          },
-          educationalLevel:
-            lang === "ja" ? "初級〜上級" : "Pemula hingga Mahir",
-          inLanguage: ["ja", "id"],
-          courseMode: lang === "ja" ? "オンライン" : "Daring",
-          hasCourseInstance: {
-            "@type": "CourseInstance",
-            courseMode: lang === "ja" ? "オンライン" : "Daring",
-            inLanguage: ["ja", "id"],
-          },
-        },
-      }),
-    },
-    {
-      "@type": "ImageObject",
-      "@id": `${canonicalUrl}#primaryImage`,
-      inLanguage: lang,
-      url: finalOgImage,
-      contentUrl: finalOgImage,
-      width: imageWidth,
-      height: imageHeight,
-    },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${canonicalUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: lang === "ja" ? "ホーム" : "Beranda",
-          item: siteUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: title,
-          item: canonicalUrl,
-        },
-      ],
-    },
-  ],
+// ========== UTILITY FUNCTIONS ==========
+// Simple, focused functions (KISS principle)
+const generateRobotsTag = (noIndex: boolean, robots: any): string => {
+  const directives: string[] = [];
+  
+  if (noIndex) {
+    directives.push('noindex');
+  } else {
+    directives.push('index');
+  }
+  
+  if (robots.follow !== false) {
+    directives.push('follow');
+  }
+  
+  if (robots.noarchive) {
+    directives.push('noarchive');
+  }
+  
+  if (robots.nosnippet) {
+    directives.push('nosnippet');
+  }
+  
+  return `<meta name="robots" content="${directives.join(', ')}" />`;
 };
 
-// --- Enhanced Meta Tags with Additional SEO Tags ---
-const metaTags = [
-  // Basic Meta Tags
-  { name: "viewport", content: "width=device-width, initial-scale=1" },
-  { name: "description", content: description },
-  { name: "author", content: authorName },
-  { name: "robots", content: robotsContent },
-  { name: "language", content: lang },
-  { name: "revisit-after", content: "7 days" },
-  { name: "rating", content: "general" },
-  { name: "distribution", content: "global" },
+// ファビコンの設定
+const faviconTags = generateFaviconTags(favicon);
 
-  // Enhanced SEO Meta Tags
-  {
-    name: "keywords",
-    content:
-      lang === "ja"
-        ? "日本語学習, イマージョン, GoRakuDo, 第二言語習得, 学習コミュニティ, インドネシア"
-        : "belajar bahasa Jepang, immersion, GoRakuDo, komunitas belajar, metodologi SLA, indonesia",
-  },
-  {
-    name: "subject",
-    content:
-      lang === "ja"
-        ? "日本語イマージョン学習"
-        : "Komunitas Immersion Bahasa Jepang",
-  },
-  { name: "category", content: "Education" },
-  { name: "coverage", content: "Worldwide" },
-  { name: "target", content: "all" },
-  { name: "HandheldFriendly", content: "true" },
-  { name: "MobileOptimized", content: "width" },
-  { name: "apple-mobile-web-app-capable", content: "yes" },
-  {
-    name: "apple-mobile-web-app-status-bar-style",
-    content: "black-translucent",
-  },
-  { name: "apple-mobile-web-app-title", content: siteTitle },
-  { name: "application-name", content: siteTitle },
-  { name: "msapplication-TileColor", content: "#8b5dff" },
-  { name: "msapplication-config", content: "/favicon/browserconfig.xml" },
-  { name: "theme-color", content: "#8b5dff" },
-  { name: "color-scheme", content: "dark light" },
-  { name: "format-detection", content: "telephone=no" },
-  { name: "referrer", content: "strict-origin-when-cross-origin" },
-  { name: "generator", content: "Astro" },
+// リソースヒントの生成
+const resourceHintTags = generateResourceHintTags(resourceHints);
 
-  // Open Graph Meta Tags
-  { property: "og:type", content: pageType },
-  { property: "og:title", content: title },
-  { property: "og:description", content: description },
-  { property: "og:url", content: canonicalUrl },
-  { property: "og:site_name", content: siteTitle },
-  { property: "og:locale", content: locale },
-  { property: "og:image", content: finalOgImage },
-  { property: "og:image:width", content: imageWidth.toString() },
-  { property: "og:image:height", content: imageHeight.toString() },
-  { property: "og:image:alt", content: description },
-  { property: "og:image:type", content: "image/png" },
-  { property: "og:image:secure_url", content: finalOgImage },
-  { property: "og:updated_time", content: isoModifiedDate },
-  { property: "og:rich_attachment", content: "true" },
-  { property: "og:see_also", content: siteUrl },
-
-  // Twitter Card Meta Tags
-  { name: "twitter:card", content: "summary_large_image" },
-  { name: "twitter:site", content: twitterHandle },
-  { name: "twitter:creator", content: twitterHandle },
-  { name: "twitter:title", content: title },
-  { name: "twitter:description", content: description },
-  { name: "twitter:image", content: finalOgImage },
-  { name: "twitter:image:alt", content: description },
-  { name: "twitter:url", content: canonicalUrl },
-  { name: "twitter:domain", content: "gorakudo.org" },
-  { name: "twitter:app:name:iphone", content: siteTitle },
-  { name: "twitter:app:name:ipad", content: siteTitle },
-  { name: "twitter:app:name:googleplay", content: siteTitle },
-
-  // Article-specific meta tags (if applicable)
-  ...(pageType === "article" && publishedDate
-    ? [
-        { property: "article:published_time", content: isoPublishedDate },
-        { property: "article:modified_time", content: isoModifiedDate },
-        { property: "article:author", content: authorName },
-        {
-          property: "article:section",
-          content: lang === "ja" ? "教育" : "Pendidikan",
-        },
-        {
-          property: "article:tag",
-          content:
-            lang === "ja"
-              ? "日本語学習, イマージョン, GoRakuDo, 第二言語習得"
-              : "belajar bahasa Jepang, metode immersion, GoRakuDo, pembelajaran SLA",
-        },
-      ]
-    : []),
-];
-
-// --- AI-Optimized Resource Hints for SEO 2025-2030 ---
-let linkTags: any[] = [];
-
-try {
-  if (enableAIOptimizations) {
-    // Generate AI-optimized resource hints
-    const aiOptimizations = generatePageSpecificAIOptimizations(aiPageType);
-
-    // Base canonical and alternate links
-    linkTags = [
-      // Canonical and alternate links
-      { rel: "canonical", href: canonicalUrl },
-      {
-        rel: "sitemap",
-        type: "application/xml",
-        title: "Sitemap",
-        href: "/sitemap.xml",
-      },
-
-      // Language alternates
-      { rel: "alternate", hreflang: lang, href: canonicalUrl },
-      {
-        rel: "alternate",
-        hreflang: alternateLocaleLang,
-        href: alternateUrl || canonicalUrl,
-      },
-      { rel: "alternate", hreflang: "x-default", href: canonicalUrl },
-
-      // Favicon and app icons
-      { rel: "icon", type: "image/svg+xml", href: "/favicon/favicon.svg" },
-      { rel: "icon", type: "image/x-icon", href: "/favicon/favicon.ico" },
-      {
-        rel: "apple-touch-icon",
-        sizes: "180x180",
-        href: "/favicon/apple-touch-icon.png",
-      },
-      { rel: "manifest", href: "/favicon/site.webmanifest" },
-
-      // AI-Optimized resource hints
-      ...aiOptimizations.resourceHints,
-    ];
-
-    // AI-Optimized resource hints generated for ${aiPageType} page
-  } else {
-    // Fallback to basic resource hints
-    linkTags = [
-      // Canonical and alternate links
-      { rel: "canonical", href: canonicalUrl },
-      {
-        rel: "sitemap",
-        type: "application/xml",
-        title: "Sitemap",
-        href: "/sitemap.xml",
-      },
-
-      // Language alternates
-      { rel: "alternate", hreflang: lang, href: canonicalUrl },
-      {
-        rel: "alternate",
-        hreflang: alternateLocaleLang,
-        href: alternateUrl || canonicalUrl,
-      },
-      { rel: "alternate", hreflang: "x-default", href: canonicalUrl },
-
-      // Favicon and app icons
-      { rel: "icon", type: "image/svg+xml", href: "/favicon/favicon.svg" },
-      { rel: "icon", type: "image/x-icon", href: "/favicon/favicon.ico" },
-      {
-        rel: "apple-touch-icon",
-        sizes: "180x180",
-        href: "/favicon/apple-touch-icon.png",
-      },
-      { rel: "manifest", href: "/favicon/site.webmanifest" },
-
-      // Basic resource hints
-      { rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preload", href: "/css/homepage-styles.css", as: "style" },
-    ];
-  }
-} catch (error) {
-  console.error("❌ Error generating AI-optimized resource hints:", error);
-
-  // Emergency fallback
-  linkTags = [
-    { rel: "canonical", href: canonicalUrl },
-    { rel: "icon", type: "image/x-icon", href: "/favicon/favicon.ico" },
-    { rel: "preload", href: "/css/homepage-styles.css", as: "style" },
-  ];
-}
-
-// --- AI-Optimized Script Tags ---
-let scriptTags: any[] = [];
-
-try {
-  if (enableAIOptimizations) {
-    // Generate AI-optimized performance monitoring
-    const aiOptimizations = generatePageSpecificAIOptimizations(aiPageType);
-
-    scriptTags = [
-      // Structured Data
-      {
-        type: "application/ld+json",
-        children: JSON.stringify(structuredData),
-      },
-
-      // AI-Optimized Performance Monitoring
-      ...aiOptimizations.performanceScripts.map((script) => ({
-        type: "text/javascript",
-        children: script,
-      })),
-
-      // AI-Specific Optimizations
-      ...aiOptimizations.aiOptimizations.map((script) => ({
-        type: "text/javascript",
-        children: script,
-      })),
-    ];
-
-    // AI-Optimized scripts generated for ${aiPageType} page
-  } else {
-    // Fallback to basic scripts
-    scriptTags = [
-      // Structured Data
-      {
-        type: "application/ld+json",
-        children: JSON.stringify(structuredData),
-      },
-    ];
-  }
-} catch (error) {
-  console.error("❌ Error generating AI-optimized scripts:", error);
-
-  // Emergency fallback
-  scriptTags = [
-    // Structured Data
-    {
-      type: "application/ld+json",
-      children: JSON.stringify(structuredData),
-    },
-  ];
-}
-
-// --- AI Performance Monitoring (Now handled by AI Prefetch Optimizer) ---
+// ロボットタグの生成
+const robotsTag = generateRobotsTag(noIndex, robots);
 ---
 
-<!-- Enhanced SEO Head Component -->
-<head>
-  <!-- Character Encoding -->
-  <meta charset="utf-8" />
-
-  <!-- Enhanced Meta Tags -->
-  {metaTags.map((tag) => <meta {...tag} />)}
-
-  <!-- Enhanced Link Tags -->
-  {linkTags.map((link) => <link {...link} />)}
-
-  <!-- Enhanced Script Tags -->
-  {scriptTags.map((script) => <script {...script} />)}
-
-  <!-- Title -->
-  <title>{formattedTitle}</title>
-
-  <!-- Font Loading with Performance Optimization -->
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Yuji+Syuku:wght@400&display=swap"
-  />
-
-  <!-- AI Performance Monitoring (Handled by AI Prefetch Optimizer) -->
-</head>
+<!-- ========== HTML TEMPLATE ========== -->
+<html lang={lang}>
+  <head>
+    <!-- ========== BASIC META TAGS ========== -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- ========== ROBOTS ========== -->
+    <Fragment set:html={robotsTag} />
+    
+    <!-- ========== CANONICAL URL ========== -->
+    {canonicalUrl && generateLinkTag('canonical', canonicalUrl)}
+    
+    <!-- ========== FAVICON ========== -->
+    {faviconTags.map(tag => (
+      <Fragment set:html={tag} />
+    ))}
+    
+    <!-- ========== RESOURCE HINTS ========== -->
+    {resourceHintTags.map(tag => (
+      <Fragment set:html={tag} />
+    ))}
+    
+    <!-- ========== ADDITIONAL HEAD SLOT ========== -->
+    <slot name="additional-head" />
+  </head>
+  <body>
+    <!-- ========== MAIN CONTENT SLOT ========== -->
+    <slot />
+    
+    <!-- ========== FOOTER SLOT ========== -->
+    <slot name="footer" />
+  </body>
+</html>

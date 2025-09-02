@@ -5,7 +5,7 @@
 
 // ========== SAFETY SYSTEM EXPORTS ==========
 // Core safety and protection system types
-export {
+export type {
   ChangeRestrictionZone,
   SafetyCheckResult,
   SafetyChecker,
@@ -18,7 +18,7 @@ export {
 
 // ========== COMPONENT PROPS EXPORTS ==========
 // Component property type definitions
-export {
+export type {
   BaseSEOProps,
   HeadSEOProps,
   BasicSEOProps,
@@ -45,7 +45,7 @@ export {
 
 // ========== VALIDATION EXPORTS ==========
 // Validation and error handling types
-export {
+export type {
   ValidationResult,
   ValidationError,
   ValidationWarning,
@@ -74,7 +74,7 @@ export {
 
 // ========== METADATA EXPORTS ==========
 // Metadata generation and management types
-export {
+export type {
   MetaGenerationResult,
   MetaTag,
   MetaTagCategory,
@@ -110,7 +110,7 @@ export {
 
 // ========== TESTING EXPORTS ==========
 // Testing and quality assurance types
-export {
+export type {
   TestCoverage,
   TestExecutionStatus,
   RiskMitigationTests,
@@ -144,7 +144,7 @@ export {
 
 // ========== UTILITY EXPORTS ==========
 // Common utility and helper types
-export {
+export type {
   // Common utility types
   Optional,
   RequiredProps,
