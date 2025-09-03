@@ -1,0 +1,423 @@
+---
+import "tailwindcss";
+// src/components/homepage/hero.astro
+const {
+  kicker = "Belajar bahasa Jepang?",
+  marker = "#Go-IMMERSE",
+  titleLine1 = "Belajar Secara Alami,",
+  titleLine2 = "Kuasai Layaknya Penutur Asli.",
+  description = "Kami ingin kamu mencapai titik di mana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi dipahami secara instan seperti bahasa ibu. Dan membuat-mu “hidup” dalam bahasa Jepang 🔥",
+  ctaPrimary = "Mulai Perjalananmu",
+  ctaSecondary = "Gabung Komunitas",
+  missionId = "mission",
+  invitationModalId = "invitationModal",
+  navbarSelector = ".navbar",
+} = Astro.props
+---
+
+<section
+  class="relative flex flex-col items-center justify-center text-center min-h-screen 
+         bg-gradient-to-b from-indigo-950 via-indigo-900 to-indigo-800 
+         px-4 sm:px-6 md:px-8"
+  style="background: transparent !important;"
+  aria-labelledby="hero-title"
+  data-mission-id={missionId}
+  data-invitation-modal-id={invitationModalId}
+  data-navbar-selector={navbarSelector}
+  transition:name="hero-section">
+  <div
+    id="hero-content"
+    class="flex flex-col items-center justify-center min-h-screen w-full max-w-5xl z-20 
+           opacity-0 translate-y-16 scale-80 blur-md transition-all duration-700 ease-out"
+    style="background: transparent !important; padding: 1em;"
+    transition:name="hero-content">
+    <div
+      class="text-[var(--color-accent-purple)] font-medium italic tracking-wide leading-tight opacity-70
+             text-base sm:text-lg md:text-xl"
+      transition:name="hero-kicker">
+      {kicker}
+    </div>
+
+    <h1
+      id="hero-title"
+      class="w-full font-bold leading-tight max-w-4xl mx-auto mt-4
+             text-3xl sm:text-4xl md:text-5xl"
+      style="margin-bottom: 1.5rem;"
+      transition:name="hero-title">
+      <span
+        class="gold-marker block text-4xl sm:text-5xl md:6xl mb-2"
+        transition:name="hero-marker">{marker}</span
+      >
+      <span
+        class="white-gradient-text block sm:inline font-extrabold"
+        transition:name="hero-title-line-1">{titleLine1}</span
+      >
+      <span
+        class="white-gradient-text block sm:inline font-extrabold"
+        transition:name="hero-title-line-2">{titleLine2}</span
+      >
+    </h1>
+
+    <p
+      class="max-w-2xl italic mx-auto mt-4 
+             text-xs sm:text-base md:text-lg lg:text-xl leading-relaxed text-[var(--color-text-muted)]"
+      style="margin-bottom: 1.5rem;"
+      transition:name="hero-description">
+      {description}
+    </p>
+
+    <div
+      class="hero-buttons flex flex-col md:flex-row gap-4 mt-6 md:mt-8"
+      transition:name="hero-buttons">
+      <button
+        type="button"
+        class="primary-button"
+        data-action="scroll-to-mission"
+        aria-label="Mulai perjalanan belajar immersion"
+        transition:name="hero-primary-button">
+        {ctaPrimary}
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="secondary-button"
+        data-action="open-invitation"
+        aria-label="Bergabung dengan komunitas Discord"
+        transition:name="hero-secondary-button">
+        {ctaSecondary}
+        <svg
+          class="btn-icon"
+          role="img"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true">
+          <title>Discord</title>
+          <path
+            d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"
+            fill="currentColor"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Pure client script — NO server-side interpolation here -->
+<script is:inline>
+  ;(() => {
+    // Read server-provided values via data-* attributes (no ${...} inside script)
+    const heroSection = document.querySelector("section[data-mission-id]")
+    const MISSION_ID = heroSection?.dataset?.missionId || "mission"
+    const INVITATION_MODAL_ID =
+      heroSection?.dataset?.invitationModalId || "invitationModal"
+    const NAVBAR_SELECTOR = heroSection?.dataset?.navbarSelector || ".navbar"
+
+    // Reveal animation
+    function setupHeroAnimation() {
+      const heroContent = document.querySelector("#hero-content")
+      if (!heroContent) return
+      setTimeout(() => {
+        heroContent.classList.remove("opacity-0", "translate-y-16", "scale-80", "blur-md")
+      }, 300)
+    }
+
+    // Open modal
+    function openInvitationModal() {
+      try {
+        if (typeof window.openInvitationModal === "function") {
+          window.openInvitationModal()
+        }
+      } catch (err) {
+        console.error("openInvitationModal error:", err)
+      }
+    }
+
+    // Close modal
+    function closeInvitationModal() {
+      try {
+        const modal = document.getElementById(INVITATION_MODAL_ID)
+        if (!modal) return
+        modal.style.opacity = "0"
+        setTimeout(() => {
+          modal.style.display = "none"
+          document.body.style.overflow = ""
+        }, 200)
+      } catch (err) {
+        console.error("closeInvitationModal error:", err)
+      }
+    }
+
+    // Scroll to mission
+    function scrollToMission() {
+      try {
+        const missionSection = document.getElementById(MISSION_ID)
+        const navbar = document.querySelector(NAVBAR_SELECTOR)
+        if (missionSection && navbar) {
+          const navbarHeight = navbar.offsetHeight || 0
+          const missionTop =
+            missionSection.getBoundingClientRect().top + window.pageYOffset
+          const desiredTopMargin = 40
+          const scrollToPos = missionTop - navbarHeight - desiredTopMargin
+          window.scrollTo({ top: scrollToPos, behavior: "smooth" })
+          return
+        }
+        if (missionSection) {
+          missionSection.scrollIntoView({ behavior: "smooth", block: "start" })
+          return
+        }
+        console.warn("Mission section not found.")
+      } catch (err) {
+        console.error("scrollToMission error:", err)
+      }
+    }
+
+    // Delegate clicks on data-action buttons
+    document.addEventListener("click", (ev) => {
+      const el = ev.target
+      if (!el || typeof el.closest !== "function") return
+      const btn = el.closest("[data-action]")
+      if (!btn) return
+      const action = btn.dataset.action
+      if (action === "open-invitation") openInvitationModal()
+      else if (action === "scroll-to-mission") scrollToMission()
+    })
+
+    // Register listener
+    window.addEventListener("open-invitation-modal", openInvitationModal)
+    window.addEventListener("close-invitation-modal", closeInvitationModal)
+
+    // Expose global API to support legacy inline onclicks:
+    window.openInvitationModal = openInvitationModal
+    window.closeInvitationModal = closeInvitationModal
+    window.scrollToMission = scrollToMission
+
+    // Init animation when DOM ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setupHeroAnimation)
+    } else {
+      setupHeroAnimation()
+    }
+  })()
+</script>
+
+<style>
+  @layer base {
+    /* Critical hero styles */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 0 15px;
+    }
+  }
+
+  @layer components {
+    /* ---------- Hero buttons container (base + mobile overrides) ---------- */
+    .hero-buttons {
+      /* Base */
+      margin-top: 1.5rem; /* mt-6 equivalent */
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem; /* gap-5 equivalent */
+
+      /* Tablet/Mobile ≤768px: make them stack & limit width */
+      @media (max-width: 768px) {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        max-width: 350px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* Center button contents on small screens */
+    .primary-button,
+    .secondary-button {
+      @media (max-width: 768px) {
+        justify-content: center;
+      }
+    }
+
+    /* ---------- Primary button (gradient pill) ---------- */
+    .primary-button {
+      /* Layout */
+      padding-left: 32px !important;
+      padding-right: 32px !important;
+      padding-top: 16px !important;
+      padding-bottom: 16px !important;
+      display: inline-flex;
+      cursor: pointer;
+      user-select: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem; /* gap-2 equivalent */
+      border: 0;
+      font-size: 16px;
+      font-weight: 500; /* font-medium equivalent */
+      /* Visuals: keep gradient via custom property for exact control */
+      background-image: linear-gradient(
+        135deg,
+        var(--color-accent-purple) 0%,
+        var(--color-accent-dark) 100%
+      );
+      color: var(--color-text-primary);
+      border-radius: var(--border-radius-pill);
+      transition:
+        box-shadow var(--animate-duration-normal) ease,
+        transform var(--animate-duration-fast) ease,
+        opacity var(--animate-duration-fast) ease;
+    }
+
+    /* ensure svg icon size and prevent shrinking */
+    .primary-button svg {
+      height: 1rem; /* h-4 equivalent */
+      width: 1rem; /* w-4 equivalent */
+      flex-shrink: 0; /* flex-shrink-0 equivalent */
+    }
+
+    .primary-button:hover {
+      box-shadow: 0 12px 35px var(--color-accent-shadow);
+      transform: translateY(-1px);
+    }
+    .primary-button:active {
+      transform: translateY(0);
+      opacity: 0.98;
+    }
+
+    /* ---------- Secondary button (outlined pill) ---------- */
+    .secondary-button {
+      padding-left: 32px !important;
+      padding-right: 32px !important;
+      padding-top: 14px !important;
+      padding-bottom: 14px !important;
+      border-width: 3px !important;
+      display: inline-flex;
+      cursor: pointer;
+      user-select: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem; /* gap-2 equivalent */
+      border-radius: 9999px; /* rounded-full equivalent */
+      background: transparent;
+      font-size: 16px;
+      font-weight: 500; /* font-medium equivalent */
+      background: transparent;
+      border: 2px solid var(--color-gold-dark-transparent);
+      border-radius: var(--border-radius-pill);
+      color: var(--color-gold-dark);
+      transition:
+        background-color var(--animate-duration-fast) ease,
+        border-color var(--animate-duration-fast) ease,
+        color var(--animate-duration-fast) ease,
+        transform var(--animate-duration-fast) ease;
+    }
+
+    /* Icon styling for secondary button */
+    .secondary-button .btn-icon {
+      width: 1rem; /* 16px */
+      height: 1rem; /* 16px */
+      flex-shrink: 0;
+      color: inherit; /* Inherits the button's text color */
+      transition: color var(--animate-duration-fast) ease;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--color-gold-dark);
+      background: var(--color-accent-glow-medium);
+    }
+
+    /* ---------- Focus / accessibility ---------- */
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible {
+      outline: none; /* outline-none equivalent */
+      /* keep the two-layer shadow you had */
+      box-shadow:
+        0 0 0 4px var(--color-accent-purple-glow-medium),
+        0 12px 35px var(--color-accent-shadow);
+    }
+
+    /* ---------- Small-screen adjustments (optional) ---------- */
+    @media (max-width: 480px) {
+      .primary-button {
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        font-size: 0.875rem; /* text-sm equivalent */
+      }
+      .secondary-button {
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 0.875rem; /* text-sm equivalent */
+      }
+    }
+
+    /* ---------- Section paddings (your snippet) ---------- */
+    .mission-section,
+    .features-section,
+    .docs-preview-section {
+      @media (max-width: 768px) {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+
+    /* Navbar component styles moved to Navbar.vue component for better component isolation */
+
+    /* Make mobile override explicit — use only if you want smaller mobile buttons */
+    @media (max-width: 768px) {
+      .hero-buttons .primary-button,
+      .hero-buttons .btn-primary {
+        padding: 14px 28px;
+        font-size: 15px;
+        min-width: auto;
+      }
+    }
+  }
+
+  @layer utilities {
+    .gold-marker {
+      margin-bottom: 0.5rem; /* mb-2 equivalent */
+      display: block;
+      color: var(--color-gold-dark);
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+      background-image: linear-gradient(
+        135deg,
+        var(--color-gold-light) 0%,
+        var(--color-gold-dark) 70%
+      );
+      -webkit-text-fill-color: transparent;
+      background-clip: text; /* modern */
+      -webkit-background-clip: text; /* legacy Safari still honors bg-clip via webkit */
+    }
+    @supports (background-clip: text) {
+      .gold-marker {
+        background-clip: text; /* bg-clip-text equivalent */
+        color: transparent; /* text-transparent equivalent */
+      }
+    }
+  }
+
+  @layer base {
+    .hero-section {
+      padding: 0 20px;
+    }
+  }
+</style>

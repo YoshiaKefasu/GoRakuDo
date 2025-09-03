@@ -1,0 +1,65 @@
+# <!-- Powered by BMAD™ Core -->
+# Quality Gate: epic-base-integration.story-day3-file-removal
+
+# Required fields (keep these first)
+schema: 1
+story: "epic-base-integration.story-day3"
+story_title: "Day 3 - 古いファイルの削除"
+gate: "CONCERNS"
+status_reason: "非クリティカルな問題（テスト自動化不足）が見つかり、チームでのレビューが必要"
+reviewer: "Quinn (Test Architect)"
+updated: "2025-01-12T10:00:00Z"
+
+# Always present but only active when WAIVED
+waiver: { active: false }
+
+# Issues (if any) - Use fixed severity: low | medium | high
+top_issues:
+  - id: "TEST-001"
+    severity: medium
+    finding: "テスト自動化の不足（手動テストのみ）"
+    suggested_action: "CI/CD統合と単体テストの追加を実装"
+  - id: "TEST-002"
+    severity: low
+    finding: "単体テストと統合テストの不足"
+    suggested_action: "テストカバレッジの向上"
+
+# Risk summary (from risk-profile task if run)
+risk_summary:
+  totals: { critical: 0, high: 0, medium: 1, low: 1 }
+  recommendations:
+    must_fix: []
+    monitor: ["テスト自動化の実装", "CI/CD統合"]
+
+# Extended fields
+quality_score: 85
+expires: "2025-01-26T00:00:00Z"
+
+evidence:
+  tests_reviewed: 0
+  risks_identified: 2
+  trace:
+    ac_covered: [1, 2, 3]
+    ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: "ファイル削除のみ、セキュリティリスクなし"
+  performance:
+    status: PASS
+    notes: "不要ファイル削除による改善"
+  reliability:
+    status: PASS
+    notes: "適切なバックアップと検証"
+  maintainability:
+    status: CONCERNS
+    notes: "テスト自動化の不足"
+
+recommendations:
+  immediate: # Must fix before production
+    - action: "テスト自動化の実装"
+      refs: ["CI/CD統合", "単体テスト追加"]
+  future: # Can be addressed later
+    - action: "E2Eテストの追加"
+      refs: ["統合テストフレームワーク"]

@@ -1,0 +1,112 @@
+---
+// ========== IMPORTS ==========
+// Internal utilities (DRY principle)
+import { 
+  generateMetaTag, 
+  generateLinkTag, 
+  generateFaviconTags,
+  generateResourceHintTags 
+} from '../../utils/new-seo-system/common-helpers';
+
+// ========== PROPS INTERFACE ==========
+// Simple props interface to avoid type definition issues
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
+  canonicalUrl?: string;
+  favicon?: string;
+  resourceHints?: Record<string, any>;
+  noIndex?: boolean;
+  robots?: {
+    follow?: boolean;
+    noarchive?: boolean;
+    nosnippet?: boolean;
+  };
+}
+
+// ========== PROPS DESTRUCTURING ==========
+// Clear default values for better developer experience (KISS principle)
+const {
+  title = "GoRakuDo",
+  description = "日本語学習プラットフォーム",
+  lang = "ja",
+  canonicalUrl,
+  favicon = "/favicon.svg",
+  resourceHints = {},
+  noIndex = false,
+  robots = {}
+}: Props = Astro.props;
+
+// ========== UTILITY FUNCTIONS ==========
+// Simple, focused functions (KISS principle)
+const generateRobotsTag = (noIndex: boolean, robots: any): string => {
+  const directives: string[] = [];
+  
+  if (noIndex) {
+    directives.push('noindex');
+  } else {
+    directives.push('index');
+  }
+  
+  if (robots.follow !== false) {
+    directives.push('follow');
+  }
+  
+  if (robots.noarchive) {
+    directives.push('noarchive');
+  }
+  
+  if (robots.nosnippet) {
+    directives.push('nosnippet');
+  }
+  
+  return `<meta name="robots" content="${directives.join(', ')}" />`;
+};
+
+// ファビコンの設定
+const faviconTags = generateFaviconTags(favicon);
+
+// リソースヒントの生成
+const resourceHintTags = generateResourceHintTags(resourceHints);
+
+// ロボットタグの生成
+const robotsTag = generateRobotsTag(noIndex, robots);
+---
+
+<!-- ========== HTML TEMPLATE ========== -->
+<html lang={lang}>
+  <head>
+    <!-- ========== BASIC META TAGS ========== -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- ========== ROBOTS ========== -->
+    <Fragment set:html={robotsTag} />
+    
+    <!-- ========== CANONICAL URL ========== -->
+    {canonicalUrl && generateLinkTag('canonical', canonicalUrl)}
+    
+    <!-- ========== FAVICON ========== -->
+    {faviconTags.map(tag => (
+      <Fragment set:html={tag} />
+    ))}
+    
+    <!-- ========== RESOURCE HINTS ========== -->
+    {resourceHintTags.map(tag => (
+      <Fragment set:html={tag} />
+    ))}
+    
+    <!-- ========== ADDITIONAL HEAD SLOT ========== -->
+    <slot name="additional-head" />
+  </head>
+  <body>
+    <!-- ========== MAIN CONTENT SLOT ========== -->
+    <slot />
+    
+    <!-- ========== FOOTER SLOT ========== -->
+    <slot name="footer" />
+  </body>
+</html>

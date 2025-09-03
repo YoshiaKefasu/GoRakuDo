@@ -10,11 +10,7 @@
  * 3. 古い型定義の使用箇所を新しい型に置換
  */
 
-// Re-export from new system for backward compatibility
-export * from '../new-seo-system/base-integration-integration.js';
-export * from '../new-seo-system/fallback-system-integration.js';
-
-// Legacy type definitions (deprecated)
+// Legacy type definitions (deprecated) - Direct implementation to avoid circular dependencies
 export interface SEOIntegrationConfig {
   readonly enabled: boolean;
   readonly apiEndpoint: string;
