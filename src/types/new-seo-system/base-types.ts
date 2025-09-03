@@ -10,33 +10,62 @@
 /**
  * Unified validation result interface
  * Consolidates validation patterns from multiple files (DRY principle)
+ * Extended to maintain backward compatibility with existing code
+ * Made mutable for existing code compatibility (KISS principle)
  */
 export interface ValidationResult {
-  readonly isValid: boolean;
-  readonly errors: readonly string[];
-  readonly warnings: readonly string[];
+  isValid: boolean;
+  errors: (string | ValidationError)[];
+  warnings: (string | ValidationWarning)[];
+  // Extended properties for backward compatibility (made required for KISS principle)
+  optimizedKeywords: string[];
+  suggestions: (string | ValidationSuggestion)[];
+  severity?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  impact?: 'SEO' | 'UX' | 'PERFORMANCE' | 'ACCESSIBILITY';
+  validationTimestamp?: Date;
+  validatorVersion?: string;
 }
 
 /**
  * Unified validation error interface
  * Consolidates error patterns from multiple files (DRY principle)
+ * Extended to maintain backward compatibility with existing code
  */
 export interface ValidationError {
   readonly field: string;
   readonly message: string;
   readonly code: string;
   readonly system?: 'seo' | 'fallback' | 'dataFlow' | 'metadata';
+  // Extended properties for backward compatibility
+  readonly severity?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  readonly impact?: 'SEO' | 'UX' | 'PERFORMANCE' | 'ACCESSIBILITY';
 }
 
 /**
  * Unified validation warning interface
  * Consolidates warning patterns from multiple files (DRY principle)
+ * Extended to maintain backward compatibility with existing code
  */
 export interface ValidationWarning {
   readonly field: string;
   readonly message: string;
   readonly code: string;
   readonly system?: 'seo' | 'fallback' | 'dataFlow' | 'metadata';
+  // Extended properties for backward compatibility
+  readonly severity?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  readonly impact?: 'SEO' | 'UX' | 'PERFORMANCE' | 'ACCESSIBILITY';
+}
+
+/**
+ * Unified validation suggestion interface
+ * Consolidates suggestion patterns from multiple files (DRY principle)
+ */
+export interface ValidationSuggestion {
+  readonly field: string;
+  readonly message: string;
+  readonly code: string;
+  readonly priority?: 'LOW' | 'MEDIUM' | 'HIGH';
+  readonly expectedBenefit?: string;
 }
 
 /**

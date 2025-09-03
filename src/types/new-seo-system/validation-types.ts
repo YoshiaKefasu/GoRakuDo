@@ -203,6 +203,34 @@ export interface MetadataInputConfig {
   readonly validationRules: readonly ValidationRule[];
 }
 
+// ========== METADATA INPUT UTILITY TYPES ==========
+/**
+ * Partial metadata input for form updates
+ * Allows partial updates during form editing
+ * Follows DRY principle by reusing MetadataInput
+ */
+export type PartialMetadataInput = Partial<MetadataInput>;
+
+/**
+ * Metadata field update payload
+ * Single field update for reactive form updates
+ */
+export interface MetadataFieldUpdate {
+  readonly field: keyof MetadataInput;
+  readonly value: unknown;
+}
+
+/**
+ * Metadata input event types
+ * Event handling for metadata input system
+ */
+export type MetadataInputEvent =
+  | { readonly type: 'input'; readonly field: keyof MetadataInput; readonly value: unknown }
+  | { readonly type: 'validation'; readonly result: MetadataValidationResult }
+  | { readonly type: 'save'; readonly metadata: MetadataInput }
+  | { readonly type: 'load'; readonly metadata: MetadataInput }
+  | { readonly type: 'error'; readonly error: string };
+
 /**
  * Advanced optimization configuration interface
  * Configuration for advanced SEO optimization features
@@ -235,6 +263,76 @@ export interface AdvancedOptimizationResult {
   readonly enhancement: number; // 0-100
   readonly issues: readonly string[];
   readonly recommendations: readonly string[];
+}
+
+// ========== ADVANCED OPTIMIZATION UTILITY TYPES ==========
+/**
+ * Advanced quality monitoring configuration
+ * Configuration for real-time quality monitoring
+ */
+export interface AdvancedQualityMonitoringConfig {
+  readonly realTime: boolean;
+  readonly autoDetection: boolean;
+  readonly metrics: readonly string[];
+  readonly thresholds: Record<string, number>;
+}
+
+/**
+ * Advanced quality monitoring result
+ * Result of quality monitoring operations
+ */
+export interface AdvancedQualityMonitoringResult {
+  readonly status: 'active' | 'inactive' | 'error';
+  readonly metrics: Record<string, number>;
+  readonly issues: readonly string[];
+  readonly recommendations: readonly string[];
+}
+
+/**
+ * Algorithm enhancement configuration
+ * Configuration for machine learning and behavioral enhancements
+ */
+export interface AlgorithmEnhancementConfig {
+  readonly machineLearning: boolean;
+  readonly userBehavior: boolean;
+  readonly optimizationLevel: 'basic' | 'advanced' | 'expert';
+  readonly adaptiveLearning: boolean;
+}
+
+/**
+ * Algorithm enhancement result
+ * Result of algorithm enhancement operations
+ */
+export interface AlgorithmEnhancementResult {
+  readonly success: boolean;
+  readonly enhancement: number; // 0-100
+  readonly improvements: readonly string[];
+  readonly performance: Record<string, number>;
+}
+
+/**
+ * Phase completion status
+ * Status tracking for development phases
+ */
+export interface PhaseCompletionStatus {
+  readonly phase: 'phase5' | 'phase6';
+  readonly status: 'pending' | 'in-progress' | 'completed' | 'failed';
+  readonly completionDate?: string;
+  readonly qualityScore?: number;
+  readonly issues?: readonly string[];
+}
+
+/**
+ * Phase quality gate
+ * Quality gate evaluation for development phases
+ */
+export interface PhaseQualityGate {
+  readonly phase: 'phase5' | 'phase6';
+  readonly passed: boolean;
+  readonly score: number;
+  readonly requirements: readonly string[];
+  readonly completedRequirements: readonly string[];
+  readonly missingRequirements: readonly string[];
 }
 
 /**

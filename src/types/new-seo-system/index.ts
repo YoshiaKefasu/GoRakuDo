@@ -43,22 +43,23 @@ export type {
   SafetyConfig
 } from './component-props';
 
-// ========== VALIDATION EXPORTS ==========
-// Validation and error handling types
+// ========== VALIDATION TYPES EXPORTS ==========
+// Types from validation.ts (separate from validation-types.ts)
+// Using aliases to avoid conflicts with validation-types.ts exports
 export type {
-  ValidationResult,
-  ValidationError,
-  ValidationWarning,
+  ValidationResult as ValidationResultFromValidation,
+  ValidationError as ValidationErrorFromValidation,
+  ValidationWarning as ValidationWarningFromValidation,
   ValidationSuggestion,
   KeywordValidationResult,
   KeywordLengthStats,
   KeywordValidationRules,
   LanguageSupport,
   LanguageSpecificRules,
-  MetadataValidationResult,
+  MetadataValidationResult as MetadataValidationResultFromValidation,
   SocialMediaValidation,
   TagValidationResult,
-  PerformanceValidation,
+  PerformanceValidation as PerformanceValidationFromValidation,
   ResourceHintValidation,
   PreloadValidation,
   PrefetchValidation,
@@ -71,6 +72,70 @@ export type {
   SecurityScore,
   SecurityFactor
 } from './validation';
+
+// ========== INTEGRATED VALIDATION TYPES EXPORTS ==========
+// Consolidated validation types from validation-types.ts and base-types.ts
+export type {
+  // Core validation types from base-types.ts (imported separately)
+  // ValidationResult, ValidationError, ValidationWarning are from base-types
+
+  // Metadata input utility types (from metadata-input.ts integration)
+  PartialMetadataInput,
+  MetadataFieldUpdate,
+  MetadataInputEvent,
+
+  // Advanced optimization utility types (from advanced-optimization.ts integration)
+  AdvancedQualityMonitoringConfig,
+  AdvancedQualityMonitoringResult,
+  AlgorithmEnhancementConfig,
+  AlgorithmEnhancementResult,
+  PhaseCompletionStatus,
+  PhaseQualityGate,
+
+  // Existing validation types from validation-types.ts
+  ValidationRule,
+  ValidationSchema,
+  ValidationPipeline,
+  QualityValidationResult,
+  PerformanceValidation as PerformanceValidationFromValidationTypes,
+
+  // Metadata input types
+  MetadataInput,
+  MetadataValidationResult as MetadataValidationResultFromValidationTypes,
+  MetadataReadResult,
+  KeywordData,
+  MetadataInputFormState,
+  MetadataInputConfig,
+
+  // Advanced optimization types
+  AdvancedOptimizationConfig,
+  AdvancedOptimizationResult,
+  StructuredDataConfig,
+  StructuredDataResult,
+  QualityGateConfig,
+  QualityGateResult,
+  TestCleanupConfig,
+  TestCleanupResult,
+  RedundantFileInfo,
+
+  // Fallback system types
+  MetadataGap,
+  ContentExtractionRule,
+  ExtractionQualityScore,
+  ContentExtractionResult,
+  FallbackPriorityConfig,
+  StopwordsConfig,
+  FallbackSystemConfig,
+  FallbackMetadata,
+  FallbackResult
+} from './validation-types';
+
+// Import and re-export base validation types
+export type {
+  ValidationResult,
+  ValidationError,
+  ValidationWarning
+} from './base-types';
 
 // ========== METADATA EXPORTS ==========
 // Metadata generation and management types
@@ -90,7 +155,6 @@ export type {
   TwitterPlayerConfig,
   LinkedInConfig,
   PinterestConfig,
-  StructuredDataConfig,
   OrganizationData,
   WebsiteData,
   PageData,
@@ -213,9 +277,6 @@ export type {
   
   // Validation utility types
   ValidationResult as ValidationResultHelper,
-  ValidationRule,
-  ValidationSchema,
-  ValidationPipeline,
   
   // Error handling utility types
   ErrorType,
@@ -265,7 +326,7 @@ export type {
   MetaTagCategory as MetaTagCategoryHelper,
   MetaTagValidation,
   
-  // Structured data utility types
+  // Structured data utility types (moved to validation-types exports)
   SchemaType,
   SchemaFormat,
   SchemaValidation,
@@ -405,7 +466,6 @@ export namespace SEOMetadata {
   export type TwitterPlayerConfig = import('./metadata').TwitterPlayerConfig;
   export type LinkedInConfig = import('./metadata').LinkedInConfig;
   export type PinterestConfig = import('./metadata').PinterestConfig;
-  export type StructuredDataConfig = import('./metadata').StructuredDataConfig;
   export type OrganizationData = import('./metadata').OrganizationData;
   export type WebsiteData = import('./metadata').WebsiteData;
   export type PageData = import('./metadata').PageData;
