@@ -1,0 +1,94 @@
+---
+// ========== IMPORTS ==========
+// Type definitions (ES Modules必須)
+import type { MetaManagerProps } from '../../types/new-seo-system';
+
+// Utility classes (ES Modules必須)
+import { NewSEOMetaManager } from '../../utils/new-seo-system/meta-manager';
+import { PerformanceOptimizer } from '../../utils/new-seo-system/performance-optimizer';
+import { SecurityManager } from '../../utils/new-seo-system/security-manager';
+import { AnalyticsIntegration } from '../../utils/new-seo-system/analytics-integration';
+
+// ========== PROPS INTERFACE ==========
+interface Props extends MetaManagerProps {
+  // 追加のプロパティ
+}
+
+// ========== PROPS DESTRUCTURING ==========
+const {
+  advancedMeta = {},
+  performanceOptimization = {
+    preload: [
+      { href: "/_astro/client.BOM-Xz5v.js", as: "script", crossorigin: "anonymous" },
+      { href: "/_astro/index.astro_astro_type_script_index_0_lang.DufLhAx8.js", as: "script", crossorigin: "anonymous" }
+    ],
+    prefetch: [],
+    dnsPrefetch: [],
+    preconnect: []
+  },
+  securityHeaders = {
+    csp: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+    hsts: "max-age=31536000; includeSubDomains; preload",
+    referrerPolicy: "strict-origin-when-cross-origin",
+    permissionsPolicy: "geolocation=(), microphone=(), camera=()"
+  },
+  analytics = {}
+}: Props = Astro.props;
+
+// ========== UTILITY CLASSES INITIALIZATION ==========
+// 各機能を担当するクラスの初期化（単一責任の原則）
+const metaManager = new NewSEOMetaManager();
+const performanceOptimizer = new PerformanceOptimizer();
+const securityManager = new SecurityManager();
+const analyticsIntegration = new AnalyticsIntegration();
+
+// ========== SECURITY HEADERS SETTING ==========
+// HTTPレスポンスヘッダーとしてセキュリティヘッダーを設定
+if (securityHeaders.csp) {
+  Astro.response.headers.set('Content-Security-Policy', securityHeaders.csp);
+}
+if (securityHeaders.hsts) {
+  Astro.response.headers.set('Strict-Transport-Security', securityHeaders.hsts);
+}
+if (securityHeaders.referrerPolicy) {
+  Astro.response.headers.set('Referrer-Policy', securityHeaders.referrerPolicy);
+}
+if (securityHeaders.permissionsPolicy) {
+  Astro.response.headers.set('Permissions-Policy', securityHeaders.permissionsPolicy);
+}
+
+// 追加のセキュリティヘッダー
+Astro.response.headers.set('X-Frame-Options', 'DENY');
+Astro.response.headers.set('X-Content-Type-Options', 'nosniff');
+Astro.response.headers.set('X-XSS-Protection', '1; mode=block');
+
+// ========== META TAG GENERATION ==========
+// 各クラスを使用してメタタグを生成（DRY原則）
+const advancedMetaTags = metaManager.generateAdvancedMeta(advancedMeta);
+const performanceTags = performanceOptimizer.generateTags(performanceOptimization);
+const securityTags = securityManager.generateHeaders(securityHeaders);
+const analyticsTags = analyticsIntegration.generateTags(analytics);
+
+// ========== INTEGRATION ==========
+// 統合メタデータの生成（KISS原則）
+const integratedMeta = metaManager.integrateAll({
+  advanced: advancedMetaTags,
+  performance: performanceTags,
+  security: securityTags,
+  analytics: analyticsTags
+});
+---
+
+<!-- ========== ADVANCED META TAGS ========== -->
+{integratedMeta.advanced}
+
+<!-- ========== PERFORMANCE OPTIMIZATION ========== -->
+{integratedMeta.performance}
+
+<!-- ========== SECURITY HEADERS ========== -->
+{integratedMeta.security}
+
+<!-- ========== ANALYTICS ========== -->
+{integratedMeta.analytics}
+
+

@@ -1,0 +1,159 @@
+---
+// ========== IMPORTS ==========
+// Helper functions
+import {
+  generateOpenGraphTags,
+  generateTwitterCardTags,
+  generateStructuredData,
+  generateKeywordsTag
+} from '../../utils/new-seo-system/seo-helpers';
+
+import {
+  generateMetaTag
+} from '../../utils/new-seo-system/common-helpers';
+
+// ========== PROPS INTERFACE ==========
+interface Props {
+  title?: string;
+  description?: string;
+  primaryKeywords?: string[];
+  longTailKeywords?: string[];
+  articleKeywords?: string[];
+  categoryKeywords?: string[];
+  seoProperties?: {
+    articleType?: string;
+    learningStage?: string;
+    searchIntent?: string;
+  };
+  socialMedia?: {
+    openGraph?: any;
+    twitterCard?: any;
+  };
+  canonicalUrl?: string;
+}
+
+// ========== PROPS DESTRUCTURING ==========
+const {
+  title,
+  description,
+  primaryKeywords = [],
+  longTailKeywords = [],
+  articleKeywords = [],
+  categoryKeywords = [],
+  seoProperties = {},
+  socialMedia = {},
+  canonicalUrl
+}: Props = Astro.props;
+
+// ========== SIMPLE KEYWORD VALIDATION ==========
+// Simple validation logic (KISS principle)
+const validateKeywords = (keywords: string[]): {
+  isValid: boolean;
+  warnings: string[];
+  suggestions: string[];
+  optimizedKeywords: string[];
+} => {
+  const warnings: string[] = [];
+  const suggestions: string[] = [];
+  const optimizedKeywords: string[] = [];
+  
+  keywords.forEach((keyword, index) => {
+    if (keyword.length < 2) {
+      warnings.push(`キーワード[${index}]: "${keyword}" が短すぎます（2文字以上必要）`);
+    } else if (keyword.length > 50) {
+      warnings.push(`キーワード[${index}]: "${keyword}" が長すぎます（50文字以下推奨）`);
+    } else {
+      optimizedKeywords.push(keyword);
+    }
+  });
+  
+  if (optimizedKeywords.length < 3) {
+    suggestions.push('より多くのキーワードを追加することでSEO効果が向上します');
+  }
+  
+  return {
+    isValid: warnings.length === 0,
+    warnings,
+    suggestions,
+    optimizedKeywords
+  };
+};
+
+// ========== KEYWORD VALIDATION ==========
+const validationResult = validateKeywords([
+  ...primaryKeywords,
+  ...longTailKeywords,
+  ...articleKeywords,
+  ...categoryKeywords
+]);
+
+// ========== DEVELOPMENT ENVIRONMENT WARNINGS ==========
+// Show validation warnings only in development (KISS principle)
+if (import.meta.env.DEV && !validationResult.isValid) {
+  console.warn('🚨 SEO Validation Warnings:', validationResult.warnings);
+  console.warn('💡 SEO Suggestions:', validationResult.suggestions);
+}
+
+// ========== META TAG GENERATION ==========
+// Generate meta tags using utility functions (DRY principle)
+const keywordsTag = generateKeywordsTag({
+  primary: primaryKeywords,
+  longTail: longTailKeywords,
+  article: articleKeywords,
+  category: categoryKeywords
+});
+
+// ========== STRUCTURED DATA GENERATION ==========
+// Generate structured data for search engines
+const structuredData = generateStructuredData({
+  title,
+  description,
+  keywords: validationResult.optimizedKeywords,
+  url: canonicalUrl,
+  seoProperties
+});
+
+// ========== SOCIAL MEDIA TAGS ==========
+// Generate Open Graph and Twitter Card tags
+const openGraphTags = socialMedia.openGraph 
+  ? generateOpenGraphTags(socialMedia.openGraph)
+  : [];
+
+const twitterCardTags = socialMedia.twitterCard
+  ? generateTwitterCardTags(socialMedia.twitterCard)
+  : [];
+---
+
+<!-- ========== SEO META TAGS ========== -->
+<Fragment set:html={keywordsTag} />
+
+<!-- ========== STRUCTURED DATA ========== -->
+<script type="application/ld+json" set:html={structuredData} />
+
+<!-- ========== OPEN GRAPH TAGS ========== -->
+{openGraphTags.map(tag => (
+  <Fragment set:html={tag} />
+))}
+
+<!-- ========== TWITTER CARD TAGS ========== -->
+{twitterCardTags.map(tag => (
+  <Fragment set:html={tag} />
+))}
+
+<!-- ========== DEVELOPMENT ENVIRONMENT WARNINGS ========== -->
+{import.meta.env.DEV && !validationResult.isValid && (
+  <div class="seo-validation-warnings" style="display: none;">
+    <h3>🚨 SEO Validation Warnings</h3>
+    <ul>
+      {validationResult.warnings.map(warning => (
+        <li>{warning}</li>
+      ))}
+    </ul>
+    <h4>💡 SEO Suggestions</h4>
+    <ul>
+      {validationResult.suggestions.map(suggestion => (
+        <li>{suggestion}</li>
+      ))}
+    </ul>
+  </div>
+)}

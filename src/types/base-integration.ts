@@ -1,31 +1,37 @@
-// ========== BASE INTEGRATION TYPE DEFINITIONS ==========
-// Strict TypeScript mode compliant type definitions for base integration system
-// Direct re-export from unified integration system (DRY principle applied)
+/**
+ * @deprecated This file is deprecated. Use src/types/new-seo-system/base-integration-integration.ts instead.
+ *
+ * This file will be removed in the next major version.
+ * Please migrate to the new system using the migration helper functions.
+ *
+ * 移行手順:
+ * 1. 新しい統合ファイルから型をインポート
+ * 2. migrateLegacyConfig関数を使用して設定を移行
+ * 3. 古い型定義の使用箇所を新しい型に置換
+ */
 
-// Re-export all integration types from unified system
-export type {
-  SEOIntegrationConfig,
-  FallbackIntegrationConfig,
-  DataFlowConfig,
-  IntegrationConfig,
-  SEOIntegrationResult,
-  FallbackIntegrationResult,
-  DataFlowResult,
-  IntegrationResult,
-  IntegrationQualityResult,
-  IntegrationValidationRule,
-  IntegrationValidationResult,
-  ValidationError,
-  ValidationWarning,
-  IntegrationErrorContext,
-  ValidationResult
-} from './new-seo-system/integration-types.js';
+// Re-export from new system for backward compatibility
+export * from '../new-seo-system/base-integration-integration.js';
+export * from '../new-seo-system/fallback-system-integration.js';
 
-// Re-export configuration from unified system
-export {
-  DEFAULT_INTEGRATION_CONFIG
-} from './new-seo-system/integration-types.js';
+// Legacy type definitions (deprecated)
+export interface SEOIntegrationConfig {
+  readonly enabled: boolean;
+  readonly apiEndpoint: string;
+  readonly timeout: number;
+  readonly legacySupport: boolean;
+}
 
+export interface FallbackIntegrationConfig {
+  readonly enabled: boolean;
+  readonly fallbackEndpoint: string;
+  readonly timeout: number;
+  readonly legacySupport: boolean;
+}
 
-
-
+// Migration warning
+console.warn(
+  'DEPRECATION WARNING: base-integration.ts is deprecated. ' +
+  'Please migrate to the new system. ' +
+  'See src/types/new-seo-system/base-integration-integration.ts for details.'
+);

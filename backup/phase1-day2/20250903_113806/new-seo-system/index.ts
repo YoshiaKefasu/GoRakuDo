@@ -655,10 +655,6 @@ export interface IntegratedMetaResult {
   analytics: string[];
 }
 
-// ========== INTEGRATION EXPORTS ==========
-export * from './base-integration-integration';
-export * from './fallback-system-integration';
-
 // ========== DEFAULT EXPORT FOR CONVENIENCE ==========
 // Default export containing all namespaces for easy access
 // Note: Namespaces cannot be used as values in default exports
