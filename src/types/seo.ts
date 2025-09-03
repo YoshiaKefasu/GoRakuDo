@@ -1,7 +1,7 @@
-// ========== SEO TYPE DEFINITIONS ==========
-// Unified SEO type definitions for the integrated system
+// ========== INTEGRATED SEO TYPE DEFINITIONS ==========
+// Complete SEO type definitions for the unified system
 // Follows DRY principle by importing from new-seo-system
-// Eliminates circular references and re-export issues
+// Eliminates circular references and re-export issues (KISS principle)
 
 // Import all SEO-related types from unified component props system
 export type {
@@ -31,58 +31,19 @@ export type {
   // Enum and utility types
   ArticleType,
   LearningStage,
-  SearchIntent
+  SearchIntent,
+
+  // Simple test types (moved from legacy seo.ts)
+  SimpleHeadSEOProps,
+  SimpleBasicSEOProps,
+  SimpleMetaManagerProps,
+
+  // Union types for flexibility
+  TestHeadSEOProps,
+  TestBasicSEOProps,
+  TestMetaManagerProps
 } from './new-seo-system/component-props';
 
-// ========== SIMPLIFIED TYPES FOR TESTING ==========
-// Lightweight versions for testing and development
-// These provide minimal interfaces for testing purposes
-
-export interface SimpleHeadSEOProps {
-  readonly title: string;
-  readonly description: string;
-  readonly lang?: string;
-  readonly canonicalUrl?: string;
-  readonly favicon?: {
-    readonly ico?: string;
-    readonly svg?: string;
-  };
-}
-
-export interface SimpleBasicSEOProps {
-  readonly keywords?: string;
-  readonly canonicalUrl?: string;
-  readonly structuredData?: Record<string, unknown>;
-  readonly ogImage?: string;
-  readonly twitterCard?: string;
-}
-
-export interface SimpleMetaManagerProps {
-  readonly enableCSP?: boolean;
-  readonly enableHSTS?: boolean;
-  readonly preloadCritical?: boolean;
-}
-
-// ========== UNION TYPES FOR FLEXIBILITY ==========
-// Union types for testing and development flexibility
-// Allows both full and simplified implementations
-
-export type TestHeadSEOProps = import('./new-seo-system/component-props').HeadSEOProps | SimpleHeadSEOProps;
-export type TestBasicSEOProps = import('./new-seo-system/component-props').BasicSEOProps | SimpleBasicSEOProps;
-export type TestMetaManagerProps = import('./new-seo-system/component-props').MetaManagerProps | SimpleMetaManagerProps;
-
 // ========== DEFAULT CONFIGURATIONS ==========
-// Centralized default values for SEO configurations
-
-export const DEFAULT_SEO_CONFIG = {
-  title: '',
-  description: '',
-  lang: 'en',
-  canonicalUrl: '',
-  keywords: '',
-  ogImage: '',
-  twitterCard: '',
-  enableCSP: false,
-  enableHSTS: false,
-  preloadCritical: false
-} as const;
+// Centralized default values for SEO configurations (DRY principle)
+export { DEFAULT_SEO_CONFIG } from './new-seo-system/component-props';

@@ -199,3 +199,56 @@ export interface SafetyConfig {
   strictMode: boolean;          // Enable strict safety mode
   autoRollback: boolean;        // Enable automatic rollback on critical issues
 }
+
+// ========== SIMPLE TEST TYPES ==========
+// Lightweight versions for testing and development
+// These provide minimal interfaces for testing purposes (KISS principle)
+
+export interface SimpleHeadSEOProps {
+  readonly title: string;
+  readonly description: string;
+  readonly lang?: string;
+  readonly canonicalUrl?: string;
+  readonly favicon?: {
+    readonly ico?: string;
+    readonly svg?: string;
+  };
+}
+
+export interface SimpleBasicSEOProps {
+  readonly keywords?: string;
+  readonly canonicalUrl?: string;
+  readonly structuredData?: Record<string, unknown>;
+  readonly ogImage?: string;
+  readonly twitterCard?: string;
+}
+
+export interface SimpleMetaManagerProps {
+  readonly enableCSP?: boolean;
+  readonly enableHSTS?: boolean;
+  readonly preloadCritical?: boolean;
+}
+
+// ========== UNION TYPES FOR FLEXIBILITY ==========
+// Union types for testing and development flexibility
+// Allows both full and simplified implementations
+
+export type TestHeadSEOProps = HeadSEOProps | SimpleHeadSEOProps;
+export type TestBasicSEOProps = BasicSEOProps | SimpleBasicSEOProps;
+export type TestMetaManagerProps = MetaManagerProps | SimpleMetaManagerProps;
+
+// ========== DEFAULT CONFIGURATIONS ==========
+// Centralized default values for SEO configurations (DRY principle)
+
+export const DEFAULT_SEO_CONFIG = {
+  title: '',
+  description: '',
+  lang: 'en',
+  canonicalUrl: '',
+  keywords: '',
+  ogImage: '',
+  twitterCard: '',
+  enableCSP: false,
+  enableHSTS: false,
+  preloadCritical: false
+} as const;
