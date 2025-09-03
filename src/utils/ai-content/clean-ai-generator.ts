@@ -74,14 +74,20 @@ export class CleanAIGenerator {
 
       this.processingTime = Date.now() - startTime;
 
-      return {
+      const result: CleanAIGenerationResult = {
         success: true,
         content,
-        metadata,
         errors: this.errors,
         warnings: this.warnings,
         processingTime: this.processingTime,
       };
+
+      // Handle optional metadata property with exactOptionalPropertyTypes
+      if (metadata !== undefined) {
+        (result as any).metadata = metadata;
+      }
+
+      return result;
     } catch (error) {
       this.errors.push(`Content generation failed: ${error}`);
       this.processingTime = Date.now() - startTime;

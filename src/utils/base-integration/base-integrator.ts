@@ -92,21 +92,38 @@ export class BaseIntegrator {
 
     try {
       const result = await this.seoConnector.connect();
-      return {
+      const response: SEOIntegrationResult = {
         success: result.status === 'connected',
         status: result.status,
-        timestamp,
-        endpoint: result.endpoint,
-        lastConnected: result.lastConnected,
-        errorMessage: result.errorMessage
+        timestamp
       };
+
+      // Handle optional properties with exactOptionalPropertyTypes
+      if (result.endpoint !== undefined) {
+        (response as any).endpoint = result.endpoint;
+      }
+      if (result.lastConnected !== undefined) {
+        (response as any).lastConnected = result.lastConnected;
+      }
+      if (result.errorMessage !== undefined) {
+        (response as any).errorMessage = result.errorMessage;
+      }
+
+      return response;
     } catch (error) {
-      return {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const response: SEOIntegrationResult = {
         success: false,
         status: 'error',
-        timestamp,
-        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+        timestamp
       };
+
+      // Handle optional errorMessage property with exactOptionalPropertyTypes
+      if (errorMessage !== undefined) {
+        (response as any).errorMessage = errorMessage;
+      }
+
+      return response;
     }
   }
 
@@ -126,21 +143,38 @@ export class BaseIntegrator {
 
     try {
       const result = await this.fallbackConnector.connect();
-      return {
+      const response: FallbackIntegrationResult = {
         success: result.status === 'connected',
         status: result.status,
-        timestamp,
-        endpoint: result.endpoint,
-        lastConnected: result.lastConnected,
-        errorMessage: result.errorMessage
+        timestamp
       };
+
+      // Handle optional properties with exactOptionalPropertyTypes
+      if (result.endpoint !== undefined) {
+        (response as any).endpoint = result.endpoint;
+      }
+      if (result.lastConnected !== undefined) {
+        (response as any).lastConnected = result.lastConnected;
+      }
+      if (result.errorMessage !== undefined) {
+        (response as any).errorMessage = result.errorMessage;
+      }
+
+      return response;
     } catch (error) {
-      return {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const response: FallbackIntegrationResult = {
         success: false,
         status: 'error',
-        timestamp,
-        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+        timestamp
       };
+
+      // Handle optional errorMessage property with exactOptionalPropertyTypes
+      if (errorMessage !== undefined) {
+        (response as any).errorMessage = errorMessage;
+      }
+
+      return response;
     }
   }
 
@@ -152,7 +186,7 @@ export class BaseIntegrator {
     const timestamp = new Date();
     try {
       const result = await this.dataFlowBuilder.build();
-      return {
+      const response: DataFlowResult = {
         success: result.flowStatus === 'active',
         status: result.flowStatus === 'active' ? 'connected' : 'error',
         timestamp,
@@ -160,10 +194,16 @@ export class BaseIntegrator {
         seoFlow: result.seoFlow,
         validation: result.validation,
         flowStatus: result.flowStatus,
-        lastProcessed: result.lastProcessed,
         processedCount: result.processedCount,
         errorCount: result.errorCount
       };
+
+      // Handle optional lastProcessed property with exactOptionalPropertyTypes
+      if (result.lastProcessed !== undefined) {
+        (response as any).lastProcessed = result.lastProcessed;
+      }
+
+      return response;
     } catch (error) {
       return {
         success: false,

@@ -136,10 +136,16 @@ export class HybridErrorHandler {
 
   // Enhanced error reporting for static hosting
   reportError(error: Error, context?: Partial<ErrorContext>): void {
-    this.logError("system", error.message, {
-      ...context,
-      stack: error.stack, // Now this is valid since stack is in the interface
-    });
+    const errorContext: Partial<ErrorContext> = {
+      ...context
+    };
+
+    // Handle optional stack property with exactOptionalPropertyTypes
+    if (error.stack !== undefined) {
+      (errorContext as any).stack = error.stack;
+    }
+
+    this.logError("system", error.message, errorContext);
   }
 
   // Performance monitoring for static hosting

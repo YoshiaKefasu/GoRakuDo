@@ -380,13 +380,21 @@ export class RUMMonitor {
     value?: number,
     metadata?: Record<string, any>,
   ): void {
-    this.addEvent({
+    const event: RUMEvent = {
       timestamp: Date.now(),
       type: "custom",
-      name,
-      value,
-      metadata,
-    });
+      name
+    };
+
+    // Handle optional properties with exactOptionalPropertyTypes
+    if (value !== undefined) {
+      (event as any).value = value;
+    }
+    if (metadata !== undefined) {
+      (event as any).metadata = metadata;
+    }
+
+    this.addEvent(event);
   }
 
   /**

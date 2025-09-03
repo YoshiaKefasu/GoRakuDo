@@ -34,7 +34,12 @@ export class SimpleSearch {
     this.posts.forEach((post) => {
       // Create searchable text for each post
       this.createSearchableText(post);
-      post.element = this.findPostElement(post.slug);
+
+      // Handle optional element property with exactOptionalPropertyTypes
+      const element = this.findPostElement(post.slug);
+      if (element !== undefined) {
+        (post as any).element = element;
+      }
     });
   }
 

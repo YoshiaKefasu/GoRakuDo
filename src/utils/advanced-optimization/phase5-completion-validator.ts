@@ -108,11 +108,18 @@ export function validatePhase5Completion(
     // Phase 5完了状態の生成
     const status: PhaseCompletionStatus = {
       phase: 'phase5',
-      status: completed ? 'completed' : 'in-progress',
-      completionDate: completed ? new Date().toISOString() : undefined,
-      qualityScore: completed ? qualityScore : undefined,
-      issues: issues.length > 0 ? issues : undefined
+      status: completed ? 'completed' : 'in-progress'
     };
+
+    // Handle optional properties with exactOptionalPropertyTypes
+    if (completed) {
+      (status as any).completionDate = new Date().toISOString();
+      (status as any).qualityScore = qualityScore;
+    }
+
+    if (issues.length > 0) {
+      (status as any).issues = issues;
+    }
 
     // Phase 5品質ゲートの生成
     const qualityGate: PhaseQualityGate = {

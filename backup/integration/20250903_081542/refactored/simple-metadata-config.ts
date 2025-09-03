@@ -142,24 +142,18 @@ export function createSimpleMetadataConfig(
     publishedDate?: string;
   } = {}
 ): SimpleMetadataConfig {
-  const result: SimpleMetadataConfig = {
+  return {
     title,
     description,
     publishedDate: options.publishedDate ?? new Date().toISOString(),
     author,
+    emoji: options.emoji,
     difficulty: options.difficulty ?? 'beginner',
     category,
     tags,
     featured: options.featured ?? false,
     contentType: options.contentType ?? 'tutorial'
   };
-
-  // Handle optional emoji property with exactOptionalPropertyTypes
-  if (options.emoji !== undefined) {
-    (result as any).emoji = options.emoji;
-  }
-
-  return result;
 }
 
 /**
