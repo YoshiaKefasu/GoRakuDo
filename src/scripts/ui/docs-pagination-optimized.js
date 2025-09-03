@@ -46,17 +46,17 @@ class DocsPagination {
    * Extract all posts from DOM
    */
   extractAllPosts() {
-    const postCards = document.querySelectorAll(".post-card");
-    this.allPosts = Array.from(postCards).map((card) => ({
+    const postCards = document.querySelectorAll('.post-card');
+    this.allPosts = Array.from(postCards).map(card => ({
       element: card,
-      title: card.querySelector(".post-title a")?.textContent || "",
-      description: card.querySelector(".post-description")?.textContent || "",
-      tags: Array.from(card.querySelectorAll(".post-tag")).map(
-        (tag) => tag.textContent || "",
+      title: card.querySelector('.post-title a')?.textContent || '',
+      description: card.querySelector('.post-description')?.textContent || '',
+      tags: Array.from(card.querySelectorAll('.post-tag')).map(
+        tag => tag.textContent || ''
       ),
-      slug: card.getAttribute("data-post-slug") || "",
-      date: card.querySelector(".post-date")?.textContent || "",
-      readTime: card.querySelector(".post-readtime")?.textContent || "",
+      slug: card.getAttribute('data-post-slug') || '',
+      date: card.querySelector('.post-date')?.textContent || '',
+      readTime: card.querySelector('.post-readtime')?.textContent || '',
     }));
 
     this.originalPosts = [...this.allPosts];
@@ -80,14 +80,14 @@ class DocsPagination {
    * Show all search results without pagination limits
    */
   showAllSearchResults() {
-    const contentState = document.getElementById("contentState");
+    const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
     if (window.enhancedDocsSearch) {
       window.enhancedDocsSearch.notifySearchModeChange(true);
     }
 
-    contentState.innerHTML = "";
+    contentState.innerHTML = '';
     this.progressiveLoading.enabled = true;
     this.progressiveLoading.loadedSearchResults = 0;
 
@@ -95,7 +95,7 @@ class DocsPagination {
       this.loadNextSearchBatch();
       this.setupProgressiveLoadingObserver();
     } else {
-      this.searchResults.forEach((post) => {
+      this.searchResults.forEach(post => {
         const postCard = this.createPostCard(post);
         contentState.appendChild(postCard);
       });
@@ -143,38 +143,38 @@ class DocsPagination {
     const startIndex = this.progressiveLoading.loadedSearchResults;
     const endIndex = Math.min(
       startIndex + this.progressiveLoading.batchSize,
-      this.searchResults.length,
+      this.searchResults.length
     );
 
     if (startIndex >= this.searchResults.length) return;
 
     this.progressiveLoading.isLoading = true;
-    const contentState = document.getElementById("contentState");
+    const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
     const skeletonPlaceholders = this.createSkeletonPlaceholders(
-      endIndex - startIndex,
+      endIndex - startIndex
     );
-    skeletonPlaceholders.forEach((skeleton) => {
+    skeletonPlaceholders.forEach(skeleton => {
       contentState.appendChild(skeleton);
     });
 
     setTimeout(() => {
-      skeletonPlaceholders.forEach((skeleton) => skeleton.remove());
+      skeletonPlaceholders.forEach(skeleton => skeleton.remove());
 
       const postsToLoad = this.searchResults.slice(startIndex, endIndex);
       postsToLoad.forEach((post, index) => {
         setTimeout(() => {
           const postCard = this.createPostCard(post);
-          postCard.style.opacity = "0";
-          postCard.style.transform = "translateY(20px)";
+          postCard.style.opacity = '0';
+          postCard.style.transform = 'translateY(20px)';
           contentState.appendChild(postCard);
 
           requestAnimationFrame(() => {
             postCard.style.transition =
-              "opacity 0.3s ease, transform 0.3s ease";
-            postCard.style.opacity = "1";
-            postCard.style.transform = "translateY(0)";
+              'opacity 0.3s ease, transform 0.3s ease';
+            postCard.style.opacity = '1';
+            postCard.style.transform = 'translateY(0)';
           });
         }, index * 100);
       });
@@ -198,8 +198,8 @@ class DocsPagination {
   createSkeletonPlaceholders(count) {
     const placeholders = [];
     for (let i = 0; i < count; i++) {
-      const skeleton = document.createElement("div");
-      skeleton.className = "post-card-skeleton";
+      const skeleton = document.createElement('div');
+      skeleton.className = 'post-card-skeleton';
       skeleton.innerHTML = `
         <div class="skeleton-header">
           <div class="skeleton-title"></div>
@@ -222,19 +222,19 @@ class DocsPagination {
    * Add loading trigger element for progressive loading
    */
   addLoadingTrigger() {
-    const contentState = document.getElementById("contentState");
+    const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
-    const existingTrigger = document.getElementById("loading-trigger");
+    const existingTrigger = document.getElementById('loading-trigger');
     if (existingTrigger) {
       existingTrigger.remove();
     }
 
-    const trigger = document.createElement("div");
-    trigger.id = "loading-trigger";
-    trigger.className = "loading-trigger";
-    trigger.style.height = "1px";
-    trigger.style.opacity = "0";
+    const trigger = document.createElement('div');
+    trigger.id = 'loading-trigger';
+    trigger.className = 'loading-trigger';
+    trigger.style.height = '1px';
+    trigger.style.opacity = '0';
     contentState.appendChild(trigger);
 
     if (this.progressiveLoading.observer) {
@@ -249,17 +249,17 @@ class DocsPagination {
     this.cleanupProgressiveLoadingObserver();
 
     this.progressiveLoading.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting && this.progressiveLoading.enabled) {
             this.loadNextSearchBatch();
           }
         });
       },
       {
-        rootMargin: "200px 0px",
+        rootMargin: '200px 0px',
         threshold: 0.1,
-      },
+      }
     );
   }
 
@@ -272,7 +272,7 @@ class DocsPagination {
       this.progressiveLoading.observer = null;
     }
 
-    const trigger = document.getElementById("loading-trigger");
+    const trigger = document.getElementById('loading-trigger');
     if (trigger) {
       trigger.remove();
     }
@@ -282,9 +282,9 @@ class DocsPagination {
    * Hide pagination controls during search
    */
   hidePaginationControls() {
-    const paginationContainer = document.getElementById("paginationContainer");
+    const paginationContainer = document.getElementById('paginationContainer');
     if (paginationContainer) {
-      paginationContainer.style.display = "none";
+      paginationContainer.style.display = 'none';
     }
   }
 
@@ -292,9 +292,9 @@ class DocsPagination {
    * Show pagination controls when not searching
    */
   showPaginationControls() {
-    const paginationContainer = document.getElementById("paginationContainer");
+    const paginationContainer = document.getElementById('paginationContainer');
     if (paginationContainer) {
-      paginationContainer.style.display = "block";
+      paginationContainer.style.display = 'block';
     }
   }
 
@@ -302,7 +302,7 @@ class DocsPagination {
    * Update search state display
    */
   updateSearchStateDisplay(isSearchActive) {
-    const paginationStats = document.querySelector(".pagination-stats");
+    const paginationStats = document.querySelector('.pagination-stats');
     if (paginationStats) {
       if (isSearchActive) {
         paginationStats.innerHTML = `
@@ -314,7 +314,7 @@ class DocsPagination {
         const startIndex = (this.currentPage - 1) * this.postsPerPage;
         const endIndex = Math.min(
           startIndex + this.postsPerPage,
-          this.allPosts.length,
+          this.allPosts.length
         );
         paginationStats.innerHTML = `
           <span class="pagination-stats">
@@ -329,37 +329,37 @@ class DocsPagination {
    * Setup event listeners
    */
   setupEventListeners() {
-    const prevBtn = document.querySelector(".prev-btn");
-    const nextBtn = document.querySelector(".next-btn");
-    const pageNumbers = document.querySelectorAll(".pagination-number");
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    const pageNumbers = document.querySelectorAll('.pagination-number');
     const infiniteScrollToggle = document.getElementById(
-      "infiniteScrollToggle",
+      'infiniteScrollToggle'
     );
 
     if (prevBtn) {
-      prevBtn.addEventListener("click", () =>
-        this.goToPage(this.currentPage - 1),
+      prevBtn.addEventListener('click', () =>
+        this.goToPage(this.currentPage - 1)
       );
     }
 
     if (nextBtn) {
-      nextBtn.addEventListener("click", () =>
-        this.goToPage(this.currentPage + 1),
+      nextBtn.addEventListener('click', () =>
+        this.goToPage(this.currentPage + 1)
       );
     }
 
-    pageNumbers.forEach((number) => {
-      number.addEventListener("click", (e) => {
+    pageNumbers.forEach(number => {
+      number.addEventListener('click', e => {
         const target = e.target;
         if (target?.getAttribute) {
-          const page = parseInt(target.getAttribute("data-page") || "1");
+          const page = parseInt(target.getAttribute('data-page') || '1');
           this.goToPage(page);
         }
       });
     });
 
     if (infiniteScrollToggle) {
-      infiniteScrollToggle.addEventListener("change", (e) => {
+      infiniteScrollToggle.addEventListener('change', e => {
         const target = e.target;
         if (target?.checked !== undefined) {
           this.toggleInfiniteScroll(target.checked);
@@ -376,7 +376,7 @@ class DocsPagination {
   setupInfiniteScroll() {
     let scrollTimeout;
 
-    window.addEventListener("scroll", () => {
+    window.addEventListener('scroll', () => {
       if (!this.isInfiniteScroll) return;
 
       clearTimeout(scrollTimeout);
@@ -408,14 +408,14 @@ class DocsPagination {
     const startIndex = this.loadedPosts;
     const endIndex = Math.min(
       startIndex + this.postsPerPage,
-      this.allPosts.length,
+      this.allPosts.length
     );
     const postsToLoad = this.allPosts.slice(startIndex, endIndex);
 
-    const contentState = document.getElementById("contentState");
+    const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
-    postsToLoad.forEach((post) => {
+    postsToLoad.forEach(post => {
       const postCard = this.createPostCard(post);
       contentState.appendChild(postCard);
     });
@@ -428,9 +428,9 @@ class DocsPagination {
    * Create post card element
    */
   createPostCard(post) {
-    const article = document.createElement("article");
-    article.className = "post-card";
-    article.setAttribute("data-post-slug", post.slug);
+    const article = document.createElement('article');
+    article.className = 'post-card';
+    article.setAttribute('data-post-slug', post.slug);
 
     article.innerHTML = `
       <div class="post-header">
@@ -439,12 +439,12 @@ class DocsPagination {
         </h2>
         <div class="post-meta">
           <span class="post-date">${post.date}</span>
-          ${post.readTime ? `<span class="post-readtime">${post.readTime}</span>` : ""}
+          ${post.readTime ? `<span class="post-readtime">${post.readTime}</span>` : ''}
         </div>
       </div>
       <p class="post-description">${post.description}</p>
       <div class="post-tags">
-        ${post.tags.map((tag) => `<span class="post-tag">${tag}</span>`).join("")}
+        ${post.tags.map(tag => `<span class="post-tag">${tag}</span>`).join('')}
       </div>
       <a href="${post.url || `/docs/${post.slug}`}" class="read-more-btn">Baca Selengkapnya →
     `;
@@ -471,16 +471,16 @@ class DocsPagination {
     const startIndex = (page - 1) * this.postsPerPage;
     const endIndex = Math.min(
       startIndex + this.postsPerPage,
-      this.allPosts.length,
+      this.allPosts.length
     );
     const postsToShow = this.allPosts.slice(startIndex, endIndex);
 
-    const contentState = document.getElementById("contentState");
+    const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
-    contentState.innerHTML = "";
+    contentState.innerHTML = '';
 
-    postsToShow.forEach((post) => {
+    postsToShow.forEach(post => {
       const postCard = this.createPostCard(post);
       contentState.appendChild(postCard);
     });
@@ -492,39 +492,39 @@ class DocsPagination {
    * Update pagination state and UI
    */
   updatePaginationState() {
-    const prevBtn = document.querySelector(".prev-btn");
-    const nextBtn = document.querySelector(".next-btn");
-    const pageNumbers = document.querySelectorAll(".pagination-number");
-    const paginationStats = document.querySelector(".pagination-stats");
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    const pageNumbers = document.querySelectorAll('.pagination-number');
+    const paginationStats = document.querySelector('.pagination-stats');
 
     if (prevBtn) {
       prevBtn.disabled = this.currentPage === 1;
-      prevBtn.setAttribute("data-page", String(this.currentPage - 1));
+      prevBtn.setAttribute('data-page', String(this.currentPage - 1));
     }
 
     if (nextBtn) {
       nextBtn.disabled = this.currentPage === this.totalPages;
-      nextBtn.setAttribute("data-page", String(this.currentPage + 1));
+      nextBtn.setAttribute('data-page', String(this.currentPage + 1));
     }
 
-    pageNumbers.forEach((number) => {
-      const page = parseInt(number.getAttribute("data-page") || "1");
-      number.classList.toggle("active", page === this.currentPage);
+    pageNumbers.forEach(number => {
+      const page = parseInt(number.getAttribute('data-page') || '1');
+      number.classList.toggle('active', page === this.currentPage);
     });
 
     if (paginationStats) {
       const startIndex = (this.currentPage - 1) * this.postsPerPage + 1;
       const endIndex = Math.min(
         this.currentPage * this.postsPerPage,
-        this.allPosts.length,
+        this.allPosts.length
       );
       paginationStats.textContent = `Menampilkan ${startIndex}-${endIndex} dari ${this.allPosts.length} dokumentasi`;
     }
 
-    const paginationContainer = document.querySelector(".pagination-container");
+    const paginationContainer = document.querySelector('.pagination-container');
     if (paginationContainer) {
       paginationContainer.style.display =
-        this.totalPages > 1 ? "block" : "none";
+        this.totalPages > 1 ? 'block' : 'none';
     }
   }
 
@@ -534,9 +534,9 @@ class DocsPagination {
   toggleInfiniteScroll(enabled) {
     this.isInfiniteScroll = enabled;
 
-    const paginationControls = document.querySelector(".pagination-controls");
+    const paginationControls = document.querySelector('.pagination-controls');
     if (paginationControls) {
-      paginationControls.style.display = enabled ? "none" : "flex";
+      paginationControls.style.display = enabled ? 'none' : 'flex';
     }
 
     if (enabled) {
@@ -551,13 +551,13 @@ class DocsPagination {
    * Display all loaded posts for infinite scroll
    */
   displayAllLoadedPosts() {
-    const contentState = document.getElementById("contentState");
+    const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
-    contentState.innerHTML = "";
+    contentState.innerHTML = '';
 
     const postsToShow = this.allPosts.slice(0, this.loadedPosts);
-    postsToShow.forEach((post) => {
+    postsToShow.forEach(post => {
       const postCard = this.createPostCard(post);
       contentState.appendChild(postCard);
     });
@@ -568,8 +568,8 @@ class DocsPagination {
    */
   updateURL(page) {
     const url = new URL(window.location.href);
-    url.searchParams.set("page", page.toString());
-    window.history.pushState({}, "", url);
+    url.searchParams.set('page', page.toString());
+    window.history.pushState({}, '', url);
   }
 
   /**
@@ -577,7 +577,7 @@ class DocsPagination {
    */
   initializeFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    const pageParam = urlParams.get("page");
+    const pageParam = urlParams.get('page');
 
     if (pageParam) {
       const page = parseInt(pageParam);
@@ -589,14 +589,14 @@ class DocsPagination {
 }
 
 // Export for use in other scripts
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = { DocsPagination };
 }
 
 // Auto-initialize if in browser environment
-if (typeof window !== "undefined") {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
       initializeDocsPagination();
     });
   } else {
@@ -604,14 +604,14 @@ if (typeof window !== "undefined") {
   }
 
   function initializeDocsPagination() {
-    console.log("📄 Initializing Docs Pagination...");
+    console.log('📄 Initializing Docs Pagination...');
 
     setTimeout(() => {
-      if (typeof DocsPagination !== "undefined") {
+      if (typeof DocsPagination !== 'undefined') {
         const pagination = new DocsPagination();
         pagination.initializeFromURL();
         window.docsPagination = pagination;
-        console.log("📄 Docs Pagination initialized successfully");
+        console.log('📄 Docs Pagination initialized successfully');
       }
     }, 100);
   }

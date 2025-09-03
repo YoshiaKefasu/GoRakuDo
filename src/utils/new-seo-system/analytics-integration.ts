@@ -7,32 +7,34 @@ export class AnalyticsIntegration {
   // シンプルで理解しやすいアナリティクスタグ生成（KISS原則）
   generateTags(analytics: AnalyticsConfig): string[] {
     const tags: string[] = [];
-    
+
     // Google Analytics
     if (analytics.googleAnalytics) {
       tags.push(...this.generateGoogleAnalyticsTags(analytics.googleAnalytics));
     }
-    
+
     // Google Tag Manager
     if (analytics.googleTagManager) {
-      tags.push(...this.generateGoogleTagManagerTags(analytics.googleTagManager));
+      tags.push(
+        ...this.generateGoogleTagManagerTags(analytics.googleTagManager)
+      );
     }
-    
+
     // Facebook Pixel
     if (analytics.facebookPixel) {
       tags.push(...this.generateFacebookPixelTags(analytics.facebookPixel));
     }
-    
+
     // Custom scripts
     if (analytics.customScripts) {
       analytics.customScripts.forEach((script: string) => {
         tags.push(this.generateCustomScriptTag(script));
       });
     }
-    
+
     return tags;
   }
-  
+
   // 共通のタグ生成ロジック（DRY原則）
   private generateGoogleAnalyticsTags(gaId: string): string[] {
     return [
@@ -42,10 +44,10 @@ export class AnalyticsIntegration {
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', '${gaId}');
-      </script>`
+      </script>`,
     ];
   }
-  
+
   private generateGoogleTagManagerTags(gtmId: string): string[] {
     return [
       `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -54,10 +56,10 @@ export class AnalyticsIntegration {
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','${gtmId}');</script>`,
       `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`,
     ];
   }
-  
+
   private generateFacebookPixelTags(pixelId: string): string[] {
     return [
       `<script>
@@ -74,10 +76,10 @@ export class AnalyticsIntegration {
       </script>`,
       `<noscript><img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1"
-      /></noscript>`
+      /></noscript>`,
     ];
   }
-  
+
   private generateCustomScriptTag(script: string): string {
     return `<script>${script}</script>`;
   }

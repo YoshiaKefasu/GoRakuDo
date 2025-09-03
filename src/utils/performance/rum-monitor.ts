@@ -9,13 +9,13 @@
 export interface RUMEvent {
   timestamp: number;
   type:
-    | "navigation"
-    | "resource"
-    | "paint"
-    | "largest-contentful-paint"
-    | "first-input"
-    | "layout-shift"
-    | "custom";
+    | 'navigation'
+    | 'resource'
+    | 'paint'
+    | 'largest-contentful-paint'
+    | 'first-input'
+    | 'layout-shift'
+    | 'custom';
   name: string;
   value?: number;
   metadata?: Record<string, any>;
@@ -101,7 +101,7 @@ export class RUMMonitor {
   initialize(): void {
     if (this.isInitialized) return;
 
-    console.log("🚀 Initializing Real User Monitoring (RUM)...");
+    console.log('🚀 Initializing Real User Monitoring (RUM)...');
 
     // Set up Core Web Vitals monitoring
     this.setupCoreWebVitals();
@@ -125,7 +125,7 @@ export class RUMMonitor {
     this.setupCustomMonitoring();
 
     this.isInitialized = true;
-    console.log("✅ RUM monitoring initialized successfully");
+    console.log('✅ RUM monitoring initialized successfully');
   }
 
   /**
@@ -133,16 +133,16 @@ export class RUMMonitor {
    */
   private setupCoreWebVitals(): void {
     // Largest Contentful Paint (LCP)
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const lcpObserver = new PerformanceObserver((list) => {
+        const lcpObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
           const lastEntry = entries[entries.length - 1] as any;
 
           this.addEvent({
             timestamp: Date.now(),
-            type: "largest-contentful-paint",
-            name: "LCP",
+            type: 'largest-contentful-paint',
+            name: 'LCP',
             value: lastEntry.startTime,
             metadata: {
               element: lastEntry.element?.tagName,
@@ -152,10 +152,10 @@ export class RUMMonitor {
           });
         });
 
-        lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
-        this.observers.set("lcp", lcpObserver);
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+        this.observers.set('lcp', lcpObserver);
       } catch (error) {
-        console.warn("LCP monitoring not supported:", error);
+        console.warn('LCP monitoring not supported:', error);
       }
     }
   }
@@ -164,14 +164,14 @@ export class RUMMonitor {
    * Set up Navigation Timing monitoring
    */
   private setupNavigationTiming(): void {
-    if ("performance" in window && "navigation" in performance) {
-      const navigation = performance.getEntriesByType("navigation")[0] as any;
+    if ('performance' in window && 'navigation' in performance) {
+      const navigation = performance.getEntriesByType('navigation')[0] as any;
 
       if (navigation) {
         this.addEvent({
           timestamp: Date.now(),
-          type: "navigation",
-          name: "NavigationTiming",
+          type: 'navigation',
+          name: 'NavigationTiming',
           metadata: {
             dnsLookup:
               navigation.domainLookupEnd - navigation.domainLookupStart,
@@ -191,18 +191,18 @@ export class RUMMonitor {
    * Set up Resource Timing monitoring
    */
   private setupResourceTiming(): void {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const resourceObserver = new PerformanceObserver((list) => {
+        const resourceObserver = new PerformanceObserver(list => {
           const entries = list.getEntries() as PerformanceResourceTiming[];
 
-          entries.forEach((entry) => {
+          entries.forEach(entry => {
             // Only track resources that took significant time
             if (entry.duration > 100) {
               this.addEvent({
                 timestamp: Date.now(),
-                type: "resource",
-                name: "ResourceTiming",
+                type: 'resource',
+                name: 'ResourceTiming',
                 value: entry.duration,
                 metadata: {
                   name: entry.name,
@@ -218,10 +218,10 @@ export class RUMMonitor {
           });
         });
 
-        resourceObserver.observe({ entryTypes: ["resource"] });
-        this.observers.set("resource", resourceObserver);
+        resourceObserver.observe({ entryTypes: ['resource'] });
+        this.observers.set('resource', resourceObserver);
       } catch (error) {
-        console.warn("Resource timing monitoring not supported:", error);
+        console.warn('Resource timing monitoring not supported:', error);
       }
     }
   }
@@ -230,25 +230,25 @@ export class RUMMonitor {
    * Set up Paint Timing monitoring
    */
   private setupPaintTiming(): void {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const paintObserver = new PerformanceObserver((list) => {
+        const paintObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
 
-          entries.forEach((entry) => {
+          entries.forEach(entry => {
             this.addEvent({
               timestamp: Date.now(),
-              type: "paint",
+              type: 'paint',
               name: entry.name,
               value: entry.startTime,
             });
           });
         });
 
-        paintObserver.observe({ entryTypes: ["paint"] });
-        this.observers.set("paint", paintObserver);
+        paintObserver.observe({ entryTypes: ['paint'] });
+        this.observers.set('paint', paintObserver);
       } catch (error) {
-        console.warn("Paint timing monitoring not supported:", error);
+        console.warn('Paint timing monitoring not supported:', error);
       }
     }
   }
@@ -257,17 +257,17 @@ export class RUMMonitor {
    * Set up Layout Shift monitoring
    */
   private setupLayoutShift(): void {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const layoutShiftObserver = new PerformanceObserver((list) => {
+        const layoutShiftObserver = new PerformanceObserver(list => {
           const entries = list.getEntries() as any[];
 
-          entries.forEach((entry) => {
+          entries.forEach(entry => {
             if (!entry.hadRecentInput) {
               this.addEvent({
                 timestamp: Date.now(),
-                type: "layout-shift",
-                name: "LayoutShift",
+                type: 'layout-shift',
+                name: 'LayoutShift',
                 value: entry.value,
                 metadata: {
                   sources: entry.sources?.map((source: any) => ({
@@ -281,10 +281,10 @@ export class RUMMonitor {
           });
         });
 
-        layoutShiftObserver.observe({ entryTypes: ["layout-shift"] });
-        this.observers.set("layout-shift", layoutShiftObserver);
+        layoutShiftObserver.observe({ entryTypes: ['layout-shift'] });
+        this.observers.set('layout-shift', layoutShiftObserver);
       } catch (error) {
-        console.warn("Layout shift monitoring not supported:", error);
+        console.warn('Layout shift monitoring not supported:', error);
       }
     }
   }
@@ -293,17 +293,17 @@ export class RUMMonitor {
    * Set up First Input monitoring
    */
   private setupFirstInput(): void {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const firstInputObserver = new PerformanceObserver((list) => {
+        const firstInputObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
 
-          entries.forEach((entry) => {
+          entries.forEach(entry => {
             const firstInputEntry = entry as any;
             this.addEvent({
               timestamp: Date.now(),
-              type: "first-input",
-              name: "FirstInput",
+              type: 'first-input',
+              name: 'FirstInput',
               value:
                 firstInputEntry.processingStart - firstInputEntry.startTime,
               metadata: {
@@ -314,10 +314,10 @@ export class RUMMonitor {
           });
         });
 
-        firstInputObserver.observe({ entryTypes: ["first-input"] });
-        this.observers.set("first-input", firstInputObserver);
+        firstInputObserver.observe({ entryTypes: ['first-input'] });
+        this.observers.set('first-input', firstInputObserver);
       } catch (error) {
-        console.warn("First input monitoring not supported:", error);
+        console.warn('First input monitoring not supported:', error);
       }
     }
   }
@@ -327,16 +327,16 @@ export class RUMMonitor {
    */
   private setupCustomMonitoring(): void {
     // Monitor long tasks
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const longTaskObserver = new PerformanceObserver((list) => {
+        const longTaskObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
 
-          entries.forEach((entry) => {
+          entries.forEach(entry => {
             this.addEvent({
               timestamp: Date.now(),
-              type: "custom",
-              name: "LongTask",
+              type: 'custom',
+              name: 'LongTask',
               value: entry.duration,
               metadata: {
                 startTime: entry.startTime,
@@ -346,21 +346,21 @@ export class RUMMonitor {
           });
         });
 
-        longTaskObserver.observe({ entryTypes: ["longtask"] });
-        this.observers.set("longtask", longTaskObserver);
+        longTaskObserver.observe({ entryTypes: ['longtask'] });
+        this.observers.set('longtask', longTaskObserver);
       } catch (error) {
-        console.warn("Long task monitoring not supported:", error);
+        console.warn('Long task monitoring not supported:', error);
       }
     }
 
     // Monitor memory usage
-    if ("memory" in performance) {
+    if ('memory' in performance) {
       setInterval(() => {
         const memory = (performance as any).memory;
         this.addEvent({
           timestamp: Date.now(),
-          type: "custom",
-          name: "MemoryUsage",
+          type: 'custom',
+          name: 'MemoryUsage',
           metadata: {
             usedJSHeapSize: memory.usedJSHeapSize,
             totalJSHeapSize: memory.totalJSHeapSize,
@@ -378,12 +378,12 @@ export class RUMMonitor {
   addCustomEvent(
     name: string,
     value?: number,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, any>
   ): void {
     const event: RUMEvent = {
       timestamp: Date.now(),
-      type: "custom",
-      name
+      type: 'custom',
+      name,
     };
 
     // Handle optional properties with exactOptionalPropertyTypes
@@ -415,26 +415,22 @@ export class RUMMonitor {
    * @returns Performance metrics object
    */
   getPerformanceMetrics(): RUMPerformanceMetrics {
-    const navigation = performance.getEntriesByType("navigation")[0] as any;
+    const navigation = performance.getEntriesByType('navigation')[0] as any;
     const resources = performance.getEntriesByType(
-      "resource",
+      'resource'
     ) as PerformanceResourceTiming[];
 
     // Calculate Core Web Vitals
     const lcpEvents = this.events.filter(
-      (e) => e.type === "largest-contentful-paint",
+      e => e.type === 'largest-contentful-paint'
     );
-    const fidEvents = this.events.filter((e) => e.type === "first-input");
-    const clsEvents = this.events.filter((e) => e.type === "layout-shift");
+    const fidEvents = this.events.filter(e => e.type === 'first-input');
+    const clsEvents = this.events.filter(e => e.type === 'layout-shift');
 
     const lcp =
-      lcpEvents.length > 0
-        ? Math.max(...lcpEvents.map((e) => e.value || 0))
-        : 0;
+      lcpEvents.length > 0 ? Math.max(...lcpEvents.map(e => e.value || 0)) : 0;
     const fid =
-      fidEvents.length > 0
-        ? Math.min(...fidEvents.map((e) => e.value || 0))
-        : 0;
+      fidEvents.length > 0 ? Math.min(...fidEvents.map(e => e.value || 0)) : 0;
     const cls = clsEvents.reduce((sum, e) => sum + (e.value || 0), 0);
 
     return {
@@ -475,7 +471,7 @@ export class RUMMonitor {
         width: window.innerWidth,
         height: window.innerHeight,
       },
-      connection: (navigator as any).connection?.effectiveType || "unknown",
+      connection: (navigator as any).connection?.effectiveType || 'unknown',
       deviceMemory: (navigator as any).deviceMemory,
       hardwareConcurrency: navigator.hardwareConcurrency,
     };
@@ -510,16 +506,16 @@ export class RUMMonitor {
       const report = this.getPerformanceReport();
 
       await fetch(endpoint, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(report),
       });
 
-      console.log("📊 Performance data sent to analytics");
+      console.log('📊 Performance data sent to analytics');
     } catch (error) {
-      console.error("Failed to send performance data:", error);
+      console.error('Failed to send performance data:', error);
     }
   }
 
@@ -527,7 +523,7 @@ export class RUMMonitor {
    * Clean up observers and resources
    */
   destroy(): void {
-    this.observers.forEach((observer) => observer.disconnect());
+    this.observers.forEach(observer => observer.disconnect());
     this.observers.clear();
     this.events = [];
     this.isInitialized = false;
@@ -546,10 +542,10 @@ export class RUMMonitor {
    * @returns User ID string
    */
   private generateUserId(): string {
-    let userId = localStorage.getItem("rum_user_id");
+    let userId = localStorage.getItem('rum_user_id');
     if (!userId) {
       userId = `user_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      localStorage.setItem("rum_user_id", userId);
+      localStorage.setItem('rum_user_id', userId);
     }
     return userId;
   }

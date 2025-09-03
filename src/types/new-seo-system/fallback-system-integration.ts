@@ -1,9 +1,9 @@
 /**
  * Fallback System Types - Legacy System Integration
- * 
+ *
  * This file provides backward compatibility for the old fallback-system.ts
  * while maintaining DRY and KISS principles.
- * 
+ *
  * DRY原則: 共通のバリデーション基本型を作成し、各システム固有のバリデーション型で継承
  * KISS原則: 複雑なバリデーション型定義をシンプルで理解しやすい構造に統合
  */
@@ -42,7 +42,7 @@ export function migrateFallbackConfig(
 ): BaseValidationConfig {
   return {
     isValid: 'isValid' in legacyConfig ? legacyConfig.isValid : true,
-    legacySupport: false
+    legacySupport: false,
   };
 }
 
@@ -57,4 +57,3 @@ export function isLegacyFallbackConfig(
     typeof (config as any).legacySupport === 'boolean'
   );
 }
-

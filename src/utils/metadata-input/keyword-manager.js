@@ -28,21 +28,24 @@ export class KeywordManager {
 
     for (const file of contentFiles) {
       try {
-        const result = this.metadataReader.readMetadata(file.path, file.content);
-        
+        const result = this.metadataReader.readMetadata(
+          file.path,
+          file.content
+        );
+
         if (result.success && result.metadata && result.metadata.tags) {
           result.metadata.tags.forEach(tag => {
             // Count frequency
             keywordFrequency.set(tag, (keywordFrequency.get(tag) || 0) + 1);
-            
+
             // Create keyword data
             const keywordData = {
               value: tag,
               priority: this.calculatePriority(tag, result.metadata),
               relatedKeywords: this.findRelatedKeywords(tag, result.metadata),
-              usageCount: 1
+              usageCount: 1,
             };
-            
+
             allKeywords.push(keywordData);
           });
         }
@@ -53,7 +56,7 @@ export class KeywordManager {
 
     // Update usage counts and cache
     this.updateKeywordCache(allKeywords, keywordFrequency);
-    
+
     return allKeywords;
   }
 
@@ -95,7 +98,7 @@ export class KeywordManager {
    */
   findRelatedKeywords(keyword, metadata) {
     const related = [];
-    
+
     // Add other tags from the same content
     if (metadata.tags) {
       related.push(...metadata.tags.filter(tag => tag !== keyword));
@@ -122,12 +125,15 @@ export class KeywordManager {
   updateKeywordCache(keywords, frequency) {
     for (const keyword of keywords) {
       const existing = this.keywordCache.get(keyword.value);
-      
+
       if (existing) {
         // Update existing keyword
-        existing.usageCount = frequency.get(keyword.value) || existing.usageCount;
+        existing.usageCount =
+          frequency.get(keyword.value) || existing.usageCount;
         existing.priority = Math.max(existing.priority, keyword.priority);
-        existing.relatedKeywords = [...new Set([...existing.relatedKeywords, ...keyword.relatedKeywords])];
+        existing.relatedKeywords = [
+          ...new Set([...existing.relatedKeywords, ...keyword.relatedKeywords]),
+        ];
       } else {
         // Add new keyword
         keyword.usageCount = frequency.get(keyword.value) || 1;
@@ -144,7 +150,7 @@ export class KeywordManager {
    */
   buildRelatedKeywordsMap() {
     this.relatedKeywordsMap.clear();
-    
+
     for (const [keyword, data] of this.keywordCache) {
       for (const related of data.relatedKeywords) {
         if (!this.relatedKeywordsMap.has(related)) {
@@ -175,20 +181,22 @@ export class KeywordManager {
         suggestions.push({
           ...data,
           matchType: 'exact',
-          relevance: this.calculateRelevance(input, keyword, data)
+          relevance: this.calculateRelevance(input, keyword, data),
         });
       }
     }
 
     // Find related keywords
     for (const [keyword, data] of this.keywordCache) {
-      if (data.relatedKeywords.some(related => 
-        related.toLowerCase().includes(inputLower)
-      )) {
+      if (
+        data.relatedKeywords.some(related =>
+          related.toLowerCase().includes(inputLower)
+        )
+      ) {
         suggestions.push({
           ...data,
           matchType: 'related',
-          relevance: this.calculateRelevance(input, keyword, data) * 0.8
+          relevance: this.calculateRelevance(input, keyword, data) * 0.8,
         });
       }
     }
@@ -211,7 +219,7 @@ export class KeywordManager {
    */
   getPopularKeywords(limit = 10) {
     const keywords = Array.from(this.keywordCache.values());
-    
+
     return keywords
       .sort((a, b) => {
         // Sort by usage count first, then by priority
@@ -263,10 +271,10 @@ export class KeywordManager {
    */
   checkDuplicateKeyword(keyword, existingKeywords) {
     const normalizedKeyword = keyword.toLowerCase().trim();
-    
+
     // Check exact duplicates
-    const exactMatch = existingKeywords.find(k => 
-      k.toLowerCase().trim() === normalizedKeyword
+    const exactMatch = existingKeywords.find(
+      k => k.toLowerCase().trim() === normalizedKeyword
     );
 
     if (exactMatch) {
@@ -274,7 +282,7 @@ export class KeywordManager {
         isDuplicate: true,
         type: 'exact',
         existing: exactMatch,
-        suggestion: null
+        suggestion: null,
       };
     }
 
@@ -289,7 +297,7 @@ export class KeywordManager {
         isDuplicate: false,
         type: 'similar',
         existing: null,
-        suggestion: similarKeywords[0]
+        suggestion: similarKeywords[0],
       };
     }
 
@@ -297,7 +305,7 @@ export class KeywordManager {
       isDuplicate: false,
       type: 'unique',
       existing: null,
-      suggestion: null
+      suggestion: null,
     };
   }
 
@@ -361,9 +369,11 @@ export class KeywordManager {
    */
   getKeywordStats() {
     const totalKeywords = this.keywordCache.size;
-    const totalUsage = Array.from(this.keywordCache.values())
-      .reduce((sum, data) => sum + data.usageCount, 0);
-    
+    const totalUsage = Array.from(this.keywordCache.values()).reduce(
+      (sum, data) => sum + data.usageCount,
+      0
+    );
+
     const priorityDistribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     for (const data of this.keywordCache.values()) {
       priorityDistribution[data.priority]++;
@@ -377,7 +387,7 @@ export class KeywordManager {
       mostUsedKeywords: this.getPopularKeywords(5),
       highestPriorityKeywords: Array.from(this.keywordCache.values())
         .sort((a, b) => b.priority - a.priority)
-        .slice(0, 5)
+        .slice(0, 5),
     };
   }
 

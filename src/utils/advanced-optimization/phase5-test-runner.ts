@@ -4,12 +4,15 @@
 // KISS原則: シンプルで確実なテスト実行
 
 import type { AdvancedOptimizationConfig } from '../../types/new-seo-system';
-import { validatePhase5Completion, generatePhase5CompletionReport } from './phase5-completion-validator.js';
+import {
+  validatePhase5Completion,
+  generatePhase5CompletionReport,
+} from './phase5-completion-validator.js';
 
 /**
  * Phase 5テスト実行システム
  * 高度化システムの包括的な動作確認
- * 
+ *
  * @param config - 高度化設定
  * @returns テスト実行結果
  */
@@ -32,7 +35,8 @@ export function runPhase5Tests(config: AdvancedOptimizationConfig): {
     // テスト用メタデータの準備
     const testMetadata = {
       title: 'Phase 5 Advanced Optimization Test',
-      description: 'Comprehensive test for advanced optimization system including structured data generation, quality monitoring, and algorithm enhancement',
+      description:
+        'Comprehensive test for advanced optimization system including structured data generation, quality monitoring, and algorithm enhancement',
       url: 'https://gorakudo.org/phase5-test',
       publishedDate: '2024-12-19',
       modifiedDate: '2024-12-19',
@@ -41,8 +45,8 @@ export function runPhase5Tests(config: AdvancedOptimizationConfig): {
         loadSpeed: 1500,
         clickRate: 3.5,
         dwellTime: 90,
-        conversionRate: 2.8
-      }
+        conversionRate: 2.8,
+      },
     };
 
     // Phase 5完了検証の実行
@@ -59,10 +63,9 @@ export function runPhase5Tests(config: AdvancedOptimizationConfig): {
         qualityScore: validationResult.details.qualityScore,
         enhancementScore: validationResult.details.enhancementScore,
         testCoverage: validationResult.details.testCoverage,
-        featureCompleteness: validationResult.details.featureCompleteness
-      }
+        featureCompleteness: validationResult.details.featureCompleteness,
+      },
     };
-
   } catch (error) {
     return {
       success: false,
@@ -70,14 +73,14 @@ export function runPhase5Tests(config: AdvancedOptimizationConfig): {
       summary: {
         status: 'failed',
         overallScore: 0,
-        completionRate: 0
+        completionRate: 0,
       },
       details: {
         qualityScore: 0,
         enhancementScore: 0,
         testCoverage: 0,
-        featureCompleteness: 0
-      }
+        featureCompleteness: 0,
+      },
     };
   }
 }
@@ -85,7 +88,7 @@ export function runPhase5Tests(config: AdvancedOptimizationConfig): {
 /**
  * Phase 5品質ゲートテスト
  * 品質ゲートの通過確認
- * 
+ *
  * @param config - 高度化設定
  * @returns 品質ゲートテスト結果
  */
@@ -98,23 +101,61 @@ export function runPhase5QualityGateTest(config: AdvancedOptimizationConfig): {
 } {
   try {
     const testResult = runPhase5Tests(config);
-    
+
     if (!testResult.success) {
       // 部分的な成功も考慮
-      const partialScore = Math.round((testResult.details.qualityScore + testResult.details.enhancementScore + testResult.details.testCoverage + testResult.details.featureCompleteness) / 4);
+      const partialScore = Math.round(
+        (testResult.details.qualityScore +
+          testResult.details.enhancementScore +
+          testResult.details.testCoverage +
+          testResult.details.featureCompleteness) /
+          4
+      );
       return {
         passed: partialScore >= 80,
         score: partialScore,
-        requirements: ['structuredDataGeneration', 'advancedQualityMonitoring', 'algorithmEnhancement', 'testCleanup'],
-        completedRequirements: partialScore >= 80 ? ['structuredDataGeneration', 'advancedQualityMonitoring', 'algorithmEnhancement', 'testCleanup'] : [],
-        missingRequirements: partialScore >= 80 ? [] : ['structuredDataGeneration', 'advancedQualityMonitoring', 'algorithmEnhancement', 'testCleanup']
+        requirements: [
+          'structuredDataGeneration',
+          'advancedQualityMonitoring',
+          'algorithmEnhancement',
+          'testCleanup',
+        ],
+        completedRequirements:
+          partialScore >= 80
+            ? [
+                'structuredDataGeneration',
+                'advancedQualityMonitoring',
+                'algorithmEnhancement',
+                'testCleanup',
+              ]
+            : [],
+        missingRequirements:
+          partialScore >= 80
+            ? []
+            : [
+                'structuredDataGeneration',
+                'advancedQualityMonitoring',
+                'algorithmEnhancement',
+                'testCleanup',
+              ],
       };
     }
 
     const { details } = testResult;
-    const overallScore = Math.round((details.qualityScore + details.enhancementScore + details.testCoverage + details.featureCompleteness) / 4);
-    
-    const requirements = ['structuredDataGeneration', 'advancedQualityMonitoring', 'algorithmEnhancement', 'testCleanup'];
+    const overallScore = Math.round(
+      (details.qualityScore +
+        details.enhancementScore +
+        details.testCoverage +
+        details.featureCompleteness) /
+        4
+    );
+
+    const requirements = [
+      'structuredDataGeneration',
+      'advancedQualityMonitoring',
+      'algorithmEnhancement',
+      'testCleanup',
+    ];
     const completedRequirements: string[] = [];
     const missingRequirements: string[] = [];
 
@@ -144,16 +185,25 @@ export function runPhase5QualityGateTest(config: AdvancedOptimizationConfig): {
       score: overallScore,
       requirements,
       completedRequirements,
-      missingRequirements
+      missingRequirements,
     };
-
   } catch (error) {
     return {
       passed: false,
       score: 0,
-      requirements: ['structuredDataGeneration', 'advancedQualityMonitoring', 'algorithmEnhancement', 'testCleanup'],
+      requirements: [
+        'structuredDataGeneration',
+        'advancedQualityMonitoring',
+        'algorithmEnhancement',
+        'testCleanup',
+      ],
       completedRequirements: [],
-      missingRequirements: ['structuredDataGeneration', 'advancedQualityMonitoring', 'algorithmEnhancement', 'testCleanup']
+      missingRequirements: [
+        'structuredDataGeneration',
+        'advancedQualityMonitoring',
+        'algorithmEnhancement',
+        'testCleanup',
+      ],
     };
   }
 }
@@ -161,7 +211,7 @@ export function runPhase5QualityGateTest(config: AdvancedOptimizationConfig): {
 /**
  * Phase 5統合テスト
  * 全システムの統合動作確認
- * 
+ *
  * @param config - 高度化設定
  * @returns 統合テスト結果
  */
@@ -176,12 +226,13 @@ export function runPhase5IntegrationTest(config: AdvancedOptimizationConfig): {
     const qualityGateResult = runPhase5QualityGateTest(config);
 
     const testResults: Record<string, boolean> = {
-      advancedOptimization: testResult.success || testResult.summary.overallScore >= 80,
+      advancedOptimization:
+        testResult.success || testResult.summary.overallScore >= 80,
       qualityGate: qualityGateResult.passed,
       structuredData: testResult.details.qualityScore >= 80,
       qualityMonitoring: testResult.details.qualityScore >= 80,
       algorithmEnhancement: testResult.details.enhancementScore >= 70,
-      testCleanup: testResult.details.testCoverage >= 80
+      testCleanup: testResult.details.testCoverage >= 80,
     };
 
     const issues: string[] = [];
@@ -203,15 +254,16 @@ export function runPhase5IntegrationTest(config: AdvancedOptimizationConfig): {
       success,
       testResults,
       issues,
-      recommendations
+      recommendations,
     };
-
   } catch (error) {
     return {
       success: false,
       testResults: {},
-      issues: [`Integration test error: ${error instanceof Error ? error.message : 'Unknown error'}`],
-      recommendations: ['Check system configuration and try again']
+      issues: [
+        `Integration test error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      ],
+      recommendations: ['Check system configuration and try again'],
     };
   }
 }

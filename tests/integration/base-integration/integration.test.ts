@@ -2,9 +2,11 @@ import { describe, it, expect } from 'vitest';
 import type {
   SEOIntegrationConfig,
   FallbackIntegrationConfig,
+} from '../../../src/types/new-seo-system/base-integration-integration';
+import {
   migrateLegacyConfig,
-  isLegacyConfig
-} from '../../../src/types/new-seo-system/base-integration-integration.js';
+  isLegacyConfig,
+} from '../../../src/types/new-seo-system/base-integration-integration';
 
 describe('Base Integration Integration Tests', () => {
   describe('Type Compatibility', () => {
@@ -13,7 +15,7 @@ describe('Base Integration Integration Tests', () => {
         enabled: true,
         apiEndpoint: 'https://api.example.com',
         timeout: 5000,
-        legacySupport: true
+        legacySupport: true,
       };
 
       expect(isLegacyConfig(legacyConfig)).toBe(true);
@@ -24,7 +26,7 @@ describe('Base Integration Integration Tests', () => {
         enabled: true,
         apiEndpoint: 'https://api.example.com',
         timeout: 5000,
-        legacySupport: true
+        legacySupport: true,
       };
 
       const newConfig = migrateLegacyConfig(legacyConfig);
@@ -41,7 +43,7 @@ describe('Base Integration Integration Tests', () => {
       const config: SEOIntegrationConfig = {
         enabled: true,
         apiEndpoint: 'https://api.example.com',
-        timeout: 5000
+        timeout: 5000,
       };
 
       // This should cause a TypeScript error if readonly is not enforced
@@ -58,7 +60,7 @@ describe('Base Integration Integration Tests', () => {
         enabled: true,
         apiEndpoint: 'https://api.example.com',
         timeout: 5000,
-        legacySupport: true
+        legacySupport: true,
       };
 
       const newConfig = migrateLegacyConfig(legacyConfig);
@@ -74,7 +76,7 @@ describe('Base Integration Integration Tests', () => {
       const config: SEOIntegrationConfig = {
         enabled: true,
         apiEndpoint: 'https://api.example.com',
-        timeout: 5000
+        timeout: 5000,
       };
 
       // Should have simple, flat structure

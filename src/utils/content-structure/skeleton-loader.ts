@@ -4,11 +4,11 @@
 
 export interface SkeletonConfig {
   type:
-    | "post-card"
-    | "search-result"
-    | "pagination"
-    | "content"
-    | "relationship-card";
+    | 'post-card'
+    | 'search-result'
+    | 'pagination'
+    | 'content'
+    | 'relationship-card';
   count?: number;
   className?: string;
 }
@@ -34,7 +34,7 @@ export interface SkeletonRelationshipCard {
 }
 
 // Generate skeleton post card HTML
-export function generateSkeletonPostCard(className: string = ""): string {
+export function generateSkeletonPostCard(className: string = ''): string {
   return `
     <article class="post-card skeleton-post-card ${className}">
       <div class="skeleton-post-header">
@@ -56,7 +56,7 @@ export function generateSkeletonPostCard(className: string = ""): string {
 }
 
 // Generate skeleton search result HTML
-export function generateSkeletonSearchResult(className: string = ""): string {
+export function generateSkeletonSearchResult(className: string = ''): string {
   return `
     <div class="search-result skeleton-search-result ${className}">
       <div class="skeleton-result-header">
@@ -76,7 +76,7 @@ export function generateSkeletonSearchResult(className: string = ""): string {
 }
 
 // Generate skeleton pagination HTML
-export function generateSkeletonPagination(className: string = ""): string {
+export function generateSkeletonPagination(className: string = ''): string {
   return `
     <div class="pagination-container skeleton-pagination ${className}">
       <div class="skeleton-pagination-info">
@@ -96,7 +96,7 @@ export function generateSkeletonPagination(className: string = ""): string {
 }
 
 // Generate skeleton content HTML
-export function generateSkeletonContent(className: string = ""): string {
+export function generateSkeletonContent(className: string = ''): string {
   return `
     <div class="post-content skeleton-content ${className}">
       <div class="skeleton-content-header">
@@ -124,7 +124,7 @@ export function generateSkeletonContent(className: string = ""): string {
 
 // Generate skeleton relationship card HTML
 export function generateSkeletonRelationshipCard(
-  className: string = "",
+  className: string = ''
 ): string {
   return `
     <div class="relationship-card skeleton-relationship-card ${className}">
@@ -139,26 +139,26 @@ export function generateSkeletonRelationshipCard(
 
 // Generate multiple skeleton items
 export function generateSkeletonItems(config: SkeletonConfig): string {
-  const { type, count = 1, className = "" } = config;
+  const { type, count = 1, className = '' } = config;
 
   try {
-    let skeletonHTML = "";
+    let skeletonHTML = '';
 
     for (let i = 0; i < count; i++) {
       switch (type) {
-        case "post-card":
+        case 'post-card':
           skeletonHTML += generateSkeletonPostCard(className);
           break;
-        case "search-result":
+        case 'search-result':
           skeletonHTML += generateSkeletonSearchResult(className);
           break;
-        case "pagination":
+        case 'pagination':
           skeletonHTML += generateSkeletonPagination(className);
           break;
-        case "content":
+        case 'content':
           skeletonHTML += generateSkeletonContent(className);
           break;
-        case "relationship-card":
+        case 'relationship-card':
           skeletonHTML += generateSkeletonRelationshipCard(className);
           break;
         default:
@@ -169,8 +169,8 @@ export function generateSkeletonItems(config: SkeletonConfig): string {
 
     return skeletonHTML;
   } catch (error) {
-    console.error("❌ Error generating skeleton items:", error);
-    return ""; // Return empty string as fallback
+    console.error('❌ Error generating skeleton items:', error);
+    return ''; // Return empty string as fallback
   }
 }
 
@@ -504,7 +504,7 @@ export function generateSkeletonCSS(): string {
 // Show skeleton loading
 export function showSkeleton(
   containerId: string,
-  config: SkeletonConfig,
+  config: SkeletonConfig
 ): void {
   try {
     const container = document.getElementById(containerId);
@@ -515,13 +515,13 @@ export function showSkeleton(
 
     const skeletonHTML = generateSkeletonItems(config);
     container.innerHTML = skeletonHTML;
-    container.classList.add("skeleton-loading");
+    container.classList.add('skeleton-loading');
 
     console.log(
-      `✅ Skeleton loading shown for ${containerId} (${config.type})`,
+      `✅ Skeleton loading shown for ${containerId} (${config.type})`
     );
   } catch (error) {
-    console.error("❌ Error showing skeleton:", error);
+    console.error('❌ Error showing skeleton:', error);
   }
 }
 
@@ -534,17 +534,17 @@ export function hideSkeleton(containerId: string): void {
       return;
     }
 
-    container.classList.remove("skeleton-loading");
-    container.classList.add("skeleton-fade-in");
+    container.classList.remove('skeleton-loading');
+    container.classList.add('skeleton-fade-in');
 
     // Remove fade-in class after animation
     setTimeout(() => {
-      container.classList.remove("skeleton-fade-in");
+      container.classList.remove('skeleton-fade-in');
     }, 500);
 
     console.log(`✅ Skeleton loading hidden for ${containerId}`);
   } catch (error) {
-    console.error("❌ Error hiding skeleton:", error);
+    console.error('❌ Error hiding skeleton:', error);
   }
 }
 
@@ -552,16 +552,16 @@ export function hideSkeleton(containerId: string): void {
 export function initializeSkeletonSystem(): void {
   try {
     // Inject skeleton CSS if not already present
-    if (!document.getElementById("skeleton-styles")) {
-      const style = document.createElement("style");
-      style.id = "skeleton-styles";
+    if (!document.getElementById('skeleton-styles')) {
+      const style = document.createElement('style');
+      style.id = 'skeleton-styles';
       style.textContent = generateSkeletonCSS();
       document.head.appendChild(style);
     }
 
-    console.log("✅ Skeleton loading system initialized");
+    console.log('✅ Skeleton loading system initialized');
   } catch (error) {
-    console.error("❌ Error initializing skeleton system:", error);
+    console.error('❌ Error initializing skeleton system:', error);
   }
 }
 
@@ -588,7 +588,7 @@ export class SkeletonManager {
   }
 
   hideAll(): void {
-    this.activeSkeletons.forEach((containerId) => {
+    this.activeSkeletons.forEach(containerId => {
       hideSkeleton(containerId);
     });
     this.activeSkeletons.clear();
@@ -602,4 +602,4 @@ export class SkeletonManager {
 // Export singleton instance
 export const skeletonManager = SkeletonManager.getInstance();
 
-console.log("✅ Skeleton loading utility loaded successfully");
+console.log('✅ Skeleton loading utility loaded successfully');

@@ -21,7 +21,7 @@ class DocsWaveAnimation {
         frequency: 0.008,
         speed: 0.015,
         offset: 0,
-        color: "rgba(139, 93, 255, 0.06)",
+        color: 'rgba(139, 93, 255, 0.06)',
         y: 0.75,
         yPos: 0,
       },
@@ -30,7 +30,7 @@ class DocsWaveAnimation {
         frequency: 0.006,
         speed: -0.012,
         offset: Math.PI / 3,
-        color: "rgba(139, 93, 255, 0.04)",
+        color: 'rgba(139, 93, 255, 0.04)',
         y: 0.8,
         yPos: 0,
       },
@@ -39,7 +39,7 @@ class DocsWaveAnimation {
         frequency: 0.01,
         speed: 0.018,
         offset: Math.PI / 2,
-        color: "rgba(139, 93, 255, 0.03)",
+        color: 'rgba(139, 93, 255, 0.03)',
         y: 0.85,
         yPos: 0,
       },
@@ -53,15 +53,15 @@ class DocsWaveAnimation {
    */
   initialize() {
     try {
-      this.canvas = document.getElementById("waveCanvas");
+      this.canvas = document.getElementById('waveCanvas');
       if (!this.canvas) {
-        console.warn("Wave canvas not found for docs page");
+        console.warn('Wave canvas not found for docs page');
         return;
       }
 
-      this.ctx = this.canvas?.getContext("2d");
+      this.ctx = this.canvas?.getContext('2d');
       if (!this.ctx) {
-        console.warn("Canvas context not available for docs page");
+        console.warn('Canvas context not available for docs page');
         return;
       }
 
@@ -69,9 +69,9 @@ class DocsWaveAnimation {
       this.setupEventListeners();
       this.isInitialized = true;
 
-      console.log("🌊 Docs wave animation initialized successfully");
+      console.log('🌊 Docs wave animation initialized successfully');
     } catch (error) {
-      console.error("Error initializing docs wave animation:", error);
+      console.error('Error initializing docs wave animation:', error);
     }
   }
 
@@ -79,15 +79,15 @@ class DocsWaveAnimation {
    * Setup event listeners
    */
   setupEventListeners() {
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       this.resizeCanvas();
     });
 
     // Intersection Observer for performance optimization
-    if ("IntersectionObserver" in window) {
+    if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
+        entries => {
+          entries.forEach(entry => {
             if (entry.isIntersecting) {
               this.startAnimation();
             } else {
@@ -97,8 +97,8 @@ class DocsWaveAnimation {
         },
         {
           threshold: 0.1,
-          rootMargin: "50px 0px",
-        },
+          rootMargin: '50px 0px',
+        }
       );
 
       if (this.canvas) {
@@ -123,7 +123,7 @@ class DocsWaveAnimation {
     this.canvas.height = height;
 
     // Update wave y positions based on new height
-    this.waves.forEach((wave) => {
+    this.waves.forEach(wave => {
       wave.yPos = height * wave.y;
     });
   }
@@ -177,9 +177,9 @@ class DocsWaveAnimation {
     if (!this.ctx || !this.canvas) return;
 
     const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-    gradient.addColorStop(0, "rgba(10, 10, 10, 1)");
-    gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)");
-    gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)");
+    gradient.addColorStop(0, 'rgba(10, 10, 10, 1)');
+    gradient.addColorStop(0.6, 'rgba(10, 10, 10, 0.98)');
+    gradient.addColorStop(1, 'rgba(139, 93, 255, 0.015)');
 
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -194,7 +194,7 @@ class DocsWaveAnimation {
     const width = this.canvas.width;
     const height = this.canvas.height;
 
-    this.waves.forEach((wave) => {
+    this.waves.forEach(wave => {
       this.ctx.beginPath();
       this.ctx.moveTo(0, height);
 
@@ -213,7 +213,7 @@ class DocsWaveAnimation {
       // Create wave gradient
       const waveGradient = this.ctx.createLinearGradient(0, 0, 0, height);
       waveGradient.addColorStop(0, wave.color);
-      waveGradient.addColorStop(1, "transparent");
+      waveGradient.addColorStop(1, 'transparent');
 
       this.ctx.fillStyle = waveGradient;
       this.ctx.fill();
@@ -241,7 +241,7 @@ class DocsWaveAnimation {
    * Set animation speed
    */
   setAnimationSpeed(speed) {
-    this.waves.forEach((wave) => {
+    this.waves.forEach(wave => {
       wave.speed = wave.speed * (speed / 1.0);
     });
   }
@@ -270,14 +270,14 @@ class DocsWaveAnimation {
 }
 
 // Export for use in other scripts
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = { DocsWaveAnimation };
 }
 
 // Auto-initialize if in browser environment
-if (typeof window !== "undefined") {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
       initializeDocsWaveAnimation();
     });
   } else {
@@ -285,13 +285,13 @@ if (typeof window !== "undefined") {
   }
 
   function initializeDocsWaveAnimation() {
-    console.log("🌊 Initializing Docs Wave Animation...");
+    console.log('🌊 Initializing Docs Wave Animation...');
 
     try {
       window.docsWaveAnimation = new DocsWaveAnimation();
-      console.log("✁EWave animation loaded successfully");
+      console.log('✁EWave animation loaded successfully');
     } catch (error) {
-      console.error("Error initializing docs wave animation:", error);
+      console.error('Error initializing docs wave animation:', error);
     }
   }
 }

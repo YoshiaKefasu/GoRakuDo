@@ -22,18 +22,18 @@ class PostSkeletonLoader {
       this.showInitialSkeleton();
 
       this.isInitialized = true;
-      console.log("✅ Post skeleton loader initialized successfully");
+      console.log('✅ Post skeleton loader initialized successfully');
     } catch (error) {
-      console.error("❌ Error initializing post skeleton loader:", error);
+      console.error('❌ Error initializing post skeleton loader:', error);
     }
   }
 
   initializeSkeletonSystem() {
     try {
       // Inject skeleton CSS if not already present
-      if (!document.getElementById("skeleton-styles")) {
-        const style = document.createElement("style");
-        style.id = "skeleton-styles";
+      if (!document.getElementById('skeleton-styles')) {
+        const style = document.createElement('style');
+        style.id = 'skeleton-styles';
         style.textContent = this.generateSkeletonCSS();
         document.head.appendChild(style);
       }
@@ -41,107 +41,107 @@ class PostSkeletonLoader {
       // Create skeleton manager
       this.skeletonManager = {
         show: (containerId, config) => this.showSkeleton(containerId, config),
-        hide: (containerId) => this.hideSkeleton(containerId),
+        hide: containerId => this.hideSkeleton(containerId),
         hideAll: () => this.hideAllSkeletons(),
       };
 
-      console.log("✅ Post skeleton system initialized");
+      console.log('✅ Post skeleton system initialized');
     } catch (error) {
-      console.error("❌ Error initializing post skeleton system:", error);
+      console.error('❌ Error initializing post skeleton system:', error);
     }
   }
 
   setupEventListeners() {
     try {
       // Markdown content loading events
-      document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener('DOMContentLoaded', () => {
         this.handleContentLoading();
       });
 
       // Relationship section loading events
       const relationshipSections = document.querySelectorAll(
-        ".relationship-section",
+        '.relationship-section'
       );
-      relationshipSections.forEach((section) => {
+      relationshipSections.forEach(section => {
         this.handleRelationshipSectionLoading(section);
       });
 
       // Navigation events
-      document.addEventListener("click", (e) => {
+      document.addEventListener('click', e => {
         if (e.target.matches('a[href^="/docs/"]')) {
           this.handlePostNavigation(e);
         }
       });
 
       // Back to docs button
-      const backToDocsBtn = document.querySelector(".back-to-docs");
+      const backToDocsBtn = document.querySelector('.back-to-docs');
       if (backToDocsBtn) {
-        backToDocsBtn.addEventListener("click", () => {
+        backToDocsBtn.addEventListener('click', () => {
           this.handleBackToDocs();
         });
       }
 
-      console.log("✅ Post event listeners set up");
+      console.log('✅ Post event listeners set up');
     } catch (error) {
-      console.error("❌ Error setting up post event listeners:", error);
+      console.error('❌ Error setting up post event listeners:', error);
     }
   }
 
   showInitialSkeleton() {
     try {
       // Show skeleton for post content if it's empty
-      const postContent = document.querySelector(".post-content");
+      const postContent = document.querySelector('.post-content');
       if (postContent && postContent.children.length === 0) {
-        this.showSkeleton("postContent", { type: "content", count: 1 });
+        this.showSkeleton('postContent', { type: 'content', count: 1 });
       }
 
       // Show skeleton for relationships if they exist but are empty
       const relationshipsContainer = document.querySelector(
-        ".relationships-container",
+        '.relationships-container'
       );
       if (
         relationshipsContainer &&
         relationshipsContainer.children.length === 0
       ) {
-        this.showSkeleton("relationshipsContainer", {
-          type: "relationship-card",
+        this.showSkeleton('relationshipsContainer', {
+          type: 'relationship-card',
           count: 3,
         });
       }
 
-      console.log("✅ Initial post skeleton shown");
+      console.log('✅ Initial post skeleton shown');
     } catch (error) {
-      console.error("❌ Error showing initial post skeleton:", error);
+      console.error('❌ Error showing initial post skeleton:', error);
     }
   }
 
   handleContentLoading() {
     try {
       // Check if markdown content is still loading
-      const markdownContent = document.querySelector(".markdown-content");
-      if (markdownContent && markdownContent.innerHTML.trim() === "") {
+      const markdownContent = document.querySelector('.markdown-content');
+      if (markdownContent && markdownContent.innerHTML.trim() === '') {
         // Show skeleton for content
-        this.showSkeleton("markdownContent", { type: "content", count: 1 });
+        this.showSkeleton('markdownContent', { type: 'content', count: 1 });
 
         // Hide skeleton after content loads
         setTimeout(() => {
-          this.hideSkeleton("markdownContent");
+          this.hideSkeleton('markdownContent');
         }, 1000);
       }
 
-      console.log("✅ Content loading skeleton handled");
+      console.log('✅ Content loading skeleton handled');
     } catch (error) {
-      console.error("❌ Error handling content loading:", error);
+      console.error('❌ Error handling content loading:', error);
     }
   }
 
   handleRelationshipSectionLoading(section) {
     try {
-      const sectionId = section.id || "relationshipSection";
+      const sectionId = section.id || 'relationshipSection';
 
       // Show skeleton for relationship section if it's empty
       if (section.children.length === 0) {
-        this.showSkeleton(sectionId, { type: "relationship-card", count: 2 });
+        this.showSkeleton(sectionId, { type: 'relationship-card', count: 2 });
 
         // Hide skeleton after relationships load
         setTimeout(() => {
@@ -149,34 +149,34 @@ class PostSkeletonLoader {
         }, 800);
       }
 
-      console.log("✅ Relationship section skeleton handled");
+      console.log('✅ Relationship section skeleton handled');
     } catch (error) {
-      console.error("❌ Error handling relationship section loading:", error);
+      console.error('❌ Error handling relationship section loading:', error);
     }
   }
 
   handlePostNavigation(event) {
     try {
-      const link = event.target.closest("a");
+      const link = event.target.closest('a');
       if (!link) return;
 
       // Show skeleton for post content
-      this.showSkeleton("postContent", { type: "content", count: 1 });
+      this.showSkeleton('postContent', { type: 'content', count: 1 });
 
       // Show skeleton for relationships if they exist
       const relationshipsContainer = document.getElementById(
-        "relationshipsContainer",
+        'relationshipsContainer'
       );
       if (relationshipsContainer) {
-        this.showSkeleton("relationshipsContainer", {
-          type: "relationship-card",
+        this.showSkeleton('relationshipsContainer', {
+          type: 'relationship-card',
           count: 3,
         });
       }
 
-      console.log("✅ Post navigation skeleton shown");
+      console.log('✅ Post navigation skeleton shown');
     } catch (error) {
-      console.error("❌ Error handling post navigation:", error);
+      console.error('❌ Error handling post navigation:', error);
     }
   }
 
@@ -184,15 +184,15 @@ class PostSkeletonLoader {
     try {
       // Show skeleton for docs page loading
       if (window.docsSkeletonLoader) {
-        window.docsSkeletonLoader.showSkeleton("postsContainer", {
-          type: "post-card",
+        window.docsSkeletonLoader.showSkeleton('postsContainer', {
+          type: 'post-card',
           count: 3,
         });
       }
 
-      console.log("✅ Back to docs skeleton shown");
+      console.log('✅ Back to docs skeleton shown');
     } catch (error) {
-      console.error("❌ Error handling back to docs:", error);
+      console.error('❌ Error handling back to docs:', error);
     }
   }
 
@@ -206,14 +206,14 @@ class PostSkeletonLoader {
 
       const skeletonHTML = this.generateSkeletonHTML(config);
       container.innerHTML = skeletonHTML;
-      container.classList.add("skeleton-loading");
+      container.classList.add('skeleton-loading');
 
       // Track loading state
       this.loadingStates.set(containerId, config);
 
       console.log(`✅ Post skeleton shown for ${containerId} (${config.type})`);
     } catch (error) {
-      console.error("❌ Error showing post skeleton:", error);
+      console.error('❌ Error showing post skeleton:', error);
     }
   }
 
@@ -225,12 +225,12 @@ class PostSkeletonLoader {
         return;
       }
 
-      container.classList.remove("skeleton-loading");
-      container.classList.add("skeleton-fade-in");
+      container.classList.remove('skeleton-loading');
+      container.classList.add('skeleton-fade-in');
 
       // Remove fade-in class after animation
       setTimeout(() => {
-        container.classList.remove("skeleton-fade-in");
+        container.classList.remove('skeleton-fade-in');
       }, 500);
 
       // Remove from loading states
@@ -238,7 +238,7 @@ class PostSkeletonLoader {
 
       console.log(`✅ Post skeleton hidden for ${containerId}`);
     } catch (error) {
-      console.error("❌ Error hiding post skeleton:", error);
+      console.error('❌ Error hiding post skeleton:', error);
     }
   }
 
@@ -248,23 +248,23 @@ class PostSkeletonLoader {
         this.hideSkeleton(containerId);
       });
 
-      console.log("✅ All post skeletons hidden");
+      console.log('✅ All post skeletons hidden');
     } catch (error) {
-      console.error("❌ Error hiding all post skeletons:", error);
+      console.error('❌ Error hiding all post skeletons:', error);
     }
   }
 
   generateSkeletonHTML(config) {
     try {
-      const { type, count = 1, className = "" } = config;
-      let skeletonHTML = "";
+      const { type, count = 1, className = '' } = config;
+      let skeletonHTML = '';
 
       for (let i = 0; i < count; i++) {
         switch (type) {
-          case "content":
+          case 'content':
             skeletonHTML += this.generateContentSkeleton(className);
             break;
-          case "relationship-card":
+          case 'relationship-card':
             skeletonHTML += this.generateRelationshipCardSkeleton(className);
             break;
           default:
@@ -275,12 +275,12 @@ class PostSkeletonLoader {
 
       return skeletonHTML;
     } catch (error) {
-      console.error("❌ Error generating post skeleton HTML:", error);
-      return "";
+      console.error('❌ Error generating post skeleton HTML:', error);
+      return '';
     }
   }
 
-  generateContentSkeleton(className = "") {
+  generateContentSkeleton(className = '') {
     return `
       <div class="post-content skeleton-content ${className}">
         <div class="skeleton-content-header">
@@ -310,7 +310,7 @@ class PostSkeletonLoader {
     `;
   }
 
-  generateRelationshipCardSkeleton(className = "") {
+  generateRelationshipCardSkeleton(className = '') {
     return `
       <div class="relationship-card skeleton-relationship-card ${className}">
         <div class="skeleton-relationship-header">
@@ -508,18 +508,18 @@ class PostSkeletonLoader {
 }
 
 // Initialize skeleton loader when DOM is ready
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
   try {
     // Create global instance
     window.postSkeletonLoader = new PostSkeletonLoader();
 
-    console.log("✅ Post skeleton loader ready");
+    console.log('✅ Post skeleton loader ready');
   } catch (error) {
-    console.error("❌ Error initializing post skeleton loader:", error);
+    console.error('❌ Error initializing post skeleton loader:', error);
   }
 });
 
 // Export for module usage
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = PostSkeletonLoader;
 }

@@ -2,7 +2,7 @@
 // Google 2025 Engineering Team - Astro + Vue + Tailwind v4.1
 // Purpose: Auto-detect and resolve content collection paths dynamically
 
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 
 // ========== TYPE DEFINITIONS ==========
 export interface ContentPathConfig {
@@ -26,45 +26,45 @@ export interface PathResolutionResult {
 // Easy to modify for future collection additions or name changes
 const CONTENT_PATH_CONFIG: ContentPathConfig[] = [
   {
-    collectionName: "docs",
-    basePath: "/docs",
-    displayName: "Docs",
-    icon: "📚",
+    collectionName: 'docs',
+    basePath: '/docs',
+    displayName: 'Docs',
+    icon: '📚',
     priority: 1,
   },
   {
-    collectionName: "articles",
-    basePath: "/articles",
-    displayName: "Articles",
-    icon: "📄",
+    collectionName: 'articles',
+    basePath: '/articles',
+    displayName: 'Articles',
+    icon: '📄',
     priority: 2,
   },
   {
-    collectionName: "guides",
-    basePath: "/guides",
-    displayName: "Guides",
-    icon: "📚",
+    collectionName: 'guides',
+    basePath: '/guides',
+    displayName: 'Guides',
+    icon: '📚',
     priority: 3,
   },
   {
-    collectionName: "tutorials",
-    basePath: "/tutorials",
-    displayName: "Tutorials",
-    icon: "🎓",
+    collectionName: 'tutorials',
+    basePath: '/tutorials',
+    displayName: 'Tutorials',
+    icon: '🎓',
     priority: 4,
   },
   {
-    collectionName: "posts",
-    basePath: "/posts",
-    displayName: "Posts",
-    icon: "📮",
+    collectionName: 'posts',
+    basePath: '/posts',
+    displayName: 'Posts',
+    icon: '📮',
     priority: 5,
   },
   {
-    collectionName: "tool-articles",
-    basePath: "/tools",
-    displayName: "Tools",
-    icon: "🛠️",
+    collectionName: 'tool-articles',
+    basePath: '/tools',
+    displayName: 'Tools',
+    icon: '🛠️',
     priority: 6,
     // Note: This collection uses nested routing: /tools/{tool-name}/{article-slug}
     // The basePath is /tools, but individual articles are at /tools/{tool}/{slug}
@@ -87,7 +87,7 @@ export function resolveContentPath(
     data?: any;
     collection?: string;
   },
-  collectionName?: string,
+  collectionName?: string
 ): PathResolutionResult {
   try {
     // Determine collection name from post or parameter
@@ -96,7 +96,7 @@ export function resolveContentPath(
 
     // Find matching configuration
     const config = CONTENT_PATH_CONFIG.find(
-      (c) => c.collectionName === detectedCollectionName,
+      c => c.collectionName === detectedCollectionName
     );
 
     if (config) {
@@ -114,19 +114,19 @@ export function resolveContentPath(
     return {
       path: fallbackPath,
       displayName: formatDisplayName(detectedCollectionName),
-      icon: "📄", // Default icon
+      icon: '📄', // Default icon
       collectionName: detectedCollectionName,
       isFallback: true,
     };
   } catch (error) {
-    console.warn("Content path resolution failed:", error);
+    console.warn('Content path resolution failed:', error);
 
     // Ultimate fallback
     return {
       path: `/docs/${post.slug}`, // Updated to docs
-      displayName: "Docs",
-      icon: "📚",
-      collectionName: "docs",
+      displayName: 'Docs',
+      icon: '📚',
+      collectionName: 'docs',
       isFallback: true,
     };
   }
@@ -142,13 +142,13 @@ export function resolveContentPath(
 export function getCollectionBasePath(collectionName: string): string {
   try {
     const config = CONTENT_PATH_CONFIG.find(
-      (c) => c.collectionName === collectionName,
+      c => c.collectionName === collectionName
     );
 
     return config?.basePath || `/${collectionName}`;
   } catch (error) {
-    console.warn("Collection base path resolution failed:", error);
-    return "/docs"; // Fallback to docs default
+    console.warn('Collection base path resolution failed:', error);
+    return '/docs'; // Fallback to docs default
   }
 }
 
@@ -165,7 +165,7 @@ export function getCollectionMetadata(collectionName: string): {
 } {
   try {
     const config = CONTENT_PATH_CONFIG.find(
-      (c) => c.collectionName === collectionName,
+      c => c.collectionName === collectionName
     );
 
     if (config) {
@@ -179,16 +179,16 @@ export function getCollectionMetadata(collectionName: string): {
     // Fallback metadata
     return {
       displayName: formatDisplayName(collectionName),
-      icon: "📄",
+      icon: '📄',
       basePath: `/${collectionName}`,
     };
   } catch (error) {
-    console.warn("Collection metadata resolution failed:", error);
+    console.warn('Collection metadata resolution failed:', error);
 
     return {
-      displayName: "Docs",
-      icon: "📚",
-      basePath: "/docs",
+      displayName: 'Docs',
+      icon: '📚',
+      basePath: '/docs',
     };
   }
 }
@@ -215,19 +215,19 @@ function detectCollectionFromEntry(post: CollectionEntry<any>): string {
 
     // Fallback: try to infer from entry structure
     // This can be enhanced based on your content schema
-    if (typedPost.data?.category === "guide") {
-      return "guides";
+    if (typedPost.data?.category === 'guide') {
+      return 'guides';
     }
 
-    if (typedPost.data?.category === "tutorial") {
-      return "tutorials";
+    if (typedPost.data?.category === 'tutorial') {
+      return 'tutorials';
     }
 
     // Default to docs for backward compatibility
-    return "docs";
+    return 'docs';
   } catch (error) {
-    console.warn("Collection detection failed:", error);
-    return "docs"; // Safe fallback
+    console.warn('Collection detection failed:', error);
+    return 'docs'; // Safe fallback
   }
 }
 
@@ -241,12 +241,12 @@ function detectCollectionFromEntry(post: CollectionEntry<any>): string {
 function formatDisplayName(collectionName: string): string {
   try {
     return collectionName
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   } catch (error) {
-    console.warn("Display name formatting failed:", error);
-    return "Content";
+    console.warn('Display name formatting failed:', error);
+    return 'Content';
   }
 }
 
@@ -260,7 +260,7 @@ export function addCollectionConfig(config: ContentPathConfig): void {
   try {
     // Check if collection already exists
     const existingIndex = CONTENT_PATH_CONFIG.findIndex(
-      (c) => c.collectionName === config.collectionName,
+      c => c.collectionName === config.collectionName
     );
 
     if (existingIndex >= 0) {
@@ -274,7 +274,7 @@ export function addCollectionConfig(config: ContentPathConfig): void {
       CONTENT_PATH_CONFIG.sort((a, b) => a.priority - b.priority);
     }
   } catch (error) {
-    console.error("Failed to add collection config:", error);
+    console.error('Failed to add collection config:', error);
   }
 }
 
@@ -302,19 +302,19 @@ export function validateCollectionConfig(config: ContentPathConfig): {
   const errors: string[] = [];
 
   if (!config.collectionName) {
-    errors.push("Collection name is required");
+    errors.push('Collection name is required');
   }
 
   if (!config.basePath) {
-    errors.push("Base path is required");
+    errors.push('Base path is required');
   }
 
   if (!config.displayName) {
-    errors.push("Display name is required");
+    errors.push('Display name is required');
   }
 
   if (!config.icon) {
-    errors.push("Icon is required");
+    errors.push('Icon is required');
   }
 
   return {

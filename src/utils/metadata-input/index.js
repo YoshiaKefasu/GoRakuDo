@@ -4,71 +4,71 @@
 // Follows DRY + KISS principles by centralizing exports
 
 // Core metadata reading functionality
-export { 
-  MetadataReader, 
-  createMetadataReader, 
-  readFileMetadata, 
-  validateMetadata, 
-  extractKeywords 
+export {
+  MetadataReader,
+  createMetadataReader,
+  readFileMetadata,
+  validateMetadata,
+  extractKeywords,
 } from './metadata-reader.js';
 
 // Fallback system functionality
-export { 
-  ContentExtractor, 
-  createContentExtractor, 
-  extractTitle, 
-  extractDescription, 
-  extractTags 
+export {
+  ContentExtractor,
+  createContentExtractor,
+  extractTitle,
+  extractDescription,
+  extractTags,
 } from './content-extractor.js';
 
-export { 
-  QualityEvaluator, 
-  createQualityEvaluator, 
-  evaluateTextQuality, 
-  isTextQualityAcceptable, 
-  getTextQualityRecommendations 
+export {
+  QualityEvaluator,
+  createQualityEvaluator,
+  evaluateTextQuality,
+  isTextQualityAcceptable,
+  getTextQualityRecommendations,
 } from './quality-evaluator.js';
 
-export { 
-  PriorityManager, 
-  createPriorityManager, 
-  compareSourcePriorities, 
-  selectHighestPrioritySource, 
-  mergeMetadataByPriority 
+export {
+  PriorityManager,
+  createPriorityManager,
+  compareSourcePriorities,
+  selectHighestPrioritySource,
+  mergeMetadataByPriority,
 } from './priority-manager.js';
 
-export { 
-  TitleAnalyzer, 
-  createTitleAnalyzer, 
-  extractTitleKeywords, 
-  analyzeTitle 
+export {
+  TitleAnalyzer,
+  createTitleAnalyzer,
+  extractTitleKeywords,
+  analyzeTitle,
 } from './title-analyzer.js';
 
-export { 
-  ConfigManager, 
-  createConfigManager, 
-  getConfig, 
-  setConfig, 
-  resetConfig, 
-  exportConfig, 
-  importConfig 
+export {
+  ConfigManager,
+  createConfigManager,
+  getConfig,
+  setConfig,
+  resetConfig,
+  exportConfig,
+  importConfig,
 } from './config-manager.js';
 
 // Enhanced keyword management functionality
-export { 
-  KeywordManager, 
-  createKeywordManager, 
-  extractKeywordsFromContent, 
-  getKeywordSuggestions, 
-  checkDuplicateKeyword 
+export {
+  KeywordManager,
+  createKeywordManager,
+  extractKeywordsFromContent,
+  getKeywordSuggestions,
+  checkDuplicateKeyword,
 } from './keyword-manager.js';
 
 // Comprehensive metadata input management
-export { 
-  MetadataInputManager, 
-  createMetadataInputManager, 
-  initializeMetadataInputSystem, 
-  saveMetadata 
+export {
+  MetadataInputManager,
+  createMetadataInputManager,
+  initializeMetadataInputSystem,
+  saveMetadata,
 } from './metadata-input-manager.js';
 
 // ========== SYSTEM INITIALIZATION ==========
@@ -82,36 +82,40 @@ export {
 export async function initializeMetadataInputSystem(config = {}) {
   try {
     console.log('🚀 Initializing Metadata Input System...');
-    
+
     // Import and initialize all components
-    const { createMetadataInputManager } = await import('./metadata-input-manager.js');
+    const { createMetadataInputManager } = await import(
+      './metadata-input-manager.js'
+    );
     const { createKeywordManager } = await import('./keyword-manager.js');
     const { createMetadataReader } = await import('./metadata-reader.js');
-    
+
     // Create component instances
     const metadataReader = createMetadataReader();
     const keywordManager = createKeywordManager();
     const inputManager = createMetadataInputManager();
-    
+
     // Initialize the main manager
     await inputManager.initialize(config);
-    
+
     console.log('✅ Metadata Input System initialized successfully');
-    
+
     return {
       metadataReader,
       keywordManager,
       inputManager,
-      
+
       // Convenience methods
-      readMetadata: (filePath, content) => inputManager.readMetadata(filePath, content),
-      saveMetadata: (filePath, metadata, immediate) => inputManager.saveMetadata(filePath, metadata, immediate),
-      getKeywordSuggestions: (input, limit) => inputManager.getKeywordSuggestions(input, limit),
-      validateMetadata: (metadata) => inputManager.validateMetadata(metadata),
+      readMetadata: (filePath, content) =>
+        inputManager.readMetadata(filePath, content),
+      saveMetadata: (filePath, metadata, immediate) =>
+        inputManager.saveMetadata(filePath, metadata, immediate),
+      getKeywordSuggestions: (input, limit) =>
+        inputManager.getKeywordSuggestions(input, limit),
+      validateMetadata: metadata => inputManager.validateMetadata(metadata),
       getSystemStats: () => inputManager.getSystemStats(),
-      cleanup: () => inputManager.cleanup()
+      cleanup: () => inputManager.cleanup(),
     };
-    
   } catch (error) {
     console.error('❌ Failed to initialize Metadata Input System:', error);
     throw error;
@@ -165,26 +169,27 @@ export async function quickValidateMetadata(metadata) {
  */
 export async function getSystemStatus() {
   try {
-    const { createMetadataInputManager } = await import('./metadata-input-manager.js');
+    const { createMetadataInputManager } = await import(
+      './metadata-input-manager.js'
+    );
     const manager = createMetadataInputManager();
-    
+
     return {
       status: 'ready',
       components: {
         metadataReader: 'available',
         keywordManager: 'available',
-        inputManager: 'available'
+        inputManager: 'available',
       },
       timestamp: new Date().toISOString(),
-      version: '1.0.0'
+      version: '1.0.0',
     };
-    
   } catch (error) {
     return {
       status: 'error',
       error: error.message,
       timestamp: new Date().toISOString(),
-      version: '1.0.0'
+      version: '1.0.0',
     };
   }
 }
@@ -211,5 +216,5 @@ export default {
   quickKeywordSuggestions,
   quickValidateMetadata,
   getSystemStatus,
-  isSystemReady
+  isSystemReady,
 };

@@ -17,13 +17,13 @@
  * @framework Astro SSG with Vue and Tailwind v4.1
  */
 
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 import {
   generateInternalLinks,
   type InternalLinkSuggestion,
-} from "./content-analysis";
-import { resolveContentPath } from "../content-path-resolver";
-import { logger } from "../logging/console-logger";
+} from './content-analysis';
+import { resolveContentPath } from '../content-path-resolver';
+import { logger } from '../logging/console-logger';
 
 // ========== PERFORMANCE CACHING ==========
 
@@ -78,9 +78,9 @@ export interface WordToLinkConfig {
   /** Show tooltip on hover */
   showTooltip: boolean;
   /** Tooltip display style */
-  tooltipStyle: "simple" | "detailed" | "minimal";
+  tooltipStyle: 'simple' | 'detailed' | 'minimal';
   /** Link visual style */
-  linkStyle: "invisible" | "subtle" | "minimal";
+  linkStyle: 'invisible' | 'subtle' | 'minimal';
 
   // Content filtering
   /** CSS selectors to exclude from linking */
@@ -112,181 +112,181 @@ export interface WordToLinkConfig {
  */
 const INDONESIAN_CONJUNCTIONS = [
   // Coordinating conjunctions (kata penghubung koordinatif)
-  "dan",
-  "yang",
-  "atau",
-  "tetapi",
-  "namun",
-  "melainkan",
-  "sedangkan",
-  "padahal",
+  'dan',
+  'yang',
+  'atau',
+  'tetapi',
+  'namun',
+  'melainkan',
+  'sedangkan',
+  'padahal',
 
   // Subordinating conjunctions (kata penghubung subordinatif)
-  "karena",
-  "sebab",
-  "oleh karena",
-  "karena itu",
-  "oleh sebab itu",
-  "jika",
-  "kalau",
-  "apabila",
-  "bila",
-  "manakala",
-  "asalkan",
-  "sehingga",
-  "sampai",
-  "hingga",
-  "agar",
-  "supaya",
-  "untuk",
-  "ketika",
-  "saat",
-  "waktu",
-  "selama",
-  "sementara",
-  "sebelum",
-  "sesudah",
-  "setelah",
-  "sejak",
-  "hingga",
-  "sampai",
-  "selama",
-  "meskipun",
-  "walaupun",
-  "biarpun",
-  "kendatipun",
-  "sekalipun",
-  "seperti",
-  "sebagai",
-  "laksana",
-  "bagaikan",
-  "umpama",
-  "ibarat",
-  "bahwa",
-  "agar",
-  "supaya",
-  "untuk",
-  "guna",
+  'karena',
+  'sebab',
+  'oleh karena',
+  'karena itu',
+  'oleh sebab itu',
+  'jika',
+  'kalau',
+  'apabila',
+  'bila',
+  'manakala',
+  'asalkan',
+  'sehingga',
+  'sampai',
+  'hingga',
+  'agar',
+  'supaya',
+  'untuk',
+  'ketika',
+  'saat',
+  'waktu',
+  'selama',
+  'sementara',
+  'sebelum',
+  'sesudah',
+  'setelah',
+  'sejak',
+  'hingga',
+  'sampai',
+  'selama',
+  'meskipun',
+  'walaupun',
+  'biarpun',
+  'kendatipun',
+  'sekalipun',
+  'seperti',
+  'sebagai',
+  'laksana',
+  'bagaikan',
+  'umpama',
+  'ibarat',
+  'bahwa',
+  'agar',
+  'supaya',
+  'untuk',
+  'guna',
 
   // Correlative conjunctions (kata penghubung korelatif)
-  "baik...maupun",
-  "tidak hanya...tetapi juga",
-  "entah...entah",
-  "bukan hanya...melainkan juga",
-  "demikian...sehingga",
+  'baik...maupun',
+  'tidak hanya...tetapi juga',
+  'entah...entah',
+  'bukan hanya...melainkan juga',
+  'demikian...sehingga',
 
   // Common conjunctions
-  "serta",
-  "dengan",
-  "tanpa",
-  "kecuali",
-  "selain",
-  "termasuk",
-  "seperti",
-  "sebagai",
-  "dalam",
-  "pada",
-  "di",
-  "ke",
-  "dari",
-  "untuk",
-  "kepada",
-  "terhadap",
-  "oleh",
-  "dengan",
-  "tanpa",
-  "sejak",
-  "hingga",
-  "sampai",
-  "selama",
-  "sementara",
-  "ketika",
-  "saat",
-  "waktu",
-  "sebelum",
-  "sesudah",
-  "setelah",
-  "karena",
-  "sebab",
-  "oleh karena",
-  "karena itu",
-  "jika",
-  "kalau",
-  "apabila",
-  "bila",
-  "asalkan",
-  "meskipun",
-  "walaupun",
-  "biarpun",
-  "kendatipun",
-  "sehingga",
-  "sampai",
-  "hingga",
-  "agar",
-  "supaya",
-  "seperti",
-  "sebagai",
-  "laksana",
-  "bagaikan",
-  "bahwa",
-  "agar",
-  "supaya",
-  "untuk",
-  "guna",
+  'serta',
+  'dengan',
+  'tanpa',
+  'kecuali',
+  'selain',
+  'termasuk',
+  'seperti',
+  'sebagai',
+  'dalam',
+  'pada',
+  'di',
+  'ke',
+  'dari',
+  'untuk',
+  'kepada',
+  'terhadap',
+  'oleh',
+  'dengan',
+  'tanpa',
+  'sejak',
+  'hingga',
+  'sampai',
+  'selama',
+  'sementara',
+  'ketika',
+  'saat',
+  'waktu',
+  'sebelum',
+  'sesudah',
+  'setelah',
+  'karena',
+  'sebab',
+  'oleh karena',
+  'karena itu',
+  'jika',
+  'kalau',
+  'apabila',
+  'bila',
+  'asalkan',
+  'meskipun',
+  'walaupun',
+  'biarpun',
+  'kendatipun',
+  'sehingga',
+  'sampai',
+  'hingga',
+  'agar',
+  'supaya',
+  'seperti',
+  'sebagai',
+  'laksana',
+  'bagaikan',
+  'bahwa',
+  'agar',
+  'supaya',
+  'untuk',
+  'guna',
 
   // Additional common conjunctions
-  "atau",
-  "dan",
-  "tetapi",
-  "namun",
-  "melainkan",
-  "sedangkan",
-  "padahal",
-  "serta",
-  "dengan",
-  "tanpa",
-  "kecuali",
-  "selain",
-  "termasuk",
-  "dalam",
-  "pada",
-  "di",
-  "ke",
-  "dari",
-  "kepada",
-  "terhadap",
-  "oleh",
-  "sejak",
-  "hingga",
-  "sampai",
-  "selama",
-  "sementara",
-  "ketika",
-  "saat",
-  "waktu",
-  "sebelum",
-  "sesudah",
-  "setelah",
-  "karena",
-  "sebab",
-  "jika",
-  "kalau",
-  "apabila",
-  "bila",
-  "asalkan",
-  "meskipun",
-  "walaupun",
-  "biarpun",
-  "kendatipun",
-  "sehingga",
-  "agar",
-  "supaya",
-  "seperti",
-  "sebagai",
-  "laksana",
-  "bagaikan",
-  "bahwa",
-  "guna",
+  'atau',
+  'dan',
+  'tetapi',
+  'namun',
+  'melainkan',
+  'sedangkan',
+  'padahal',
+  'serta',
+  'dengan',
+  'tanpa',
+  'kecuali',
+  'selain',
+  'termasuk',
+  'dalam',
+  'pada',
+  'di',
+  'ke',
+  'dari',
+  'kepada',
+  'terhadap',
+  'oleh',
+  'sejak',
+  'hingga',
+  'sampai',
+  'selama',
+  'sementara',
+  'ketika',
+  'saat',
+  'waktu',
+  'sebelum',
+  'sesudah',
+  'setelah',
+  'karena',
+  'sebab',
+  'jika',
+  'kalau',
+  'apabila',
+  'bila',
+  'asalkan',
+  'meskipun',
+  'walaupun',
+  'biarpun',
+  'kendatipun',
+  'sehingga',
+  'agar',
+  'supaya',
+  'seperti',
+  'sebagai',
+  'laksana',
+  'bagaikan',
+  'bahwa',
+  'guna',
 ];
 
 // ========== RESULT INTERFACES ==========
@@ -330,7 +330,7 @@ export interface WordMatch {
   /** Target link information */
   targetLink: InternalLinkSuggestion;
   /** Type of match (exact/partial) */
-  matchType: "exact" | "partial";
+  matchType: 'exact' | 'partial';
 }
 
 export const DEFAULT_WORD_TO_LINK_CONFIG: WordToLinkConfig = {
@@ -346,8 +346,8 @@ export const DEFAULT_WORD_TO_LINK_CONFIG: WordToLinkConfig = {
 
   // Display settings
   showTooltip: true,
-  tooltipStyle: "simple",
-  linkStyle: "invisible",
+  tooltipStyle: 'simple',
+  linkStyle: 'invisible',
 
   // Content filtering
   excludeSelectors: [],
@@ -379,23 +379,23 @@ export const DEFAULT_WORD_TO_LINK_CONFIG: WordToLinkConfig = {
  */
 export async function convertWordsToInternalLinks(
   content: string,
-  currentPost: CollectionEntry<"docs">,
-  allPosts: CollectionEntry<"docs">[],
-  config: Partial<WordToLinkConfig> = {},
+  currentPost: CollectionEntry<'docs'>,
+  allPosts: CollectionEntry<'docs'>[],
+  config: Partial<WordToLinkConfig> = {}
 ): Promise<WordToLinkResult> {
   const startTime = performance.now();
   const finalConfig = { ...DEFAULT_WORD_TO_LINK_CONFIG, ...config };
 
   // Essential logging for functionality tracking
   logger.verbose(
-    `Processing word-to-link conversion for "${currentPost.slug}"`,
+    `Processing word-to-link conversion for "${currentPost.slug}"`
   );
 
   // Step 1: Generate internal link suggestions using existing system
   const linkSuggestions = generateInternalLinks(
     currentPost,
     allPosts,
-    finalConfig.maxConversionsPerArticle,
+    finalConfig.maxConversionsPerArticle
   );
 
   if (linkSuggestions.length === 0) {
@@ -408,12 +408,12 @@ export async function convertWordsToInternalLinks(
 
   // Create target variations map for word matching
   const targetVariations = new Map<string, InternalLinkSuggestion>();
-  linkSuggestions.forEach((link) => {
+  linkSuggestions.forEach(link => {
     const title = link.targetTitle;
     const variations = generateWordVariations(title, finalConfig);
 
     // Add variations to the map
-    variations.forEach((variation) => {
+    variations.forEach(variation => {
       if (
         variation.length >= finalConfig.minWordLength &&
         variation.length <= finalConfig.maxWordLength
@@ -424,7 +424,7 @@ export async function convertWordsToInternalLinks(
 
     // Also add individual words from the title for better matching
     const titleWords = title.split(/\s+/);
-    titleWords.forEach((word) => {
+    titleWords.forEach(word => {
       const cleanWord = cleanWordForMatching(word, finalConfig);
       if (
         cleanWord.length >= finalConfig.minWordLength &&
@@ -445,7 +445,7 @@ export async function convertWordsToInternalLinks(
   const convertedWords = new Set<string>();
 
   // Process each section
-  sections.forEach((section) => {
+  sections.forEach(section => {
     if (section.isHeader) {
       // SIMPLE APPROACH: Skip headers completely - no word matching at all
       currentPosition += section.content.length;
@@ -455,7 +455,7 @@ export async function convertWordsToInternalLinks(
     // Only process non-header sections for word matching
     const words = extractWordsFromContent(section.content, finalConfig);
 
-    words.forEach((word) => {
+    words.forEach(word => {
       if (matchCount >= finalConfig.maxConversionsPerArticle) {
         return; // Stop if we've reached the limit
       }
@@ -495,7 +495,7 @@ export async function convertWordsToInternalLinks(
           position,
           context,
           relevance: 1.0, // Exact matches get perfect relevance
-          matchType: "exact",
+          matchType: 'exact',
         });
 
         // NEW: Mark this word as converted
@@ -503,7 +503,7 @@ export async function convertWordsToInternalLinks(
 
         matchCount++;
         logger.verbose(
-          `Found exact match: "${word}" → "${exactMatch.targetTitle}"`,
+          `Found exact match: "${word}" → "${exactMatch.targetTitle}"`
         );
         return;
       }
@@ -522,7 +522,7 @@ export async function convertWordsToInternalLinks(
             targetLink,
             position,
             context,
-            matchType: "partial",
+            matchType: 'partial',
             relevance,
           });
 
@@ -531,7 +531,7 @@ export async function convertWordsToInternalLinks(
 
           matchCount++;
           logger.verbose(
-            `Found partial match: "${word}" → "${targetLink.targetTitle}" (relevance: ${relevance.toFixed(2)})`,
+            `Found partial match: "${word}" → "${targetLink.targetTitle}" (relevance: ${relevance.toFixed(2)})`
           );
           break;
         }
@@ -545,7 +545,7 @@ export async function convertWordsToInternalLinks(
 
   if (wordMatches.length === 0) {
     logger.verbose(
-      `No word matches found for conversion in "${currentPost.slug}"`,
+      `No word matches found for conversion in "${currentPost.slug}"`
     );
     return createEmptyResult(content, startTime);
   }
@@ -554,18 +554,18 @@ export async function convertWordsToInternalLinks(
   const enhancedContent = convertWordsToLinks(
     content,
     wordMatches,
-    finalConfig,
+    finalConfig
   );
 
   const processingTime = performance.now() - startTime;
 
   logger.verbose(
-    `Word-to-link conversion complete: ${wordMatches.length} words converted in ${processingTime.toFixed(2)}ms`,
+    `Word-to-link conversion complete: ${wordMatches.length} words converted in ${processingTime.toFixed(2)}ms`
   );
 
   return {
     enhancedContent,
-    conversions: wordMatches.map((match) => ({
+    conversions: wordMatches.map(match => ({
       originalWord: match.word,
       targetSlug: match.targetLink.targetSlug,
       targetTitle: match.targetLink.targetTitle,
@@ -588,9 +588,9 @@ export async function convertWordsToInternalLinks(
  */
 export async function convertWordsToInternalLinksInHTML(
   htmlContent: string,
-  currentPost: CollectionEntry<"docs">,
-  allPosts: CollectionEntry<"docs">[],
-  config: Partial<WordToLinkConfig> = {},
+  currentPost: CollectionEntry<'docs'>,
+  allPosts: CollectionEntry<'docs'>[],
+  config: Partial<WordToLinkConfig> = {}
 ): Promise<WordToLinkResult> {
   const startTime = performance.now();
   const finalConfig = { ...DEFAULT_WORD_TO_LINK_CONFIG, ...config };
@@ -599,7 +599,7 @@ export async function convertWordsToInternalLinksInHTML(
   const linkSuggestions = generateInternalLinks(
     currentPost,
     allPosts,
-    finalConfig.maxConversionsPerArticle,
+    finalConfig.maxConversionsPerArticle
   );
 
   if (linkSuggestions.length === 0) {
@@ -607,14 +607,14 @@ export async function convertWordsToInternalLinksInHTML(
   }
 
   // Step 2: Create a temporary DOM element to parse HTML
-  const tempDiv = document.createElement("div");
+  const tempDiv = document.createElement('div');
   tempDiv.innerHTML = htmlContent;
 
   // Step 3: Find and convert words in text nodes (excluding headers)
   const conversions = await processHTMLNodes(
     tempDiv,
     linkSuggestions,
-    finalConfig,
+    finalConfig
   );
 
   // Step 4: Get the processed HTML
@@ -639,7 +639,7 @@ export async function convertWordsToInternalLinksInHTML(
 async function processHTMLNodes(
   element: HTMLElement,
   linkSuggestions: InternalLinkSuggestion[],
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): Promise<
   Array<{
     originalWord: string;
@@ -659,10 +659,10 @@ async function processHTMLNodes(
 
   // Create target variations map
   const targetVariations = new Map<string, InternalLinkSuggestion>();
-  linkSuggestions.forEach((link) => {
+  linkSuggestions.forEach(link => {
     const title = link.targetTitle;
     const variations = generateWordVariations(title, config);
-    variations.forEach((variation) => {
+    variations.forEach(variation => {
       if (
         variation.length >= config.minWordLength &&
         variation.length <= config.maxWordLength
@@ -684,7 +684,7 @@ async function processHTMLNodes(
       // Skip text nodes in excluded elements
       if (
         parent &&
-        config.excludeSelectors.some((selector) => parent.matches(selector))
+        config.excludeSelectors.some(selector => parent.matches(selector))
       ) {
         return NodeFilter.FILTER_REJECT;
       }
@@ -696,7 +696,7 @@ async function processHTMLNodes(
   let node;
   while ((node = walker.nextNode())) {
     const textNode = node as Text;
-    const text = textNode.textContent || "";
+    const text = textNode.textContent || '';
 
     // Find word matches in this text node
     const matches = findWordMatchesInText(text, targetVariations, config);
@@ -706,18 +706,16 @@ async function processHTMLNodes(
       const fragment = document.createDocumentFragment();
       let lastIndex = 0;
 
-      matches.forEach((match) => {
+      matches.forEach(match => {
         // Add text before the match
         if (match.startIndex > lastIndex) {
           fragment.appendChild(
-            document.createTextNode(
-              text.substring(lastIndex, match.startIndex),
-            ),
+            document.createTextNode(text.substring(lastIndex, match.startIndex))
           );
         }
 
         // Create the link element
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         // Use dynamic path resolution
         try {
           const resolvedPath = resolveContentPath({
@@ -727,11 +725,11 @@ async function processHTMLNodes(
         } catch (error) {
           console.warn(
             `Failed to resolve path for ${match.targetLink.targetSlug}:`,
-            error,
+            error
           );
           link.href = `/docs/${match.targetLink.targetSlug}`;
         }
-        link.className = "word-internal-link word-link-invisible";
+        link.className = 'word-internal-link word-link-invisible';
         link.title = cleanTooltipText(match.targetLink.targetTitle);
         link.textContent = match.word;
 
@@ -746,7 +744,7 @@ async function processHTMLNodes(
           position: match.startIndex,
           context: text.substring(
             Math.max(0, match.startIndex - 20),
-            match.endIndex + 20,
+            match.endIndex + 20
           ),
         });
       });
@@ -754,7 +752,7 @@ async function processHTMLNodes(
       // Add remaining text
       if (lastIndex < text.length) {
         fragment.appendChild(
-          document.createTextNode(text.substring(lastIndex)),
+          document.createTextNode(text.substring(lastIndex))
         );
       }
 
@@ -772,7 +770,7 @@ async function processHTMLNodes(
 function findWordMatchesInText(
   text: string,
   targetVariations: Map<string, InternalLinkSuggestion>,
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): Array<{
   word: string;
   startIndex: number;
@@ -789,7 +787,7 @@ function findWordMatchesInText(
   const words = text.split(/\s+/);
   let currentIndex = 0;
 
-  words.forEach((word) => {
+  words.forEach(word => {
     const cleanWord = cleanWordForMatching(word, config);
 
     if (
@@ -841,7 +839,7 @@ function findWordMatchesInText(
  */
 function splitContentIntoSections(
   content: string,
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): Array<{
   content: string;
   isHeader: boolean;
@@ -855,7 +853,7 @@ function splitContentIntoSections(
     endPosition: number;
   }> = [];
 
-  const lines = content.split("\n");
+  const lines = content.split('\n');
   let currentPosition = 0;
 
   lines.forEach((line, lineIndex) => {
@@ -866,7 +864,7 @@ function splitContentIntoSections(
       line,
       lineIndex,
       lines.length,
-      config,
+      config
     );
 
     if (!isHeader) {
@@ -912,7 +910,7 @@ function isComprehensiveHeader(
   line: string,
   lineIndex: number,
   totalLines: number,
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): boolean {
   if (!config.excludeHeaders) return false;
 
@@ -966,25 +964,25 @@ function isComprehensiveHeader(
 
   // Layer 4: Keyword-Based Detection (Specific content patterns)
   const headerKeywords = [
-    "Filosofi",
-    "Landasan",
-    "Metodologi",
-    "Pembelajaran",
-    "Bahasa",
-    "Introduction",
-    "Pendahuluan",
-    "Kesimpulan",
-    "Conclusion",
-    "Chapter",
-    "Bab",
-    "Section",
-    "Bagian",
-    "Part",
-    "Bagian",
+    'Filosofi',
+    'Landasan',
+    'Metodologi',
+    'Pembelajaran',
+    'Bahasa',
+    'Introduction',
+    'Pendahuluan',
+    'Kesimpulan',
+    'Conclusion',
+    'Chapter',
+    'Bab',
+    'Section',
+    'Bagian',
+    'Part',
+    'Bagian',
   ];
 
   const hasHeaderKeywords = headerKeywords.some(
-    (keyword) => trimmedLine.includes(keyword) && trimmedLine.includes(":"),
+    keyword => trimmedLine.includes(keyword) && trimmedLine.includes(':')
   );
 
   if (hasHeaderKeywords && trimmedLine.length > 20) {
@@ -994,7 +992,7 @@ function isComprehensiveHeader(
 
   // Layer 5: Content Structure Detection
   const isStructuredHeader =
-    trimmedLine.includes(":") &&
+    trimmedLine.includes(':') &&
     trimmedLine.length > 15 &&
     trimmedLine.length < 80 &&
     /^[A-Z]/.test(trimmedLine) &&
@@ -1019,9 +1017,9 @@ function isComprehensiveHeader(
  */
 function extractWordsFromContent(
   content: string,
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): string[] {
-  return content.split(/\s+/).filter((word) => {
+  return content.split(/\s+/).filter(word => {
     const cleanWord = cleanWordForMatching(word, config);
     return (
       cleanWord.length >= config.minWordLength &&
@@ -1127,8 +1125,8 @@ function isIndonesianConjunction(word: string): boolean {
  */
 function isCompleteIndonesianWord(word: string): boolean {
   // Remove common Indonesian prefixes and suffixes
-  const prefixes = ["ber", "ter", "per", "se", "ke", "di", "me", "pe"];
-  const suffixes = ["kan", "an", "i", "nya", "lah", "kah", "tah", "pun"];
+  const prefixes = ['ber', 'ter', 'per', 'se', 'ke', 'di', 'me', 'pe'];
+  const suffixes = ['kan', 'an', 'i', 'nya', 'lah', 'kah', 'tah', 'pun'];
 
   let baseWord = word.toLowerCase();
 
@@ -1165,7 +1163,7 @@ function isCompleteIndonesianWord(word: string): boolean {
  */
 function generateWordVariations(
   title: string,
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): string[] {
   // Check cache first for performance
   const cacheKey = `${title}_${config.minWordLength}_${config.maxWordLength}`;
@@ -1180,7 +1178,7 @@ function generateWordVariations(
 
   // Add individual words from the title
   const words = title.split(/\s+/);
-  words.forEach((word) => {
+  words.forEach(word => {
     const cleanWord = cleanWordForMatching(word, config);
     if (cleanWord.length >= config.minWordLength) {
       variations.push(cleanWord);
@@ -1189,7 +1187,7 @@ function generateWordVariations(
 
   // Add key phrases (2-word combinations)
   for (let i = 0; i < words.length - 1; i++) {
-    const phrase = words.slice(i, i + 2).join(" ");
+    const phrase = words.slice(i, i + 2).join(' ');
     if (
       phrase.length >= config.minWordLength &&
       phrase.length <= config.maxWordLength
@@ -1201,7 +1199,7 @@ function generateWordVariations(
   // Add 3-word phrases for longer titles
   if (words.length >= 3) {
     for (let i = 0; i < words.length - 2; i++) {
-      const phrase = words.slice(i, i + 3).join(" ");
+      const phrase = words.slice(i, i + 3).join(' ');
       if (
         phrase.length >= config.minWordLength &&
         phrase.length <= config.maxWordLength
@@ -1232,12 +1230,12 @@ function cleanWordForMatching(word: string, config: WordToLinkConfig): string {
   }
 
   // Remove punctuation but preserve Indonesian characters
-  const cleaned = word.replace(/[^\w\s\u00C0-\u017F]/g, "").trim();
+  const cleaned = word.replace(/[^\w\s\u00C0-\u017F]/g, '').trim();
 
   // If respecting Indonesian words, ensure it's a complete word
   if (config.respectIndonesianWords) {
     // Don't break Indonesian compound words
-    if (cleaned.includes("-") || cleaned.includes("_")) {
+    if (cleaned.includes('-') || cleaned.includes('_')) {
       performanceCache.cleanedWords.set(cacheKey, cleaned);
       return cleaned;
     }
@@ -1280,7 +1278,7 @@ function cleanWordForMatching(word: string, config: WordToLinkConfig): string {
 function convertWordsToLinks(
   content: string,
   wordMatches: WordMatch[],
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): string {
   if (wordMatches.length === 0) return content;
 
@@ -1290,7 +1288,7 @@ function convertWordsToLinks(
   let currentPosition = 0;
 
   // Process each section
-  sections.forEach((section) => {
+  sections.forEach(section => {
     if (section.isHeader) {
       // Skip header sections completely - no word replacement
       currentPosition += section.content.length;
@@ -1299,31 +1297,31 @@ function convertWordsToLinks(
 
     // Only process non-header sections for word replacement
     const sectionMatches = wordMatches.filter(
-      (match) =>
+      match =>
         match.position >= currentPosition &&
-        match.position < currentPosition + section.content.length,
+        match.position < currentPosition + section.content.length
     );
 
     if (sectionMatches.length > 0) {
       // Process matches from highest position to lowest to maintain text indices
       const sortedMatches = [...sectionMatches].sort(
-        (a, b) => b.position - a.position,
+        (a, b) => b.position - a.position
       );
 
       let sectionContent = section.content;
 
-      sortedMatches.forEach((match) => {
+      sortedMatches.forEach(match => {
         const linkHTML = generateWordLinkHTML(
           match.word,
           match.targetLink,
-          config,
+          config
         );
 
         // Find and replace the specific word occurrence within this section
         const wordRegex = createWordRegex(match.word);
         let replacementCount = 0;
 
-        sectionContent = sectionContent.replace(wordRegex, (foundWord) => {
+        sectionContent = sectionContent.replace(wordRegex, foundWord => {
           replacementCount++;
           // Only replace the first occurrence to avoid over-linking
           return replacementCount === 1 ? linkHTML : foundWord;
@@ -1333,7 +1331,7 @@ function convertWordsToLinks(
       // Replace the section content in the enhanced content
       enhancedContent = enhancedContent.replace(
         section.content,
-        sectionContent,
+        sectionContent
       );
     }
 
@@ -1371,7 +1369,7 @@ function convertWordsToLinks(
 function generateWordLinkHTML(
   originalWord: string,
   targetLink: InternalLinkSuggestion,
-  config: WordToLinkConfig,
+  config: WordToLinkConfig
 ): string {
   // Use dynamic path resolution
   let linkUrl: string;
@@ -1388,23 +1386,23 @@ function generateWordLinkHTML(
   // NEW: Clean tooltip text to show only the post title
   const tooltipText = cleanTooltipText(targetLink.targetTitle);
 
-  let className = "word-internal-link";
+  let className = 'word-internal-link';
 
   // Apply styling based on config
   switch (config.linkStyle) {
-    case "invisible":
-      className += " word-link-invisible";
+    case 'invisible':
+      className += ' word-link-invisible';
       break;
-    case "subtle":
-      className += " word-link-subtle";
+    case 'subtle':
+      className += ' word-link-subtle';
       break;
-    case "minimal":
-      className += " word-link-minimal";
+    case 'minimal':
+      className += ' word-link-minimal';
       break;
   }
 
   // Add tooltip if enabled
-  let tooltipAttr = "";
+  let tooltipAttr = '';
   if (config.showTooltip) {
     tooltipAttr = `title="${tooltipText}"`;
   }
@@ -1420,7 +1418,7 @@ function generateWordLinkHTML(
  */
 function createWordRegex(word: string): RegExp {
   const escapedWord = escapeRegex(word);
-  return new RegExp(`\\b${escapedWord}\\b`, "g");
+  return new RegExp(`\\b${escapedWord}\\b`, 'g');
 }
 
 /**
@@ -1433,28 +1431,28 @@ function createWordRegex(word: string): RegExp {
 function cleanTooltipText(title: string): string {
   // Remove common prefixes
   const prefixesToRemove = [
-    "Baca juga:",
-    "Baca juga :",
-    "Related:",
-    "Related :",
-    "Lihat juga:",
-    "Lihat juga :",
-    "📖",
-    "🔗",
-    "📘",
+    'Baca juga:',
+    'Baca juga :',
+    'Related:',
+    'Related :',
+    'Lihat juga:',
+    'Lihat juga :',
+    '📖',
+    '🔗',
+    '📘',
   ];
 
   let cleanTitle = title;
 
   // Remove prefixes
-  prefixesToRemove.forEach((prefix) => {
+  prefixesToRemove.forEach(prefix => {
     if (cleanTitle.startsWith(prefix)) {
       cleanTitle = cleanTitle.substring(prefix.length).trim();
     }
   });
 
   // Remove extra whitespace and normalize
-  cleanTitle = cleanTitle.replace(/\s+/g, " ").trim();
+  cleanTitle = cleanTitle.replace(/\s+/g, ' ').trim();
 
   // If title is empty after cleaning, use original
   if (!cleanTitle) {
@@ -1471,7 +1469,7 @@ function cleanTooltipText(title: string): string {
  * @returns Escaped string safe for regex
  */
 function escapeRegex(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 // ========== UTILITY FUNCTIONS ==========
@@ -1485,7 +1483,7 @@ function escapeRegex(string: string): string {
  */
 function createEmptyResult(
   content: string,
-  startTime: number,
+  startTime: number
 ): WordToLinkResult {
   return {
     enhancedContent: content,
@@ -1506,13 +1504,13 @@ function createEmptyResult(
  */
 export async function convertWords(
   content: string,
-  currentPost: CollectionEntry<"docs">,
-  allPosts: CollectionEntry<"docs">[],
+  currentPost: CollectionEntry<'docs'>,
+  allPosts: CollectionEntry<'docs'>[]
 ): Promise<string> {
   const result = await convertWordsToInternalLinks(
     content,
     currentPost,
-    allPosts,
+    allPosts
   );
   return result.enhancedContent;
 }
@@ -1521,7 +1519,7 @@ export async function convertWords(
  * Configuration builder for custom setups
  */
 export function createWordToLinkConfig(
-  overrides: Partial<WordToLinkConfig>,
+  overrides: Partial<WordToLinkConfig>
 ): WordToLinkConfig {
   return { ...DEFAULT_WORD_TO_LINK_CONFIG, ...overrides };
 }

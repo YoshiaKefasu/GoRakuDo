@@ -9,12 +9,12 @@
 export class PriorityManager {
   constructor() {
     this.priorityLevels = {
-      manual: 100,      // Highest priority
-      auto: 80,         // Medium-high priority
-      fallback: 60,     // Medium priority
-      default: 40       // Lowest priority
+      manual: 100, // Highest priority
+      auto: 80, // Medium-high priority
+      fallback: 60, // Medium priority
+      default: 40, // Lowest priority
     };
-    
+
     this.fieldPriorities = {
       title: 'critical',
       description: 'high',
@@ -22,7 +22,7 @@ export class PriorityManager {
       category: 'medium',
       difficulty: 'low',
       author: 'low',
-      publishedDate: 'low'
+      publishedDate: 'low',
     };
   }
 
@@ -53,7 +53,7 @@ export class PriorityManager {
   compareSources(source1, source2) {
     const priority1 = this.getSourcePriority(source1);
     const priority2 = this.getSourcePriority(source2);
-    
+
     if (priority1 > priority2) return -1;
     if (priority1 < priority2) return 1;
     return 0;
@@ -72,7 +72,7 @@ export class PriorityManager {
     return sources.reduce((highest, current) => {
       const currentPriority = this.getSourcePriority(current.source);
       const highestPriority = this.getSourcePriority(highest.source);
-      
+
       return currentPriority > highestPriority ? current : highest;
     });
   }
@@ -93,16 +93,16 @@ export class PriorityManager {
     // Group metadata by field
     sourceMetadata.forEach(metadata => {
       Object.keys(metadata).forEach(field => {
-        if (field === 'source' || field === 'confidence') continue;
-        
+        if (field === 'source' || field === 'confidence') return;
+
         if (!fieldSources[field]) {
           fieldSources[field] = [];
         }
-        
+
         fieldSources[field].push({
           value: metadata[field],
           source: metadata.source,
-          priority: this.getSourcePriority(metadata.source)
+          priority: this.getSourcePriority(metadata.source),
         });
       });
     });
@@ -113,7 +113,7 @@ export class PriorityManager {
       const highestPriority = sources.reduce((highest, current) => {
         return current.priority > highest.priority ? current : highest;
       });
-      
+
       merged[field] = highestPriority.value;
     });
 
@@ -135,7 +135,7 @@ export class PriorityManager {
     }, 0);
 
     const weightedConfidence = sources.reduce((sum, source) => {
-      return sum + (source.confidence * this.getSourcePriority(source.source));
+      return sum + source.confidence * this.getSourcePriority(source.source);
     }, 0);
 
     return Math.min(1, weightedConfidence / totalWeight);
@@ -149,31 +149,39 @@ export class PriorityManager {
    */
   getPriorityRecommendations(metadata, gaps) {
     const recommendations = [];
-    
+
     gaps.forEach(gap => {
       const fieldPriority = this.getFieldPriority(gap.field);
-      const sourcePriority = this.getSourcePriority(gap.fallbackSource || 'fallback');
-      
-      if (fieldPriority === 'critical' && sourcePriority < this.priorityLevels.auto) {
+      const sourcePriority = this.getSourcePriority(
+        gap.fallbackSource || 'fallback'
+      );
+
+      if (
+        fieldPriority === 'critical' &&
+        sourcePriority < this.priorityLevels.auto
+      ) {
         recommendations.push({
           field: gap.field,
           priority: 'critical',
           message: `${gap.field}フィールドは重要度が高いため、手動入力または自動抽出を推奨します`,
-          suggestedAction: 'manual_or_auto'
+          suggestedAction: 'manual_or_auto',
         });
-      } else if (fieldPriority === 'high' && sourcePriority < this.priorityLevels.fallback) {
+      } else if (
+        fieldPriority === 'high' &&
+        sourcePriority < this.priorityLevels.fallback
+      ) {
         recommendations.push({
           field: gap.field,
           priority: 'high',
           message: `${gap.field}フィールドは中程度の重要度のため、自動抽出を推奨します`,
-          suggestedAction: 'auto_extraction'
+          suggestedAction: 'auto_extraction',
         });
       } else {
         recommendations.push({
           field: gap.field,
           priority: fieldPriority,
           message: `${gap.field}フィールドは現在の優先度で適切です`,
-          suggestedAction: 'current_priority_ok'
+          suggestedAction: 'current_priority_ok',
         });
       }
     });
@@ -187,19 +195,31 @@ export class PriorityManager {
    */
   adjustPriorityLevels(preferences) {
     if (preferences.manualPriority !== undefined) {
-      this.priorityLevels.manual = Math.max(0, Math.min(100, preferences.manualPriority));
+      this.priorityLevels.manual = Math.max(
+        0,
+        Math.min(100, preferences.manualPriority)
+      );
     }
-    
+
     if (preferences.autoPriority !== undefined) {
-      this.priorityLevels.auto = Math.max(0, Math.min(100, preferences.autoPriority));
+      this.priorityLevels.auto = Math.max(
+        0,
+        Math.min(100, preferences.autoPriority)
+      );
     }
-    
+
     if (preferences.fallbackPriority !== undefined) {
-      this.priorityLevels.fallback = Math.max(0, Math.min(100, preferences.fallbackPriority));
+      this.priorityLevels.fallback = Math.max(
+        0,
+        Math.min(100, preferences.fallbackPriority)
+      );
     }
-    
+
     if (preferences.defaultPriority !== undefined) {
-      this.priorityLevels.default = Math.max(0, Math.min(100, preferences.defaultPriority));
+      this.priorityLevels.default = Math.max(
+        0,
+        Math.min(100, preferences.defaultPriority)
+      );
     }
   }
 
@@ -210,7 +230,7 @@ export class PriorityManager {
   getPriorityConfiguration() {
     return {
       levels: { ...this.priorityLevels },
-      fieldPriorities: { ...this.fieldPriorities }
+      fieldPriorities: { ...this.fieldPriorities },
     };
   }
 
@@ -233,7 +253,7 @@ export class PriorityManager {
       if (priority < 0 || priority > 100) {
         errors.push(`${source}の優先度が無効な値です: ${priority}`);
       }
-      
+
       if (priority === 0) {
         warnings.push(`${source}の優先度が0に設定されています`);
       }
@@ -250,7 +270,7 @@ export class PriorityManager {
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -262,7 +282,7 @@ export class PriorityManager {
       manual: 100,
       auto: 80,
       fallback: 60,
-      default: 40
+      default: 40,
     };
   }
 }

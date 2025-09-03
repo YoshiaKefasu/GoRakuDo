@@ -1,14 +1,14 @@
 // Search System Index - Core Search System
 // Exports all search functionality for easy integration
 
-import { SimpleSearch } from "./simple-search";
+import { SimpleSearch } from './simple-search';
 import type {
   SearchPost,
   SearchFilters,
   SearchResult,
   SearchOptions,
   SearchMetrics,
-} from "./types";
+} from './types';
 
 export { SimpleSearch };
 export type {
@@ -23,12 +23,12 @@ export type {
 export function convertToSearchPost(astroPost: any): SearchPost {
   return {
     id: astroPost.id || astroPost.slug,
-    title: astroPost.data.title || "",
-    description: astroPost.data.description || "",
+    title: astroPost.data.title || '',
+    description: astroPost.data.description || '',
     tags: astroPost.data.tags || [],
-    slug: astroPost.slug || "",
-    contentType: astroPost.data.aiMetadata?.contentType || "guide",
-    learningStage: astroPost.data.aiMetadata?.learningStage || "beginner",
+    slug: astroPost.slug || '',
+    contentType: astroPost.data.aiMetadata?.contentType || 'guide',
+    learningStage: astroPost.data.aiMetadata?.learningStage || 'beginner',
     isRecommended: astroPost.data.aiMetadata?.isRecommended || false,
   };
 }

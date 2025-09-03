@@ -25,7 +25,7 @@ export class DiscordErrorReporter {
   private static instance: DiscordErrorReporter;
   private errorQueue: DiscordErrorReport[] = [];
   private maxQueueSize = 20;
-  private discordInviteUrl = "https://discord.gg/gorakudo";
+  private discordInviteUrl = 'https://discord.gg/gorakudo';
 
   static getInstance(): DiscordErrorReporter {
     if (!DiscordErrorReporter.instance) {
@@ -52,17 +52,17 @@ export class DiscordErrorReporter {
     // Log for development
     console.error(
       `[Discord Error Report] ${error.type}: ${error.message}`,
-      error,
+      error
     );
   }
 
   // Show user-friendly error notification with Discord invite
   private showUserFriendlyError(error: DiscordErrorReport): void {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     // Create error notification
-    const notification = document.createElement("div");
-    notification.className = "discord-error-notification";
+    const notification = document.createElement('div');
+    notification.className = 'discord-error-notification';
     notification.style.cssText = `
       position: fixed;
       top: 20px;
@@ -130,7 +130,7 @@ export class DiscordErrorReporter {
 
     // Animate in
     setTimeout(() => {
-      notification.style.transform = "translateX(0)";
+      notification.style.transform = 'translateX(0)';
     }, 100);
 
     // Auto-dismiss after 10 seconds
@@ -142,23 +142,23 @@ export class DiscordErrorReporter {
   // Get user-friendly error message based on error type
   private getErrorMessage(error: DiscordErrorReport): string {
     switch (error.type) {
-      case "enhancement-load-error":
-        return "Fitur tambahan tidak dapat dimuat. Ini tidak mempengaruhi fungsi utama situs.";
-      case "performance-error":
-        return "Ada masalah dengan performa halaman. Coba refresh halaman.";
-      case "content-load-error":
-        return "Konten tidak dapat dimuat dengan sempurna. Coba refresh halaman.";
-      case "network-error":
-        return "Masalah koneksi terdeteksi. Periksa koneksi internet Anda.";
+      case 'enhancement-load-error':
+        return 'Fitur tambahan tidak dapat dimuat. Ini tidak mempengaruhi fungsi utama situs.';
+      case 'performance-error':
+        return 'Ada masalah dengan performa halaman. Coba refresh halaman.';
+      case 'content-load-error':
+        return 'Konten tidak dapat dimuat dengan sempurna. Coba refresh halaman.';
+      case 'network-error':
+        return 'Masalah koneksi terdeteksi. Periksa koneksi internet Anda.';
       default:
-        return "Terjadi kesalahan yang tidak terduga. Tim kami akan segera memperbaikinya.";
+        return 'Terjadi kesalahan yang tidak terduga. Tim kami akan segera memperbaikinya.';
     }
   }
 
   // Join Discord server
   joinDiscord(): void {
-    if (typeof window !== "undefined") {
-      window.open(this.discordInviteUrl, "_blank");
+    if (typeof window !== 'undefined') {
+      window.open(this.discordInviteUrl, '_blank');
 
       // Show success message
       this.showDiscordSuccess();
@@ -167,10 +167,10 @@ export class DiscordErrorReporter {
 
   // Show Discord success message
   private showDiscordSuccess(): void {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
-    const successNotification = document.createElement("div");
-    successNotification.className = "discord-success-notification";
+    const successNotification = document.createElement('div');
+    successNotification.className = 'discord-success-notification';
     successNotification.style.cssText = `
       position: fixed;
       top: 20px;
@@ -201,7 +201,7 @@ export class DiscordErrorReporter {
 
     // Animate in
     setTimeout(() => {
-      successNotification.style.transform = "translateX(0)";
+      successNotification.style.transform = 'translateX(0)';
     }, 100);
 
     // Auto-dismiss after 3 seconds
@@ -212,7 +212,7 @@ export class DiscordErrorReporter {
 
   // Dismiss error notification
   dismissError(element: HTMLElement): void {
-    element.style.transform = "translateX(400px)";
+    element.style.transform = 'translateX(400px)';
     setTimeout(() => {
       if (element.parentNode) {
         element.parentNode.removeChild(element);
@@ -222,9 +222,9 @@ export class DiscordErrorReporter {
 
   // Collect user feedback for Discord
   async collectUserFeedback(_error: DiscordErrorReport): Promise<string> {
-    return new Promise((resolve) => {
-      if (typeof window === "undefined") {
-        resolve("Feedback tidak tersedia");
+    return new Promise(resolve => {
+      if (typeof window === 'undefined') {
+        resolve('Feedback tidak tersedia');
         return;
       }
 
@@ -232,37 +232,37 @@ export class DiscordErrorReporter {
         `Bantu kami memperbaiki masalah ini!\n\n` +
           `Jelaskan apa yang Anda lakukan saat error terjadi:\n` +
           `(Kosongkan jika tidak ingin memberikan feedback)`,
-        "",
+        ''
       );
 
-      resolve(feedback || "Tidak ada feedback");
+      resolve(feedback || 'Tidak ada feedback');
     });
   }
 
   // Persist error queue to localStorage
   private persistErrorQueue(): void {
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem(
-          "gorakudo-discord-errors",
-          JSON.stringify(this.errorQueue),
+          'gorakudo-discord-errors',
+          JSON.stringify(this.errorQueue)
         );
       } catch (error) {
-        console.warn("Could not persist error queue:", error);
+        console.warn('Could not persist error queue:', error);
       }
     }
   }
 
   // Load error queue from localStorage
   loadErrorQueue(): void {
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       try {
-        const stored = localStorage.getItem("gorakudo-discord-errors");
+        const stored = localStorage.getItem('gorakudo-discord-errors');
         if (stored) {
           this.errorQueue = JSON.parse(stored);
         }
       } catch (error) {
-        console.warn("Could not load error queue:", error);
+        console.warn('Could not load error queue:', error);
       }
     }
   }
@@ -281,7 +281,7 @@ export class DiscordErrorReporter {
   // Generate Discord report text
   generateDiscordReport(): string {
     const report = this.errorQueue
-      .map((error) => {
+      .map(error => {
         return (
           `**${error.type}** - ${error.timestamp}\n` +
           `Message: ${error.message}\n` +
@@ -290,7 +290,7 @@ export class DiscordErrorReporter {
           `---`
         );
       })
-      .join("\n\n");
+      .join('\n\n');
 
     return `# GoRakuDo Error Report\n\n${report}`;
   }
@@ -300,7 +300,7 @@ export class DiscordErrorReporter {
 export const discordErrorReporter = DiscordErrorReporter.getInstance();
 
 // Make available globally for static hosting compatibility
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   (window as any).discordErrorReporter = discordErrorReporter;
   discordErrorReporter.loadErrorQueue();
 }

@@ -23,10 +23,12 @@ src/scripts/
 ## 🎯 Script Categories
 
 ### **Performance Scripts** (`performance/`)
+
 - **performance-monitor.js**: Production performance monitoring with 30ms target
 - **localhost-performance-monitor.js**: Localhost-specific monitoring with 10ms target
 
 ### **UI Scripts** (`ui/`)
+
 - **docs-pagination.js**: Pagination functionality for docs listing page
 - **docs-search.js**: Search functionality with filtering and suggestions
 - **docs-skeleton-loader.js**: Skeleton loading for docs page components
@@ -34,6 +36,7 @@ src/scripts/
 - **settings-manager.js**: Settings management and persistence
 
 ### **Core Scripts** (`core/`)
+
 - **hompage-script.js**: Homepage-specific functionality (wave animations, modals)
 - **post-script.js**: Post page functionality (markdown rendering, navigation)
 - **upgrade-browsermu.js**: Browser compatibility checker and upgrade prompts
@@ -41,23 +44,25 @@ src/scripts/
 ## 🚀 Usage
 
 ### **Import from Index**
+
 ```javascript
-import { 
-  PerformanceMonitor, 
-  DocsSearch, 
-  HomepageScript 
-} from '@/scripts';
+import { PerformanceMonitor, DocsSearch, HomepageScript } from '@/scripts';
 ```
 
 ### **Dynamic Loading**
+
 ```javascript
 import { loadScript } from '@/scripts';
 
 // Load specific script
-const performanceScript = await loadScript('performance', 'performance-monitor');
+const performanceScript = await loadScript(
+  'performance',
+  'performance-monitor'
+);
 ```
 
 ### **Auto-Initialization**
+
 ```javascript
 import { initializeScripts } from '@/scripts';
 
@@ -68,18 +73,21 @@ initializeScripts();
 ## 📊 Performance Features
 
 ### **Aggressive Loading**
+
 - Default aggressive loading enabled
 - Reduced thresholds for faster response
 - Immediate enhancement loading
 - Resource preloading for critical assets
 
 ### **Skeleton Loading**
+
 - Smooth loading states for all components
 - Fade-in animations for better UX
 - Responsive skeleton designs
 - Performance-optimized animations
 
 ### **Monitoring**
+
 - Real-time performance metrics
 - Core Web Vitals tracking
 - Long task detection
@@ -88,6 +96,7 @@ initializeScripts();
 ## 🔧 Configuration
 
 ### **Astro Config Integration**
+
 Scripts are integrated with Astro's build system for optimal bundling:
 
 ```javascript
@@ -100,6 +109,7 @@ manualChunks: {
 ```
 
 ### **Build Optimization**
+
 - Tree-shaking for unused code removal
 - Code splitting for better caching
 - Minification for smaller bundle sizes
@@ -108,12 +118,14 @@ manualChunks: {
 ## 🛡️ Safety Features
 
 ### **Error Handling**
+
 - Comprehensive try-catch blocks
 - Graceful fallbacks for missing elements
 - Console logging for debugging
 - Performance monitoring for errors
 
 ### **Browser Compatibility**
+
 - Modern browser feature detection
 - Progressive enhancement
 - Fallback strategies for older browsers
@@ -122,6 +134,7 @@ manualChunks: {
 ## 📈 Performance Targets
 
 ### **Production**
+
 - **Target Load Time**: 30ms
 - **FCP Target**: 1000ms
 - **LCP Target**: 1500ms
@@ -129,6 +142,7 @@ manualChunks: {
 - **CLS Target**: 0.1
 
 ### **Localhost**
+
 - **Target Load Time**: 10ms
 - **FCP Target**: 500ms
 - **LCP Target**: 750ms
@@ -138,6 +152,7 @@ manualChunks: {
 ## 🔄 Migration Notes
 
 ### **From `public/scripts/` to `src/scripts/`**
+
 - ✅ All scripts migrated and categorized
 - ✅ Import paths updated in all .astro files
 - ✅ Astro configuration updated
@@ -145,6 +160,7 @@ manualChunks: {
 - ✅ Old scripts directory removed
 
 ### **Path Updates**
+
 - `public/scripts/` → `src/scripts/`
 - Organized by category for better maintainability
 - Index file for easy imports
@@ -153,12 +169,14 @@ manualChunks: {
 ## 🎯 Future Enhancements
 
 ### **Planned Features**
+
 - TypeScript migration for better type safety
 - Module federation for micro-frontend support
 - Service worker integration for offline functionality
 - Advanced caching strategies
 
 ### **Performance Improvements**
+
 - Web Workers for heavy computations
 - Intersection Observer optimization
 - Request animation frame optimization

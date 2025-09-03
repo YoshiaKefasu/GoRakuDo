@@ -86,15 +86,15 @@ export interface ValidationRule<T = unknown> {
  * Base integration configuration interface
  * Common configuration pattern for all integration types
  */
-export interface BaseIntegrationConfig<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface BaseIntegrationConfig<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
   readonly enabled: boolean;
   readonly timeout: number;
   readonly maxRetries?: number;
   readonly qualityThreshold?: number;
   readonly custom?: T;
 }
-
-
 
 /**
  * Base result interface
@@ -112,14 +112,24 @@ export interface BaseResult {
 // ========== COMMON ENUMS AND LITERALS ==========
 // Centralized constants following DRY principle
 
-export const SYSTEM_TYPES = ['seo', 'fallback', 'dataFlow', 'metadata', 'optimization'] as const;
-export type SystemType = typeof SYSTEM_TYPES[number];
+export const SYSTEM_TYPES = [
+  'seo',
+  'fallback',
+  'dataFlow',
+  'metadata',
+  'optimization',
+] as const;
+export type SystemType = (typeof SYSTEM_TYPES)[number];
 
 export const PRIORITY_LEVELS = ['critical', 'high', 'medium', 'low'] as const;
-export type PriorityLevel = typeof PRIORITY_LEVELS[number];
+export type PriorityLevel = (typeof PRIORITY_LEVELS)[number];
 
-export const ENVIRONMENT_TYPES = ['development', 'staging', 'production'] as const;
-export type EnvironmentType = typeof ENVIRONMENT_TYPES[number];
+export const ENVIRONMENT_TYPES = [
+  'development',
+  'staging',
+  'production',
+] as const;
+export type EnvironmentType = (typeof ENVIRONMENT_TYPES)[number];
 
 // ========== COMMON UTILITY TYPES ==========
 // Reusable utility types following DRY principle
@@ -176,7 +186,9 @@ export function isValidationResult(obj: unknown): obj is ValidationResult {
 /**
  * Type guard for BaseIntegrationConfig
  */
-export function isBaseIntegrationConfig(obj: unknown): obj is BaseIntegrationConfig {
+export function isBaseIntegrationConfig(
+  obj: unknown
+): obj is BaseIntegrationConfig {
   return (
     typeof obj === 'object' &&
     obj !== null &&

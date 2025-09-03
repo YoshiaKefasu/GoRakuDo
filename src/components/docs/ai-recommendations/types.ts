@@ -4,7 +4,7 @@ export interface AIRecommendation {
   targetTitle: string;
   reason: string;
   score: number;
-  type: "similar" | "contextual";
+  type: 'similar' | 'contextual';
   label: string;
   icon: any; // Astro JSX element
 }

@@ -1,8 +1,8 @@
-import { EnvironmentManager } from "./environment";
-import { DataPersistence } from "./data-persistence";
-import { AISystem } from "./ai-system";
-import type { AIProcessingResult } from "./types";
-import { logger } from "../logging/console-logger";
+import { EnvironmentManager } from './environment';
+import { DataPersistence } from './data-persistence';
+import { AISystem } from './ai-system';
+import type { AIProcessingResult } from './types';
+import { logger } from '../logging/console-logger';
 
 export class BuildProcessor {
   private environment: EnvironmentManager;
@@ -17,40 +17,40 @@ export class BuildProcessor {
     title: string,
     content: string,
     availablePosts: any[],
-    language: "id" | "ja" = "id",
+    language: 'id' | 'ja' = 'id'
   ): Promise<AIProcessingResult | null> {
     const envInfo = this.environment.getEnvironmentInfo();
     logger.log(`Build Processor: ${envInfo}`);
 
     if (!this.environment.isAIAvailable()) {
-      logger.log("Loading pre-processed data for production build", "info");
+      logger.log('Loading pre-processed data for production build', 'info');
       return await this.loadPreProcessedData(title);
     }
 
     // Smart content detection
     const contentId = title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-");
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-');
     const isProcessed =
       await this.dataPersistence.isContentProcessed(contentId);
     const hasChanged = await this.dataPersistence.hasContentChanged(
       contentId,
-      content,
+      content
     );
 
     if (isProcessed && !hasChanged) {
-      logger.log(`Content already processed and unchanged: ${title}`, "info");
+      logger.log(`Content already processed and unchanged: ${title}`, 'info');
       return await this.loadPreProcessedData(title);
     }
 
     if (hasChanged) {
-      logger.log(`Content changed, regenerating AI data: ${title}`, "warning");
+      logger.log(`Content changed, regenerating AI data: ${title}`, 'warning');
     } else {
-      logger.log(`New content detected, processing with AI: ${title}`, "info");
+      logger.log(`New content detected, processing with AI: ${title}`, 'info');
     }
 
-    logger.log("Processing content with AI for development build");
+    logger.log('Processing content with AI for development build');
     return await this.processWithAI(title, content, availablePosts, language);
   }
 
@@ -58,7 +58,7 @@ export class BuildProcessor {
     title: string,
     content: string,
     availablePosts: any[],
-    language: "id" | "ja",
+    language: 'id' | 'ja'
   ): Promise<AIProcessingResult | null> {
     try {
       // AI processing disabled for security
@@ -68,7 +68,7 @@ export class BuildProcessor {
         title,
         content,
         availablePosts,
-        language,
+        language
       );
 
       // Save processed data for production builds
@@ -76,26 +76,26 @@ export class BuildProcessor {
 
       logger.log(
         `AI processing completed and data saved for: ${title}`,
-        "success",
+        'success'
       );
       return result;
     } catch (error) {
-      logger.log(`AI processing failed: ${error}`, "error");
+      logger.log(`AI processing failed: ${error}`, 'error');
       return await this.loadPreProcessedData(title);
     }
   }
 
   private async loadPreProcessedData(
-    title: string,
+    title: string
   ): Promise<AIProcessingResult | null> {
     try {
       const data = await this.dataPersistence.loadProcessedData(title);
       if (data) {
-        logger.log(`Loaded pre-processed data for: ${title}`, "success");
+        logger.log(`Loaded pre-processed data for: ${title}`, 'success');
         return data;
       }
     } catch (error) {
-      logger.log(`Failed to load pre-processed data: ${error}`, "warning");
+      logger.log(`Failed to load pre-processed data: ${error}`, 'warning');
     }
 
     // Return fallback data if no pre-processed data available
@@ -103,7 +103,7 @@ export class BuildProcessor {
   }
 
   private generateFallbackData(title: string): AIProcessingResult {
-    logger.log(`Generating fallback data for: ${title}`, "warning");
+    logger.log(`Generating fallback data for: ${title}`, 'warning');
 
     return {
       metaDescription: {
@@ -111,11 +111,11 @@ export class BuildProcessor {
         length: 85,
         hasKeywords: true,
         hasCTA: true,
-        language: "id",
+        language: 'id',
         generatedAt: new Date().toISOString(),
       },
       recommendations: [],
-      keywords: ["belajar", "bahasa", "jepang", "immersion"],
+      keywords: ['belajar', 'bahasa', 'jepang', 'immersion'],
       seoScore: 75,
       processingTime: 0,
       apiCallsUsed: 0,
@@ -124,10 +124,10 @@ export class BuildProcessor {
 
   async processAllUnprocessedContent(
     availablePosts: any[],
-    language: "id" | "ja" = "id",
+    language: 'id' | 'ja' = 'id'
   ): Promise<void> {
     if (!this.environment.isAIAvailable()) {
-      logger.log("AI not available, skipping content processing", "warning");
+      logger.log('AI not available, skipping content processing', 'warning');
       return;
     }
 
@@ -135,7 +135,7 @@ export class BuildProcessor {
       await this.dataPersistence.getUnprocessedContent(availablePosts);
 
     if (unprocessed.length === 0) {
-      logger.log("All content already processed", "success");
+      logger.log('All content already processed', 'success');
       return;
     }
 
@@ -146,13 +146,13 @@ export class BuildProcessor {
       try {
         await this.processContentForBuild(
           post.title,
-          post.body || post.content || "",
+          post.body || post.content || '',
           availablePosts,
-          language,
+          language
         );
-        logger.log(`Processed: ${post.title}`, "success");
+        logger.log(`Processed: ${post.title}`, 'success');
       } catch (error) {
-        logger.log(`Failed to process: ${post.title} - ${error}`, "error");
+        logger.log(`Failed to process: ${post.title} - ${error}`, 'error');
       }
     }
 

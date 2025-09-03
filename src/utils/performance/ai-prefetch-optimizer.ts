@@ -51,7 +51,7 @@ export const defaultAIConfig: AIPrefetchConfig = {
  * Reduced complexity while maintaining core AI search engine optimization
  */
 export function generateAIPrefetchHints(
-  config: Partial<AIPrefetchConfig> = {},
+  config: Partial<AIPrefetchConfig> = {}
 ): AIPrefetchResult {
   const finalConfig = { ...defaultAIConfig, ...config };
   const resourceHints: ResourceHint[] = [];
@@ -64,18 +64,18 @@ export function generateAIPrefetchHints(
       // LCP optimization - only critical resources
       resourceHints.push(
         {
-          rel: "preload",
-          href: "/img/SlideshowHomepage/Slide-post-0.webp",
-          as: "image",
-          type: "image/webp",
-          fetchpriority: "high",
+          rel: 'preload',
+          href: '/img/SlideshowHomepage/Slide-post-0.webp',
+          as: 'image',
+          type: 'image/webp',
+          fetchpriority: 'high',
         },
         {
-          rel: "preload",
-          href: "/css/homepage-styles.css",
-          as: "style",
-          fetchpriority: "high",
-        },
+          rel: 'preload',
+          href: '/css/homepage-styles.css',
+          as: 'style',
+          fetchpriority: 'high',
+        }
       );
     }
 
@@ -97,39 +97,39 @@ export function generateAIPrefetchHints(
     // 2. Essential DNS Prefetch (Simplified)
     if (finalConfig.enableAICrawlerHints) {
       resourceHints.push(
-        { rel: "dns-prefetch", href: "https://discord.gg" },
-        { rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
-        { rel: "dns-prefetch", href: "https://fonts.gstatic.com" },
+        { rel: 'dns-prefetch', href: 'https://discord.gg' },
+        { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
+        { rel: 'dns-prefetch', href: 'https://fonts.gstatic.com' }
       );
     }
 
     // 3. Essential Preconnect (Simplified)
     if (finalConfig.enableAICrawlerHints) {
       resourceHints.push(
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         {
-          rel: "preconnect",
-          href: "https://fonts.gstatic.com",
-          crossorigin: "",
+          rel: 'preconnect',
+          href: 'https://fonts.gstatic.com',
+          crossorigin: '',
         },
-        { rel: "preconnect", href: "https://discord.gg" },
+        { rel: 'preconnect', href: 'https://discord.gg' }
       );
     }
 
     // 4. Essential Prefetch (Simplified)
     resourceHints.push(
-      { rel: "prefetch", href: "/docs" },
-      { rel: "prefetch", href: "/discord" },
+      { rel: 'prefetch', href: '/docs' },
+      { rel: 'prefetch', href: '/discord' }
     );
 
     // 5. Essential Performance Scripts (Simplified)
     if (finalConfig.enablePerformanceMonitoring) {
-      performanceScripts.push("performance-monitor.js");
+      performanceScripts.push('performance-monitor.js');
     }
 
     // 6. Essential AI Optimizations (Simplified)
     if (finalConfig.enableAIMetrics) {
-      aiOptimizations.push("ai-metrics-collection");
+      aiOptimizations.push('ai-metrics-collection');
     }
 
     // AI prefetch hints generated successfully
@@ -140,13 +140,13 @@ export function generateAIPrefetchHints(
       aiOptimizations,
     };
   } catch (error) {
-    console.error("❌ Error generating AI prefetch hints:", error);
+    console.error('❌ Error generating AI prefetch hints:', error);
 
     // Fallback: return minimal essential hints
     return {
       resourceHints: [
-        { rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       ],
       performanceScripts: [],
       aiOptimizations: [],
@@ -158,36 +158,36 @@ export function generateAIPrefetchHints(
  * Generate page-specific AI optimizations (Simplified)
  */
 export function generatePageSpecificAIOptimizations(
-  pageType: "home" | "docs" | "post" | "discord" = "home",
+  pageType: 'home' | 'docs' | 'post' | 'discord' = 'home'
 ): AIPrefetchResult {
   const baseResult = generateAIPrefetchHints();
 
   // Add page-specific optimizations (simplified)
   switch (pageType) {
-    case "home":
+    case 'home':
       baseResult.resourceHints.push(
-        { rel: "prefetch", href: "/docs" },
-        { rel: "prefetch", href: "/discord" },
+        { rel: 'prefetch', href: '/docs' },
+        { rel: 'prefetch', href: '/discord' }
       );
       // Page-specific AI optimizations generated for home
       break;
 
-    case "docs":
+    case 'docs':
       // Use hardcoded paths for performance optimization (can be updated later)
       baseResult.resourceHints.push(
-        { rel: "prefetch", href: "/docs/getting-started" },
-        { rel: "prefetch", href: "/docs/immersion-philosophy" },
+        { rel: 'prefetch', href: '/docs/getting-started' },
+        { rel: 'prefetch', href: '/docs/immersion-philosophy' }
       );
       // Page-specific AI optimizations generated for docs
       break;
 
-    case "post":
-      baseResult.resourceHints.push({ rel: "prefetch", href: "/docs" });
+    case 'post':
+      baseResult.resourceHints.push({ rel: 'prefetch', href: '/docs' });
       // Page-specific AI optimizations generated for post
       break;
 
-    case "discord":
-      baseResult.resourceHints.push({ rel: "prefetch", href: "/" });
+    case 'discord':
+      baseResult.resourceHints.push({ rel: 'prefetch', href: '/' });
       // Page-specific AI optimizations generated for discord
       break;
   }
@@ -201,23 +201,23 @@ export function generatePageSpecificAIOptimizations(
  * Generate AI-optimized scripts (Simplified)
  */
 export function generateAIOptimizedScripts(
-  pageType: "home" | "docs" | "post" | "discord" = "home",
+  pageType: 'home' | 'docs' | 'post' | 'discord' = 'home'
 ): string[] {
-  const scripts = ["performance-monitor.js"];
+  const scripts = ['performance-monitor.js'];
 
   // Add page-specific scripts (simplified)
   switch (pageType) {
-    case "home":
-      scripts.push("homepage-script.js");
+    case 'home':
+      scripts.push('homepage-script.js');
       break;
-    case "docs":
+    case 'docs':
       // scripts.push("docs-search.js"); // Removed - loaded inline in docs.astro
       break;
-    case "post":
-      scripts.push("post-script.js");
+    case 'post':
+      scripts.push('post-script.js');
       break;
-    case "discord":
-      scripts.push("discord-script.js");
+    case 'discord':
+      scripts.push('discord-script.js');
       break;
   }
 

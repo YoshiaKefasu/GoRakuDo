@@ -2,22 +2,22 @@
 // Provides optimized post processing capabilities for AI content generation
 // Handles individual post analysis and enhancement
 
-import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 
 // Import RelatedContent type for consistency
-import type { RelatedContent } from "../../components/docs/ai-recommendations/types";
-import { getRelatedContent } from "./semantic-relationships";
-import { generateInternalLinks } from "./content-analysis";
+import type { RelatedContent } from '../../components/docs/ai-recommendations/types';
+import { getRelatedContent } from './semantic-relationships';
+import { generateInternalLinks } from './content-analysis';
 import {
   convertWordsToInternalLinks,
   createWordToLinkConfig,
-} from "./word-to-link-converter";
-import { logger } from "../logging/console-logger";
+} from './word-to-link-converter';
+import { logger } from '../logging/console-logger';
 
 // Post processing result interface
 export interface PostProcessingResult {
-  post: CollectionEntry<"docs">;
+  post: CollectionEntry<'docs'>;
   enhanced: boolean;
   processingTime: number;
   errors: string[];
@@ -50,7 +50,7 @@ export class OptimizedPostProcessor {
    * Process a single post with optimization
    */
   async processPost(
-    post: CollectionEntry<"docs">,
+    post: CollectionEntry<'docs'>
   ): Promise<PostProcessingResult> {
     const startTime = Date.now();
     this.reset();
@@ -70,7 +70,7 @@ export class OptimizedPostProcessor {
         usedExistingMetadata: false,
         relatedContent: await this.generateRelatedContent(enhancedPost),
         internalLinks: this.extractInternalLinks(enhancedPost),
-        enhancedContent: enhancedPost.body || "",
+        enhancedContent: enhancedPost.body || '',
         metadata,
       };
     } catch (error) {
@@ -86,7 +86,7 @@ export class OptimizedPostProcessor {
         usedExistingMetadata: false,
         relatedContent: await this.generateRelatedContent(post),
         internalLinks: this.extractInternalLinks(post),
-        enhancedContent: post.body || "",
+        enhancedContent: post.body || '',
         metadata: this.analyzePostMetadata(post),
       };
     }
@@ -96,7 +96,7 @@ export class OptimizedPostProcessor {
    * Process multiple posts with optimization
    */
   async processMultiplePosts(
-    posts: CollectionEntry<"docs">[],
+    posts: CollectionEntry<'docs'>[]
   ): Promise<PostProcessingResult[]> {
     const results: PostProcessingResult[] = [];
 
@@ -115,7 +115,7 @@ export class OptimizedPostProcessor {
           usedExistingMetadata: false,
           relatedContent: await this.generateRelatedContent(post),
           internalLinks: this.extractInternalLinks(post),
-          enhancedContent: post.body || "",
+          enhancedContent: post.body || '',
           metadata: this.analyzePostMetadata(post),
         });
       }
@@ -128,11 +128,11 @@ export class OptimizedPostProcessor {
    * Enhance a single post with internal links
    */
   private async enhancePost(
-    post: CollectionEntry<"docs">,
-  ): Promise<CollectionEntry<"docs">> {
+    post: CollectionEntry<'docs'>
+  ): Promise<CollectionEntry<'docs'>> {
     try {
       // Get all posts for internal link generation
-      const allPosts = await getCollection("docs");
+      const allPosts = await getCollection('docs');
 
       logger.startGroup(`Post Enhancement: ${post.slug}`);
       logger.log(`Starting post enhancement`);
@@ -153,22 +153,22 @@ export class OptimizedPostProcessor {
           exactMatch: false,
           allowPartialMatch: true,
           showTooltip: true,
-          tooltipStyle: "simple",
-          linkStyle: "invisible", // Words look exactly like normal text
+          tooltipStyle: 'simple',
+          linkStyle: 'invisible', // Words look exactly like normal text
           excludeSelectors: [
-            "code",
-            "pre",
-            "blockquote",
-            ".no-links",
-            ".syntax-highlight",
-            ".code-block",
-            "a",
-            "h1",
-            "h2",
-            "h3",
-            "h4",
-            "h5",
-            "h6", // Exclude headers
+            'code',
+            'pre',
+            'blockquote',
+            '.no-links',
+            '.syntax-highlight',
+            '.code-block',
+            'a',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6', // Exclude headers
           ],
           excludePatterns: [
             /^```[\s\S]*?```$/gm, // Code blocks
@@ -181,14 +181,14 @@ export class OptimizedPostProcessor {
           respectIndonesianWords: true, // NEW: Respect Indonesian word boundaries
           excludeHeaders: true, // NEW: Exclude headers from processing
           excludeConjunctions: true, // FIXED: Re-enable Indonesian conjunction exclusion
-        }),
+        })
       );
 
       // Clean word-to-link conversion results logging
       logger.logWordToLinkResults(
         post.slug,
         wordLinkResult.statistics,
-        wordLinkResult.conversions,
+        wordLinkResult.conversions
       );
 
       if (wordLinkResult.conversions.length === 0) {
@@ -197,12 +197,12 @@ export class OptimizedPostProcessor {
         logger.verbose(`Link suggestions generated: ${linkSuggestions.length}`);
         if (linkSuggestions.length > 0) {
           logger.verbose(
-            `Available link suggestions: ${linkSuggestions.length}`,
+            `Available link suggestions: ${linkSuggestions.length}`
           );
         } else {
           logger.log(
             `No link suggestions generated - this needs investigation`,
-            "warning",
+            'warning'
           );
         }
       }
@@ -211,10 +211,10 @@ export class OptimizedPostProcessor {
 
       // Debug: Check if content was actually enhanced
       if (enhancedBody !== post.body) {
-        logger.log(`Content enhanced successfully`, "success");
-        logger.logContentPreview("Enhanced content preview", enhancedBody, 200);
+        logger.log(`Content enhanced successfully`, 'success');
+        logger.logContentPreview('Enhanced content preview', enhancedBody, 200);
       } else {
-        logger.log(`Content not enhanced - using original body`, "warning");
+        logger.log(`Content not enhanced - using original body`, 'warning');
       }
 
       const enhancedPost = {
@@ -223,13 +223,13 @@ export class OptimizedPostProcessor {
         data: {
           ...post.data,
           // Ensure required fields with defaults
-          title: post.data.title || "Untitled Post",
+          title: post.data.title || 'Untitled Post',
           description:
             post.data.description || this.generateDescription(enhancedBody),
           publishedDate: post.data.publishedDate || new Date().toISOString(),
-          author: post.data.author || "Tim GoRakuDo",
-          difficulty: post.data.difficulty || "beginner",
-          category: post.data.category || "general",
+          author: post.data.author || 'Tim GoRakuDo',
+          difficulty: post.data.difficulty || 'beginner',
+          category: post.data.category || 'general',
           tags: post.data.tags || [],
           featured: post.data.featured || false,
           // mindMapBranch: post.data.mindMapBranch || "landasan-filosofi", // Removed - MindMap functionality deprecated
@@ -241,13 +241,13 @@ export class OptimizedPostProcessor {
       // Add warnings for missing optional fields
       if (!post.data.emoji) {
         this.warnings.push(
-          `Post ${post.id} missing emoji for sticky note design`,
+          `Post ${post.id} missing emoji for sticky note design`
         );
       }
 
       if (!post.data.tags || post.data.tags.length === 0) {
         this.warnings.push(
-          `Post ${post.id} missing tags for better categorization`,
+          `Post ${post.id} missing tags for better categorization`
         );
       }
 
@@ -255,19 +255,19 @@ export class OptimizedPostProcessor {
       if (wordLinkResult.statistics.convertedWords > 0) {
         logger.log(
           `Generated ${wordLinkResult.statistics.convertedWords} word-to-link conversions`,
-          "success",
+          'success'
         );
       } else {
         logger.log(
           `No word-to-link conversions generated - this needs investigation`,
-          "warning",
+          'warning'
         );
       }
 
       logger.endGroup();
       return enhancedPost;
     } catch (error) {
-      logger.log(`Error enhancing post: ${error}`, "error");
+      logger.log(`Error enhancing post: ${error}`, 'error');
       logger.endGroup();
       // Return original post if enhancement fails
       return post;
@@ -277,26 +277,26 @@ export class OptimizedPostProcessor {
   /**
    * Analyze post metadata
    */
-  private analyzePostMetadata(post: CollectionEntry<"docs">) {
-    const content = post.body || "";
+  private analyzePostMetadata(post: CollectionEntry<'docs'>) {
+    const content = post.body || '';
     const wordCount = content.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
 
     // Calculate complexity score based on content analysis
     let complexityScore = 1;
     if (wordCount > 1000) complexityScore++;
-    if (content.includes("```")) complexityScore++; // Code blocks
-    if (content.includes("![") || content.includes("<img")) complexityScore++; // Images
-    if (content.includes("http")) complexityScore++; // External links
-    if (content.includes("##") || content.includes("###")) complexityScore++; // Headers
+    if (content.includes('```')) complexityScore++; // Code blocks
+    if (content.includes('![') || content.includes('<img')) complexityScore++; // Images
+    if (content.includes('http')) complexityScore++; // External links
+    if (content.includes('##') || content.includes('###')) complexityScore++; // Headers
 
     return {
       wordCount,
       readingTime,
       complexityScore: Math.min(complexityScore, 10),
-      hasImages: content.includes("![") || content.includes("<img"),
-      hasCodeBlocks: content.includes("```"),
-      hasLinks: content.includes("http"),
+      hasImages: content.includes('![') || content.includes('<img'),
+      hasCodeBlocks: content.includes('```'),
+      hasLinks: content.includes('http'),
     };
   }
 
@@ -305,17 +305,19 @@ export class OptimizedPostProcessor {
    */
   private generateDescription(content: string): string {
     // Extract first paragraph or sentence
-    const firstParagraph = content.split("\n\n")[0];
-    const firstSentence = firstParagraph.split(".")[0];
+    const firstParagraph = content.split('\n\n')[0];
+    if (!firstParagraph) return '';
+    const firstSentence = firstParagraph.split('.')[0];
+    if (!firstSentence) return '';
 
     // Clean up markdown and limit length
     const cleanDescription = firstSentence
-      .replace(/[#*`]/g, "") // Remove markdown formatting
-      .replace(/\s+/g, " ") // Normalize whitespace
+      .replace(/[#*`]/g, '') // Remove markdown formatting
+      .replace(/\s+/g, ' ') // Normalize whitespace
       .trim();
 
     return cleanDescription.length > 160
-      ? cleanDescription.substring(0, 157) + "..."
+      ? cleanDescription.substring(0, 157) + '...'
       : cleanDescription;
   }
 
@@ -332,17 +334,17 @@ export class OptimizedPostProcessor {
    * Generate related content for AI recommendations
    */
   private async generateRelatedContent(
-    post: CollectionEntry<"docs">,
+    post: CollectionEntry<'docs'>
   ): Promise<RelatedContent> {
     try {
       // Get all posts for comparison
-      const allPosts = await getCollection("docs");
+      const allPosts = await getCollection('docs');
 
       // Get semantic relationships
       const relationships = getRelatedContent(post, allPosts);
 
       // Convert to AI-Recommendations format with improved logic
-      const similarContent = relationships.similarContent.map((rel) => ({
+      const similarContent = relationships.similarContent.map(rel => ({
         targetSlug: rel.targetSlug,
         targetTitle: rel.targetTitle,
         reason: rel.reason,
@@ -351,12 +353,12 @@ export class OptimizedPostProcessor {
 
       const contextualRelevance = relationships.relatedContent
         .filter(
-          (rel) =>
+          rel =>
             !relationships.similarContent.some(
-              (sim) => sim.targetSlug === rel.targetSlug,
-            ),
+              sim => sim.targetSlug === rel.targetSlug
+            )
         )
-        .map((rel) => ({
+        .map(rel => ({
           targetSlug: rel.targetSlug,
           targetTitle: rel.targetTitle,
           reason: rel.reason,
@@ -370,16 +372,14 @@ export class OptimizedPostProcessor {
         // Add more contextual relevance to reach 3 recommendations
         const remainingPosts = relationships.relatedContent
           .filter(
-            (rel) =>
-              !similarContent.some(
-                (sim) => sim.targetSlug === rel.targetSlug,
-              ) &&
+            rel =>
+              !similarContent.some(sim => sim.targetSlug === rel.targetSlug) &&
               !contextualRelevance.some(
-                (ctx) => ctx.targetSlug === rel.targetSlug,
-              ),
+                ctx => ctx.targetSlug === rel.targetSlug
+              )
           )
           .slice(0, 3 - totalRecommendations)
-          .map((rel) => ({
+          .map(rel => ({
             targetSlug: rel.targetSlug,
             targetTitle: rel.targetTitle,
             reason: rel.reason,
@@ -394,7 +394,7 @@ export class OptimizedPostProcessor {
         contextualRelevance,
       };
     } catch (error) {
-      console.error("Error generating related content:", error);
+      console.error('Error generating related content:', error);
       return {
         similarContent: [],
         contextualRelevance: [],
@@ -405,12 +405,12 @@ export class OptimizedPostProcessor {
   /**
    * Extract internal links from post content
    */
-  private extractInternalLinks(post: CollectionEntry<"docs">): Array<{
+  private extractInternalLinks(post: CollectionEntry<'docs'>): Array<{
     slug: string;
     title: string;
     anchor?: string;
   }> {
-    const content = post.body || "";
+    const content = post.body || '';
     const links: Array<{ slug: string; title: string; anchor?: string }> = [];
 
     // Extract markdown links that point to internal docs
@@ -418,11 +418,13 @@ export class OptimizedPostProcessor {
     let match;
 
     while ((match = linkRegex.exec(content)) !== null) {
-      links.push({
-        title: match[1],
-        slug: match[2],
-        anchor: match[3],
-      });
+      if (match[1] && match[2]) {
+        links.push({
+          title: match[1],
+          slug: match[2],
+          ...(match[3] && { anchor: match[3] }),
+        });
+      }
     }
 
     return links;
@@ -434,7 +436,7 @@ export class OptimizedPostProcessor {
  * Convenience function for single post processing
  */
 export async function processPostWithOptimization(
-  post: CollectionEntry<"docs">,
+  post: CollectionEntry<'docs'>
 ): Promise<PostProcessingResult> {
   const processor = new OptimizedPostProcessor();
   return await processor.processPost(post);
@@ -445,7 +447,7 @@ export async function processPostWithOptimization(
  * Convenience function for batch processing
  */
 export async function processMultiplePostsWithOptimization(
-  posts: CollectionEntry<"docs">[],
+  posts: CollectionEntry<'docs'>[]
 ): Promise<PostProcessingResult[]> {
   const processor = new OptimizedPostProcessor();
   return await processor.processMultiplePosts(posts);

@@ -16,11 +16,11 @@ export interface ErrorContext {
 export class ProgressiveErrorHandler {
   private errorCounts: Map<string, number> = new Map();
   private userPreferences: {
-    errorDetailLevel: "basic" | "enhanced" | "detailed";
+    errorDetailLevel: 'basic' | 'enhanced' | 'detailed';
     showTechnicalDetails: boolean;
     autoReport: boolean;
   } = {
-    errorDetailLevel: "basic",
+    errorDetailLevel: 'basic',
     showTechnicalDetails: false,
     autoReport: false,
   };
@@ -31,7 +31,7 @@ export class ProgressiveErrorHandler {
 
   private loadUserPreferences() {
     try {
-      const stored = localStorage.getItem("error-handler-preferences");
+      const stored = localStorage.getItem('error-handler-preferences');
       if (stored) {
         this.userPreferences = {
           ...this.userPreferences,
@@ -39,18 +39,18 @@ export class ProgressiveErrorHandler {
         };
       }
     } catch (error) {
-      console.warn("Could not load error handler preferences:", error);
+      console.warn('Could not load error handler preferences:', error);
     }
   }
 
   private saveUserPreferences() {
     try {
       localStorage.setItem(
-        "error-handler-preferences",
-        JSON.stringify(this.userPreferences),
+        'error-handler-preferences',
+        JSON.stringify(this.userPreferences)
       );
     } catch (error) {
-      console.warn("Could not save error handler preferences:", error);
+      console.warn('Could not save error handler preferences:', error);
     }
   }
 
@@ -71,7 +71,7 @@ export class ProgressiveErrorHandler {
   private getErrorMessage(
     error: Error,
     context: ErrorContext,
-    count: number,
+    count: number
   ): string {
     const baseMessage = this.getBaseMessage(error, context);
 
@@ -87,11 +87,11 @@ export class ProgressiveErrorHandler {
 
   private getBaseMessage(error: Error, context: ErrorContext): string {
     switch (this.userPreferences.errorDetailLevel) {
-      case "basic":
+      case 'basic':
         return this.getBasicMessage(error, context);
-      case "enhanced":
+      case 'enhanced':
         return this.getEnhancedMessage(error, context);
-      case "detailed":
+      case 'detailed':
         return this.getDetailedMessage(error, context);
       default:
         return this.getBasicMessage(error, context);
@@ -100,16 +100,20 @@ export class ProgressiveErrorHandler {
 
   private getBasicMessage(_error: Error, context: ErrorContext): string {
     const messages: Record<string, string> = {
-      "content-loading":
-        "Unable to load content. Please try refreshing the page.",
-      routing: "Navigation error. Please check the URL and try again.",
-      performance: "Performance issue detected. The page may be slow to load.",
+      'content-loading':
+        'Unable to load content. Please try refreshing the page.',
+      routing: 'Navigation error. Please check the URL and try again.',
+      performance: 'Performance issue detected. The page may be slow to load.',
       network:
-        "Network connection issue. Please check your internet connection.",
-      default: "An unexpected error occurred. Please try again.",
+        'Network connection issue. Please check your internet connection.',
+      default: 'An unexpected error occurred. Please try again.',
     };
 
-    return messages[context.action] || messages.default;
+    return (
+      messages[context.action] ||
+      messages.default ||
+      '不明なエラーが発生しました'
+    );
   }
 
   private getEnhancedMessage(error: Error, context: ErrorContext): string {
@@ -132,7 +136,7 @@ export class ProgressiveErrorHandler {
       userAgent: navigator.userAgent,
     };
 
-    console.error("Progressive Error Handler:", logData);
+    console.error('Progressive Error Handler:', logData);
 
     // Auto-report if enabled and error is frequent
     if (this.userPreferences.autoReport && count >= 3) {
@@ -143,9 +147,9 @@ export class ProgressiveErrorHandler {
   private async reportError(logData: any) {
     try {
       // In a real implementation, this would send to your error reporting service
-      console.log("Auto-reporting error:", logData);
+      console.log('Auto-reporting error:', logData);
     } catch (error) {
-      console.warn("Failed to report error:", error);
+      console.warn('Failed to report error:', error);
     }
   }
 

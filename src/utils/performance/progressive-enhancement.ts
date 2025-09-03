@@ -3,8 +3,8 @@ export interface EnhancementConfig {
   id: string;
   name: string;
   description: string;
-  category: "performance" | "ux" | "accessibility" | "feature";
-  priority: "low" | "medium" | "high" | "critical";
+  category: 'performance' | 'ux' | 'accessibility' | 'feature';
+  priority: 'low' | 'medium' | 'high' | 'critical';
   dependencies: string[];
   featureTest: () => boolean | Promise<boolean>;
   performanceTest: () => boolean | Promise<boolean>;
@@ -35,10 +35,10 @@ export class HybridProgressiveEnhancement {
     try {
       // SSG-safe localStorage access
       if (
-        typeof window !== "undefined" &&
-        typeof localStorage !== "undefined"
+        typeof window !== 'undefined' &&
+        typeof localStorage !== 'undefined'
       ) {
-        const stored = localStorage.getItem("enhancement-preferences");
+        const stored = localStorage.getItem('enhancement-preferences');
         if (stored) {
           const prefs = JSON.parse(stored);
           Object.entries(prefs).forEach(([key, value]) => {
@@ -47,7 +47,7 @@ export class HybridProgressiveEnhancement {
         }
       }
     } catch (error) {
-      console.warn("Could not load enhancement preferences:", error);
+      console.warn('Could not load enhancement preferences:', error);
     }
   }
 
@@ -55,84 +55,84 @@ export class HybridProgressiveEnhancement {
     try {
       // SSG-safe localStorage access
       if (
-        typeof window !== "undefined" &&
-        typeof localStorage !== "undefined"
+        typeof window !== 'undefined' &&
+        typeof localStorage !== 'undefined'
       ) {
         const prefs: Record<string, boolean> = {};
         this.userPreferences.forEach((value, key) => {
           prefs[key] = value;
         });
-        localStorage.setItem("enhancement-preferences", JSON.stringify(prefs));
+        localStorage.setItem('enhancement-preferences', JSON.stringify(prefs));
       }
     } catch (error) {
-      console.warn("Could not save enhancement preferences:", error);
+      console.warn('Could not save enhancement preferences:', error);
     }
   }
 
   private initializeEnhancements() {
     // Performance Enhancements
     this.addEnhancement({
-      id: "lazy-loading",
-      name: "Lazy Loading",
-      description: "Load images and content as needed",
-      category: "performance",
-      priority: "high",
+      id: 'lazy-loading',
+      name: 'Lazy Loading',
+      description: 'Load images and content as needed',
+      category: 'performance',
+      priority: 'high',
       dependencies: [],
-      featureTest: () => "IntersectionObserver" in window,
+      featureTest: () => 'IntersectionObserver' in window,
       performanceTest: async () => {
         const navigation = performance.getEntriesByType(
-          "navigation",
+          'navigation'
         )[0] as PerformanceNavigationTiming;
         return navigation
           ? navigation.loadEventEnd - navigation.loadEventStart < 2000
           : false;
       },
-      userPreference: "enable-lazy-loading",
+      userPreference: 'enable-lazy-loading',
       apply: () => this.applyLazyLoading(),
       revert: () => this.revertLazyLoading(),
     });
 
     // UX Enhancements
     this.addEnhancement({
-      id: "smooth-scroll",
-      name: "Smooth Scrolling",
-      description: "Enable smooth scrolling behavior",
-      category: "ux",
-      priority: "medium",
+      id: 'smooth-scroll',
+      name: 'Smooth Scrolling',
+      description: 'Enable smooth scrolling behavior',
+      category: 'ux',
+      priority: 'medium',
       dependencies: [],
-      featureTest: () => "scrollBehavior" in document.documentElement.style,
+      featureTest: () => 'scrollBehavior' in document.documentElement.style,
       performanceTest: async () => true, // Smooth scroll doesn't significantly impact performance
-      userPreference: "enable-smooth-scroll",
+      userPreference: 'enable-smooth-scroll',
       apply: () => this.applySmoothScroll(),
       revert: () => this.revertSmoothScroll(),
     });
 
     // Accessibility Enhancements
     this.addEnhancement({
-      id: "focus-indicators",
-      name: "Focus Indicators",
-      description: "Enhanced focus indicators for keyboard navigation",
-      category: "accessibility",
-      priority: "high",
+      id: 'focus-indicators',
+      name: 'Focus Indicators',
+      description: 'Enhanced focus indicators for keyboard navigation',
+      category: 'accessibility',
+      priority: 'high',
       dependencies: [],
       featureTest: () => true, // CSS focus styles are always available
       performanceTest: async () => true, // CSS doesn't impact performance
-      userPreference: "enable-focus-indicators",
+      userPreference: 'enable-focus-indicators',
       apply: () => this.applyFocusIndicators(),
       revert: () => this.revertFocusIndicators(),
     });
 
     // Feature Enhancements
     this.addEnhancement({
-      id: "offline-support",
-      name: "Offline Support",
-      description: "Enable offline functionality with service worker",
-      category: "feature",
-      priority: "medium",
+      id: 'offline-support',
+      name: 'Offline Support',
+      description: 'Enable offline functionality with service worker',
+      category: 'feature',
+      priority: 'medium',
       dependencies: [],
-      featureTest: () => "serviceWorker" in navigator,
+      featureTest: () => 'serviceWorker' in navigator,
       performanceTest: async () => true, // Service worker doesn't impact initial load
-      userPreference: "enable-offline-support",
+      userPreference: 'enable-offline-support',
       apply: () => this.applyOfflineSupport(),
       revert: () => this.revertOfflineSupport(),
     });
@@ -164,7 +164,7 @@ export class HybridProgressiveEnhancement {
         const userWants = state.userPreference;
 
         // Check dependencies
-        const dependenciesMet = enhancement.dependencies.every((depId) => {
+        const dependenciesMet = enhancement.dependencies.every(depId => {
           const depState = this.states.get(depId);
           return depState?.applied ?? false;
         });
@@ -218,27 +218,27 @@ export class HybridProgressiveEnhancement {
   // Enhancement implementations
   private applyLazyLoading(): void {
     // Add lazy loading to images
-    const images = document.querySelectorAll("img[data-src]");
-    if ("IntersectionObserver" in window) {
-      const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
+    const images = document.querySelectorAll('img[data-src]');
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target as HTMLImageElement;
             img.src = img.dataset.src!;
-            img.classList.remove("lazy");
+            img.classList.remove('lazy');
             imageObserver.unobserve(img);
           }
         });
       });
 
-      images.forEach((img) => imageObserver.observe(img));
+      images.forEach(img => imageObserver.observe(img));
     }
   }
 
   private revertLazyLoading(): void {
     // Remove lazy loading
-    const images = document.querySelectorAll("img[data-src]");
-    images.forEach((img) => {
+    const images = document.querySelectorAll('img[data-src]');
+    images.forEach(img => {
       const image = img as HTMLImageElement;
       if (image.dataset.src) {
         image.src = image.dataset.src;
@@ -247,40 +247,40 @@ export class HybridProgressiveEnhancement {
   }
 
   private applySmoothScroll(): void {
-    document.documentElement.style.scrollBehavior = "smooth";
+    document.documentElement.style.scrollBehavior = 'smooth';
   }
 
   private revertSmoothScroll(): void {
-    document.documentElement.style.scrollBehavior = "auto";
+    document.documentElement.style.scrollBehavior = 'auto';
   }
 
   private applyFocusIndicators(): void {
-    document.body.classList.add("enhanced-focus");
+    document.body.classList.add('enhanced-focus');
   }
 
   private revertFocusIndicators(): void {
-    document.body.classList.remove("enhanced-focus");
+    document.body.classList.remove('enhanced-focus');
   }
 
   private applyOfflineSupport(): void {
     // Register service worker for offline support
-    if ("serviceWorker" in navigator) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker
-        .register("/sw.js")
-        .then((registration) => {
-          console.log("Service Worker registered:", registration);
+        .register('/sw.js')
+        .then(registration => {
+          console.log('Service Worker registered:', registration);
         })
-        .catch((error) => {
-          console.error("Service Worker registration failed:", error);
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
         });
     }
   }
 
   private revertOfflineSupport(): void {
     // Unregister service worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        registrations.forEach((registration) => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(registration => {
           registration.unregister();
         });
       });

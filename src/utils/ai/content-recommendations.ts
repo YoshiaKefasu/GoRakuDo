@@ -1,7 +1,7 @@
 import type {
   ContentRecommendationRequest,
   ContentRecommendation,
-} from "./types";
+} from './types';
 
 export class ContentRecommendationSystem {
   private cache: Map<string, ContentRecommendation[]>;
@@ -11,7 +11,7 @@ export class ContentRecommendationSystem {
   }
 
   async generateRecommendations(
-    request: ContentRecommendationRequest,
+    request: ContentRecommendationRequest
   ): Promise<ContentRecommendation[]> {
     // AI processing disabled for security
     return this.generateFallbackRecommendations(request);
@@ -113,10 +113,10 @@ export class ContentRecommendationSystem {
   // }
 
   private generateFallbackRecommendations(
-    request: ContentRecommendationRequest,
+    request: ContentRecommendationRequest
   ): ContentRecommendation[] {
     const availablePosts = request.availablePosts.filter(
-      (post) => post.id !== request.currentPost.id,
+      post => post.id !== request.currentPost.id
     );
 
     return availablePosts.slice(0, 3).map((post, index) => ({
@@ -130,11 +130,11 @@ export class ContentRecommendationSystem {
 
   private generateFallbackReason(index: number): string {
     const reasons = [
-      "Artikel terkait tentang pembelajaran bahasa Jepang",
-      "Materi lanjutan untuk memperdalam pemahaman",
-      "Konten pelengkap untuk metode immersion",
+      'Artikel terkait tentang pembelajaran bahasa Jepang',
+      'Materi lanjutan untuk memperdalam pemahaman',
+      'Konten pelengkap untuk metode immersion',
     ];
-    return reasons[index] || reasons[0];
+    return reasons[index] || reasons[0] || 'おすすめコンテンツ';
   }
 
   // private generateCacheKey(request: ContentRecommendationRequest): string {

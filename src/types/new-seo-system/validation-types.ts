@@ -225,7 +225,11 @@ export interface MetadataFieldUpdate {
  * Event handling for metadata input system
  */
 export type MetadataInputEvent =
-  | { readonly type: 'input'; readonly field: keyof MetadataInput; readonly value: unknown }
+  | {
+      readonly type: 'input';
+      readonly field: keyof MetadataInput;
+      readonly value: unknown;
+    }
   | { readonly type: 'validation'; readonly result: MetadataValidationResult }
   | { readonly type: 'save'; readonly metadata: MetadataInput }
   | { readonly type: 'load'; readonly metadata: MetadataInput }
@@ -445,7 +449,9 @@ export interface ValidationRule<T = unknown> {
  * Validation schema interface
  * Collection of validation rules for a configuration object
  */
-export interface ValidationSchema<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface ValidationSchema<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
   readonly rules: readonly ValidationRule<T>[];
   readonly validateAll?: boolean;
 }
@@ -499,14 +505,18 @@ export function isMetadataGap(obj: unknown): obj is MetadataGap {
     'type' in obj &&
     ['missing', 'incomplete', 'invalid'].includes((obj as MetadataGap).type) &&
     'priority' in obj &&
-    ['critical', 'high', 'medium', 'low'].includes((obj as MetadataGap).priority)
+    ['critical', 'high', 'medium', 'low'].includes(
+      (obj as MetadataGap).priority
+    )
   );
 }
 
 /**
  * Type guard for ContentExtractionRule
  */
-export function isContentExtractionRule(obj: unknown): obj is ContentExtractionRule {
+export function isContentExtractionRule(
+  obj: unknown
+): obj is ContentExtractionRule {
   return (
     typeof obj === 'object' &&
     obj !== null &&
@@ -526,7 +536,9 @@ export function isContentExtractionRule(obj: unknown): obj is ContentExtractionR
 /**
  * Type guard for ExtractionQualityScore
  */
-export function isExtractionQualityScore(obj: unknown): obj is ExtractionQualityScore {
+export function isExtractionQualityScore(
+  obj: unknown
+): obj is ExtractionQualityScore {
   return (
     typeof obj === 'object' &&
     obj !== null &&
@@ -597,7 +609,9 @@ export type MetadataInputType = MetadataInput;
 export type FallbackMetadataType = FallbackMetadata;
 export type FallbackResultType = FallbackResult;
 export type ValidationRuleType<T = unknown> = ValidationRule<T>;
-export type ValidationSchemaType<T extends Record<string, unknown> = Record<string, unknown>> = ValidationSchema<T>;
+export type ValidationSchemaType<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = ValidationSchema<T>;
 export type ValidationPipelineType<T = unknown> = ValidationPipeline<T>;
 export type QualityValidationResultType = QualityValidationResult;
 export type PerformanceValidationType = PerformanceValidation;

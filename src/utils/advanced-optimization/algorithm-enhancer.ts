@@ -5,7 +5,7 @@
 
 import type {
   AlgorithmEnhancementConfig,
-  AlgorithmEnhancementResult
+  AlgorithmEnhancementResult,
 } from '../../types/new-seo-system';
 
 // 既存の最適化アルゴリズムパターンを活用（DRY原則）
@@ -14,7 +14,7 @@ const OPTIMIZATION_ALGORITHMS = {
     titleOptimization: true,
     descriptionOptimization: true,
     keywordOptimization: true,
-    contentOptimization: true
+    contentOptimization: true,
   },
   advanced: {
     titleOptimization: true,
@@ -23,7 +23,7 @@ const OPTIMIZATION_ALGORITHMS = {
     contentOptimization: true,
     semanticAnalysis: true,
     competitorAnalysis: true,
-    trendAnalysis: true
+    trendAnalysis: true,
   },
   expert: {
     titleOptimization: true,
@@ -35,14 +35,14 @@ const OPTIMIZATION_ALGORITHMS = {
     trendAnalysis: true,
     machineLearning: true,
     userBehaviorAnalysis: true,
-    predictiveOptimization: true
-  }
+    predictiveOptimization: true,
+  },
 };
 
 /**
  * 自動最適化アルゴリズムの高度化機能
  * 既存の最適化アルゴリズムを活用して高度化
- * 
+ *
  * @param config - アルゴリズム高度化設定
  * @param currentData - 現在の最適化データ
  * @returns 高度化結果
@@ -67,7 +67,7 @@ export function enhanceOptimizationAlgorithm(
       const mlResult = applyMachineLearningEnhancement(currentData);
       performance.machineLearningScore = mlResult.score;
       enhancement += mlResult.enhancement;
-      
+
       if (mlResult.improvements.length > 0) {
         improvements.push(...mlResult.improvements);
       }
@@ -78,17 +78,20 @@ export function enhanceOptimizationAlgorithm(
       const behaviorResult = applyUserBehaviorEnhancement(currentData);
       performance.userBehaviorScore = behaviorResult.score;
       enhancement += behaviorResult.enhancement;
-      
+
       if (behaviorResult.improvements.length > 0) {
         improvements.push(...behaviorResult.improvements);
       }
     }
 
     // 継続的な最適化改善機能（既存アルゴリズム活用）
-    const continuousResult = applyContinuousImprovement(config.optimizationLevel, currentData);
+    const continuousResult = applyContinuousImprovement(
+      config.optimizationLevel,
+      currentData
+    );
     performance.continuousImprovementScore = continuousResult.score;
     enhancement += continuousResult.enhancement;
-    
+
     if (continuousResult.improvements.length > 0) {
       improvements.push(...continuousResult.improvements);
     }
@@ -98,7 +101,7 @@ export function enhanceOptimizationAlgorithm(
       const adaptiveResult = applyAdaptiveLearning(currentData);
       performance.adaptiveLearningScore = adaptiveResult.score;
       enhancement += adaptiveResult.enhancement;
-      
+
       if (adaptiveResult.improvements.length > 0) {
         improvements.push(...adaptiveResult.improvements);
       }
@@ -112,22 +115,23 @@ export function enhanceOptimizationAlgorithm(
       success: true,
       enhancement: Math.min(enhancement, 100),
       improvements: [...new Set(improvements)], // 重複除去
-      performance
+      performance,
     };
-
   } catch (error) {
     return {
       success: false,
       enhancement: 0,
-      improvements: [`Enhancement error: ${error instanceof Error ? error.message : 'Unknown error'}`],
-      performance: {}
+      improvements: [
+        `Enhancement error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      ],
+      performance: {},
     };
   }
 }
 
 /**
  * 機械学習による最適化精度向上（既存アルゴリズム活用）
- * 
+ *
  * @param currentData - 現在の最適化データ
  * @returns 機械学習高度化結果
  */
@@ -147,13 +151,13 @@ function applyMachineLearningEnhancement(currentData: {
   let enhancement = 0;
 
   // 既存の最適化アルゴリズムを活用した機械学習（DRY原則）
-  
+
   // タイトル最適化の機械学習
   if (currentData.title.length > 0) {
     const titleOptimization = optimizeTitleWithML(currentData.title);
     score += titleOptimization.score;
     enhancement += titleOptimization.enhancement;
-    
+
     if (titleOptimization.improvements.length > 0) {
       improvements.push(...titleOptimization.improvements);
     }
@@ -161,10 +165,12 @@ function applyMachineLearningEnhancement(currentData: {
 
   // 説明文最適化の機械学習
   if (currentData.description.length > 0) {
-    const descriptionOptimization = optimizeDescriptionWithML(currentData.description);
+    const descriptionOptimization = optimizeDescriptionWithML(
+      currentData.description
+    );
     score += descriptionOptimization.score;
     enhancement += descriptionOptimization.enhancement;
-    
+
     if (descriptionOptimization.improvements.length > 0) {
       improvements.push(...descriptionOptimization.improvements);
     }
@@ -175,7 +181,7 @@ function applyMachineLearningEnhancement(currentData: {
     const keywordOptimization = optimizeKeywordsWithML(currentData.keywords);
     score += keywordOptimization.score;
     enhancement += keywordOptimization.enhancement;
-    
+
     if (keywordOptimization.improvements.length > 0) {
       improvements.push(...keywordOptimization.improvements);
     }
@@ -184,13 +190,13 @@ function applyMachineLearningEnhancement(currentData: {
   return {
     score: Math.min(score / 3, 100),
     enhancement: Math.min(enhancement / 3, 100),
-    improvements
+    improvements,
   };
 }
 
 /**
  * ユーザー行動に基づく最適化調整（既存アルゴリズム活用）
- * 
+ *
  * @param currentData - 現在の最適化データ
  * @returns ユーザー行動高度化結果
  */
@@ -210,30 +216,36 @@ function applyUserBehaviorEnhancement(currentData: {
   let enhancement = 0;
 
   // 既存の最適化アルゴリズムを活用したユーザー行動分析（DRY原則）
-  
+
   // クリック率に基づく最適化
-  const clickRateOptimization = optimizeBasedOnClickRate(currentData.performance);
+  const clickRateOptimization = optimizeBasedOnClickRate(
+    currentData.performance
+  );
   score += clickRateOptimization.score;
   enhancement += clickRateOptimization.enhancement;
-  
+
   if (clickRateOptimization.improvements.length > 0) {
     improvements.push(...clickRateOptimization.improvements);
   }
 
   // 滞在時間に基づく最適化
-  const dwellTimeOptimization = optimizeBasedOnDwellTime(currentData.performance);
+  const dwellTimeOptimization = optimizeBasedOnDwellTime(
+    currentData.performance
+  );
   score += dwellTimeOptimization.score;
   enhancement += dwellTimeOptimization.enhancement;
-  
+
   if (dwellTimeOptimization.improvements.length > 0) {
     improvements.push(...dwellTimeOptimization.improvements);
   }
 
   // コンバージョン率に基づく最適化
-  const conversionOptimization = optimizeBasedOnConversion(currentData.performance);
+  const conversionOptimization = optimizeBasedOnConversion(
+    currentData.performance
+  );
   score += conversionOptimization.score;
   enhancement += conversionOptimization.enhancement;
-  
+
   if (conversionOptimization.improvements.length > 0) {
     improvements.push(...conversionOptimization.improvements);
   }
@@ -241,13 +253,13 @@ function applyUserBehaviorEnhancement(currentData: {
   return {
     score: Math.min(score / 3, 100),
     enhancement: Math.min(enhancement / 3, 100),
-    improvements
+    improvements,
   };
 }
 
 /**
  * 継続的な最適化改善機能（既存アルゴリズム活用）
- * 
+ *
  * @param optimizationLevel - 最適化レベル
  * @param currentData - 現在の最適化データ
  * @returns 継続的改善結果
@@ -272,13 +284,13 @@ function applyContinuousImprovement(
 
   // 既存の最適化アルゴリズムを活用した継続的改善（DRY原則）
   const algorithms = OPTIMIZATION_ALGORITHMS[optimizationLevel];
-  
+
   Object.entries(algorithms).forEach(([algorithm, enabled]) => {
     if (enabled) {
       const algorithmResult = applyAlgorithmImprovement(algorithm, currentData);
       score += algorithmResult.score;
       enhancement += algorithmResult.enhancement;
-      
+
       if (algorithmResult.improvements.length > 0) {
         improvements.push(...algorithmResult.improvements);
       }
@@ -286,17 +298,18 @@ function applyContinuousImprovement(
   });
 
   const algorithmCount = Object.values(algorithms).filter(Boolean).length;
-  
+
   return {
     score: algorithmCount > 0 ? Math.min(score / algorithmCount, 100) : 0,
-    enhancement: algorithmCount > 0 ? Math.min(enhancement / algorithmCount, 100) : 0,
-    improvements
+    enhancement:
+      algorithmCount > 0 ? Math.min(enhancement / algorithmCount, 100) : 0,
+    improvements,
   };
 }
 
 /**
  * 適応学習の実装（既存アルゴリズム活用）
- * 
+ *
  * @param currentData - 現在の最適化データ
  * @returns 適応学習結果
  */
@@ -316,12 +329,14 @@ function applyAdaptiveLearning(currentData: {
   let enhancement = 0;
 
   // 既存の最適化アルゴリズムを活用した適応学習（DRY原則）
-  
+
   // パフォーマンス履歴に基づく適応
-  const performanceAdaptation = adaptBasedOnPerformanceHistory(currentData.performance);
+  const performanceAdaptation = adaptBasedOnPerformanceHistory(
+    currentData.performance
+  );
   score += performanceAdaptation.score;
   enhancement += performanceAdaptation.enhancement;
-  
+
   if (performanceAdaptation.improvements.length > 0) {
     improvements.push(...performanceAdaptation.improvements);
   }
@@ -330,7 +345,7 @@ function applyAdaptiveLearning(currentData: {
   const trendAdaptation = adaptBasedOnTrends(currentData);
   score += trendAdaptation.score;
   enhancement += trendAdaptation.enhancement;
-  
+
   if (trendAdaptation.improvements.length > 0) {
     improvements.push(...trendAdaptation.improvements);
   }
@@ -338,7 +353,7 @@ function applyAdaptiveLearning(currentData: {
   return {
     score: Math.min(score / 2, 100),
     enhancement: Math.min(enhancement / 2, 100),
-    improvements
+    improvements,
   };
 }
 
@@ -432,7 +447,9 @@ function optimizeBasedOnClickRate(performance: Record<string, number>): {
   let enhancement = 15;
 
   if (clickRate < 2) {
-    improvements.push('Low click rate detected, optimizing title and description');
+    improvements.push(
+      'Low click rate detected, optimizing title and description'
+    );
     score -= 15;
   } else if (clickRate > 5) {
     improvements.push('High click rate, maintaining current optimization');
@@ -501,7 +518,10 @@ function optimizeBasedOnConversion(performance: Record<string, number>): {
   return { score: Math.max(score, 0), enhancement, improvements };
 }
 
-function applyAlgorithmImprovement(algorithm: string, _currentData: any): {
+function applyAlgorithmImprovement(
+  algorithm: string,
+  _currentData: any
+): {
   score: number;
   enhancement: number;
   improvements: string[];
@@ -552,8 +572,14 @@ function adaptBasedOnTrends(_currentData: any): {
   return { score, enhancement, improvements };
 }
 
-function calculateAlgorithmEfficiency(performance: Record<string, number>): number {
+function calculateAlgorithmEfficiency(
+  performance: Record<string, number>
+): number {
   // シンプルなアルゴリズム効率計算（KISS原則）
-  const scores = Object.values(performance).filter(score => typeof score === 'number');
-  return scores.length > 0 ? scores.reduce((sum, score) => sum + score, 0) / scores.length : 0;
+  const scores = Object.values(performance).filter(
+    score => typeof score === 'number'
+  );
+  return scores.length > 0
+    ? scores.reduce((sum, score) => sum + score, 0) / scores.length
+    : 0;
 }

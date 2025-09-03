@@ -9,21 +9,37 @@ const SEARCH_CONFIG = {
   maxResults: 50,
   searchDelay: 300, // ms
   highlightClass: 'search-highlight',
-  
+
   // Search fields and weights
   searchFields: {
     title: { weight: 3, boost: 2.0 },
     description: { weight: 2, boost: 1.5 },
     tags: { weight: 2, boost: 1.8 },
-    content: { weight: 1, boost: 1.0 }
+    content: { weight: 1, boost: 1.0 },
   },
-  
+
   // Filter options
   filters: {
-    contentType: ['guide', 'methodology', 'tool', 'theory', 'practice', 'review', 'case-study', 'faq'],
-    learningStage: ['alphabet', 'basic-grammar', 'kanji-intro', 'intermediate', 'advanced', 'fluency'],
-    difficulty: ['beginner', 'intermediate', 'advanced']
-  }
+    contentType: [
+      'guide',
+      'methodology',
+      'tool',
+      'theory',
+      'practice',
+      'review',
+      'case-study',
+      'faq',
+    ],
+    learningStage: [
+      'alphabet',
+      'basic-grammar',
+      'kanji-intro',
+      'intermediate',
+      'advanced',
+      'fluency',
+    ],
+    difficulty: ['beginner', 'intermediate', 'advanced'],
+  },
 };
 
 // Search Engine Class
@@ -35,12 +51,12 @@ class DocsSearchEngine {
     this.searchResults = [];
     this.isInitialized = false;
     this.searchTimeout = null;
-    
+
     // Performance tracking
     this.metrics = {
       searchCount: 0,
       averageSearchTime: 0,
-      totalSearchTime: 0
+      totalSearchTime: 0,
     };
   }
 
@@ -50,19 +66,19 @@ class DocsSearchEngine {
   async initialize() {
     try {
       console.log('🔍 Initializing Docs Search Engine...');
-      
+
       // Load posts data
       await this.loadPostsData();
-      
+
       // Build search index
       this.buildSearchIndex();
-      
+
       // Set up event listeners
       this.setupEventListeners();
-      
+
       this.isInitialized = true;
       console.log('✅ Docs Search Engine initialized successfully');
-      
+
       return true;
     } catch (error) {
       console.error('❌ Failed to initialize Docs Search Engine:', error);
@@ -83,12 +99,12 @@ class DocsSearchEngine {
           this.posts = JSON.parse(postsData);
         }
       }
-      
+
       // Fallback: try to extract from page elements
       if (this.posts.length === 0) {
         this.posts = this.extractPostsFromPage();
       }
-      
+
       console.log(`📚 Loaded ${this.posts.length} posts for search`);
     } catch (error) {
       console.error('❌ Error loading posts data:', error);
@@ -102,7 +118,7 @@ class DocsSearchEngine {
   extractPostsFromPage() {
     const posts = [];
     const postElements = document.querySelectorAll('[data-post]');
-    
+
     postElements.forEach(element => {
       try {
         const postData = JSON.parse(element.getAttribute('data-post') || '{}');
@@ -113,7 +129,7 @@ class DocsSearchEngine {
         console.warn('⚠️ Failed to parse post data:', error);
       }
     });
-    
+
     return posts;
   }
 
@@ -122,30 +138,42 @@ class DocsSearchEngine {
    */
   buildSearchIndex() {
     this.searchIndex.clear();
-    
+
     this.posts.forEach((post, index) => {
       // Index by title
-      this.indexText(post.title, index, SEARCH_CONFIG.searchFields.title.weight);
-      
+      this.indexText(
+        post.title,
+        index,
+        SEARCH_CONFIG.searchFields.title.weight
+      );
+
       // Index by description
       if (post.description) {
-        this.indexText(post.description, index, SEARCH_CONFIG.searchFields.description.weight);
+        this.indexText(
+          post.description,
+          index,
+          SEARCH_CONFIG.searchFields.description.weight
+        );
       }
-      
+
       // Index by tags
       if (post.tags && Array.isArray(post.tags)) {
         post.tags.forEach(tag => {
           this.indexText(tag, index, SEARCH_CONFIG.searchFields.tags.weight);
         });
       }
-      
+
       // Index by content (first 500 characters for performance)
       if (post.content) {
         const contentPreview = post.content.substring(0, 500);
-        this.indexText(contentPreview, index, SEARCH_CONFIG.searchFields.content.weight);
+        this.indexText(
+          contentPreview,
+          index,
+          SEARCH_CONFIG.searchFields.content.weight
+        );
       }
     });
-    
+
     console.log(`🔍 Built search index with ${this.searchIndex.size} terms`);
   }
 
@@ -154,13 +182,13 @@ class DocsSearchEngine {
    */
   indexText(text, postIndex, weight) {
     if (!text) return;
-    
+
     const words = this.tokenize(text);
     words.forEach(word => {
       if (!this.searchIndex.has(word)) {
         this.searchIndex.set(word, new Map());
       }
-      
+
       const postWeights = this.searchIndex.get(word);
       const currentWeight = postWeights.get(postIndex) || 0;
       postWeights.set(postIndex, currentWeight + weight);
@@ -171,7 +199,8 @@ class DocsSearchEngine {
    * Tokenize text into searchable terms
    */
   tokenize(text) {
-    return text.toLowerCase()
+    return text
+      .toLowerCase()
       .replace(/[^\w\s]/g, ' ')
       .split(/\s+/)
       .filter(word => word.length >= SEARCH_CONFIG.minQueryLength)
@@ -184,28 +213,213 @@ class DocsSearchEngine {
   isStopWord(word) {
     const stopWords = new Set([
       // English stop words
-      'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
-      'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
-      'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those',
-      
+      'the',
+      'a',
+      'an',
+      'and',
+      'or',
+      'but',
+      'in',
+      'on',
+      'at',
+      'to',
+      'for',
+      'of',
+      'with',
+      'by',
+      'is',
+      'are',
+      'was',
+      'were',
+      'be',
+      'been',
+      'being',
+      'have',
+      'has',
+      'had',
+      'do',
+      'does',
+      'did',
+      'will',
+      'would',
+      'could',
+      'should',
+      'may',
+      'might',
+      'must',
+      'can',
+      'this',
+      'that',
+      'these',
+      'those',
+
       // Indonesian stop words
-      'yang', 'dan', 'atau', 'dengan', 'di', 'ke', 'dari', 'untuk', 'dalam', 'pada', 'oleh', 'karena',
-      'adalah', 'akan', 'sudah', 'belum', 'tidak', 'bukan', 'juga', 'saja', 'hanya', 'masih', 'sudah',
-      'pernah', 'selalu', 'kadang', 'sering', 'jarang', 'segera', 'nanti', 'kemarin', 'hari', 'ini',
-      'itu', 'ini', 'sana', 'sini', 'mana', 'apa', 'siapa', 'kapan', 'bagaimana', 'mengapa', 'berapa',
-      'seperti', 'sebagai', 'tentang', 'terhadap', 'antara', 'diantara', 'sebelum', 'sesudah', 'setelah',
-      'sambil', 'sementara', 'ketika', 'jika', 'kalau', 'apabila', 'meskipun', 'walaupun', 'sehingga',
-      'agar', 'supaya', 'hingga', 'sampai', 'selama', 'sepanjang', 'sejak', 'dari', 'hingga', 'sampai',
-      'lebih', 'paling', 'terlalu', 'sangat', 'amat', 'benar', 'sungguh', 'memang', 'tentu', 'pasti',
-      'mungkin', 'barangkali', 'rasanya', 'sepertinya', 'kayaknya', 'seolah', 'seakan', 'bagai',
-      'seperti', 'sebagai', 'tentang', 'terhadap', 'antara', 'diantara', 'sebelum', 'sesudah', 'setelah',
-      'sambil', 'sementara', 'ketika', 'jika', 'kalau', 'apabila', 'meskipun', 'walaupun', 'sehingga',
-      'agar', 'supaya', 'hingga', 'sampai', 'selama', 'sepanjang', 'sejak', 'dari', 'hingga', 'sampai',
-      'lebih', 'paling', 'terlalu', 'sangat', 'amat', 'benar', 'sungguh', 'memang', 'tentu', 'pasti',
-      'mungkin', 'barangkali', 'rasanya', 'sepertinya', 'kayaknya', 'seolah', 'seakan', 'bagai',
-      'saya', 'aku', 'kamu', 'anda', 'dia', 'mereka', 'kami', 'kita', 'kalian', 'mereka', 'ini', 'itu',
-      'disini', 'disana', 'dimana', 'kemana', 'darimana', 'bagaimana', 'mengapa', 'kenapa', 'berapa',
-      'kapan', 'dimana', 'kemana', 'darimana', 'bagaimana', 'mengapa', 'kenapa', 'berapa', 'kapan'
+      'yang',
+      'dan',
+      'atau',
+      'dengan',
+      'di',
+      'ke',
+      'dari',
+      'untuk',
+      'dalam',
+      'pada',
+      'oleh',
+      'karena',
+      'adalah',
+      'akan',
+      'sudah',
+      'belum',
+      'tidak',
+      'bukan',
+      'juga',
+      'saja',
+      'hanya',
+      'masih',
+      'sudah',
+      'pernah',
+      'selalu',
+      'kadang',
+      'sering',
+      'jarang',
+      'segera',
+      'nanti',
+      'kemarin',
+      'hari',
+      'ini',
+      'itu',
+      'ini',
+      'sana',
+      'sini',
+      'mana',
+      'apa',
+      'siapa',
+      'kapan',
+      'bagaimana',
+      'mengapa',
+      'berapa',
+      'seperti',
+      'sebagai',
+      'tentang',
+      'terhadap',
+      'antara',
+      'diantara',
+      'sebelum',
+      'sesudah',
+      'setelah',
+      'sambil',
+      'sementara',
+      'ketika',
+      'jika',
+      'kalau',
+      'apabila',
+      'meskipun',
+      'walaupun',
+      'sehingga',
+      'agar',
+      'supaya',
+      'hingga',
+      'sampai',
+      'selama',
+      'sepanjang',
+      'sejak',
+      'dari',
+      'hingga',
+      'sampai',
+      'lebih',
+      'paling',
+      'terlalu',
+      'sangat',
+      'amat',
+      'benar',
+      'sungguh',
+      'memang',
+      'tentu',
+      'pasti',
+      'mungkin',
+      'barangkali',
+      'rasanya',
+      'sepertinya',
+      'kayaknya',
+      'seolah',
+      'seakan',
+      'bagai',
+      'seperti',
+      'sebagai',
+      'tentang',
+      'terhadap',
+      'antara',
+      'diantara',
+      'sebelum',
+      'sesudah',
+      'setelah',
+      'sambil',
+      'sementara',
+      'ketika',
+      'jika',
+      'kalau',
+      'apabila',
+      'meskipun',
+      'walaupun',
+      'sehingga',
+      'agar',
+      'supaya',
+      'hingga',
+      'sampai',
+      'selama',
+      'sepanjang',
+      'sejak',
+      'dari',
+      'hingga',
+      'sampai',
+      'lebih',
+      'paling',
+      'terlalu',
+      'sangat',
+      'amat',
+      'benar',
+      'sungguh',
+      'memang',
+      'tentu',
+      'pasti',
+      'mungkin',
+      'barangkali',
+      'rasanya',
+      'sepertinya',
+      'kayaknya',
+      'seolah',
+      'seakan',
+      'bagai',
+      'saya',
+      'aku',
+      'kamu',
+      'anda',
+      'dia',
+      'mereka',
+      'kami',
+      'kita',
+      'kalian',
+      'mereka',
+      'ini',
+      'itu',
+      'disini',
+      'disana',
+      'dimana',
+      'kemana',
+      'darimana',
+      'bagaimana',
+      'mengapa',
+      'kenapa',
+      'berapa',
+      'kapan',
+      'dimana',
+      'kemana',
+      'darimana',
+      'bagaimana',
+      'mengapa',
+      'kenapa',
+      'berapa',
+      'kapan',
     ]);
     return stopWords.has(word.toLowerCase());
   }
@@ -220,25 +434,25 @@ class DocsSearchEngine {
     }
 
     const startTime = performance.now();
-    
+
     // Clear previous timeout
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
     }
 
     // Debounce search
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.searchTimeout = setTimeout(() => {
         const results = this.performSearch(query, options);
         const searchTime = performance.now() - startTime;
-        
+
         // Update metrics
         this.updateMetrics(searchTime);
-        
+
         // Update current state
         this.currentQuery = query;
         this.searchResults = results.results;
-        
+
         resolve(results);
       }, SEARCH_CONFIG.searchDelay);
     });
@@ -254,7 +468,7 @@ class DocsSearchEngine {
 
     const queryWords = this.tokenize(query);
     const scores = new Map();
-    
+
     // Calculate scores for each post
     queryWords.forEach(word => {
       const postWeights = this.searchIndex.get(word);
@@ -265,23 +479,23 @@ class DocsSearchEngine {
         });
       }
     });
-    
+
     // Convert scores to results
     const results = Array.from(scores.entries())
       .map(([postIndex, score]) => ({
         post: this.posts[postIndex],
         score: score,
-        highlights: this.generateHighlights(query, this.posts[postIndex])
+        highlights: this.generateHighlights(query, this.posts[postIndex]),
       }))
       .filter(result => result.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, SEARCH_CONFIG.maxResults);
-    
+
     return {
       results: results,
       total: results.length,
       query: query,
-      searchTime: performance.now()
+      searchTime: performance.now(),
     };
   }
 
@@ -291,23 +505,23 @@ class DocsSearchEngine {
   generateHighlights(query, post) {
     const highlights = [];
     const queryWords = this.tokenize(query);
-    
+
     // Highlight in title
     if (post.title) {
       highlights.push({
         field: 'title',
-        text: this.highlightText(post.title, queryWords)
+        text: this.highlightText(post.title, queryWords),
       });
     }
-    
+
     // Highlight in description
     if (post.description) {
       highlights.push({
         field: 'description',
-        text: this.highlightText(post.description, queryWords)
+        text: this.highlightText(post.description, queryWords),
       });
     }
-    
+
     return highlights;
   }
 
@@ -316,12 +530,15 @@ class DocsSearchEngine {
    */
   highlightText(text, queryWords) {
     let highlightedText = text;
-    
+
     queryWords.forEach(word => {
       const regex = new RegExp(`(${word})`, 'gi');
-      highlightedText = highlightedText.replace(regex, `<mark class="${SEARCH_CONFIG.highlightClass}">$1</mark>`);
+      highlightedText = highlightedText.replace(
+        regex,
+        `<mark class="${SEARCH_CONFIG.highlightClass}">$1</mark>`
+      );
     });
-    
+
     return highlightedText;
   }
 
@@ -332,31 +549,31 @@ class DocsSearchEngine {
     if (!filters || Object.keys(filters).length === 0) {
       return results;
     }
-    
+
     return results.filter(result => {
       const post = result.post;
-      
+
       // Filter by content type
       if (filters.contentType && filters.contentType.length > 0) {
         if (!filters.contentType.includes(post.contentType)) {
           return false;
         }
       }
-      
+
       // Filter by learning stage
       if (filters.learningStage && filters.learningStage.length > 0) {
         if (!filters.learningStage.includes(post.learningStage)) {
           return false;
         }
       }
-      
+
       // Filter by difficulty
       if (filters.difficulty && filters.difficulty.length > 0) {
         if (!filters.difficulty.includes(post.difficulty)) {
           return false;
         }
       }
-      
+
       return true;
     });
   }
@@ -368,17 +585,17 @@ class DocsSearchEngine {
     if (!query || query.length < 2) {
       return [];
     }
-    
+
     const suggestions = new Set();
     const queryLower = query.toLowerCase();
-    
+
     // Find matching terms from search index
     this.searchIndex.forEach((_, term) => {
       if (term.startsWith(queryLower) && term !== queryLower) {
         suggestions.add(term);
       }
     });
-    
+
     // Find matching titles
     this.posts.forEach(post => {
       const titleWords = this.tokenize(post.title);
@@ -388,7 +605,7 @@ class DocsSearchEngine {
         }
       });
     });
-    
+
     return Array.from(suggestions).slice(0, 10);
   }
 
@@ -398,7 +615,8 @@ class DocsSearchEngine {
   updateMetrics(searchTime) {
     this.metrics.searchCount++;
     this.metrics.totalSearchTime += searchTime;
-    this.metrics.averageSearchTime = this.metrics.totalSearchTime / this.metrics.searchCount;
+    this.metrics.averageSearchTime =
+      this.metrics.totalSearchTime / this.metrics.searchCount;
   }
 
   /**
@@ -415,23 +633,23 @@ class DocsSearchEngine {
     // Search input event listener
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
+      searchInput.addEventListener('input', e => {
         const query = e.target.value.trim();
         this.handleSearchInput(query);
       });
-      
-      searchInput.addEventListener('keydown', (e) => {
+
+      searchInput.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
           e.preventDefault();
           this.handleSearchSubmit();
         }
       });
     }
-    
+
     // Search form submit
     const searchForm = document.getElementById('searchForm');
     if (searchForm) {
-      searchForm.addEventListener('submit', (e) => {
+      searchForm.addEventListener('submit', e => {
         e.preventDefault();
         this.handleSearchSubmit();
       });
@@ -475,7 +693,7 @@ class DocsSearchEngine {
   displayResults(results) {
     const resultsContainer = document.getElementById('searchResults');
     if (!resultsContainer) return;
-    
+
     if (results.results.length === 0) {
       resultsContainer.innerHTML = `
         <div class="text-center py-8">
@@ -485,12 +703,13 @@ class DocsSearchEngine {
       `;
       return;
     }
-    
-    const resultsHTML = results.results.map(result => {
-      const post = result.post;
-      const highlights = result.highlights;
-      
-      return `
+
+    const resultsHTML = results.results
+      .map(result => {
+        const post = result.post;
+        const highlights = result.highlights;
+
+        return `
         <div class="search-result-item p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors">
           <h3 class="text-lg font-semibold text-gray-900 mb-2">
             <a href="${post.url || '#'}" class="hover:text-primary-600">
@@ -506,8 +725,9 @@ class DocsSearchEngine {
           </div>
         </div>
       `;
-    }).join('');
-    
+      })
+      .join('');
+
     resultsContainer.innerHTML = resultsHTML;
   }
 
@@ -527,16 +747,20 @@ class DocsSearchEngine {
   showSuggestions(query) {
     const suggestions = this.getSuggestions(query);
     const suggestionsContainer = document.getElementById('searchSuggestions');
-    
+
     if (!suggestionsContainer || suggestions.length === 0) return;
-    
-    const suggestionsHTML = suggestions.map(suggestion => `
+
+    const suggestionsHTML = suggestions
+      .map(
+        suggestion => `
       <div class="suggestion-item px-4 py-2 hover:bg-gray-100 cursor-pointer" 
            onclick="window.enhancedDocsSearch.selectSuggestion('${suggestion}')">
         ${suggestion}
       </div>
-    `).join('');
-    
+    `
+      )
+      .join('');
+
     suggestionsContainer.innerHTML = suggestionsHTML;
     suggestionsContainer.style.display = 'block';
   }

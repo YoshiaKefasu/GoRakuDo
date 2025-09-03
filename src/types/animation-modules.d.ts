@@ -5,7 +5,7 @@
  * to resolve TypeScript import errors in Astro files.
  */
 
-declare module "../scripts/ui/background-animations/stars-animation.js" {
+declare module '../scripts/ui/background-animations/stars-animation.js' {
   export interface StarsConfig {
     enabled: boolean;
     count: number;
@@ -46,6 +46,6 @@ declare module "../scripts/ui/background-animations/stars-animation.js" {
   }
 
   export function initStarsAnimation(
-    config?: Partial<StarsConfig>,
+    config?: Partial<StarsConfig>
   ): StarsAnimation;
 }

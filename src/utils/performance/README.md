@@ -5,27 +5,33 @@ This directory contains performance monitoring utilities specifically designed t
 ## 🟡 Areas for Attention - Status
 
 ### 1. Performance Budget (🟡 Monitored) ✅ IMPLEMENTED
+
 **Issue**: Medium probability, High impact - 5% build time budget from Story 2.6 baseline
 
 **Solution Implemented**:
+
 - ✅ Build performance measurement system
 - ✅ Story 2.6 baseline calibration functionality
 - ✅ Automated budget validation with alerts
 - ✅ Performance logging and reporting
 
 ### 2. CSS Bundle Size (🟡 Monitored) ✅ IMPLEMENTED
+
 **Issue**: Low probability, Medium impact - <3KB additional CSS per page
 
 **Solution Implemented**:
+
 - ✅ CSS bundle size measurement
 - ✅ Budget validation against 3KB limit
 - ✅ Build-time CSS analysis
 - ✅ Performance impact reporting
 
 ### 3. Accessibility (🟡 PASS with recommendation) ✅ IMPLEMENTED
+
 **Issue**: WCAG 2.1 AA compliance audit recommended
 
 **Solution Implemented**:
+
 - ✅ Screen reader utilities (sr-only class)
 - ✅ Keyboard navigation focus indicators
 - ✅ High contrast mode support
@@ -39,6 +45,7 @@ This directory contains performance monitoring utilities specifically designed t
 ### Build Performance Monitoring
 
 #### 1. Calibrate Story 2.6 Baseline
+
 ```bash
 # First, measure your Story 2.6 build time
 time npm run build
@@ -48,6 +55,7 @@ npm run perf:calibrate 3500
 ```
 
 #### 2. Use Performance-Monitored Builds
+
 ```bash
 # Build with performance monitoring
 npm run build:perf
@@ -60,6 +68,7 @@ npm run build:perf
 ```
 
 #### 3. Validate Performance Budget
+
 ```bash
 # Check CSS bundle size and generate performance report
 npm run build:validate
@@ -74,6 +83,7 @@ npm run perf:css
 ### Performance Budget Validation
 
 The system validates:
+
 - **Build Time**: Must not exceed (Story 2.6 baseline × 1.05)
 - **CSS Bundle Size**: Must not exceed 3KB additional per page
 - **Performance Violations**: Automatically logged and reported
@@ -102,6 +112,7 @@ The system validates:
 ## 📊 Files Overview
 
 ### Core Files
+
 - **`performance-monitor.js`** - Main performance monitoring utilities
 - **`build-performance-monitor.js`** - Build-time performance measurement CLI
 - **`README.md`** - This documentation
@@ -109,17 +120,22 @@ The system validates:
 ### Key Functions
 
 #### Client-side Monitoring
+
 ```javascript
-import { initPerformanceMonitoring, measureCssBundleSize } from './performance-monitor.js'
+import {
+  initPerformanceMonitoring,
+  measureCssBundleSize,
+} from './performance-monitor.js';
 
 // Initialize Web Vitals monitoring
-initPerformanceMonitoring()
+initPerformanceMonitoring();
 
 // Measure CSS bundle size
-measureCssBundleSize()
+measureCssBundleSize();
 ```
 
 #### Build-time Monitoring
+
 ```bash
 # Start measurement
 node src/scripts/build-performance-monitor.js start
@@ -134,16 +150,19 @@ node src/scripts/build-performance-monitor.js calibrate 3500
 ## 🎯 Performance Targets
 
 ### Build Time Budget
+
 - **Target**: ≤5% increase from Story 2.6 baseline
 - **Measurement**: Total build time (npm run build)
 - **Validation**: Automatic during `npm run build:perf`
 
 ### CSS Bundle Size Budget
+
 - **Target**: <3KB additional CSS per article page
-- **Measurement**: Uncompressed CSS size in dist/_astro/
+- **Measurement**: Uncompressed CSS size in dist/\_astro/
 - **Validation**: Automatic during `npm run build:validate`
 
 ### Accessibility Standards
+
 - **Target**: WCAG 2.1 AA compliance
 - **Features**: Screen readers, keyboard navigation, high contrast
 - **Validation**: Manual testing and automated checks
@@ -151,15 +170,17 @@ node src/scripts/build-performance-monitor.js calibrate 3500
 ## 🔧 Configuration
 
 ### Performance Budget Settings
+
 ```javascript
 // In performance-monitor.js
 const STORY_2_7_BUDGET = {
   BUILD_TIME_MULTIPLIER: 1.05, // 5% increase allowed
   CSS_BUNDLE_SIZE_BYTES: 3072, // 3KB maximum additional CSS
-}
+};
 ```
 
 ### Accessibility Features
+
 - **Screen Reader Support**: `.sr-only` utility class
 - **Focus Management**: Automatic focus indicators
 - **High Contrast**: `@media (prefers-contrast: high)` support
@@ -168,12 +189,15 @@ const STORY_2_7_BUDGET = {
 ## 📈 Monitoring & Reporting
 
 ### Performance Logs
+
 All performance data is logged to:
+
 - **File**: `.ai/build-performance.json`
 - **Format**: JSON array of performance measurements
 - **Data**: Build times, budget validation, CSS sizes
 
 ### Automated Alerts
+
 - **Budget Exceeded**: Automatic console warnings
 - **Performance Violations**: Detailed error messages
 - **Recommendations**: Optimization suggestions
@@ -183,17 +207,20 @@ All performance data is logged to:
 ### Common Issues
 
 #### 1. "Story 2.6 baseline not set"
+
 ```bash
 # Solution: Calibrate the baseline first
 npm run perf:calibrate 3500  # Replace 3500 with your Story 2.6 build time
 ```
 
 #### 2. CSS Bundle Size Exceeded
+
 - **Check**: Run `npm run perf:css` to identify large CSS files
 - **Optimize**: Remove unused CSS or optimize existing styles
 - **Monitor**: Use `npm run build:validate` to track progress
 
 #### 3. Build Performance Issues
+
 - **Profile**: Use `npm run perf:report` to identify bottlenecks
 - **Optimize**: Consider code splitting or removing dependencies
 - **Monitor**: Use `npm run build:perf` for ongoing tracking
@@ -201,16 +228,19 @@ npm run perf:calibrate 3500  # Replace 3500 with your Story 2.6 build time
 ## 📋 Validation Checklist
 
 ### Pre-Implementation
+
 - [x] Calibrate Story 2.6 baseline build time
 - [x] Set up performance monitoring scripts
 - [x] Configure accessibility utilities
 
 ### During Implementation
+
 - [x] Monitor build time with `npm run build:perf`
 - [x] Validate CSS bundle size with `npm run perf:css`
 - [x] Test accessibility features manually
 
 ### Post-Implementation
+
 - [ ] Generate final performance report with `npm run perf:report`
 - [ ] Validate all performance budgets are met
 - [ ] Document any performance optimizations made

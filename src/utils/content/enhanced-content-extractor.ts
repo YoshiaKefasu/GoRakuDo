@@ -10,9 +10,9 @@
  * - 100% functionality guarantee
  */
 
-import { getCollection, type CollectionEntry } from "astro:content";
-import fs from "fs/promises";
-import path from "path";
+import { getCollection, type CollectionEntry } from 'astro:content';
+import fs from 'fs/promises';
+import path from 'path';
 
 // QA Testing Interface
 interface QAResult {
@@ -64,7 +64,7 @@ export class EnhancedContentExtractor {
    */
   async extractAllContent(): Promise<ContentExtractionResult> {
     console.log(
-      "🔍 ENHANCED CONTENT EXTRACTOR: Starting comprehensive content extraction...",
+      '🔍 ENHANCED CONTENT EXTRACTOR: Starting comprehensive content extraction...'
     );
 
     const result: ContentExtractionResult = {
@@ -101,7 +101,7 @@ export class EnhancedContentExtractor {
         // QA: Validate collection extraction
         await this.qaValidateCollectionExtraction(
           collectionName,
-          collectionResult,
+          collectionResult
         );
       }
 
@@ -115,11 +115,11 @@ export class EnhancedContentExtractor {
       result.qaResults = this.qaResults;
 
       console.log(
-        "✅ ENHANCED CONTENT EXTRACTOR: Content extraction completed successfully!",
+        '✅ ENHANCED CONTENT EXTRACTOR: Content extraction completed successfully!'
       );
       this.printExtractionReport(result);
     } catch (error) {
-      console.error("❌ ENHANCED CONTENT EXTRACTOR: Extraction failed:", error);
+      console.error('❌ ENHANCED CONTENT EXTRACTOR: Extraction failed:', error);
       result.qaResults = this.qaResults;
       this.printExtractionReport(result);
     }
@@ -131,18 +131,18 @@ export class EnhancedContentExtractor {
    * Discover all available collections
    */
   private async discoverCollections(): Promise<string[]> {
-    console.log("🔍 Discovering content collections...");
+    console.log('🔍 Discovering content collections...');
 
     const collections: string[] = [];
 
     try {
       // Check for common collection names
       const possibleCollections = [
-        "blog",
-        "docs",
-        "tutorials",
-        "guides",
-        "articles",
+        'blog',
+        'docs',
+        'tutorials',
+        'guides',
+        'articles',
       ];
 
       for (const collectionName of possibleCollections) {
@@ -151,7 +151,7 @@ export class EnhancedContentExtractor {
           if (collection && collection.length > 0) {
             collections.push(collectionName);
             console.log(
-              `✅ Found collection: ${collectionName} (${collection.length} entries)`,
+              `✅ Found collection: ${collectionName} (${collection.length} entries)`
             );
           }
         } catch (error) {
@@ -162,15 +162,15 @@ export class EnhancedContentExtractor {
       // QA: Validate collections discovery
       this.addQAResult({
         success: collections.length > 0,
-        message: `Discovered ${collections.length} collections: ${collections.join(", ")}`,
+        message: `Discovered ${collections.length} collections: ${collections.join(', ')}`,
         timestamp: new Date().toISOString(),
         details: { collections },
       });
     } catch (error) {
-      console.error("❌ Error discovering collections:", error);
+      console.error('❌ Error discovering collections:', error);
       this.addQAResult({
         success: false,
-        message: "Failed to discover collections",
+        message: 'Failed to discover collections',
         timestamp: new Date().toISOString(),
         details: { error: (error as Error).message },
       });
@@ -231,7 +231,7 @@ export class EnhancedContentExtractor {
       // QA: Validate content extraction
       const contentQA = this.qaValidateContentExtraction(
         typedEntry,
-        fullContent,
+        fullContent
       );
       qaResults.push(contentQA);
 
@@ -242,13 +242,13 @@ export class EnhancedContentExtractor {
       // QA: Check for specific content (like "Krashen")
       const specificQA = this.qaValidateSpecificContent(
         typedEntry,
-        fullContent,
+        fullContent
       );
       qaResults.push(specificQA);
 
       return {
         slug: typedEntry.slug,
-        title: typedEntry.data?.title || "Untitled",
+        title: typedEntry.data?.title || 'Untitled',
         contentLength: fullContent.length,
         wordCount: fullContent.split(/\s+/).length,
         hasContent: fullContent.length > 0,
@@ -266,7 +266,7 @@ export class EnhancedContentExtractor {
 
       return {
         slug: typedEntry.slug,
-        title: typedEntry.data?.title || "Untitled",
+        title: typedEntry.data?.title || 'Untitled',
         contentLength: 0,
         wordCount: 0,
         hasContent: false,
@@ -279,7 +279,7 @@ export class EnhancedContentExtractor {
    * Extract full content from entry
    */
   private async extractFullContent(
-    entry: CollectionEntry<any>,
+    entry: CollectionEntry<any>
   ): Promise<string> {
     // Add type assertion for better TypeScript inference
     const typedEntry = entry as CollectionEntry<any> & {
@@ -289,29 +289,29 @@ export class EnhancedContentExtractor {
 
     try {
       // Get the full markdown content
-      const fullContent = typedEntry.body || "";
+      const fullContent = typedEntry.body || '';
 
       // Clean the markdown content for search indexing
       const cleanedContent = fullContent
-        .replace(/---[\s\S]*?---/, "") // Remove frontmatter
-        .replace(/```[\s\S]*?```/g, " ") // Remove code blocks
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, " $1 ") // Replace images with alt text
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1") // Remove links, keep text
-        .replace(/#{1,6}\s+/g, "") // Remove header markers
-        .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove bold formatting
-        .replace(/\*([^*]+)\*/g, "$1") // Remove italic formatting
-        .replace(/`([^`]+)`/g, "$1") // Remove inline code formatting
-        .replace(/\n+/g, " ") // Replace newlines with spaces
-        .replace(/\s+/g, " ") // Normalize spaces
+        .replace(/---[\s\S]*?---/, '') // Remove frontmatter
+        .replace(/```[\s\S]*?```/g, ' ') // Remove code blocks
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, ' $1 ') // Replace images with alt text
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1') // Remove links, keep text
+        .replace(/#{1,6}\s+/g, '') // Remove header markers
+        .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold formatting
+        .replace(/\*([^*]+)\*/g, '$1') // Remove italic formatting
+        .replace(/`([^`]+)`/g, '$1') // Remove inline code formatting
+        .replace(/\n+/g, ' ') // Replace newlines with spaces
+        .replace(/\s+/g, ' ') // Normalize spaces
         .trim();
 
       return cleanedContent;
     } catch (error) {
       console.error(
         `❌ Error extracting content from ${typedEntry.slug}:`,
-        error,
+        error
       );
-      return "";
+      return '';
     }
   }
 
@@ -320,19 +320,19 @@ export class EnhancedContentExtractor {
    */
   private async qaValidateContentDirectory(): Promise<void> {
     try {
-      const contentPath = path.join(process.cwd(), "src", "content");
+      const contentPath = path.join(process.cwd(), 'src', 'content');
       await fs.access(contentPath);
 
       this.addQAResult({
         success: true,
-        message: "Content directory exists and is accessible",
+        message: 'Content directory exists and is accessible',
         timestamp: new Date().toISOString(),
         details: { path: contentPath },
       });
     } catch (error) {
       this.addQAResult({
         success: false,
-        message: "Content directory not found or not accessible",
+        message: 'Content directory not found or not accessible',
         timestamp: new Date().toISOString(),
         details: { error: (error as Error).message },
       });
@@ -343,7 +343,7 @@ export class EnhancedContentExtractor {
    * QA: Validate collections discovery
    */
   private async qaValidateCollectionsDiscovery(
-    collections: string[],
+    collections: string[]
   ): Promise<void> {
     this.addQAResult({
       success: collections.length > 0,
@@ -358,7 +358,7 @@ export class EnhancedContentExtractor {
    */
   private async qaValidateCollectionExtraction(
     collectionName: string,
-    result: any,
+    result: any
   ): Promise<void> {
     this.addQAResult({
       success: result.entries > 0,
@@ -378,7 +378,7 @@ export class EnhancedContentExtractor {
    */
   private qaValidateContentExtraction(
     entry: CollectionEntry<any>,
-    content: string,
+    content: string
   ): QAResult {
     const typedEntry = entry as CollectionEntry<any> & {
       slug: string;
@@ -407,7 +407,7 @@ export class EnhancedContentExtractor {
    */
   private qaValidateContentQuality(
     entry: CollectionEntry<any>,
-    content: string,
+    content: string
   ): QAResult {
     const typedEntry = entry as CollectionEntry<any> & {
       slug: string;
@@ -436,7 +436,7 @@ export class EnhancedContentExtractor {
    */
   private qaValidateSpecificContent(
     entry: CollectionEntry<any>,
-    content: string,
+    content: string
   ): QAResult {
     const typedEntry = entry as CollectionEntry<any> & {
       slug: string;
@@ -444,19 +444,19 @@ export class EnhancedContentExtractor {
       body?: string;
     };
     const importantTerms = [
-      "krashen",
-      "immersion",
-      "input",
-      "hypothesis",
-      "bahasa",
-      "jepang",
-      "pembelajaran",
+      'krashen',
+      'immersion',
+      'input',
+      'hypothesis',
+      'bahasa',
+      'jepang',
+      'pembelajaran',
     ];
-    const foundTerms = importantTerms.filter((term) =>
-      content.toLowerCase().includes(term),
+    const foundTerms = importantTerms.filter(term =>
+      content.toLowerCase().includes(term)
     );
 
-    const hasKrashen = content.toLowerCase().includes("krashen");
+    const hasKrashen = content.toLowerCase().includes('krashen');
 
     return {
       success: true, // Always success, just informational
@@ -474,7 +474,7 @@ export class EnhancedContentExtractor {
    * QA: Validate overall extraction
    */
   private async qaValidateOverallExtraction(
-    result: ContentExtractionResult,
+    result: ContentExtractionResult
   ): Promise<void> {
     const totalFiles = result.summary.totalFiles;
     const totalContentLength = result.summary.totalContentLength;
@@ -482,7 +482,7 @@ export class EnhancedContentExtractor {
 
     this.addQAResult({
       success: hasContent && totalFiles > 0,
-      message: "Overall extraction validation completed",
+      message: 'Overall extraction validation completed',
       timestamp: new Date().toISOString(),
       details: {
         totalFiles,
@@ -533,67 +533,68 @@ export class EnhancedContentExtractor {
    * Print comprehensive extraction report
    */
   private printExtractionReport(result: ContentExtractionResult): void {
-    console.log("\n" + "=".repeat(80));
-    console.log("🔍 ENHANCED CONTENT EXTRACTOR - COMPREHENSIVE QA REPORT");
-    console.log("=".repeat(80));
+    console.log('\n' + '='.repeat(80));
+    console.log('🔍 ENHANCED CONTENT EXTRACTOR - COMPREHENSIVE QA REPORT');
+    console.log('='.repeat(80));
 
     console.log(`\n📊 EXTRACTION SUMMARY:`);
-    console.log(`  ✅ Success: ${result.success ? "YES" : "NO"}`);
+    console.log(`  ✅ Success: ${result.success ? 'YES' : 'NO'}`);
     console.log(`  📁 Total Collections: ${result.summary.totalCollections}`);
     console.log(`  📄 Total Files: ${result.summary.totalFiles}`);
     console.log(
-      `  📝 Total Content Length: ${result.summary.totalContentLength.toLocaleString()} characters`,
+      `  📝 Total Content Length: ${result.summary.totalContentLength.toLocaleString()} characters`
     );
     console.log(
-      `  📚 Total Word Count: ${result.summary.totalWordCount.toLocaleString()} words`,
+      `  📚 Total Word Count: ${result.summary.totalWordCount.toLocaleString()} words`
     );
     console.log(
-      `  ⏱️  Extraction Time: ${result.summary.extractionTime.toFixed(2)}ms`,
+      `  ⏱️  Extraction Time: ${result.summary.extractionTime.toFixed(2)}ms`
     );
 
     console.log(`\n📁 COLLECTIONS DETAILS:`);
     for (const collectionName in result.collections) {
       const collection = result.collections[collectionName];
+      if (!collection) continue;
       console.log(`  📂 ${collectionName}:`);
       console.log(`    - Entries: ${collection.entries}`);
       console.log(
-        `    - Content Length: ${collection.totalContentLength.toLocaleString()} chars`,
+        `    - Content Length: ${collection.totalContentLength.toLocaleString()} chars`
       );
       console.log(
-        `    - Word Count: ${collection.totalWordCount.toLocaleString()} words`,
+        `    - Word Count: ${collection.totalWordCount.toLocaleString()} words`
       );
 
       // Show files with "Krashen" content
-      const krashenFiles = collection.files.filter((file) =>
-        file.qaResults.some((qa) => qa.details?.hasKrashen === true),
+      const krashenFiles = collection.files.filter(file =>
+        file.qaResults.some(qa => qa.details?.hasKrashen === true)
       );
 
       if (krashenFiles.length > 0) {
         console.log(
-          `    - Files with "Krashen": ${krashenFiles.map((f) => f.slug).join(", ")}`,
+          `    - Files with "Krashen": ${krashenFiles.map(f => f.slug).join(', ')}`
         );
       }
     }
 
     console.log(`\n🔍 QA RESULTS SUMMARY:`);
-    const successCount = result.qaResults.filter((qa) => qa.success).length;
+    const successCount = result.qaResults.filter(qa => qa.success).length;
     const totalCount = result.qaResults.length;
     console.log(
-      `  ✅ Successful QA Tests: ${successCount}/${totalCount} (${((successCount / totalCount) * 100).toFixed(1)}%)`,
+      `  ✅ Successful QA Tests: ${successCount}/${totalCount} (${((successCount / totalCount) * 100).toFixed(1)}%)`
     );
 
     // Show failed QA tests
-    const failedTests = result.qaResults.filter((qa) => !qa.success);
+    const failedTests = result.qaResults.filter(qa => !qa.success);
     if (failedTests.length > 0) {
       console.log(`  ❌ Failed QA Tests:`);
-      failedTests.forEach((test) => {
+      failedTests.forEach(test => {
         console.log(`    - ${test.message}`);
       });
     }
 
-    console.log("\n" + "=".repeat(80));
-    console.log("🔍 ENHANCED CONTENT EXTRACTOR - QA REPORT COMPLETE");
-    console.log("=".repeat(80) + "\n");
+    console.log('\n' + '='.repeat(80));
+    console.log('🔍 ENHANCED CONTENT EXTRACTOR - QA REPORT COMPLETE');
+    console.log('='.repeat(80) + '\n');
   }
 }
 

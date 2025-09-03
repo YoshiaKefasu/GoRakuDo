@@ -1,4 +1,4 @@
-import type { MetaDescriptionRequest, SEOOptimizedMeta } from "./types";
+import type { MetaDescriptionRequest, SEOOptimizedMeta } from './types';
 
 export class MetaDescriptionGenerator {
   private cache: Map<string, SEOOptimizedMeta>;
@@ -8,7 +8,7 @@ export class MetaDescriptionGenerator {
   }
 
   async generateOptimizedMetaDescription(
-    request: MetaDescriptionRequest,
+    request: MetaDescriptionRequest
   ): Promise<SEOOptimizedMeta> {
     // AI processing disabled for security
     return this.generateFallbackMetaDescription(request);
@@ -61,7 +61,7 @@ export class MetaDescriptionGenerator {
   // }
 
   private generateFallbackMetaDescription(
-    request: MetaDescriptionRequest,
+    request: MetaDescriptionRequest
   ): SEOOptimizedMeta {
     const title = request.title;
     const content = request.content.substring(0, 100);
@@ -73,14 +73,14 @@ export class MetaDescriptionGenerator {
       fallback = `${keywords[0]} - ${fallback}`;
     }
 
-    if (request.language === "ja") {
+    if (request.language === 'ja') {
       fallback = `${fallback} イマージョン法による日本語学習。`;
     } else {
       fallback = `${fallback} Belajar bahasa Jepang dengan metode immersion.`;
     }
 
     if (fallback.length > 160) {
-      fallback = fallback.substring(0, 157) + "...";
+      fallback = fallback.substring(0, 157) + '...';
     }
 
     return {
@@ -88,17 +88,17 @@ export class MetaDescriptionGenerator {
       length: fallback.length,
       hasKeywords: this.checkKeywordPresence(fallback, keywords),
       hasCTA: true,
-      language: request.language || "id",
+      language: request.language || 'id',
       generatedAt: new Date().toISOString(),
     };
   }
 
   private checkKeywordPresence(
     description: string,
-    keywords: string[],
+    keywords: string[]
   ): boolean {
-    return keywords.some((keyword) =>
-      description.toLowerCase().includes(keyword.toLowerCase()),
+    return keywords.some(keyword =>
+      description.toLowerCase().includes(keyword.toLowerCase())
     );
   }
 

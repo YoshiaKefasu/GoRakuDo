@@ -1,11 +1,11 @@
-import { logger } from "../logging/console-logger";
+import { logger } from '../logging/console-logger';
 
 export interface APIGeneratedRecommendation {
   targetSlug: string;
   targetTitle: string;
   score: number; // 0-100
   reason: string;
-  type: "similar" | "contextual";
+  type: 'similar' | 'contextual';
 }
 
 export interface APIGeneratedRecommendations {
@@ -29,10 +29,10 @@ export interface PostInfo {
  */
 export async function generateAPIRecommendations(
   _currentPost: PostInfo,
-  _availablePosts: PostInfo[],
+  _availablePosts: PostInfo[]
 ): Promise<APIGeneratedRecommendations> {
   // AI processing disabled for security
-  logger.log("API recommendation generation disabled for security", "warning");
+  logger.log('API recommendation generation disabled for security', 'warning');
   return {
     similarContent: [],
     contextualRelevance: [],
@@ -146,12 +146,12 @@ export async function generateAPIRecommendations(
  */
 export async function loadAndEnhanceRecommendations(
   currentPostSlug: string,
-  availablePosts: PostInfo[],
+  availablePosts: PostInfo[]
 ): Promise<APIGeneratedRecommendations> {
   try {
     // Get current post info
     const currentPost = availablePosts.find(
-      (post) => post.slug === currentPostSlug,
+      post => post.slug === currentPostSlug
     );
     if (!currentPost) {
       return {
@@ -162,7 +162,7 @@ export async function loadAndEnhanceRecommendations(
 
     // Filter out the current post from available posts
     const otherPosts = availablePosts.filter(
-      (post) => post.slug !== currentPostSlug,
+      post => post.slug !== currentPostSlug
     );
 
     if (otherPosts.length === 0) {
@@ -176,12 +176,12 @@ export async function loadAndEnhanceRecommendations(
     // AI will automatically select only the top 3 posts with highest scores
     const apiRecommendations = await generateAPIRecommendations(
       currentPost,
-      otherPosts,
+      otherPosts
     );
 
     return apiRecommendations;
   } catch (error) {
-    logger.log(`Failed to load and enhance recommendations: ${error}`, "error");
+    logger.log(`Failed to load and enhance recommendations: ${error}`, 'error');
     return {
       similarContent: [],
       contextualRelevance: [],
@@ -193,11 +193,11 @@ export async function loadAndEnhanceRecommendations(
  * Convert post collection to PostInfo format
  */
 export function convertPostsToPostInfo(posts: any[]): PostInfo[] {
-  return posts.map((post) => ({
+  return posts.map(post => ({
     slug: post.slug,
     title: post.data.title,
-    description: post.data.description || "",
+    description: post.data.description || '',
     tags: Array.isArray(post.data.tags) ? post.data.tags : [],
-    content: post.body || "",
+    content: post.body || '',
   }));
 }

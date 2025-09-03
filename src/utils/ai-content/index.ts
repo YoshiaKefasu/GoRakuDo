@@ -6,22 +6,22 @@ export {
   analyzeContent,
   generateInternalLinks,
   // MindMap functionality deprecated - MIND_MAP_BRANCHES removed
-} from "./content-analysis";
+} from './content-analysis';
 
-export type { ContentAnalysis, LinkSuggestion } from "./content-analysis";
+export type { ContentAnalysis, LinkSuggestion } from './content-analysis';
 
 export {
   getRelatedContent,
   getLearningPathRecommendations,
   getPostsWithSemanticRelationships,
   analyzeSemanticRelationships,
-} from "./semantic-relationships";
+} from './semantic-relationships';
 
 export type {
   SemanticRelationships,
   ContentRelationship,
   RelationshipAnalysis,
-} from "./semantic-relationships";
+} from './semantic-relationships';
 
 // AI Metadata Management - Explicit exports only
 export {
@@ -40,24 +40,24 @@ export {
   getContentByFreshness,
   generateLearningPath,
   getContentRecommendations,
-} from "./ai-content-utils";
+} from './ai-content-utils';
 
 export type {
   AIMetadata,
   ContentRelationship as ContentRelationshipFromUtils,
-} from "./ai-content-utils";
+} from './ai-content-utils';
 
 export {
   validateAIMetadata,
   validateAIMetadataBatch,
   generateValidationReport,
-} from "./ai-metadata-validator";
+} from './ai-metadata-validator';
 
 export type {
   ValidationResult,
   ValidationError,
   ValidationWarning,
-} from "./ai-metadata-validator";
+} from './ai-metadata-validator';
 
 export {
   generateSimpleAIMetadata,
@@ -65,9 +65,9 @@ export {
   getContentByLearningStage as getContentByLearningStageSimple,
   getContentByType as getContentByTypeSimple,
   getContentRecommendations as getContentRecommendationsSimple,
-} from "./auto-ai-metadata";
+} from './auto-ai-metadata';
 
-export type { SimpleAIMetadata } from "./auto-ai-metadata";
+export type { SimpleAIMetadata } from './auto-ai-metadata';
 
 export {
   generateAIMetadata,
@@ -76,40 +76,40 @@ export {
   getContentByJLPTLevelWithAI,
   getContentByTypeWithAI,
   getContentRecommendationsWithAI,
-} from "./auto-ai-metadata-fixed";
+} from './auto-ai-metadata-fixed';
 
 // API-Driven Recommendations
 export {
   generateAPIRecommendations,
   loadAndEnhanceRecommendations,
   convertPostsToPostInfo,
-} from "./api-recommendations";
+} from './api-recommendations';
 
 export type {
   APIGeneratedRecommendation,
   APIGeneratedRecommendations,
   PostInfo,
-} from "./api-recommendations";
+} from './api-recommendations';
 
 // Optimized Build Processing
 export {
   OptimizedBuildProcessor,
   runOptimizedBuildProcessing,
   shouldEnableOptimizedProcessing,
-} from "./optimized-build-processor";
+} from './optimized-build-processor';
 
-export type { BuildProcessingStats } from "./optimized-build-processor";
+export type { BuildProcessingStats } from './optimized-build-processor';
 
 // Optimized Post Processing
 export {
   OptimizedPostProcessor,
   processPostWithOptimization,
   processMultiplePostsWithOptimization,
-} from "./optimized-post-processor";
+} from './optimized-post-processor';
 
-export type { PostProcessingResult } from "./optimized-post-processor";
+export type { PostProcessingResult } from './optimized-post-processor';
 
 // Clean AI Generation
-export { CleanAIGenerator, generateCleanAIContent } from "./clean-ai-generator";
+export { CleanAIGenerator, generateCleanAIContent } from './clean-ai-generator';
 
-export type { CleanAIGenerationResult } from "./clean-ai-generator";
+export type { CleanAIGenerationResult } from './clean-ai-generator';

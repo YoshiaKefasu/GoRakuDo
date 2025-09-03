@@ -2,7 +2,10 @@
 // Connects to existing SEO optimization system following DRY principle
 // Integrates with existing SEOOptimizer class
 
-import type { SEOIntegrationConfig, SEOIntegrationResult } from '../../types/new-seo-system/integration-types.js';
+import type {
+  SEOIntegrationConfig,
+  SEOIntegrationResult,
+} from '../../types/new-seo-system/integration-types.js';
 import type { SEOAnalysis, AIProcessingResult } from '../ai/types.js';
 
 // 新しいSEOシステムをインポート（DRY原則）
@@ -36,47 +39,50 @@ export class SEOConnector {
   async connect(): Promise<SEOIntegrationResult> {
     try {
       this.lastConnectionAttempt = new Date();
-      
+
       // 既存のSEO最適化システムとの接続テスト
       const connectionTest = await this.testConnection();
-      
+
       if (connectionTest.success) {
         this.isConnected = true;
         this.connectionErrors = [];
-        
+
         const timestamp = new Date();
         return {
           success: true,
           status: 'connected',
           timestamp,
           endpoint: this.config.apiEndpoint,
-          lastConnected: timestamp
+          lastConnected: timestamp,
         };
       } else {
         this.isConnected = false;
-        this.connectionErrors.push(connectionTest.error || 'Connection test failed');
-        
+        this.connectionErrors.push(
+          connectionTest.error || 'Connection test failed'
+        );
+
         const timestamp = new Date();
         return {
           success: false,
           status: 'error',
           timestamp,
           endpoint: this.config.apiEndpoint,
-          errorMessage: connectionTest.error || 'Connection test failed'
+          errorMessage: connectionTest.error || 'Connection test failed',
         };
       }
     } catch (error) {
       this.isConnected = false;
-      const errorMessage = error instanceof Error ? error.message : 'Unknown connection error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown connection error';
       this.connectionErrors.push(errorMessage);
-      
+
       const timestamp = new Date();
       return {
         success: false,
         status: 'error',
         timestamp,
         endpoint: this.config.apiEndpoint,
-        errorMessage
+        errorMessage,
       };
     }
   }
@@ -85,7 +91,10 @@ export class SEOConnector {
    * 接続テスト
    * 既存のSEO最適化システムの動作確認
    */
-  private async testConnection(): Promise<{ success: boolean; error?: string }> {
+  private async testConnection(): Promise<{
+    success: boolean;
+    error?: string;
+  }> {
     try {
       // 新しいSEOシステムの基本機能テスト
       const testKeywords = ['test', 'seo', 'optimization'];
@@ -95,13 +104,13 @@ export class SEOConnector {
         colorScheme: 'light',
         viewport: {
           width: 'device-width',
-          initialScale: 1
-        }
+          initialScale: 1,
+        },
       };
 
       // キーワード検証テスト
       const validationResult = this.keywordValidator.validateAll({
-        primary: testKeywords
+        primary: testKeywords,
       });
       if (!validationResult.isValid) {
         return { success: false, error: 'Keyword validation failed' };
@@ -118,9 +127,12 @@ export class SEOConnector {
         advanced: metaTags,
         performance: [],
         security: [],
-        analytics: []
+        analytics: [],
       });
-      if (!integratedResult.advanced || integratedResult.advanced.length === 0) {
+      if (
+        !integratedResult.advanced ||
+        integratedResult.advanced.length === 0
+      ) {
         return { success: false, error: 'Meta integration failed' };
       }
 
@@ -128,7 +140,7 @@ export class SEOConnector {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Connection test error'
+        error: error instanceof Error ? error.message : 'Connection test error',
       };
     }
   }
@@ -137,7 +149,11 @@ export class SEOConnector {
    * SEO分析の実行
    * 既存のSEO最適化システムを活用した分析
    */
-  async analyzeSEO(title: string, content: string, keywords: string[] = []): Promise<SEOAnalysis | null> {
+  async analyzeSEO(
+    title: string,
+    content: string,
+    keywords: string[] = []
+  ): Promise<SEOAnalysis | null> {
     if (!this.isConnected) {
       throw new Error('SEO system not connected');
     }
@@ -146,14 +162,14 @@ export class SEOConnector {
       // 新しいSEOシステムを活用（DRY原則）
       const validationResult = this.keywordValidator.validateAll({
         primary: keywords,
-        article: [title] // タイトルを記事キーワードとして使用
+        article: [title], // タイトルを記事キーワードとして使用
       });
 
       // メタタグ生成
       const metaConfig: AdvancedMetaConfig = {
         robots: 'index,follow',
         themeColor: '#ffffff',
-        colorScheme: 'light'
+        colorScheme: 'light',
       };
       this.metaManager.generateAdvancedMeta(metaConfig);
 
@@ -174,11 +190,11 @@ export class SEOConnector {
           hasKeywords: validationResult.optimizedKeywords.length > 0,
           hasCTA: this.hasCallToAction(content),
           language: this.detectLanguage(content),
-          generatedAt: new Date().toISOString()
+          generatedAt: new Date().toISOString(),
         },
         keywords: validationResult.optimizedKeywords,
         structuredKeywords: [], // 新しいシステムでは構造化キーワードは別途実装
-        seoScore: validationResult.isValid ? 85 : 60 // 検証結果に基づく簡易スコア
+        seoScore: validationResult.isValid ? 85 : 60, // 検証結果に基づく簡易スコア
       };
 
       return seoAnalysis;
@@ -192,7 +208,10 @@ export class SEOConnector {
    * AI処理結果の生成
    * 既存のAI処理パターンを活用
    */
-  async generateAIProcessingResult(title: string, content: string): Promise<AIProcessingResult | null> {
+  async generateAIProcessingResult(
+    title: string,
+    content: string
+  ): Promise<AIProcessingResult | null> {
     if (!this.isConnected) {
       throw new Error('SEO system not connected');
     }
@@ -201,19 +220,20 @@ export class SEOConnector {
       // 新しいSEOシステムを活用（DRY原則）
       const validationResult = this.keywordValidator.validateAll({
         primary: [title], // タイトルをプライマリキーワードとして使用
-        article: [content.substring(0, 100)] // コンテンツの一部を記事キーワードとして使用
+        article: [content.substring(0, 100)], // コンテンツの一部を記事キーワードとして使用
       });
 
       // メタタグ生成
       const metaConfig: AdvancedMetaConfig = {
         robots: 'index,follow',
         themeColor: '#ffffff',
-        colorScheme: 'light'
+        colorScheme: 'light',
       };
       this.metaManager.generateAdvancedMeta(metaConfig);
 
       // 簡易抜粋生成（新しいシステムでは別途実装が必要）
-      const excerpt = content.length > 160 ? content.substring(0, 157) + "..." : content;
+      const excerpt =
+        content.length > 160 ? content.substring(0, 157) + '...' : content;
 
       // 既存の型定義に準拠したAI処理結果を生成
       const processingResult: AIProcessingResult = {
@@ -223,13 +243,13 @@ export class SEOConnector {
           hasKeywords: validationResult.optimizedKeywords.length > 0,
           hasCTA: this.hasCallToAction(excerpt),
           language: this.detectLanguage(content),
-          generatedAt: new Date().toISOString()
+          generatedAt: new Date().toISOString(),
         },
         recommendations: [],
         keywords: validationResult.optimizedKeywords,
         seoScore: validationResult.isValid ? 85 : 60, // 検証結果に基づく簡易スコア
         processingTime: 0,
-        apiCallsUsed: 0
+        apiCallsUsed: 0,
       };
 
       return processingResult;
@@ -245,11 +265,19 @@ export class SEOConnector {
    */
   private hasCallToAction(text: string): boolean {
     const ctaWords = [
-      'belajar', 'pelajari', 'mulai', 'gabung', 'daftar',
-      '学び', '学習', '始め', '参加', '登録'
+      'belajar',
+      'pelajari',
+      'mulai',
+      'gabung',
+      'daftar',
+      '学び',
+      '学習',
+      '始め',
+      '参加',
+      '登録',
     ];
-    
-    return ctaWords.some(word => 
+
+    return ctaWords.some(word =>
       text.toLowerCase().includes(word.toLowerCase())
     );
   }
@@ -260,8 +288,10 @@ export class SEOConnector {
    */
   private detectLanguage(text: string): 'id' | 'ja' {
     const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(text);
-    const hasIndonesian = /belajar|bahasa|jepang|immersion/.test(text.toLowerCase());
-    
+    const hasIndonesian = /belajar|bahasa|jepang|immersion/.test(
+      text.toLowerCase()
+    );
+
     if (hasJapanese) return 'ja';
     if (hasIndonesian) return 'id';
     return 'id'; // デフォルト

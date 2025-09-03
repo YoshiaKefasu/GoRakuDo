@@ -18,14 +18,8 @@ export type {
   ValidationError,
   ValidationWarning,
   IntegrationErrorContext,
-  ValidationResult
+  ValidationResult,
 } from './new-seo-system/integration-types.js';
 
 // Re-export configuration from unified system
-export {
-  DEFAULT_INTEGRATION_CONFIG
-} from './new-seo-system/integration-types.js';
-
-
-
-
+export { DEFAULT_INTEGRATION_CONFIG } from './new-seo-system/integration-types.js';

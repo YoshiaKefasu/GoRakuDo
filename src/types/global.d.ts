@@ -4,7 +4,7 @@ declare global {
     clientLogger: {
       log: (
         message: string,
-        level?: "info" | "success" | "warning" | "error",
+        level?: 'info' | 'success' | 'warning' | 'error'
       ) => void;
       startGroup: (title: string) => void;
       endGroup: (title: string) => void;

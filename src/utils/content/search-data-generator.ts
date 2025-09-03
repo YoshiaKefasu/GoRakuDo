@@ -2,11 +2,11 @@
 // Integrates with Astro build process to generate search data automatically
 // Processes content at build time and generates optimized search data
 
-import { getCollection } from "astro:content";
+import { getCollection } from 'astro:content';
 import {
   contentExtractor,
   type ExtractedContent,
-} from "./auto-content-extractor";
+} from './auto-content-extractor';
 
 export interface SearchData {
   posts: Map<string, ExtractedContent>;
@@ -37,7 +37,7 @@ export class SearchDataGenerator {
 
     try {
       // Get all blog posts from Astro content collection
-      const posts = await getCollection("docs");
+      const posts = await getCollection('docs');
 
       // Extract content from all posts
       const extractedPosts = contentExtractor.processAllPosts(posts);
@@ -49,7 +49,7 @@ export class SearchDataGenerator {
 
       return searchData;
     } catch (error) {
-      console.error("Error generating search data:", error);
+      console.error('Error generating search data:', error);
       throw error;
     }
   }
@@ -68,20 +68,20 @@ export class SearchDataGenerator {
     let totalReadingTime = 0;
 
     // Process each post
-    posts.forEach((post) => {
+    posts.forEach(post => {
       // Collect keywords
-      post.keywords.forEach((keyword) => keywords.add(keyword));
+      post.keywords.forEach(keyword => keywords.add(keyword));
 
       // Collect topics from content analysis
-      if (post.content.includes("immersion")) topics.add("immersion");
-      if (post.content.includes("anki")) topics.add("anki");
-      if (post.content.includes("srs")) topics.add("srs");
-      if (post.content.includes("hiragana")) topics.add("hiragana");
-      if (post.content.includes("katakana")) topics.add("katakana");
-      if (post.content.includes("kanji")) topics.add("kanji");
-      if (post.content.includes("pembelajaran")) topics.add("pembelajaran");
-      if (post.content.includes("metodologi")) topics.add("metodologi");
-      if (post.content.includes("filosofi")) topics.add("filosofi");
+      if (post.content.includes('immersion')) topics.add('immersion');
+      if (post.content.includes('anki')) topics.add('anki');
+      if (post.content.includes('srs')) topics.add('srs');
+      if (post.content.includes('hiragana')) topics.add('hiragana');
+      if (post.content.includes('katakana')) topics.add('katakana');
+      if (post.content.includes('kanji')) topics.add('kanji');
+      if (post.content.includes('pembelajaran')) topics.add('pembelajaran');
+      if (post.content.includes('metodologi')) topics.add('metodologi');
+      if (post.content.includes('filosofi')) topics.add('filosofi');
 
       // Collect languages
       languages.add(post.language);
@@ -118,7 +118,7 @@ export class SearchDataGenerator {
   public getPostSearchData(slug: string): ExtractedContent | null {
     if (!this.searchData) {
       console.warn(
-        "⚠️ Search data not generated yet. Call generateSearchData() first.",
+        '⚠️ Search data not generated yet. Call generateSearchData() first.'
       );
       return null;
     }
@@ -143,17 +143,17 @@ export class SearchDataGenerator {
       caseSensitive?: boolean;
       fuzzyMatch?: boolean;
       maxResults?: number;
-    } = {},
+    } = {}
   ): ExtractedContent[] {
     if (!this.searchData) {
       console.warn(
-        "⚠️ Search data not generated yet. Call generateSearchData() first.",
+        '⚠️ Search data not generated yet. Call generateSearchData() first.'
       );
       return [];
     }
 
     const {
-      searchFields = ["title", "description", "tags", "content", "keywords"],
+      searchFields = ['title', 'description', 'tags', 'content', 'keywords'],
       caseSensitive = false,
       fuzzyMatch = false,
       maxResults = 50,
@@ -162,11 +162,11 @@ export class SearchDataGenerator {
     const searchQuery = caseSensitive ? query : query.toLowerCase();
     const results: ExtractedContent[] = [];
 
-    this.searchData.posts.forEach((post) => {
+    this.searchData.posts.forEach(post => {
       let isMatch = false;
 
       // Search in title
-      if (searchFields.includes("title")) {
+      if (searchFields.includes('title')) {
         const titleText = caseSensitive ? post.title : post.title.toLowerCase();
         if (
           fuzzyMatch
@@ -178,7 +178,7 @@ export class SearchDataGenerator {
       }
 
       // Search in description
-      if (!isMatch && searchFields.includes("description")) {
+      if (!isMatch && searchFields.includes('description')) {
         const descText = caseSensitive
           ? post.description
           : post.description.toLowerCase();
@@ -192,10 +192,10 @@ export class SearchDataGenerator {
       }
 
       // Search in tags
-      if (!isMatch && searchFields.includes("tags")) {
+      if (!isMatch && searchFields.includes('tags')) {
         const tagText = caseSensitive
-          ? post.tags.join(" ")
-          : post.tags.join(" ").toLowerCase();
+          ? post.tags.join(' ')
+          : post.tags.join(' ').toLowerCase();
         if (
           fuzzyMatch
             ? this.fuzzyMatch(tagText, searchQuery)
@@ -206,7 +206,7 @@ export class SearchDataGenerator {
       }
 
       // Search in content
-      if (!isMatch && searchFields.includes("content")) {
+      if (!isMatch && searchFields.includes('content')) {
         const contentText = caseSensitive
           ? post.content
           : post.content.toLowerCase();
@@ -220,10 +220,10 @@ export class SearchDataGenerator {
       }
 
       // Search in keywords
-      if (!isMatch && searchFields.includes("keywords")) {
+      if (!isMatch && searchFields.includes('keywords')) {
         const keywordText = caseSensitive
-          ? post.keywords.join(" ")
-          : post.keywords.join(" ").toLowerCase();
+          ? post.keywords.join(' ')
+          : post.keywords.join(' ').toLowerCase();
         if (
           fuzzyMatch
             ? this.fuzzyMatch(keywordText, searchQuery)
@@ -252,16 +252,16 @@ export class SearchDataGenerator {
     const suggestions = new Set<string>();
     const queryLower = query.toLowerCase();
 
-    this.searchData.posts.forEach((post) => {
+    this.searchData.posts.forEach(post => {
       // Add matching keywords
-      post.keywords.forEach((keyword) => {
+      post.keywords.forEach(keyword => {
         if (keyword.toLowerCase().includes(queryLower)) {
           suggestions.add(keyword);
         }
       });
 
       // Add matching tags
-      post.tags.forEach((tag) => {
+      post.tags.forEach(tag => {
         if (tag.toLowerCase().includes(queryLower)) {
           suggestions.add(tag);
         }
@@ -288,7 +288,7 @@ export class SearchDataGenerator {
 
     const results: ExtractedContent[] = [];
 
-    this.searchData.posts.forEach((post) => {
+    this.searchData.posts.forEach(post => {
       let matches = true;
 
       // Filter by language
@@ -317,10 +317,10 @@ export class SearchDataGenerator {
       // Filter by topics
       if (filters.topics && filters.topics.length > 0) {
         const hasTopic = filters.topics.some(
-          (topic) =>
+          topic =>
             post.content.includes(topic) ||
             post.keywords.includes(topic) ||
-            post.tags.includes(topic),
+            post.tags.includes(topic)
         );
         if (!hasTopic) {
           matches = false;

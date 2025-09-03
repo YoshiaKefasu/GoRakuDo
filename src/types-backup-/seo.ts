@@ -41,7 +41,7 @@ export type {
   // Union types for flexibility
   TestHeadSEOProps,
   TestBasicSEOProps,
-  TestMetaManagerProps
+  TestMetaManagerProps,
 } from './new-seo-system/component-props';
 
 // ========== DEFAULT CONFIGURATIONS ==========

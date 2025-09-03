@@ -1,4 +1,4 @@
-import NodeCache from "node-cache";
+import NodeCache from 'node-cache';
 
 export class RateLimiter {
   private dailyCache: NodeCache;
@@ -23,13 +23,13 @@ export class RateLimiter {
 
     if (dailyCount >= this.dailyLimit) {
       throw new Error(
-        `Daily rate limit exceeded: ${dailyCount}/${this.dailyLimit}`,
+        `Daily rate limit exceeded: ${dailyCount}/${this.dailyLimit}`
       );
     }
 
     if (minuteCount >= this.minuteLimit) {
       throw new Error(
-        `Minute rate limit exceeded: ${minuteCount}/${this.minuteLimit}`,
+        `Minute rate limit exceeded: ${minuteCount}/${this.minuteLimit}`
       );
     }
 

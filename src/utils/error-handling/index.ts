@@ -4,24 +4,24 @@
 export {
   DiscordErrorReporter,
   discordErrorReporter,
-} from "./discord-error-reporter";
+} from './discord-error-reporter';
 
 export type {
   DiscordErrorReport,
   DiscordErrorUI,
-} from "./discord-error-reporter";
+} from './discord-error-reporter';
 
-export { ProgressiveErrorHandler, errorHandler } from "./error-handler";
+export { ProgressiveErrorHandler, errorHandler } from './error-handler';
 
-export type { ErrorLevel, ErrorContext } from "./error-handler";
+export type { ErrorLevel, ErrorContext } from './error-handler';
 
 export {
   HybridErrorHandler,
   errorHandler as hybridErrorHandler,
-} from "./hybrid-error-handler";
+} from './hybrid-error-handler';
 
 export type {
   ErrorContext as HybridErrorContext,
   ErrorLogEntry,
   ErrorType,
-} from "./hybrid-error-handler";
+} from './hybrid-error-handler';

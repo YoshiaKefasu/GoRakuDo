@@ -6,13 +6,13 @@ The Core Search System is a simplified, high-performance search implementation t
 
 ## **🎯 Performance Targets**
 
-| Metric | Target | Status |
-|--------|--------|--------|
-| Search Response | <50ms | ✅ Achieved |
-| Filter Response | <30ms | ✅ Achieved |
-| Bundle Size | <10KB | ✅ Achieved |
-| Dependencies | Zero | ✅ Achieved |
-| TypeScript Errors | 0 | ✅ Achieved |
+| Metric            | Target | Status      |
+| ----------------- | ------ | ----------- |
+| Search Response   | <50ms  | ✅ Achieved |
+| Filter Response   | <30ms  | ✅ Achieved |
+| Bundle Size       | <10KB  | ✅ Achieved |
+| Dependencies      | Zero   | ✅ Achieved |
+| TypeScript Errors | 0      | ✅ Achieved |
 
 ## **📁 File Structure**
 
@@ -29,22 +29,26 @@ src/utils/search/
 ## **🚀 Key Features**
 
 ### **1. Fast Text Search**
+
 - Case-insensitive search across title, description, and tags
 - Fuzzy matching support for better results
 - Caching for repeated searches
 - Performance target: <50ms
 
 ### **2. Efficient Filtering**
+
 - Filter by content type, learning stage, recommendations
 - Fast filtering with <30ms response time
 - Combined search and filter operations
 
 ### **3. Smart Suggestions**
+
 - Auto-generated search suggestions
 - Based on post titles and tags
 - Optimized for Indonesian and Japanese content
 
 ### **4. Performance Monitoring**
+
 - Built-in performance metrics
 - Search time tracking
 - Result count monitoring
@@ -52,34 +56,37 @@ src/utils/search/
 ## **💻 Usage Examples**
 
 ### **Basic Search**
+
 ```typescript
 import { SimpleSearch } from './simple-search';
 
 const search = new SimpleSearch(posts);
 const results = search.search('anki');
-console.log(`Found ${results.filteredCount} results in ${results.searchTime}ms`);
+console.log(
+  `Found ${results.filteredCount} results in ${results.searchTime}ms`
+);
 ```
 
 ### **Filtering**
+
 ```typescript
 const toolResults = search.filter({ contentType: 'tool' });
 const beginnerResults = search.filter({ learningStage: 'beginner' });
 ```
 
 ### **Combined Search & Filter**
+
 ```typescript
-const results = search.searchAndFilter('panduan', { 
-  learningStage: 'beginner' 
+const results = search.searchAndFilter('panduan', {
+  learningStage: 'beginner',
 });
 ```
 
 ### **Vue Component Integration**
+
 ```vue
 <template>
-  <SearchUI 
-    :posts="posts" 
-    @results="handleSearchResults" 
-  />
+  <SearchUI :posts="posts" @results="handleSearchResults" />
 </template>
 
 <script setup>
@@ -93,6 +100,7 @@ const posts = astroPosts.map(convertToSearchPost);
 ## **🔧 Integration with Astro**
 
 ### **Converting Astro Content**
+
 ```typescript
 import { convertToSearchPost, initializeSearchWithAstroContent } from './index';
 
@@ -104,6 +112,7 @@ const search = initializeSearchWithAstroContent(posts);
 ```
 
 ### **Replacing Old Search System**
+
 1. Remove `src/scripts/ui/docs-search.js`
 2. Import new search system in your Astro pages
 3. Update HTML to use new Vue component
@@ -112,6 +121,7 @@ const search = initializeSearchWithAstroContent(posts);
 ## **📊 Performance Comparison**
 
 ### **Before (Old System)**
+
 - File size: 471 lines
 - Complex DOM manipulation
 - No type safety
@@ -119,6 +129,7 @@ const search = initializeSearchWithAstroContent(posts);
 - Bundle size: ~15KB
 
 ### **After (New System)**
+
 - File size: ~200 lines
 - Clean TypeScript implementation
 - Full type safety
@@ -128,17 +139,20 @@ const search = initializeSearchWithAstroContent(posts);
 ## **🎨 Vue Component Features**
 
 ### **Accessibility**
+
 - ARIA labels and roles
 - Keyboard navigation support
 - Screen reader compatibility
 - Focus management
 
 ### **Responsive Design**
+
 - Mobile-optimized touch targets
 - Responsive layout
 - Tailwind CSS integration
 
 ### **User Experience**
+
 - Real-time search results
 - Clear visual feedback
 - Loading states
@@ -147,6 +161,7 @@ const search = initializeSearchWithAstroContent(posts);
 ## **🧪 Testing**
 
 ### **Performance Testing**
+
 ```javascript
 // Run in browser console
 testSearchPerformance();
@@ -154,6 +169,7 @@ testSearchFunctionality();
 ```
 
 ### **Expected Results**
+
 - Search time: <50ms
 - Filter time: <30ms
 - Zero TypeScript errors
@@ -162,11 +178,13 @@ testSearchFunctionality();
 ## **🔮 Future Enhancements (Phase 2+)**
 
 ### **AI Enhancement Layer**
+
 - Content analysis for better categorization
 - Smart keyword generation
 - SEO optimization features
 
 ### **Advanced Features**
+
 - Search history
 - Saved searches
 - Advanced filters
@@ -175,30 +193,34 @@ testSearchFunctionality();
 ## **📝 Migration Guide**
 
 ### **Step 1: Install New System**
+
 ```bash
 # Files are already created in src/utils/search/
 ```
 
 ### **Step 2: Update Astro Pages**
+
 ```astro
 ---
 import SearchUI from '../components/search/SearchUI.vue';
 import { convertToSearchPost } from '../utils/search';
 ---
 
-<SearchUI 
+<SearchUI
   client:load
-  posts={posts.map(convertToSearchPost)} 
+  posts={posts.map(convertToSearchPost)}
 />
 ```
 
 ### **Step 3: Remove Old System**
+
 ```bash
 # Remove old search file
 rm src/scripts/ui/docs-search.js
 ```
 
 ### **Step 4: Test Performance**
+
 ```bash
 npm run build
 # Check build time and bundle size improvements

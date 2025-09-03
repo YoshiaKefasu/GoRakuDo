@@ -19,12 +19,12 @@ export interface ErrorLogEntry {
 }
 
 export type ErrorType =
-  | "performance"
-  | "content"
-  | "routing"
-  | "network"
-  | "interaction"
-  | "system";
+  | 'performance'
+  | 'content'
+  | 'routing'
+  | 'network'
+  | 'interaction'
+  | 'system';
 
 export class HybridErrorHandler {
   private static instance: HybridErrorHandler;
@@ -41,7 +41,7 @@ export class HybridErrorHandler {
   logError(
     type: ErrorType,
     message: string,
-    context?: Partial<ErrorContext>,
+    context?: Partial<ErrorContext>
   ): void {
     const errorEntry: ErrorLogEntry = {
       timestamp: new Date().toISOString(),
@@ -49,15 +49,15 @@ export class HybridErrorHandler {
       message,
       context: {
         timestamp: new Date().toISOString(),
-        url: typeof window !== "undefined" ? window.location.href : "unknown",
+        url: typeof window !== 'undefined' ? window.location.href : 'unknown',
         userAgent:
-          typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
+          typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
         ...context,
       },
     };
 
     // Add stack trace if available
-    if (typeof Error !== "undefined") {
+    if (typeof Error !== 'undefined') {
       const error = new Error();
       if (error.stack) {
         errorEntry.stack = error.stack;
@@ -72,8 +72,8 @@ export class HybridErrorHandler {
     }
 
     // Log to console for development
-    if (typeof window !== "undefined") {
-      console.error(`[${type}] ${message}`, context || "");
+    if (typeof window !== 'undefined') {
+      console.error(`[${type}] ${message}`, context || '');
     }
 
     // Store in localStorage for persistence (static hosting compatible)
@@ -90,7 +90,7 @@ export class HybridErrorHandler {
   }
 
   getErrorsByType(type: ErrorType): ErrorLogEntry[] {
-    return this.errorLog.filter((error) => error.type === type);
+    return this.errorLog.filter(error => error.type === type);
   }
 
   getRecentErrors(count: number = 10): ErrorLogEntry[] {
@@ -99,37 +99,37 @@ export class HybridErrorHandler {
 
   // Static hosting compatible persistence
   private persistToStorage(): void {
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem(
-          "gorakudo-error-log",
-          JSON.stringify(this.errorLog),
+          'gorakudo-error-log',
+          JSON.stringify(this.errorLog)
         );
       } catch (error) {
-        console.warn("Could not save error log to localStorage:", error);
+        console.warn('Could not save error log to localStorage:', error);
       }
     }
   }
 
   private clearFromStorage(): void {
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       try {
-        localStorage.removeItem("gorakudo-error-log");
+        localStorage.removeItem('gorakudo-error-log');
       } catch (error) {
-        console.warn("Could not clear error log from localStorage:", error);
+        console.warn('Could not clear error log from localStorage:', error);
       }
     }
   }
 
   loadFromStorage(): void {
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       try {
-        const stored = localStorage.getItem("gorakudo-error-log");
+        const stored = localStorage.getItem('gorakudo-error-log');
         if (stored) {
           this.errorLog = JSON.parse(stored);
         }
       } catch (error) {
-        console.warn("Could not load error log from localStorage:", error);
+        console.warn('Could not load error log from localStorage:', error);
       }
     }
   }
@@ -137,7 +137,7 @@ export class HybridErrorHandler {
   // Enhanced error reporting for static hosting
   reportError(error: Error, context?: Partial<ErrorContext>): void {
     const errorContext: Partial<ErrorContext> = {
-      ...context
+      ...context,
     };
 
     // Handle optional stack property with exactOptionalPropertyTypes
@@ -145,16 +145,16 @@ export class HybridErrorHandler {
       (errorContext as any).stack = error.stack;
     }
 
-    this.logError("system", error.message, errorContext);
+    this.logError('system', error.message, errorContext);
   }
 
   // Performance monitoring for static hosting
   logPerformance(
     metric: string,
     value: number,
-    context?: Partial<ErrorContext>,
+    context?: Partial<ErrorContext>
   ): void {
-    this.logError("performance", `${metric}: ${value}ms`, context);
+    this.logError('performance', `${metric}: ${value}ms`, context);
   }
 }
 
@@ -162,6 +162,6 @@ export class HybridErrorHandler {
 export const errorHandler = HybridErrorHandler.getInstance();
 
 // Load existing errors on initialization
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   errorHandler.loadFromStorage();
 }

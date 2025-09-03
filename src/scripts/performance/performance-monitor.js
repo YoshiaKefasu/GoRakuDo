@@ -25,82 +25,82 @@ class PerformanceMonitor {
     // Monitor long tasks
     this.observeLongTasks();
 
-    console.log("🚀 Performance Monitor initialized - Target: 30ms");
+    console.log('🚀 Performance Monitor initialized - Target: 30ms');
   }
 
   observeNavigationTiming() {
-    if ("PerformanceObserver" in window) {
-      const observer = new PerformanceObserver((list) => {
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
-          if (entry.entryType === "navigation") {
+          if (entry.entryType === 'navigation') {
             this.measurePageLoad(entry);
           }
         }
       });
 
-      observer.observe({ entryTypes: ["navigation"] });
+      observer.observe({ entryTypes: ['navigation'] });
       this.observers.push(observer);
     }
   }
 
   observeCoreWebVitals() {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       // First Contentful Paint
-      const fcpObserver = new PerformanceObserver((list) => {
+      const fcpObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureFCP(entry);
         }
       });
-      fcpObserver.observe({ entryTypes: ["paint"] });
+      fcpObserver.observe({ entryTypes: ['paint'] });
       this.observers.push(fcpObserver);
 
       // Largest Contentful Paint
-      const lcpObserver = new PerformanceObserver((list) => {
+      const lcpObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureLCP(entry);
         }
       });
-      lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
       this.observers.push(lcpObserver);
 
       // First Input Delay
-      const fidObserver = new PerformanceObserver((list) => {
+      const fidObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureFID(entry);
         }
       });
-      fidObserver.observe({ entryTypes: ["first-input"] });
+      fidObserver.observe({ entryTypes: ['first-input'] });
       this.observers.push(fidObserver);
 
       // Cumulative Layout Shift
-      const clsObserver = new PerformanceObserver((list) => {
+      const clsObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureCLS(entry);
         }
       });
-      clsObserver.observe({ entryTypes: ["layout-shift"] });
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
       this.observers.push(clsObserver);
     }
   }
 
   observeResourceTiming() {
-    if ("PerformanceObserver" in window) {
-      const observer = new PerformanceObserver((list) => {
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
-          if (entry.entryType === "resource") {
+          if (entry.entryType === 'resource') {
             this.measureResourceLoad(entry);
           }
         }
       });
 
-      observer.observe({ entryTypes: ["resource"] });
+      observer.observe({ entryTypes: ['resource'] });
       this.observers.push(observer);
     }
   }
 
   observeLongTasks() {
-    if ("PerformanceObserver" in window) {
-      const observer = new PerformanceObserver((list) => {
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           if (entry.duration > 50) {
             // Tasks longer than 50ms
@@ -109,7 +109,7 @@ class PerformanceMonitor {
         }
       });
 
-      observer.observe({ entryTypes: ["longtask"] });
+      observer.observe({ entryTypes: ['longtask'] });
       this.observers.push(observer);
     }
   }
@@ -128,25 +128,25 @@ class PerformanceMonitor {
       performance: this.getPerformanceGrade(loadTime),
     };
 
-    this.reportMetrics("Page Load", {
-      "Total Load Time": `${loadTime.toFixed(2)}ms`,
-      "DOM Content Loaded": `${domContentLoaded.toFixed(2)}ms`,
-      "First Paint": `${firstPaint.toFixed(2)}ms`,
-      "Target Met": loadTime <= this.targetLoadTime ? "✅" : "❌",
+    this.reportMetrics('Page Load', {
+      'Total Load Time': `${loadTime.toFixed(2)}ms`,
+      'DOM Content Loaded': `${domContentLoaded.toFixed(2)}ms`,
+      'First Paint': `${firstPaint.toFixed(2)}ms`,
+      'Target Met': loadTime <= this.targetLoadTime ? '✅' : '❌',
     });
   }
 
   measureFCP(entry) {
-    if (entry.name === "first-contentful-paint") {
+    if (entry.name === 'first-contentful-paint') {
       this.metrics.fcp = {
         value: entry.startTime,
         targetMet: entry.startTime <= 1000, // 1s target
         performance: this.getPerformanceGrade(entry.startTime),
       };
 
-      this.reportMetrics("First Contentful Paint", {
+      this.reportMetrics('First Contentful Paint', {
         FCP: `${entry.startTime.toFixed(2)}ms`,
-        "Target Met": entry.startTime <= 1000 ? "✅" : "❌",
+        'Target Met': entry.startTime <= 1000 ? '✅' : '❌',
       });
     }
   }
@@ -158,9 +158,9 @@ class PerformanceMonitor {
       performance: this.getPerformanceGrade(entry.startTime),
     };
 
-    this.reportMetrics("Largest Contentful Paint", {
+    this.reportMetrics('Largest Contentful Paint', {
       LCP: `${entry.startTime.toFixed(2)}ms`,
-      "Target Met": entry.startTime <= 1500 ? "✅" : "❌",
+      'Target Met': entry.startTime <= 1500 ? '✅' : '❌',
     });
   }
 
@@ -169,14 +169,14 @@ class PerformanceMonitor {
       value: entry.processingStart - entry.startTime,
       targetMet: entry.processingStart - entry.startTime <= 100, // 100ms target
       performance: this.getPerformanceGrade(
-        entry.processingStart - entry.startTime,
+        entry.processingStart - entry.startTime
       ),
     };
 
-    this.reportMetrics("First Input Delay", {
+    this.reportMetrics('First Input Delay', {
       FID: `${(entry.processingStart - entry.startTime).toFixed(2)}ms`,
-      "Target Met":
-        entry.processingStart - entry.startTime <= 100 ? "✅" : "❌",
+      'Target Met':
+        entry.processingStart - entry.startTime <= 100 ? '✅' : '❌',
     });
   }
 
@@ -189,9 +189,9 @@ class PerformanceMonitor {
     this.metrics.cls.value = this.calculateCLS(this.metrics.cls.entries);
     this.metrics.cls.targetMet = this.metrics.cls.value <= 0.1; // 0.1 target
 
-    this.reportMetrics("Cumulative Layout Shift", {
+    this.reportMetrics('Cumulative Layout Shift', {
       CLS: this.metrics.cls.value.toFixed(3),
-      "Target Met": this.metrics.cls.value <= 0.1 ? "✅" : "❌",
+      'Target Met': this.metrics.cls.value <= 0.1 ? '✅' : '❌',
     });
   }
 
@@ -210,27 +210,27 @@ class PerformanceMonitor {
 
     if (loadTime > 100) {
       // Report slow resources
-      this.reportMetrics("Slow Resource", {
+      this.reportMetrics('Slow Resource', {
         Resource: entry.name,
-        "Load Time": `${loadTime.toFixed(2)}ms`,
+        'Load Time': `${loadTime.toFixed(2)}ms`,
         Size: `${(entry.transferSize / 1024).toFixed(2)}KB`,
       });
     }
   }
 
   reportLongTask(entry) {
-    this.reportMetrics("Long Task Detected", {
+    this.reportMetrics('Long Task Detected', {
       Duration: `${entry.duration.toFixed(2)}ms`,
-      "Start Time": `${entry.startTime.toFixed(2)}ms`,
+      'Start Time': `${entry.startTime.toFixed(2)}ms`,
     });
   }
 
   getPerformanceGrade(value) {
-    if (value <= 10) return "EXCELLENT";
-    if (value <= 20) return "GOOD";
-    if (value <= 30) return "ACCEPTABLE";
-    if (value <= 50) return "NEEDS IMPROVEMENT";
-    return "CRITICAL";
+    if (value <= 10) return 'EXCELLENT';
+    if (value <= 20) return 'GOOD';
+    if (value <= 30) return 'ACCEPTABLE';
+    if (value <= 50) return 'NEEDS IMPROVEMENT';
+    return 'CRITICAL';
   }
 
   reportMetrics(category, data) {
@@ -261,8 +261,8 @@ class PerformanceMonitor {
 
   sendToAnalytics(report) {
     // Send to Google Analytics or other analytics service
-    if (typeof gtag !== "undefined") {
-      gtag("event", "performance_metric", {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'performance_metric', {
         event_category: report.category,
         event_label: report.url,
         value: Object.values(report.data)[0],
@@ -307,14 +307,14 @@ class PerformanceMonitor {
   }
 
   disconnect() {
-    this.observers.forEach((observer) => observer.disconnect());
+    this.observers.forEach(observer => observer.disconnect());
     this.observers = [];
   }
 }
 
 // Initialize performance monitor when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
     window.performanceMonitor = new PerformanceMonitor();
   });
 } else {
@@ -322,6 +322,6 @@ if (document.readyState === "loading") {
 }
 
 // Export for module systems
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = PerformanceMonitor;
 }

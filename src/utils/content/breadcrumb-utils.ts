@@ -24,10 +24,10 @@ export interface BreadcrumbData {
 export function generateToolIndexBreadcrumb(toolName: string): BreadcrumbData {
   try {
     // Validate tool name against whitelist
-    const validTools = ["anki", "migaku", "yomitan"];
+    const validTools = ['anki', 'migaku', 'yomitan'];
     if (!validTools.includes(toolName)) {
-      console.warn("⚠️ Invalid tool name for breadcrumb:", toolName);
-      throw new Error("Invalid tool name");
+      console.warn('⚠️ Invalid tool name for breadcrumb:', toolName);
+      throw new Error('Invalid tool name');
     }
 
     // Format tool name for display
@@ -35,13 +35,13 @@ export function generateToolIndexBreadcrumb(toolName: string): BreadcrumbData {
 
     const breadcrumbItems: BreadcrumbItem[] = [
       {
-        title: "Home",
-        url: "/",
+        title: 'Home',
+        url: '/',
         isActive: false,
       },
       {
-        title: "Tools",
-        url: "/tools",
+        title: 'Tools',
+        url: '/tools',
         isActive: false,
       },
       {
@@ -56,11 +56,11 @@ export function generateToolIndexBreadcrumb(toolName: string): BreadcrumbData {
       ariaLabel: `${displayName} tool navigation breadcrumb`,
     };
   } catch (error) {
-    console.error("🚨 Error generating tool index breadcrumb:", error);
+    console.error('🚨 Error generating tool index breadcrumb:', error);
     // Return minimal breadcrumb as fallback
     return {
-      items: [{ title: "Home", url: "/", isActive: true }],
-      ariaLabel: "Navigation breadcrumb",
+      items: [{ title: 'Home', url: '/', isActive: true }],
+      ariaLabel: 'Navigation breadcrumb',
     };
   }
 }
@@ -75,23 +75,23 @@ export function generateToolIndexBreadcrumb(toolName: string): BreadcrumbData {
 export function generateToolArticleBreadcrumb(
   toolName: string,
   articleTitle: string,
-  articleSlug: string,
+  articleSlug: string
 ): BreadcrumbData {
   try {
     // Validate tool name against whitelist
-    const validTools = ["anki", "migaku", "yomitan"];
+    const validTools = ['anki', 'migaku', 'yomitan'];
     if (!validTools.includes(toolName)) {
-      console.warn("⚠️ Invalid tool name for breadcrumb:", toolName);
-      throw new Error("Invalid tool name");
+      console.warn('⚠️ Invalid tool name for breadcrumb:', toolName);
+      throw new Error('Invalid tool name');
     }
 
     // Security: Sanitize article title and slug
-    const sanitizedTitle = articleTitle.replace(/[<>\"'&]/g, "");
-    const sanitizedSlug = articleSlug.replace(/[<>\"'&]/g, "");
+    const sanitizedTitle = articleTitle.replace(/[<>\"'&]/g, '');
+    const sanitizedSlug = articleSlug.replace(/[<>\"'&]/g, '');
 
     if (sanitizedTitle !== articleTitle || sanitizedSlug !== articleSlug) {
-      console.warn("🚨 Security: XSS attempt detected in breadcrumb data");
-      throw new Error("XSS attempt detected");
+      console.warn('🚨 Security: XSS attempt detected in breadcrumb data');
+      throw new Error('XSS attempt detected');
     }
 
     // Format tool name for display
@@ -100,18 +100,18 @@ export function generateToolArticleBreadcrumb(
     // Truncate article title if too long
     const truncatedTitle =
       sanitizedTitle.length > 30
-        ? sanitizedTitle.substring(0, 30) + "..."
+        ? sanitizedTitle.substring(0, 30) + '...'
         : sanitizedTitle;
 
     const breadcrumbItems: BreadcrumbItem[] = [
       {
-        title: "Home",
-        url: "/",
+        title: 'Home',
+        url: '/',
         isActive: false,
       },
       {
-        title: "Tools",
-        url: "/tools",
+        title: 'Tools',
+        url: '/tools',
         isActive: false,
       },
       {
@@ -131,11 +131,11 @@ export function generateToolArticleBreadcrumb(
       ariaLabel: `${displayName} ${truncatedTitle} navigation breadcrumb`,
     };
   } catch (error) {
-    console.error("🚨 Error generating tool article breadcrumb:", error);
+    console.error('🚨 Error generating tool article breadcrumb:', error);
     // Return minimal breadcrumb as fallback
     return {
-      items: [{ title: "Home", url: "/", isActive: true }],
-      ariaLabel: "Navigation breadcrumb",
+      items: [{ title: 'Home', url: '/', isActive: true }],
+      ariaLabel: 'Navigation breadcrumb',
     };
   }
 }
@@ -151,34 +151,34 @@ export function validateBreadcrumbData(data: BreadcrumbData): boolean {
     if (
       !data ||
       !Array.isArray(data.items) ||
-      typeof data.ariaLabel !== "string"
+      typeof data.ariaLabel !== 'string'
     ) {
-      console.warn("⚠️ Invalid breadcrumb data structure");
+      console.warn('⚠️ Invalid breadcrumb data structure');
       return false;
     }
 
     // Check if all items have required properties
     for (const item of data.items) {
       if (
-        typeof item.title !== "string" ||
-        typeof item.url !== "string" ||
-        typeof item.isActive !== "boolean"
+        typeof item.title !== 'string' ||
+        typeof item.url !== 'string' ||
+        typeof item.isActive !== 'boolean'
       ) {
-        console.warn("⚠️ Invalid breadcrumb item structure");
+        console.warn('⚠️ Invalid breadcrumb item structure');
         return false;
       }
     }
 
     // Check if there's exactly one active item
-    const activeItems = data.items.filter((item) => item.isActive);
+    const activeItems = data.items.filter(item => item.isActive);
     if (activeItems.length !== 1) {
-      console.warn("⚠️ Breadcrumb must have exactly one active item");
+      console.warn('⚠️ Breadcrumb must have exactly one active item');
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error("🚨 Error validating breadcrumb data:", error);
+    console.error('🚨 Error validating breadcrumb data:', error);
     return false;
   }
 }
@@ -190,8 +190,8 @@ export function validateBreadcrumbData(data: BreadcrumbData): boolean {
  */
 export function sanitizeBreadcrumbItem(item: BreadcrumbItem): BreadcrumbItem {
   return {
-    title: item.title.replace(/[<>\"'&]/g, ""),
-    url: item.url.replace(/[<>\"'&]/g, ""),
+    title: item.title.replace(/[<>\"'&]/g, ''),
+    url: item.url.replace(/[<>\"'&]/g, ''),
     isActive: item.isActive,
   };
 }

@@ -25,7 +25,7 @@ class DocsSkeletonLoader {
       this.showInitialSkeleton();
       this.isInitialized = true;
     } catch (error) {
-      console.error("Error initializing docs skeleton loader:", error);
+      console.error('Error initializing docs skeleton loader:', error);
     }
   }
 
@@ -34,20 +34,20 @@ class DocsSkeletonLoader {
    */
   initializeSkeletonSystem() {
     try {
-      if (!document.getElementById("skeleton-styles")) {
-        const style = document.createElement("style");
-        style.id = "skeleton-styles";
+      if (!document.getElementById('skeleton-styles')) {
+        const style = document.createElement('style');
+        style.id = 'skeleton-styles';
         style.textContent = this.generateSkeletonCSS();
         document.head.appendChild(style);
       }
 
       this.skeletonManager = {
         show: (containerId, config) => this.showSkeleton(containerId, config),
-        hide: (containerId) => this.hideSkeleton(containerId),
+        hide: containerId => this.hideSkeleton(containerId),
         hideAll: () => this.hideAllSkeletons(),
       };
     } catch (error) {
-      console.error("Error initializing skeleton system:", error);
+      console.error('Error initializing skeleton system:', error);
     }
   }
 
@@ -56,9 +56,9 @@ class DocsSkeletonLoader {
    */
   setupEventListeners() {
     try {
-      const searchInput = document.getElementById("searchInput");
+      const searchInput = document.getElementById('searchInput');
       if (searchInput) {
-        searchInput.addEventListener("input", (e) => {
+        searchInput.addEventListener('input', e => {
           const target = e.target;
           if (target?.value !== undefined) {
             this.handleSearchInput(target.value);
@@ -66,28 +66,33 @@ class DocsSkeletonLoader {
         });
       }
 
-      document.addEventListener("click", (e) => {
+      document.addEventListener('click', e => {
         const target = e.target;
-        if (target?.matches && target.matches(".pagination-btn, .pagination-number")) {
+        if (
+          target?.matches &&
+          target.matches('.pagination-btn, .pagination-number')
+        ) {
           this.handlePaginationClick(e);
         }
       });
 
-      const infiniteScrollToggle = document.getElementById("infiniteScrollToggle");
+      const infiniteScrollToggle = document.getElementById(
+        'infiniteScrollToggle'
+      );
       if (infiniteScrollToggle) {
-        infiniteScrollToggle.addEventListener("change", (e) => {
+        infiniteScrollToggle.addEventListener('change', e => {
           this.handleInfiniteScrollToggle(e);
         });
       }
 
-      document.addEventListener("click", (e) => {
+      document.addEventListener('click', e => {
         const target = e.target;
         if (target?.matches && target.matches('a[href^="/docs/"]')) {
           this.handlePostNavigation(e);
         }
       });
     } catch (error) {
-      console.error("Error setting up event listeners:", error);
+      console.error('Error setting up event listeners:', error);
     }
   }
 
@@ -96,23 +101,25 @@ class DocsSkeletonLoader {
    */
   showInitialSkeleton() {
     try {
-      const postsContainer = document.getElementById("postsContainer");
+      const postsContainer = document.getElementById('postsContainer');
       if (postsContainer && postsContainer.children.length === 0) {
-        this.showSkeleton("postsContainer", {
-          type: "post-card",
+        this.showSkeleton('postsContainer', {
+          type: 'post-card',
           count: 3,
         });
       }
 
-      const paginationContainer = document.querySelector(".pagination-container");
+      const paginationContainer = document.querySelector(
+        '.pagination-container'
+      );
       if (paginationContainer && paginationContainer.children.length === 0) {
-        this.showSkeleton("paginationContainer", {
-          type: "pagination",
+        this.showSkeleton('paginationContainer', {
+          type: 'pagination',
           count: 1,
         });
       }
     } catch (error) {
-      console.error("Error showing initial skeleton:", error);
+      console.error('Error showing initial skeleton:', error);
     }
   }
 
@@ -122,20 +129,20 @@ class DocsSkeletonLoader {
   handleSearchInput(query) {
     try {
       if (!query || query.trim().length === 0) {
-        this.hideSkeleton("searchResultsContent");
+        this.hideSkeleton('searchResultsContent');
         return;
       }
 
-      this.showSkeleton("searchResultsContent", {
-        type: "search-result",
+      this.showSkeleton('searchResultsContent', {
+        type: 'search-result',
         count: 3,
       });
 
       setTimeout(() => {
-        this.hideSkeleton("searchResultsContent");
+        this.hideSkeleton('searchResultsContent');
       }, 500);
     } catch (error) {
-      console.error("Error handling search input:", error);
+      console.error('Error handling search input:', error);
     }
   }
 
@@ -149,16 +156,16 @@ class DocsSkeletonLoader {
 
       if (!page) return;
 
-      this.showSkeleton("postsContainer", {
-        type: "post-card",
+      this.showSkeleton('postsContainer', {
+        type: 'post-card',
         count: 3,
       });
 
       setTimeout(() => {
-        this.hideSkeleton("postsContainer");
+        this.hideSkeleton('postsContainer');
       }, 300);
     } catch (error) {
-      console.error("Error handling pagination click:", error);
+      console.error('Error handling pagination click:', error);
     }
   }
 
@@ -170,17 +177,17 @@ class DocsSkeletonLoader {
       const isEnabled = event.target.checked;
 
       if (isEnabled) {
-        this.showSkeleton("postsContainer", {
-          type: "post-card",
+        this.showSkeleton('postsContainer', {
+          type: 'post-card',
           count: 2,
         });
 
         setTimeout(() => {
-          this.hideSkeleton("postsContainer");
+          this.hideSkeleton('postsContainer');
         }, 400);
       }
     } catch (error) {
-      console.error("Error handling infinite scroll toggle:", error);
+      console.error('Error handling infinite scroll toggle:', error);
     }
   }
 
@@ -189,20 +196,22 @@ class DocsSkeletonLoader {
    */
   handlePostNavigation(event) {
     try {
-      const link = event.target.closest("a");
+      const link = event.target.closest('a');
       if (!link) return;
 
-      this.showSkeleton("postContent", { type: "content", count: 1 });
+      this.showSkeleton('postContent', { type: 'content', count: 1 });
 
-      const relationshipsContainer = document.getElementById("relationshipsContainer");
+      const relationshipsContainer = document.getElementById(
+        'relationshipsContainer'
+      );
       if (relationshipsContainer) {
-        this.showSkeleton("relationshipsContainer", {
-          type: "relationship-card",
+        this.showSkeleton('relationshipsContainer', {
+          type: 'relationship-card',
           count: 3,
         });
       }
     } catch (error) {
-      console.error("Error handling post navigation:", error);
+      console.error('Error handling post navigation:', error);
     }
   }
 
@@ -213,17 +222,17 @@ class DocsSkeletonLoader {
     try {
       const container = document.getElementById(containerId);
       if (!container) {
-        console.warn(`‚ö†ÅEÅEContainer not found: ${containerId}`);
+        console.warn(`‚ö†ÔøΩEÔøΩEContainer not found: ${containerId}`);
         return;
       }
 
       const skeletonHTML = this.generateSkeletonHTML(config);
       container.innerHTML = skeletonHTML;
-      container.classList.add("skeleton-loading");
+      container.classList.add('skeleton-loading');
 
       this.loadingStates.set(containerId, config);
     } catch (error) {
-      console.error("Error showing skeleton:", error);
+      console.error('Error showing skeleton:', error);
     }
   }
 
@@ -234,20 +243,20 @@ class DocsSkeletonLoader {
     try {
       const container = document.getElementById(containerId);
       if (!container) {
-        console.warn(`‚ö†ÅEÅEContainer not found: ${containerId}`);
+        console.warn(`‚ö†ÔøΩEÔøΩEContainer not found: ${containerId}`);
         return;
       }
 
-      container.classList.remove("skeleton-loading");
-      container.classList.add("skeleton-fade-in");
+      container.classList.remove('skeleton-loading');
+      container.classList.add('skeleton-fade-in');
 
       setTimeout(() => {
-        container.classList.remove("skeleton-fade-in");
+        container.classList.remove('skeleton-fade-in');
       }, 500);
 
       this.loadingStates.delete(containerId);
     } catch (error) {
-      console.error("Error hiding skeleton:", error);
+      console.error('Error hiding skeleton:', error);
     }
   }
 
@@ -260,7 +269,7 @@ class DocsSkeletonLoader {
         this.hideSkeleton(containerId);
       });
     } catch (error) {
-      console.error("Error hiding all skeletons:", error);
+      console.error('Error hiding all skeletons:', error);
     }
   }
 
@@ -269,43 +278,43 @@ class DocsSkeletonLoader {
    */
   generateSkeletonHTML(config) {
     try {
-      const { type, count = 1, className = "" } = config;
-      let skeletonHTML = "";
+      const { type, count = 1, className = '' } = config;
+      let skeletonHTML = '';
 
       for (let i = 0; i < count; i++) {
         switch (type) {
-          case "post-card":
+          case 'post-card':
             skeletonHTML += this.generatePostCardSkeleton(className);
             break;
-          case "search-result":
+          case 'search-result':
             skeletonHTML += this.generateSearchResultSkeleton(className);
             break;
-          case "pagination":
+          case 'pagination':
             skeletonHTML += this.generatePaginationSkeleton(className);
             break;
-          case "content":
+          case 'content':
             skeletonHTML += this.generateContentSkeleton(className);
             break;
-          case "relationship-card":
+          case 'relationship-card':
             skeletonHTML += this.generateRelationshipCardSkeleton(className);
             break;
           default:
-            console.warn(`‚ö†ÅEÅEUnknown skeleton type: ${type}`);
+            console.warn(`‚ö†ÔøΩEÔøΩEUnknown skeleton type: ${type}`);
             break;
         }
       }
 
       return skeletonHTML;
     } catch (error) {
-      console.error("Error generating skeleton HTML:", error);
-      return "";
+      console.error('Error generating skeleton HTML:', error);
+      return '';
     }
   }
 
   /**
    * Generate post card skeleton
    */
-  generatePostCardSkeleton(className = "") {
+  generatePostCardSkeleton(className = '') {
     return `
       <article class="post-card skeleton-post-card ${className}">
         <div class="skeleton-post-header">
@@ -329,7 +338,7 @@ class DocsSkeletonLoader {
   /**
    * Generate search result skeleton
    */
-  generateSearchResultSkeleton(className = "") {
+  generateSearchResultSkeleton(className = '') {
     return `
       <div class="search-result skeleton-search-result ${className}">
         <div class="skeleton-result-header">
@@ -351,7 +360,7 @@ class DocsSkeletonLoader {
   /**
    * Generate pagination skeleton
    */
-  generatePaginationSkeleton(className = "") {
+  generatePaginationSkeleton(className = '') {
     return `
       <div class="pagination-container skeleton-pagination ${className}">
         <div class="skeleton-pagination-info">
@@ -373,7 +382,7 @@ class DocsSkeletonLoader {
   /**
    * Generate content skeleton
    */
-  generateContentSkeleton(className = "") {
+  generateContentSkeleton(className = '') {
     return `
       <div class="post-content skeleton-content ${className}">
         <div class="skeleton-content-header">
@@ -402,7 +411,7 @@ class DocsSkeletonLoader {
   /**
    * Generate relationship card skeleton
    */
-  generateRelationshipCardSkeleton(className = "") {
+  generateRelationshipCardSkeleton(className = '') {
     return `
       <div class="relationship-card skeleton-relationship-card ${className}">
         <div class="skeleton-relationship-header">
@@ -752,7 +761,7 @@ if (typeof module !== 'undefined' && module.exports) {
 // Auto-initialize if in browser environment
 if (typeof window !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       initializeDocsSkeletonLoader();
     });
   } else {
@@ -761,7 +770,7 @@ if (typeof window !== 'undefined') {
 
   function initializeDocsSkeletonLoader() {
     console.log('ü¶¥ Initializing Docs Skeleton Loader...');
-    
+
     try {
       window.docsSkeletonLoader = new DocsSkeletonLoader();
       console.log('‚úÅESkeleton loading utility loaded successfully');

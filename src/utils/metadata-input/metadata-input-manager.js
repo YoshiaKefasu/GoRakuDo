@@ -19,7 +19,7 @@ export class MetadataInputManager {
       readTime: 0,
       validationTime: 0,
       saveTime: 0,
-      totalOperations: 0
+      totalOperations: 0,
     };
     this.cache = new Map();
     this.autoSaveEnabled = true;
@@ -34,16 +34,15 @@ export class MetadataInputManager {
     try {
       // Load existing content and build keyword cache
       this.loadExistingContent();
-      
+
       // Apply configuration
       this.autoSaveEnabled = config.autoSaveEnabled !== false;
       this.autoSaveInterval = config.autoSaveInterval || 5000;
-      
+
       // Initialize performance monitoring
       this.initializePerformanceMonitoring();
-      
+
       console.log('✅ Metadata input system initialized successfully');
-      
     } catch (error) {
       console.error('❌ Error initializing metadata input system:', error);
       throw error;
@@ -55,20 +54,22 @@ export class MetadataInputManager {
    */
   async loadExistingContent() {
     const startTime = performance.now();
-    
+
     try {
       // This would integrate with existing content loading system
       // For now, we'll simulate loading existing content
       const existingContent = await this.getExistingContentFiles();
-      
+
       if (existingContent.length > 0) {
         // Extract keywords from existing content
-        const keywords = this.keywordManager.extractKeywordsFromContent(existingContent);
-        console.log(`📚 Loaded ${keywords.length} keywords from existing content`);
+        const keywords =
+          this.keywordManager.extractKeywordsFromContent(existingContent);
+        console.log(
+          `📚 Loaded ${keywords.length} keywords from existing content`
+        );
       }
-      
+
       this.updatePerformanceMetrics('readTime', performance.now() - startTime);
-      
     } catch (error) {
       console.error('Error loading existing content:', error);
     }
@@ -108,20 +109,21 @@ export class MetadataInputManager {
    * Log performance metrics
    */
   logPerformanceMetrics() {
-    const { readTime, validationTime, saveTime, totalOperations } = this.performanceMetrics;
-    
+    const { readTime, validationTime, saveTime, totalOperations } =
+      this.performanceMetrics;
+
     console.log('📊 Metadata Input Performance Metrics:');
     console.log(`  📖 Read Time: ${readTime.toFixed(2)}ms`);
     console.log(`  ✅ Validation Time: ${validationTime.toFixed(2)}ms`);
     console.log(`  💾 Save Time: ${saveTime.toFixed(2)}ms`);
     console.log(`  🔄 Total Operations: ${totalOperations}`);
-    
+
     // Reset metrics after logging
     this.performanceMetrics = {
       readTime: 0,
       validationTime: 0,
       saveTime: 0,
-      totalOperations: 0
+      totalOperations: 0,
     };
   }
 
@@ -133,29 +135,28 @@ export class MetadataInputManager {
    */
   readMetadata(filePath, content) {
     const startTime = performance.now();
-    
+
     try {
       const result = this.metadataReader.readMetadata(filePath, content);
-      
+
       // Cache successful results
       if (result.success) {
         this.cache.set(filePath, {
           metadata: result.metadata,
           timestamp: Date.now(),
-          contentHash: this.hashContent(content)
+          contentHash: this.hashContent(content),
         });
       }
-      
+
       this.updatePerformanceMetrics('readTime', performance.now() - startTime);
       return result;
-      
     } catch (error) {
       console.error(`Error reading metadata from ${filePath}:`, error);
       this.updatePerformanceMetrics('readTime', performance.now() - startTime);
       return {
         success: false,
         error: error.message,
-        filePath
+        filePath,
       };
     }
   }
@@ -168,13 +169,13 @@ export class MetadataInputManager {
   hashContent(content) {
     let hash = 0;
     if (content.length === 0) return hash.toString();
-    
+
     for (let i = 0; i < content.length; i++) {
       const char = content.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
-    
+
     return hash.toString();
   }
 
@@ -185,19 +186,30 @@ export class MetadataInputManager {
    */
   validateMetadata(metadata) {
     const startTime = performance.now();
-    
+
     try {
       const result = this.metadataReader.validateMetadata(metadata);
-      this.updatePerformanceMetrics('validationTime', performance.now() - startTime);
+      this.updatePerformanceMetrics(
+        'validationTime',
+        performance.now() - startTime
+      );
       return result;
-      
     } catch (error) {
       console.error('Error validating metadata:', error);
-      this.updatePerformanceMetrics('validationTime', performance.now() - startTime);
+      this.updatePerformanceMetrics(
+        'validationTime',
+        performance.now() - startTime
+      );
       return {
         isValid: false,
-        errors: [{ field: 'unknown', message: error.message, code: 'VALIDATION_ERROR' }],
-        warnings: []
+        errors: [
+          {
+            field: 'unknown',
+            message: error.message,
+            code: 'VALIDATION_ERROR',
+          },
+        ],
+        warnings: [],
       };
     }
   }
@@ -211,7 +223,7 @@ export class MetadataInputManager {
    */
   async saveMetadata(filePath, metadata, immediate = false) {
     const startTime = performance.now();
-    
+
     try {
       // Validate metadata before saving
       const validation = this.validateMetadata(metadata);
@@ -219,14 +231,17 @@ export class MetadataInputManager {
         return {
           success: false,
           error: 'Metadata validation failed',
-          validation
+          validation,
         };
       }
 
       if (immediate) {
         // Save immediately
         const result = await this.performSave(filePath, metadata);
-        this.updatePerformanceMetrics('saveTime', performance.now() - startTime);
+        this.updatePerformanceMetrics(
+          'saveTime',
+          performance.now() - startTime
+        );
         return result;
       } else {
         // Schedule auto-save
@@ -234,16 +249,15 @@ export class MetadataInputManager {
         return {
           success: true,
           message: 'Auto-save scheduled',
-          scheduled: true
+          scheduled: true,
         };
       }
-      
     } catch (error) {
       console.error(`Error saving metadata for ${filePath}:`, error);
       this.updatePerformanceMetrics('saveTime', performance.now() - startTime);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -283,23 +297,24 @@ export class MetadataInputManager {
       this.cache.set(filePath, {
         metadata,
         timestamp: Date.now(),
-        contentHash: this.hashContent(JSON.stringify(metadata))
+        contentHash: this.hashContent(JSON.stringify(metadata)),
       });
 
       // Update keyword cache if tags changed
       if (metadata.tags && metadata.tags.length > 0) {
-        this.keywordManager.extractKeywordsFromContent([{
-          path: filePath,
-          content: JSON.stringify(metadata)
-        }]);
+        this.keywordManager.extractKeywordsFromContent([
+          {
+            path: filePath,
+            content: JSON.stringify(metadata),
+          },
+        ]);
       }
 
       return {
         success: true,
         message: 'Metadata saved successfully',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-
     } catch (error) {
       throw new Error(`Save operation failed: ${error.message}`);
     }
@@ -328,7 +343,10 @@ export class MetadataInputManager {
    */
   checkDuplicateKeyword(keyword, existingKeywords) {
     try {
-      return this.keywordManager.checkDuplicateKeyword(keyword, existingKeywords);
+      return this.keywordManager.checkDuplicateKeyword(
+        keyword,
+        existingKeywords
+      );
     } catch (error) {
       console.error('Error checking duplicate keywords:', error);
       return {
@@ -336,7 +354,7 @@ export class MetadataInputManager {
         type: 'error',
         existing: null,
         suggestion: null,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -348,7 +366,8 @@ export class MetadataInputManager {
    */
   getCachedMetadata(filePath) {
     const cached = this.cache.get(filePath);
-    if (cached && Date.now() - cached.timestamp < 300000) { // 5 minutes
+    if (cached && Date.now() - cached.timestamp < 300000) {
+      // 5 minutes
       return cached.metadata;
     }
     return null;
@@ -376,7 +395,7 @@ export class MetadataInputManager {
       keywordStats: this.keywordManager.getKeywordStats(),
       performanceMetrics: { ...this.performanceMetrics },
       autoSaveEnabled: this.autoSaveEnabled,
-      autoSaveInterval: this.autoSaveInterval
+      autoSaveInterval: this.autoSaveInterval,
     };
   }
 
@@ -388,10 +407,10 @@ export class MetadataInputManager {
       clearTimeout(this.autoSaveTimer);
       this.autoSaveTimer = null;
     }
-    
+
     this.clearCache();
     this.keywordManager.clearCache();
-    
+
     console.log('🧹 Metadata input system cleaned up');
   }
 }

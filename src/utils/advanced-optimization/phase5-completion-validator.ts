@@ -6,10 +6,14 @@
 import type {
   AdvancedOptimizationConfig,
   PhaseCompletionStatus,
-  PhaseQualityGate
+  PhaseQualityGate,
 } from '../../types/new-seo-system';
 
-import { implementAdvancedOptimization, runAdvancedOptimizationTests, verifyAdvancedOptimizationQuality } from './advanced-optimizer.js';
+import {
+  implementAdvancedOptimization,
+  runAdvancedOptimizationTests,
+  verifyAdvancedOptimizationQuality,
+} from './advanced-optimizer.js';
 
 // 既存の品質基準を活用（DRY原則）
 const PHASE5_QUALITY_REQUIREMENTS = {
@@ -20,14 +24,14 @@ const PHASE5_QUALITY_REQUIREMENTS = {
     'structuredDataGeneration',
     'advancedQualityMonitoring',
     'algorithmEnhancement',
-    'testCleanup'
-  ]
+    'testCleanup',
+  ],
 };
 
 /**
  * Phase 5完了検証システム
  * 高度化システムの品質基準達成を確認
- * 
+ *
  * @param config - 高度化設定
  * @param testMetadata - テスト用メタデータ
  * @returns Phase 5完了検証結果
@@ -65,7 +69,10 @@ export function validatePhase5Completion(
 
   try {
     // 高度化システムの実装テスト
-    const optimizationResult = implementAdvancedOptimization(config, testMetadata);
+    const optimizationResult = implementAdvancedOptimization(
+      config,
+      testMetadata
+    );
     qualityScore = optimizationResult.quality;
     enhancementScore = optimizationResult.enhancement;
 
@@ -86,7 +93,10 @@ export function validatePhase5Completion(
     }
 
     // 高度化システムの品質基準達成確認
-    const qualityVerification = verifyAdvancedOptimizationQuality(config, optimizationResult);
+    const qualityVerification = verifyAdvancedOptimizationQuality(
+      config,
+      optimizationResult
+    );
     featureCompleteness = qualityVerification.score;
 
     if (!qualityVerification.achieved) {
@@ -102,13 +112,13 @@ export function validatePhase5Completion(
       enhancementScore,
       testCoverage,
       featureCompleteness,
-      issues
+      issues,
     });
 
     // Phase 5完了状態の生成
     const status: PhaseCompletionStatus = {
       phase: 'phase5',
-      status: completed ? 'completed' : 'in-progress'
+      status: completed ? 'completed' : 'in-progress',
     };
 
     // Handle optional properties with exactOptionalPropertyTypes
@@ -125,10 +135,13 @@ export function validatePhase5Completion(
     const qualityGate: PhaseQualityGate = {
       phase: 'phase5',
       passed: completed,
-      score: Math.round((qualityScore + enhancementScore + testCoverage + featureCompleteness) / 4),
+      score: Math.round(
+        (qualityScore + enhancementScore + testCoverage + featureCompleteness) /
+          4
+      ),
       requirements: PHASE5_QUALITY_REQUIREMENTS.requiredFeatures,
       completedRequirements: qualityVerification.completedRequirements,
-      missingRequirements: qualityVerification.missingRequirements
+      missingRequirements: qualityVerification.missingRequirements,
     };
 
     return {
@@ -141,15 +154,16 @@ export function validatePhase5Completion(
         testCoverage,
         featureCompleteness,
         issues,
-        recommendations
-      }
+        recommendations,
+      },
     };
-
   } catch (error) {
     const errorStatus: PhaseCompletionStatus = {
       phase: 'phase5',
       status: 'failed',
-      issues: [`Validation error: ${error instanceof Error ? error.message : 'Unknown error'}`]
+      issues: [
+        `Validation error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      ],
     };
 
     const errorQualityGate: PhaseQualityGate = {
@@ -158,7 +172,7 @@ export function validatePhase5Completion(
       score: 0,
       requirements: PHASE5_QUALITY_REQUIREMENTS.requiredFeatures,
       completedRequirements: [],
-      missingRequirements: PHASE5_QUALITY_REQUIREMENTS.requiredFeatures
+      missingRequirements: PHASE5_QUALITY_REQUIREMENTS.requiredFeatures,
     };
 
     return {
@@ -170,16 +184,18 @@ export function validatePhase5Completion(
         enhancementScore: 0,
         testCoverage: 0,
         featureCompleteness: 0,
-        issues: [`Validation error: ${error instanceof Error ? error.message : 'Unknown error'}`],
-        recommendations: ['Check configuration and try again']
-      }
+        issues: [
+          `Validation error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        ],
+        recommendations: ['Check configuration and try again'],
+      },
     };
   }
 }
 
 /**
  * Phase 5完了判定（シンプルで確実、KISS原則）
- * 
+ *
  * @param metrics - 完了判定メトリクス
  * @returns 完了判定結果
  */
@@ -206,7 +222,7 @@ function isPhase5Completed(metrics: {
 
 /**
  * テストカバレッジの計算（シンプルで確実、KISS原則）
- * 
+ *
  * @param testResult - テスト結果
  * @returns テストカバレッジ（%）
  */
@@ -217,7 +233,9 @@ function calculateTestCoverage(testResult: {
 }): number {
   // シンプルなテストカバレッジ計算（KISS原則）
   const totalTests = Object.keys(testResult.testResults).length;
-  const passedTests = Object.values(testResult.testResults).filter(Boolean).length;
+  const passedTests = Object.values(testResult.testResults).filter(
+    Boolean
+  ).length;
 
   if (totalTests === 0) {
     return 95; // デフォルトの高いカバレッジ
@@ -230,7 +248,7 @@ function calculateTestCoverage(testResult: {
 
 /**
  * Phase 5完了レポートの生成
- * 
+ *
  * @param validationResult - 検証結果
  * @returns 完了レポート
  */
@@ -255,7 +273,7 @@ export function generatePhase5CompletionReport(validationResult: {
   };
 } {
   const { completed, status, qualityGate, details } = validationResult;
-  
+
   // 完了レポートの生成
   const report = `
 === Phase 5 Completion Report ===
@@ -279,14 +297,22 @@ ${details.recommendations.length > 0 ? `Recommendations:\n${details.recommendati
 
   // サマリーの生成
   const overallScore = qualityGate.score;
-  const completionRate = completed ? 100 : Math.round((details.qualityScore + details.enhancementScore + details.testCoverage + details.featureCompleteness) / 4);
+  const completionRate = completed
+    ? 100
+    : Math.round(
+        (details.qualityScore +
+          details.enhancementScore +
+          details.testCoverage +
+          details.featureCompleteness) /
+          4
+      );
 
   return {
     report,
     summary: {
       status: status.status,
       overallScore,
-      completionRate
-    }
+      completionRate,
+    },
   };
 }

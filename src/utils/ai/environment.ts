@@ -1,4 +1,4 @@
-import { logger } from "../logging/console-logger";
+import { logger } from '../logging/console-logger';
 
 export interface EnvironmentConfig {
   isProduction: boolean;
@@ -23,24 +23,23 @@ export class EnvironmentManager {
   private loadEnvironmentConfig(): EnvironmentConfig {
     // const isGitHubActions = process.env.GITHUB_ACTIONS === "true";
     // const isDevelopment = process.env.NODE_ENV === "development";
-    const isProduction = process.env.NODE_ENV === "production";
+    const isProduction = process.env.NODE_ENV === 'production';
 
     return {
       isProduction,
       enableAIProcessing: this.shouldEnableAIProcessing(
         false, // isGitHubActions
-        false, // isDevelopment
+        false // isDevelopment
       ),
-
     };
   }
 
   private shouldEnableAIProcessing(
     _isGitHubActions: boolean,
-    _isDevelopment: boolean,
+    _isDevelopment: boolean
   ): boolean {
     // AI processing is disabled for security
-    logger.log("AI processing disabled for security", "warning");
+    logger.log('AI processing disabled for security', 'warning');
     return false;
   }
 
@@ -56,7 +55,7 @@ export class EnvironmentManager {
     return (
       `Environment: Production, ` +
       `GitHub Actions: No, ` +
-      `AI Processing: ${this.config.enableAIProcessing ? "Enabled" : "Disabled"}`
+      `AI Processing: ${this.config.enableAIProcessing ? 'Enabled' : 'Disabled'}`
     );
   }
 }

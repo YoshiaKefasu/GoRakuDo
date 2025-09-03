@@ -1,6 +1,6 @@
 // ========== NEW SEO METADATA LOADER ==========
-import * as fs from "fs/promises";
-import * as path from "path";
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 export interface MetadataContent {
   metaDescription?: string;
@@ -20,11 +20,11 @@ export interface LoadedMetadata {
  * @returns Metadata content if available
  */
 export async function loadMetadata(
-  contentFilePath: string,
+  contentFilePath: string
 ): Promise<LoadedMetadata> {
   try {
     const contentDir = path.dirname(contentFilePath);
-    const fileName = path.basename(contentFilePath, ".md");
+    const fileName = path.basename(contentFilePath, '.md');
     const metadataPath = path.join(contentDir, `${fileName}-metadata.json`);
 
     // Check if metadata file exists
@@ -39,7 +39,7 @@ export async function loadMetadata(
     }
 
     // Load and parse metadata
-    const metadataContent = await fs.readFile(metadataPath, "utf-8");
+    const metadataContent = await fs.readFile(metadataPath, 'utf-8');
     const metadata: MetadataContent = JSON.parse(metadataContent);
 
     return {
@@ -52,7 +52,7 @@ export async function loadMetadata(
     return {
       exists: false,
       data: null,
-      filePath: "",
+      filePath: '',
     };
   }
 }
@@ -65,7 +65,7 @@ export async function loadMetadata(
  */
 export function getSEOFromMetadata(
   metadata: LoadedMetadata,
-  fallbackDescription: string,
+  fallbackDescription: string
 ): {
   description: string;
   keywords: string[];
@@ -88,11 +88,11 @@ export function getSEOFromMetadata(
   let keywordArray: string[] = [];
   if (keywords) {
     // Handle both comma-separated and array formats
-    if (typeof keywords === "string") {
+    if (typeof keywords === 'string') {
       keywordArray = keywords
-        .split(",")
-        .map((k) => k.trim())
-        .filter((k) => k.length > 0);
+        .split(',')
+        .map(k => k.trim())
+        .filter(k => k.length > 0);
     } else if (Array.isArray(keywords)) {
       keywordArray = keywords;
     }
@@ -111,7 +111,7 @@ export function getSEOFromMetadata(
  * @returns Array of recommended content titles
  */
 export function getRecommendationsFromMetadata(
-  metadata: LoadedMetadata,
+  metadata: LoadedMetadata
 ): string[] {
   if (!metadata.exists || !metadata.data?.recommendations) {
     return [];
@@ -119,12 +119,12 @@ export function getRecommendationsFromMetadata(
 
   const { recommendations } = metadata.data;
 
-  if (typeof recommendations === "string") {
+  if (typeof recommendations === 'string') {
     // Parse comma-separated recommendations
     return recommendations
-      .split(",")
-      .map((rec) => rec.trim())
-      .filter((rec) => rec.length > 0);
+      .split(',')
+      .map(rec => rec.trim())
+      .filter(rec => rec.length > 0);
   } else if (Array.isArray(recommendations)) {
     return recommendations;
   }
@@ -138,7 +138,7 @@ export function getRecommendationsFromMetadata(
  * @returns Map of file paths to metadata
  */
 export async function loadMultipleMetadata(
-  contentFilePaths: string[],
+  contentFilePaths: string[]
 ): Promise<Map<string, LoadedMetadata>> {
   const metadataMap = new Map<string, LoadedMetadata>();
 

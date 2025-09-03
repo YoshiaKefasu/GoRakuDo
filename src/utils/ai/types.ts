@@ -1,5 +1,3 @@
-
-
 export interface AIResponse {
   response: string;
   timestamp: number;
@@ -12,7 +10,7 @@ export interface MetaDescriptionRequest {
   title: string;
   content: string;
   keywords: string[];
-  language: "id" | "ja";
+  language: 'id' | 'ja';
 }
 
 export interface ContentRecommendationRequest {
@@ -35,7 +33,7 @@ export interface SEOOptimizedMeta {
   length: number;
   hasKeywords: boolean;
   hasCTA: boolean;
-  language: "id" | "ja";
+  language: 'id' | 'ja';
   generatedAt: string;
 }
 
@@ -63,5 +61,3 @@ export interface AIProcessingResult {
   processingTime: number;
   apiCallsUsed: number;
 }
-
-

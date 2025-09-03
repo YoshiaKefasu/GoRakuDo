@@ -15,12 +15,12 @@ export type {
   KeywordData,
   MetadataInputFormState,
   MetadataInputConfig,
-  ValidationRule
+  ValidationRule,
 } from './new-seo-system/validation-types.js';
 
 export type {
   ValidationError,
-  ValidationWarning
+  ValidationWarning,
 } from './new-seo-system/base-types.js';
 
 // ========== DEFAULT CONFIGURATION ==========
@@ -35,23 +35,25 @@ export const DEFAULT_METADATA_CONFIG: MetadataInputConfig = {
   validationRules: [
     {
       field: 'title',
-      validator: (value: unknown) => typeof value === 'string' && value.length > 0 && value.length <= 100,
+      validator: (value: unknown) =>
+        typeof value === 'string' && value.length > 0 && value.length <= 100,
       message: 'Title is required and must be 100 characters or less',
-      isRequired: true
+      isRequired: true,
     },
     {
       field: 'description',
-      validator: (value: unknown) => typeof value === 'string' && value.length > 0 && value.length <= 300,
+      validator: (value: unknown) =>
+        typeof value === 'string' && value.length > 0 && value.length <= 300,
       message: 'Description is required and must be 300 characters or less',
-      isRequired: true
+      isRequired: true,
     },
     {
       field: 'tags',
       validator: (value: unknown) => Array.isArray(value) && value.length <= 10,
       message: 'Tags must be an array with 10 or fewer items',
-      isRequired: false
-    }
-  ]
+      isRequired: false,
+    },
+  ],
 };
 
 // ========== UTILITY TYPES ==========
@@ -64,5 +66,5 @@ export const DEFAULT_METADATA_CONFIG: MetadataInputConfig = {
 export type {
   PartialMetadataInput,
   MetadataFieldUpdate,
-  MetadataInputEvent
+  MetadataInputEvent,
 } from './new-seo-system/validation-types.js';

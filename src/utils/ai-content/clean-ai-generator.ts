@@ -32,24 +32,24 @@ export class CleanAIGenerator {
     prompt: string,
     options: {
       contentType?:
-        | "guide"
-        | "methodology"
-        | "tool"
-        | "theory"
-        | "practice"
-        | "review"
-        | "case-study"
-        | "faq";
+        | 'guide'
+        | 'methodology'
+        | 'tool'
+        | 'theory'
+        | 'practice'
+        | 'review'
+        | 'case-study'
+        | 'faq';
       learningStage?:
-        | "alphabet"
-        | "basic-grammar"
-        | "kanji-intro"
-        | "intermediate"
-        | "advanced"
-        | "fluency";
+        | 'alphabet'
+        | 'basic-grammar'
+        | 'kanji-intro'
+        | 'intermediate'
+        | 'advanced'
+        | 'fluency';
       maxLength?: number;
       includeMetadata?: boolean;
-    } = {},
+    } = {}
   ): Promise<CleanAIGenerationResult> {
     const startTime = Date.now();
     this.reset();
@@ -57,7 +57,7 @@ export class CleanAIGenerator {
     try {
       // Validate input
       if (!prompt || prompt.trim().length === 0) {
-        throw new Error("Prompt is required");
+        throw new Error('Prompt is required');
       }
 
       // Generate content based on prompt and options
@@ -111,40 +111,40 @@ export class CleanAIGenerator {
       contentType?: string;
       learningStage?: string;
       maxLength?: number;
-    },
+    }
   ): Promise<string> {
     // Placeholder content generation
     // In a real implementation, this would integrate with an AI service
-    const contentType = options.contentType || "guide";
-    const learningStage = options.learningStage || "alphabet";
+    const contentType = options.contentType || 'guide';
+    const learningStage = options.learningStage || 'alphabet';
     const maxLength = options.maxLength || 1000;
 
     // Generate structured content based on type and stage
     let content = `# ${prompt}\n\n`;
 
     switch (contentType) {
-      case "guide":
+      case 'guide':
         content += this.generateGuideContent(prompt, learningStage);
         break;
-      case "methodology":
+      case 'methodology':
         content += this.generateMethodologyContent(prompt, learningStage);
         break;
-      case "tool":
+      case 'tool':
         content += this.generateToolContent(prompt, learningStage);
         break;
-      case "theory":
+      case 'theory':
         content += this.generateTheoryContent(prompt);
         break;
-      case "practice":
+      case 'practice':
         content += this.generatePracticeContent(prompt);
         break;
-      case "review":
+      case 'review':
         content += this.generateReviewContent(prompt, learningStage);
         break;
-      case "case-study":
+      case 'case-study':
         content += this.generateCaseStudyContent(prompt);
         break;
-      case "faq":
+      case 'faq':
         content += this.generateFAQContent(prompt, learningStage);
         break;
       default:
@@ -153,8 +153,8 @@ export class CleanAIGenerator {
 
     // Limit content length
     if (content.length > maxLength) {
-      content = content.substring(0, maxLength - 3) + "...";
-      this.warnings.push("Content was truncated to meet length requirements");
+      content = content.substring(0, maxLength - 3) + '...';
+      this.warnings.push('Content was truncated to meet length requirements');
     }
 
     return content;
@@ -212,7 +212,7 @@ This guide covered the essential aspects of ${prompt.toLowerCase()}. Remember to
    */
   private generateMethodologyContent(
     prompt: string,
-    learningStage: string,
+    learningStage: string
   ): string {
     return `## Methodology Overview
 
@@ -617,7 +617,7 @@ Common questions about ${prompt.toLowerCase()} for ${learningStage} learners.
     options: {
       contentType?: string;
       learningStage?: string;
-    },
+    }
   ) {
     const wordCount = content.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200);
@@ -626,7 +626,7 @@ Common questions about ${prompt.toLowerCase()} for ${learningStage} learners.
     const words = content.toLowerCase().split(/\s+/);
     const keywordCounts: Record<string, number> = {};
 
-    words.forEach((word) => {
+    words.forEach(word => {
       if (word.length > 3) {
         keywordCounts[word] = (keywordCounts[word] || 0) + 1;
       }
@@ -638,8 +638,8 @@ Common questions about ${prompt.toLowerCase()} for ${learningStage} learners.
       .map(([word]) => word);
 
     return {
-      contentType: options.contentType || "guide",
-      learningStage: options.learningStage || "alphabet",
+      contentType: options.contentType || 'guide',
+      learningStage: options.learningStage || 'alphabet',
       complexityScore: Math.min(Math.ceil(wordCount / 200), 10),
       estimatedStudyTime: readingTime,
       primaryKeywords,
@@ -651,24 +651,24 @@ Common questions about ${prompt.toLowerCase()} for ${learningStage} learners.
    */
   private validateGeneratedContent(content: string): void {
     if (!content || content.trim().length === 0) {
-      throw new Error("Generated content is empty");
+      throw new Error('Generated content is empty');
     }
 
     if (content.length < 100) {
-      this.warnings.push("Generated content is quite short");
+      this.warnings.push('Generated content is quite short');
     }
 
     if (content.length > 10000) {
-      this.warnings.push("Generated content is very long");
+      this.warnings.push('Generated content is very long');
     }
 
     // Check for basic structure
-    if (!content.includes("#")) {
-      this.warnings.push("Content lacks proper heading structure");
+    if (!content.includes('#')) {
+      this.warnings.push('Content lacks proper heading structure');
     }
 
-    if (!content.includes("\n\n")) {
-      this.warnings.push("Content lacks proper paragraph breaks");
+    if (!content.includes('\n\n')) {
+      this.warnings.push('Content lacks proper paragraph breaks');
     }
   }
 
@@ -690,24 +690,24 @@ export async function generateCleanAIContent(
   prompt: string,
   options: {
     contentType?:
-      | "guide"
-      | "methodology"
-      | "tool"
-      | "theory"
-      | "practice"
-      | "review"
-      | "case-study"
-      | "faq";
+      | 'guide'
+      | 'methodology'
+      | 'tool'
+      | 'theory'
+      | 'practice'
+      | 'review'
+      | 'case-study'
+      | 'faq';
     learningStage?:
-      | "alphabet"
-      | "basic-grammar"
-      | "kanji-intro"
-      | "intermediate"
-      | "advanced"
-      | "fluency";
+      | 'alphabet'
+      | 'basic-grammar'
+      | 'kanji-intro'
+      | 'intermediate'
+      | 'advanced'
+      | 'fluency';
     maxLength?: number;
     includeMetadata?: boolean;
-  } = {},
+  } = {}
 ): Promise<CleanAIGenerationResult> {
   const generator = new CleanAIGenerator();
   return await generator.generateContent(prompt, options);

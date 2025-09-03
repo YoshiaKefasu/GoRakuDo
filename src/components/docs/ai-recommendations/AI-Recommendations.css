@@ -86,7 +86,7 @@
 }
 
 .ai-recommendation-card::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -443,7 +443,7 @@
 }
 
 .mind-map-badge::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;

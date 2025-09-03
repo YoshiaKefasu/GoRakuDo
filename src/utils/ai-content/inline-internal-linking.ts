@@ -16,12 +16,12 @@
  * @framework Astro SSG with Vue and Tailwind v4.1
  */
 
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 import {
   generateInternalLinks,
   type InternalLinkSuggestion,
-} from "./content-analysis";
-import { resolveContentPath } from "../content-path-resolver";
+} from './content-analysis';
+import { resolveContentPath } from '../content-path-resolver';
 
 // ========== CONFIGURATION INTERFACES ==========
 
@@ -48,13 +48,13 @@ export interface InlineLinkingConfig {
 
   // Positioning strategy
   /** Where to place links within paragraphs */
-  positionStrategy: "mid-paragraph" | "end-paragraph" | "smart";
+  positionStrategy: 'mid-paragraph' | 'end-paragraph' | 'smart';
   /** Respect natural reading flow patterns */
   respectReadingFlow: boolean;
 
   // Display settings
   /** Visual style of the links */
-  linkStyle: "subtle" | "prominent" | "contextual";
+  linkStyle: 'subtle' | 'prominent' | 'contextual';
   /** Show icon before link text */
   showIcon: boolean;
   /** Show reason tooltip */
@@ -73,13 +73,13 @@ export const DEFAULT_INLINE_CONFIG: InlineLinkingConfig = {
 
   // Content filtering - excludes inappropriate content types
   excludeSelectors: [
-    "code",
-    "pre",
-    "blockquote",
-    ".no-links",
-    ".syntax-highlight",
-    ".code-block",
-    ".example",
+    'code',
+    'pre',
+    'blockquote',
+    '.no-links',
+    '.syntax-highlight',
+    '.code-block',
+    '.example',
   ],
   excludePatterns: [
     /^```[\s\S]*?```$/gm, // Code blocks
@@ -91,11 +91,11 @@ export const DEFAULT_INLINE_CONFIG: InlineLinkingConfig = {
   minParagraphLength: 50,
 
   // Positioning - smart placement for natural reading flow
-  positionStrategy: "smart",
+  positionStrategy: 'smart',
   respectReadingFlow: true,
 
   // Display - contextual styling that blends with content
-  linkStyle: "contextual",
+  linkStyle: 'contextual',
   showIcon: true,
   showReason: false,
 };
@@ -169,9 +169,9 @@ export interface InlineLinkingResult {
  */
 export async function injectInlineInternalLinks(
   content: string,
-  currentPost: CollectionEntry<"docs">,
-  allPosts: CollectionEntry<"docs">[],
-  config: Partial<InlineLinkingConfig> = {},
+  currentPost: CollectionEntry<'docs'>,
+  allPosts: CollectionEntry<'docs'>[],
+  config: Partial<InlineLinkingConfig> = {}
 ): Promise<InlineLinkingResult> {
   const startTime = performance.now();
   const finalConfig = { ...DEFAULT_INLINE_CONFIG, ...config };
@@ -181,7 +181,7 @@ export async function injectInlineInternalLinks(
   // Step 1: Analyze content structure and find linkable paragraphs
   const paragraphAnalysis = analyzeParagraphsForInlineLinking(
     content,
-    finalConfig,
+    finalConfig
   );
 
   if (paragraphAnalysis.length === 0) {
@@ -192,18 +192,18 @@ export async function injectInlineInternalLinks(
   // Step 2: Calculate adaptive link count based on content length
   const adaptiveLinkCount = calculateAdaptiveLinkCount(
     paragraphAnalysis.length,
-    finalConfig,
+    finalConfig
   );
 
   console.log(
-    `📊 Analysis: ${paragraphAnalysis.length} paragraphs, target ${adaptiveLinkCount} links`,
+    `📊 Analysis: ${paragraphAnalysis.length} paragraphs, target ${adaptiveLinkCount} links`
   );
 
   // Step 3: Generate internal link suggestions using existing system
   const linkSuggestions = generateInternalLinks(
     currentPost,
     allPosts,
-    adaptiveLinkCount,
+    adaptiveLinkCount
   );
 
   if (linkSuggestions.length === 0) {
@@ -215,14 +215,14 @@ export async function injectInlineInternalLinks(
   const linkPlacements = matchLinksToParagraphs(
     paragraphAnalysis,
     linkSuggestions,
-    finalConfig,
+    finalConfig
   );
 
   // Step 5: Inject links inline within paragraphs
   const enhancedContent = injectLinksInline(
     content,
     linkPlacements,
-    finalConfig,
+    finalConfig
   );
 
   const processingTime = performance.now() - startTime;
@@ -230,7 +230,7 @@ export async function injectInlineInternalLinks(
   // Calculate statistics
   const statistics = {
     totalParagraphs: paragraphAnalysis.length,
-    linkableParagraphs: paragraphAnalysis.filter((p) => p.isLinkable).length,
+    linkableParagraphs: paragraphAnalysis.filter(p => p.isLinkable).length,
     injectedLinks: linkPlacements.length,
     processingTime,
     averageWordsPerParagraph:
@@ -240,12 +240,12 @@ export async function injectInlineInternalLinks(
   };
 
   console.log(
-    `✅ Inline linking complete: ${statistics.injectedLinks} links in ${statistics.processingTime.toFixed(2)}ms`,
+    `✅ Inline linking complete: ${statistics.injectedLinks} links in ${statistics.processingTime.toFixed(2)}ms`
   );
 
   return {
     enhancedContent,
-    injectedLinks: linkPlacements.map((placement) => ({
+    injectedLinks: linkPlacements.map(placement => ({
       paragraphIndex: placement.paragraphIndex,
       link: placement.link,
       position: placement.absolutePosition,
@@ -261,7 +261,7 @@ export async function injectInlineInternalLinks(
  */
 function createEmptyResult(
   content: string,
-  startTime: number,
+  startTime: number
 ): InlineLinkingResult {
   return {
     enhancedContent: content,
@@ -291,21 +291,25 @@ function createEmptyResult(
  */
 function analyzeParagraphsForInlineLinking(
   content: string,
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): ParagraphAnalysis[] {
   const paragraphs: ParagraphAnalysis[] = [];
-  const lines = content.split("\n");
-  let currentParagraph = "";
+  const lines = content.split('\n');
+  let currentParagraph = '';
   let paragraphIndex = 0;
   let currentPosition = 0;
   let lineIndex = 0;
 
   while (lineIndex < lines.length) {
     const line = lines[lineIndex];
+    if (!line) {
+      lineIndex++;
+      continue;
+    }
     const lineLength = line.length + 1; // +1 for newline
 
     // Check if line starts a new paragraph (empty line)
-    if (line.trim() === "" && currentParagraph.trim() !== "") {
+    if (line.trim() === '' && currentParagraph.trim() !== '') {
       // Process completed paragraph
       if (currentParagraph.trim()) {
         const startPosition = currentPosition - currentParagraph.length;
@@ -316,7 +320,7 @@ function analyzeParagraphsForInlineLinking(
           paragraphIndex,
           startPosition,
           endPosition,
-          config,
+          config
         );
 
         if (analysis) {
@@ -324,10 +328,10 @@ function analyzeParagraphsForInlineLinking(
           paragraphIndex++;
         }
       }
-      currentParagraph = "";
-    } else if (line.trim() !== "") {
+      currentParagraph = '';
+    } else if (line.trim() !== '') {
       // Continue building current paragraph
-      currentParagraph += (currentParagraph ? "\n" : "") + line;
+      currentParagraph += (currentParagraph ? '\n' : '') + line;
     }
 
     currentPosition += lineLength;
@@ -344,7 +348,7 @@ function analyzeParagraphsForInlineLinking(
       paragraphIndex,
       startPosition,
       endPosition,
-      config,
+      config
     );
 
     if (analysis) {
@@ -353,7 +357,7 @@ function analyzeParagraphsForInlineLinking(
   }
 
   console.log(
-    `📋 Analyzed ${paragraphs.length} paragraphs (${paragraphs.filter((p) => p.isLinkable).length} linkable)`,
+    `📋 Analyzed ${paragraphs.length} paragraphs (${paragraphs.filter(p => p.isLinkable).length} linkable)`
   );
 
   return paragraphs;
@@ -377,11 +381,11 @@ function analyzeSingleParagraph(
   index: number,
   startPosition: number,
   endPosition: number,
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): ParagraphAnalysis | null {
   const wordCount = paragraph
     .split(/\s+/)
-    .filter((word) => word.length > 0).length;
+    .filter(word => word.length > 0).length;
 
   // Check if paragraph should be excluded
   if (shouldExcludeParagraph(paragraph, config)) {
@@ -431,7 +435,7 @@ function analyzeSingleParagraph(
  */
 function shouldExcludeParagraph(
   paragraph: string,
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): boolean {
   // Check exclusion patterns
   for (const pattern of config.excludePatterns) {
@@ -441,7 +445,7 @@ function shouldExcludeParagraph(
   }
 
   // Check for code-like content
-  if (paragraph.includes("```") || paragraph.includes("`")) {
+  if (paragraph.includes('```') || paragraph.includes('`')) {
     return true;
   }
 
@@ -480,9 +484,9 @@ function shouldExcludeParagraph(
  */
 function calculateOptimalInlinePosition(
   paragraph: string,
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): number {
-  const words = paragraph.split(/\s+/).filter((word) => word.length > 0);
+  const words = paragraph.split(/\s+/).filter(word => word.length > 0);
   const wordCount = words.length;
 
   if (wordCount < 5) {
@@ -490,19 +494,19 @@ function calculateOptimalInlinePosition(
   }
 
   switch (config.positionStrategy) {
-    case "mid-paragraph":
+    case 'mid-paragraph':
       return findSentenceBoundaryPosition(
         paragraph,
-        Math.floor(wordCount * 0.6),
+        Math.floor(wordCount * 0.6)
       );
 
-    case "end-paragraph":
+    case 'end-paragraph':
       return findSentenceBoundaryPosition(
         paragraph,
-        Math.max(wordCount - 3, Math.floor(wordCount * 0.8)),
+        Math.max(wordCount - 3, Math.floor(wordCount * 0.8))
       );
 
-    case "smart":
+    case 'smart':
     default:
       return findOptimalSentenceBoundaryPosition(paragraph, wordCount);
   }
@@ -515,7 +519,7 @@ function calculateOptimalInlinePosition(
  */
 function findSentenceBoundaryPosition(
   paragraph: string,
-  targetPosition: number,
+  targetPosition: number
 ): number {
   const sentences = paragraph.split(/([.!?]+)/);
   let currentWordCount = 0;
@@ -526,9 +530,8 @@ function findSentenceBoundaryPosition(
   for (let i = 0; i < sentences.length; i += 2) {
     // Skip punctuation
     const sentence = sentences[i];
-    const sentenceWords = sentence
-      .split(/\s+/)
-      .filter((word) => word.length > 0);
+    if (!sentence) continue;
+    const sentenceWords = sentence.split(/\s+/).filter(word => word.length > 0);
     const sentenceEndPosition = currentWordCount + sentenceWords.length;
 
     // Check if this sentence boundary is close to target
@@ -552,7 +555,7 @@ function findSentenceBoundaryPosition(
  */
 function findOptimalSentenceBoundaryPosition(
   paragraph: string,
-  wordCount: number,
+  wordCount: number
 ): number {
   const sentences = paragraph.split(/([.!?]+)/);
   let currentWordCount = 0;
@@ -560,9 +563,8 @@ function findOptimalSentenceBoundaryPosition(
   // Strategy 1: Try to place after first complete sentence
   for (let i = 0; i < sentences.length; i += 2) {
     const sentence = sentences[i];
-    const sentenceWords = sentence
-      .split(/\s+/)
-      .filter((word) => word.length > 0);
+    if (!sentence) continue;
+    const sentenceWords = sentence.split(/\s+/).filter(word => word.length > 0);
     const sentenceEndPosition = currentWordCount + sentenceWords.length;
 
     // Only place after first sentence if it's substantial (at least 10 words)
@@ -579,9 +581,8 @@ function findOptimalSentenceBoundaryPosition(
 
   for (let i = 0; i < sentences.length; i += 2) {
     const sentence = sentences[i];
-    const sentenceWords = sentence
-      .split(/\s+/)
-      .filter((word) => word.length > 0);
+    if (!sentence) continue;
+    const sentenceWords = sentence.split(/\s+/).filter(word => word.length > 0);
     const sentenceEndPosition = currentWordCount + sentenceWords.length;
 
     if (sentenceEndPosition > targetPosition && sentenceEndPosition > 5) {
@@ -610,32 +611,32 @@ function extractContextKeywords(paragraph: string): string[] {
 
   // Japanese learning specific keywords
   const japaneseKeywords = [
-    "immersion",
-    "bahasa jepang",
-    "pembelajaran",
-    "metodologi",
-    "anki",
-    "flashcard",
-    "srs",
-    "spaced repetition",
-    "grammar",
-    "vocabulary",
-    "reading",
-    "listening",
-    "krashen",
-    "input hypothesis",
-    "natural approach",
-    "contoh",
-    "example",
-    "prinsip",
-    "principle",
-    "teori",
-    "theory",
-    "praktik",
-    "practice",
+    'immersion',
+    'bahasa jepang',
+    'pembelajaran',
+    'metodologi',
+    'anki',
+    'flashcard',
+    'srs',
+    'spaced repetition',
+    'grammar',
+    'vocabulary',
+    'reading',
+    'listening',
+    'krashen',
+    'input hypothesis',
+    'natural approach',
+    'contoh',
+    'example',
+    'prinsip',
+    'principle',
+    'teori',
+    'theory',
+    'praktik',
+    'practice',
   ];
 
-  japaneseKeywords.forEach((keyword) => {
+  japaneseKeywords.forEach(keyword => {
     if (lowerParagraph.includes(keyword)) {
       keywords.push(keyword);
     }
@@ -656,7 +657,7 @@ function extractContextKeywords(paragraph: string): string[] {
  */
 function calculateParagraphRelevance(
   paragraph: string,
-  wordCount: number,
+  wordCount: number
 ): number {
   let score = 0;
 
@@ -668,19 +669,19 @@ function calculateParagraphRelevance(
   }
 
   // Content quality indicators
-  if (paragraph.includes(".")) score += 0.1; // Complete sentences
-  if (paragraph.includes(":")) score += 0.1; // Explanatory content
-  if (paragraph.includes("contoh") || paragraph.includes("example"))
+  if (paragraph.includes('.')) score += 0.1; // Complete sentences
+  if (paragraph.includes(':')) score += 0.1; // Explanatory content
+  if (paragraph.includes('contoh') || paragraph.includes('example'))
     score += 0.2;
-  if (paragraph.includes("prinsip") || paragraph.includes("principle"))
+  if (paragraph.includes('prinsip') || paragraph.includes('principle'))
     score += 0.2;
-  if (paragraph.includes("penting") || paragraph.includes("important"))
+  if (paragraph.includes('penting') || paragraph.includes('important'))
     score += 0.15;
 
   // Educational content bonus
-  if (paragraph.includes("pembelajaran") || paragraph.includes("learn"))
+  if (paragraph.includes('pembelajaran') || paragraph.includes('learn'))
     score += 0.1;
-  if (paragraph.includes("metode") || paragraph.includes("method"))
+  if (paragraph.includes('metode') || paragraph.includes('method'))
     score += 0.1;
 
   // Avoid very short or very long paragraphs for inline links
@@ -703,7 +704,7 @@ function calculateParagraphRelevance(
  */
 function calculateAdaptiveLinkCount(
   paragraphCount: number,
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): number {
   if (!config.adaptiveDensity) {
     return Math.min(config.maxLinksPerArticle, paragraphCount);
@@ -754,9 +755,9 @@ interface LinkPlacement {
 function matchLinksToParagraphs(
   paragraphs: ParagraphAnalysis[],
   linkSuggestions: InternalLinkSuggestion[],
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): LinkPlacement[] {
-  const linkableParagraphs = paragraphs.filter((p) => p.isLinkable);
+  const linkableParagraphs = paragraphs.filter(p => p.isLinkable);
   const placements: LinkPlacement[] = [];
 
   if (linkableParagraphs.length === 0 || linkSuggestions.length === 0) {
@@ -765,7 +766,7 @@ function matchLinksToParagraphs(
 
   // Sort paragraphs by relevance score (highest first)
   const sortedParagraphs = [...linkableParagraphs].sort(
-    (a, b) => b.relevanceScore - a.relevanceScore,
+    (a, b) => b.relevanceScore - a.relevanceScore
   );
 
   // Distribute links with minimum spacing
@@ -780,14 +781,14 @@ function matchLinksToParagraphs(
 
     // Find next suitable paragraph with minimum spacing
     const suitableParagraph = sortedParagraphs.find(
-      (p) => p.index >= lastLinkedIndex + config.minParagraphsBetweenLinks,
+      p => p.index >= lastLinkedIndex + config.minParagraphsBetweenLinks
     );
 
-    if (suitableParagraph) {
+    if (suitableParagraph && link) {
       const wordPosition = suitableParagraph.optimalPosition;
       const absolutePosition = calculateAbsolutePosition(
         suitableParagraph,
-        wordPosition,
+        wordPosition
       );
 
       placements.push({
@@ -795,14 +796,14 @@ function matchLinksToParagraphs(
         link,
         wordPosition,
         absolutePosition,
-        context: suitableParagraph.content.substring(0, 50) + "...",
+        context: suitableParagraph.content.substring(0, 50) + '...',
       });
 
       lastLinkedIndex = suitableParagraph.index;
 
       // Remove used paragraph from future consideration
       const usedIndex = sortedParagraphs.findIndex(
-        (p) => p.index === suitableParagraph.index,
+        p => p.index === suitableParagraph.index
       );
       if (usedIndex > -1) {
         sortedParagraphs.splice(usedIndex, 1);
@@ -822,11 +823,9 @@ function matchLinksToParagraphs(
  */
 function calculateAbsolutePosition(
   paragraph: ParagraphAnalysis,
-  wordPosition: number,
+  wordPosition: number
 ): number {
-  const words = paragraph.content
-    .split(/\s+/)
-    .filter((word) => word.length > 0);
+  const words = paragraph.content.split(/\s+/).filter(word => word.length > 0);
 
   if (wordPosition >= words.length) {
     return paragraph.endPosition;
@@ -834,8 +833,11 @@ function calculateAbsolutePosition(
 
   // Calculate character position of the target word
   let characterPosition = paragraph.startPosition;
-  for (let i = 0; i < wordPosition; i++) {
-    characterPosition += words[i].length + 1; // +1 for space
+  for (let i = 0; i < wordPosition && i < words.length; i++) {
+    const word = words[i];
+    if (word) {
+      characterPosition += word.length + 1; // +1 for space
+    }
   }
 
   return characterPosition;
@@ -857,7 +859,7 @@ function calculateAbsolutePosition(
 function injectLinksInline(
   content: string,
   linkPlacements: LinkPlacement[],
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): string {
   if (linkPlacements.length === 0) {
     return content;
@@ -865,32 +867,32 @@ function injectLinksInline(
 
   // Sort placements by position in reverse order to avoid position shifts
   const sortedPlacements = [...linkPlacements].sort(
-    (a, b) => b.absolutePosition - a.absolutePosition,
+    (a, b) => b.absolutePosition - a.absolutePosition
   );
 
   let enhancedContent = content;
 
-  sortedPlacements.forEach((placement) => {
+  sortedPlacements.forEach(placement => {
     const linkHTML = generateInlineLinkHTML(placement.link, config);
 
     // CRITICAL FIX: Use safe insertion position to prevent sentence disruption
     const safePosition = findSafeInsertionPosition(
       enhancedContent,
-      placement.absolutePosition,
+      placement.absolutePosition
     );
 
     // Insert link at safe position
     if (safePosition <= enhancedContent.length) {
       enhancedContent =
         enhancedContent.slice(0, safePosition) +
-        " " +
+        ' ' +
         linkHTML +
-        " " +
+        ' ' +
         enhancedContent.slice(safePosition);
     }
 
     console.log(
-      `🔗 Injected inline link "${placement.link.targetTitle}" at safe position in paragraph ${placement.paragraphIndex}`,
+      `🔗 Injected inline link "${placement.link.targetTitle}" at safe position in paragraph ${placement.paragraphIndex}`
     );
   });
 
@@ -904,7 +906,7 @@ function injectLinksInline(
  */
 function findSafeInsertionPosition(
   paragraph: string,
-  targetPosition: number,
+  targetPosition: number
 ): number {
   const words = paragraph.split(/\s+/);
   const sentences = paragraph.split(/([.!?]+)/);
@@ -915,9 +917,8 @@ function findSafeInsertionPosition(
   // Find the nearest sentence boundary
   for (let i = 0; i < sentences.length; i += 2) {
     const sentence = sentences[i];
-    const sentenceWords = sentence
-      .split(/\s+/)
-      .filter((word) => word.length > 0);
+    if (!sentence) continue;
+    const sentenceWords = sentence.split(/\s+/).filter(word => word.length > 0);
     const sentenceEndPosition = currentWordCount + sentenceWords.length;
 
     // If target is within this sentence, place at sentence end
@@ -940,7 +941,7 @@ function findSafeInsertionPosition(
  */
 function generateInlineLinkHTML(
   link: InternalLinkSuggestion,
-  config: InlineLinkingConfig,
+  config: InlineLinkingConfig
 ): string {
   // Use dynamic path resolution
   let linkUrl: string;
@@ -962,17 +963,17 @@ function generateInlineLinkHTML(
   }
 
   // Apply styling based on config
-  let className = "inline-internal-link";
+  let className = 'inline-internal-link';
   switch (config.linkStyle) {
-    case "subtle":
-      className += " inline-link-subtle";
+    case 'subtle':
+      className += ' inline-link-subtle';
       break;
-    case "prominent":
-      className += " inline-link-prominent";
+    case 'prominent':
+      className += ' inline-link-prominent';
       break;
-    case "contextual":
+    case 'contextual':
     default:
-      className += " inline-link-contextual";
+      className += ' inline-link-contextual';
       break;
   }
 
@@ -988,13 +989,13 @@ function generateInlineLinkHTML(
  */
 export async function addInlineLinks(
   content: string,
-  currentPost: CollectionEntry<"docs">,
-  allPosts: CollectionEntry<"docs">[],
+  currentPost: CollectionEntry<'docs'>,
+  allPosts: CollectionEntry<'docs'>[]
 ): Promise<string> {
   const result = await injectInlineInternalLinks(
     content,
     currentPost,
-    allPosts,
+    allPosts
   );
   return result.enhancedContent;
 }
@@ -1003,7 +1004,7 @@ export async function addInlineLinks(
  * Configuration builder for custom setups
  */
 export function createInlineLinkingConfig(
-  overrides: Partial<InlineLinkingConfig>,
+  overrides: Partial<InlineLinkingConfig>
 ): InlineLinkingConfig {
   return { ...DEFAULT_INLINE_CONFIG, ...overrides };
 }

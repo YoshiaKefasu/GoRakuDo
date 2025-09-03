@@ -151,7 +151,7 @@ export function createSimpleMetadataConfig(
     category,
     tags,
     featured: options.featured ?? false,
-    contentType: options.contentType ?? 'tutorial'
+    contentType: options.contentType ?? 'tutorial',
   };
 
   // Handle optional emoji property with exactOptionalPropertyTypes
@@ -178,8 +178,12 @@ export function isValidSimpleMetadataConfig(
     typeof (config as SimpleMetadataConfig).category === 'string' &&
     Array.isArray((config as SimpleMetadataConfig).tags) &&
     typeof (config as SimpleMetadataConfig).featured === 'boolean' &&
-    ['beginner', 'intermediate', 'advanced'].includes((config as SimpleMetadataConfig).difficulty) &&
-    ['metodologi', 'tutorial', 'resource'].includes((config as SimpleMetadataConfig).contentType)
+    ['beginner', 'intermediate', 'advanced'].includes(
+      (config as SimpleMetadataConfig).difficulty
+    ) &&
+    ['metodologi', 'tutorial', 'resource'].includes(
+      (config as SimpleMetadataConfig).contentType
+    )
   );
 }
 
@@ -187,7 +191,9 @@ export function isValidSimpleMetadataConfig(
  * Calculate complexity score for SimpleMetadataConfig
  * Should return ≤12 for KISS compliance
  */
-export function calculateSimpleMetadataComplexity(config: SimpleMetadataConfig): number {
+export function calculateSimpleMetadataComplexity(
+  config: SimpleMetadataConfig
+): number {
   // Simple calculation: base score + union types + optional fields
   const baseScore = 6; // Basic structure
   const unionTypeScore = 2; // difficulty + contentType unions
@@ -200,7 +206,9 @@ export function calculateSimpleMetadataComplexity(config: SimpleMetadataConfig):
  * Convert SimpleMetadataConfig to JSON
  * Utility function for serialization
  */
-export function simpleMetadataConfigToJSON(config: SimpleMetadataConfig): string {
+export function simpleMetadataConfigToJSON(
+  config: SimpleMetadataConfig
+): string {
   return JSON.stringify(config, null, 2);
 }
 
@@ -208,7 +216,9 @@ export function simpleMetadataConfigToJSON(config: SimpleMetadataConfig): string
  * Parse SimpleMetadataConfig from JSON
  * Utility function for deserialization
  */
-export function simpleMetadataConfigFromJSON(json: string): SimpleMetadataConfig | null {
+export function simpleMetadataConfigFromJSON(
+  json: string
+): SimpleMetadataConfig | null {
   try {
     const parsed = JSON.parse(json);
     return isValidSimpleMetadataConfig(parsed) ? parsed : null;

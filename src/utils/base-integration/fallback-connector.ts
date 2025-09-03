@@ -2,8 +2,14 @@
 // Connects to Story 4B Fallback system following DRY principle
 // Integrates with existing fallback system patterns
 
-import type { FallbackIntegrationConfig, FallbackIntegrationResult } from '../../types/new-seo-system/integration-types.js';
-import type { FallbackResult, FallbackMetadata } from '../../types/new-seo-system/validation-types.js';
+import type {
+  FallbackIntegrationConfig,
+  FallbackIntegrationResult,
+} from '../../types/new-seo-system/integration-types.js';
+import type {
+  FallbackResult,
+  FallbackMetadata,
+} from '../../types/new-seo-system/validation-types.js';
 
 // 既存のFallbackシステムをインポート（DRY原則）
 import { AISystem } from '../ai/ai-system.js';
@@ -20,7 +26,7 @@ export class FallbackConnector {
   private isConnected: boolean = false;
   private lastConnectionAttempt?: Date;
   private connectionErrors: string[] = [];
-  
+
   // 既存のFallbackシステムコンポーネント（DRY原則）
   private aiSystem: AISystem;
   private metaDescriptionGenerator: MetaDescriptionGenerator;
@@ -29,7 +35,7 @@ export class FallbackConnector {
 
   constructor(config: FallbackIntegrationConfig) {
     this.config = config;
-    
+
     // 既存のFallbackシステムコンポーネントを初期化
     this.aiSystem = new AISystem();
     this.metaDescriptionGenerator = new MetaDescriptionGenerator();
@@ -44,47 +50,50 @@ export class FallbackConnector {
   async connect(): Promise<FallbackIntegrationResult> {
     try {
       this.lastConnectionAttempt = new Date();
-      
+
       // 既存のFallbackシステムとの接続テスト
       const connectionTest = await this.testConnection();
-      
+
       if (connectionTest.success) {
         this.isConnected = true;
         this.connectionErrors = [];
-        
+
         const timestamp = new Date();
         return {
           success: true,
           status: 'connected',
           timestamp,
           endpoint: this.config.fallbackEndpoint,
-          lastConnected: timestamp
+          lastConnected: timestamp,
         };
       } else {
         this.isConnected = false;
-        this.connectionErrors.push(connectionTest.error || 'Connection test failed');
-        
+        this.connectionErrors.push(
+          connectionTest.error || 'Connection test failed'
+        );
+
         const timestamp = new Date();
         return {
           success: false,
           status: 'error',
           timestamp,
           endpoint: this.config.fallbackEndpoint,
-          errorMessage: connectionTest.error || 'Connection test failed'
+          errorMessage: connectionTest.error || 'Connection test failed',
         };
       }
     } catch (error) {
       this.isConnected = false;
-      const errorMessage = error instanceof Error ? error.message : 'Unknown connection error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown connection error';
       this.connectionErrors.push(errorMessage);
-      
+
       const timestamp = new Date();
       return {
         success: false,
         status: 'error',
         timestamp,
         endpoint: this.config.fallbackEndpoint,
-        errorMessage
+        errorMessage,
       };
     }
   }
@@ -93,63 +102,94 @@ export class FallbackConnector {
    * 接続テスト
    * 既存のFallbackシステムの動作確認
    */
-  private async testConnection(): Promise<{ success: boolean; error?: string }> {
+  private async testConnection(): Promise<{
+    success: boolean;
+    error?: string;
+  }> {
     try {
-      const testTitle = "Test Title for Fallback System";
-      const testContent = "This is a test content for fallback system testing.";
+      const testTitle = 'Test Title for Fallback System';
+      const testContent = 'This is a test content for fallback system testing.';
       const testLanguage: 'id' | 'ja' = 'id';
-      
+
       // 1. メタデータ生成器のテスト
-      const metaDescriptionResult = await this.metaDescriptionGenerator.generateOptimizedMetaDescription({
-        title: testTitle,
-        content: testContent,
-        keywords: ['test', 'fallback'],
-        language: testLanguage
-      });
-      
+      const metaDescriptionResult =
+        await this.metaDescriptionGenerator.generateOptimizedMetaDescription({
+          title: testTitle,
+          content: testContent,
+          keywords: ['test', 'fallback'],
+          language: testLanguage,
+        });
+
       if (!metaDescriptionResult || !metaDescriptionResult.description) {
         return { success: false, error: 'Meta description generation failed' };
       }
-      
+
       // 2. AIシステムのテスト
       const aiMetaDescription = await this.aiSystem.generateMetaDescriptionOnly(
         testTitle,
         testContent,
         testLanguage
       );
-      
+
       if (!aiMetaDescription || !aiMetaDescription.description) {
-        return { success: false, error: 'AI meta description generation failed' };
+        return {
+          success: false,
+          error: 'AI meta description generation failed',
+        };
       }
-      
+
       // 3. ビルドプロセッサーのテスト
       // 既存のBuildProcessorの公開メソッドを使用
-      const buildResult = await this.buildProcessor.processContentForBuild(testTitle, "Test content for fallback system testing.", [], testLanguage);
-      
+      const buildResult = await this.buildProcessor.processContentForBuild(
+        testTitle,
+        'Test content for fallback system testing.',
+        [],
+        testLanguage
+      );
+
       if (!buildResult || !buildResult.metaDescription) {
         return { success: false, error: 'Build processor fallback failed' };
       }
-      
+
       // 4. コンテンツ推奨のテスト
       const testPosts = [
-        { id: '1', title: 'Test Post 1', description: 'Test description 1', tags: ['test'] },
-        { id: '2', title: 'Test Post 2', description: 'Test description 2', tags: ['test'] }
+        {
+          id: '1',
+          title: 'Test Post 1',
+          description: 'Test description 1',
+          tags: ['test'],
+        },
+        {
+          id: '2',
+          title: 'Test Post 2',
+          description: 'Test description 2',
+          tags: ['test'],
+        },
       ];
-      
-      const recommendations = this.contentRecommendations.generateRecommendations({
-        currentPost: { id: '0', title: testTitle, content: testContent, tags: ['test'] },
-        availablePosts: testPosts
-      });
-      
+
+      const recommendations =
+        this.contentRecommendations.generateRecommendations({
+          currentPost: {
+            id: '0',
+            title: testTitle,
+            content: testContent,
+            tags: ['test'],
+          },
+          availablePosts: testPosts,
+        });
+
       if (!Array.isArray(recommendations) || recommendations.length === 0) {
-        return { success: false, error: 'Content recommendations generation failed' };
+        return {
+          success: false,
+          error: 'Content recommendations generation failed',
+        };
       }
-      
+
       return { success: true };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Connection test error' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Connection test error',
       };
     }
   }
@@ -159,8 +199,8 @@ export class FallbackConnector {
    * 既存のFallbackシステムを活用したメタデータ生成
    */
   async generateFallbackMetadata(
-    title: string, 
-    content: string, 
+    title: string,
+    content: string,
     language: 'id' | 'ja' = 'id'
   ): Promise<FallbackMetadata | null> {
     if (!this.isConnected) {
@@ -169,8 +209,12 @@ export class FallbackConnector {
 
     try {
       // 既存のFallbackシステムを活用（DRY原則）
-      const metaDescription = await this.aiSystem.generateMetaDescriptionOnly(title, content, language);
-      
+      const metaDescription = await this.aiSystem.generateMetaDescriptionOnly(
+        title,
+        content,
+        language
+      );
+
       // 既存の型定義に準拠したFallbackメタデータを生成
       const fallbackMetadata: FallbackMetadata = {
         title,
@@ -185,9 +229,9 @@ export class FallbackConnector {
         publishedDate: new Date().toISOString(),
         readTime: Math.ceil(content.split(/\s+/).length / 200), // 200語/分
         difficulty: 'beginner',
-                category: 'general',
+        category: 'general',
         featured: false,
-        contentType: 'tutorial'
+        contentType: 'tutorial',
       };
 
       return fallbackMetadata;
@@ -202,8 +246,8 @@ export class FallbackConnector {
    * 既存のFallbackシステムを活用した結果生成
    */
   async generateFallbackResult(
-    title: string, 
-    content: string, 
+    title: string,
+    content: string,
     language: 'id' | 'ja' = 'id'
   ): Promise<FallbackResult | null> {
     if (!this.isConnected) {
@@ -212,8 +256,12 @@ export class FallbackConnector {
 
     try {
       // 既存のFallbackシステムを活用（DRY原則）
-      const metadata = await this.generateFallbackMetadata(title, content, language);
-      
+      const metadata = await this.generateFallbackMetadata(
+        title,
+        content,
+        language
+      );
+
       if (!metadata) {
         return null;
       }
@@ -229,8 +277,8 @@ export class FallbackConnector {
           length: 80,
           readability: 70,
           relevance: 75,
-          confidence: this.config.confidenceThreshold
-        }
+          confidence: this.config.confidenceThreshold,
+        },
       };
 
       return fallbackResult;
@@ -251,11 +299,17 @@ export class FallbackConnector {
 
     try {
       // 既存のFallbackシステムを活用（DRY原則）
-      const testPost = { id: '0', title: 'Test', content: 'Test content', description: 'Test description', tags: ['test'] };
-      
+      const testPost = {
+        id: '0',
+        title: 'Test',
+        content: 'Test content',
+        description: 'Test description',
+        tags: ['test'],
+      };
+
       return this.contentRecommendations.generateRecommendations({
         currentPost: testPost,
-        availablePosts: availablePosts.length > 0 ? availablePosts : [testPost]
+        availablePosts: availablePosts.length > 0 ? availablePosts : [testPost],
       });
     } catch (error) {
       console.error('Fallback recommendations generation failed:', error);

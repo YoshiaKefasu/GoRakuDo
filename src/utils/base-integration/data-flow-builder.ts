@@ -1,6 +1,13 @@
 // ========== DATA FLOW BUILDER ==========
-import type { DataFlowConfig, DataFlowResult } from '../../types/new-seo-system/integration-types.js';
-import { loadMetadata, getSEOFromMetadata, getRecommendationsFromMetadata } from '../new-seo-system/metadata-loader';
+import type {
+  DataFlowConfig,
+  DataFlowResult,
+} from '../../types/new-seo-system/integration-types.js';
+import {
+  loadMetadata,
+  getSEOFromMetadata,
+  getRecommendationsFromMetadata,
+} from '../new-seo-system/metadata-loader';
 import { NewSEOMetaManager } from '../new-seo-system/meta-manager';
 import { NewSEOKeywordValidator } from '../new-seo-system/keyword-validator';
 import type { AdvancedMetaConfig } from '../../types/new-seo-system';
@@ -36,7 +43,7 @@ export class DataFlowBuilder {
       await this.buildIntegratedDataFlow({
         metadataFlow: metadataFlowResult,
         seoFlow: seoFlowResult,
-        validationFlow: validationFlowResult
+        validationFlow: validationFlowResult,
       });
 
       console.log('✅ Integrated data flow built successfully');
@@ -52,7 +59,7 @@ export class DataFlowBuilder {
         flowStatus: 'active',
         lastProcessed: timestamp,
         processedCount: 1,
-        errorCount: 0
+        errorCount: 0,
       };
     } catch (error) {
       console.error('❌ Failed to build data flow:', error);
@@ -65,18 +72,19 @@ export class DataFlowBuilder {
 
     try {
       console.log('📊 Building metadata flow...');
-      
+
       // 既存のmetadata-loaderパターンを活用（DRY原則）
       const testContentPath = 'test-content.md';
       const testMetadata = await loadMetadata(testContentPath);
-      
+
       // メタデータフローの検証
-      const hasValidMetadata = testMetadata.exists || testMetadata.data !== null;
+      const hasValidMetadata =
+        testMetadata.exists || testMetadata.data !== null;
       const hasValidStructure = this.validateMetadataStructure(testMetadata);
-      
+
       const metadataFlowSuccess = hasValidMetadata && hasValidStructure;
       console.log(`📊 Metadata flow: ${metadataFlowSuccess ? '✅' : '❌'}`);
-      
+
       return metadataFlowSuccess;
     } catch (error) {
       console.error('❌ Metadata flow build failed:', error);
@@ -89,19 +97,24 @@ export class DataFlowBuilder {
 
     try {
       console.log('🔍 Building SEO flow...');
-      
+
       // 既存のSEO最適化システムパターンを活用（DRY原則）
       const testTitle = 'Test Title for SEO Flow';
       const testContent = 'This is test content for SEO flow validation.';
-      
+
       // SEOフローの検証
       const hasValidTitle = this.testSEOFlow(testTitle, testContent);
-      const hasValidKeywords = this.extractBasicKeywords(testContent).length > 0;
-      const hasValidSEOScore = this.testSEOScoreCalculation(testTitle, testContent);
-      
-      const seoFlowSuccess = hasValidTitle && hasValidKeywords && hasValidSEOScore;
+      const hasValidKeywords =
+        this.extractBasicKeywords(testContent).length > 0;
+      const hasValidSEOScore = this.testSEOScoreCalculation(
+        testTitle,
+        testContent
+      );
+
+      const seoFlowSuccess =
+        hasValidTitle && hasValidKeywords && hasValidSEOScore;
       console.log(`🔍 SEO flow: ${seoFlowSuccess ? '✅' : '❌'}`);
-      
+
       return seoFlowSuccess;
     } catch (error) {
       console.error('❌ SEO flow build failed:', error);
@@ -114,11 +127,11 @@ export class DataFlowBuilder {
 
     try {
       console.log('✅ Building validation flow...');
-      
+
       // バリデーションフローの検証
       const validationFlowSuccess = await this.testValidationFlow();
       console.log(`✅ Validation flow: ${validationFlowSuccess ? '✅' : '❌'}`);
-      
+
       return validationFlowSuccess;
     } catch (error) {
       console.error('❌ Validation flow build failed:', error);
@@ -133,17 +146,22 @@ export class DataFlowBuilder {
   }): Promise<void> {
     try {
       console.log('🔗 Building integrated data flow...');
-      
+
       // 統合データフローの構築
-      const isIntegrated = flowResults.metadataFlow && flowResults.seoFlow && flowResults.validationFlow;
+      const isIntegrated =
+        flowResults.metadataFlow &&
+        flowResults.seoFlow &&
+        flowResults.validationFlow;
       const flowEfficiency = this.calculateFlowEfficiency(flowResults);
       const dataConsistency = await this.validateDataConsistency();
       const crossSystemValidation = await this.validateCrossSystemIntegration();
-      
+
       console.log(`🔗 Integration status: ${isIntegrated ? '✅' : '❌'}`);
       console.log(`🔗 Flow efficiency: ${flowEfficiency}%`);
       console.log(`🔗 Data consistency: ${dataConsistency ? '✅' : '❌'}`);
-      console.log(`🔗 Cross system validation: ${crossSystemValidation ? '✅' : '❌'}`);
+      console.log(
+        `🔗 Cross system validation: ${crossSystemValidation ? '✅' : '❌'}`
+      );
     } catch (error) {
       console.error('❌ Integrated data flow build failed:', error);
     }
@@ -154,13 +172,13 @@ export class DataFlowBuilder {
       // 新しいSEOシステムパターンを活用（DRY原則）
       const validationResult = this.keywordValidator.validateAll({
         primary: [title],
-        article: [content.substring(0, 100)]
+        article: [content.substring(0, 100)],
       });
 
       const metaConfig: AdvancedMetaConfig = {
         robots: 'index,follow',
         themeColor: '#ffffff',
-        colorScheme: 'light'
+        colorScheme: 'light',
       };
       const metaTags = this.metaManager.generateAdvancedMeta(metaConfig);
 
@@ -169,7 +187,12 @@ export class DataFlowBuilder {
       const hasValidKeywords = validationResult.optimizedKeywords.length > 0;
       const hasValidMetaTags = metaTags.length > 0;
 
-      return Boolean(hasValidTitle) && Boolean(hasValidContent) && hasValidKeywords && hasValidMetaTags;
+      return (
+        Boolean(hasValidTitle) &&
+        Boolean(hasValidContent) &&
+        hasValidKeywords &&
+        hasValidMetaTags
+      );
     } catch (error) {
       console.error('❌ SEO flow test failed:', error);
       return false;
@@ -180,7 +203,7 @@ export class DataFlowBuilder {
     try {
       // 新しいキーワード検証システムを活用（DRY原則）
       const validationResult = this.keywordValidator.validateAll({
-        article: [content.substring(0, 100)]
+        article: [content.substring(0, 100)],
       });
       return validationResult.optimizedKeywords;
     } catch (error) {
@@ -194,11 +217,14 @@ export class DataFlowBuilder {
       // 新しいキーワード検証システムを活用（DRY原則）
       const validationResult = this.keywordValidator.validateAll({
         primary: [title],
-        article: [content.substring(0, 100)]
+        article: [content.substring(0, 100)],
       });
 
       // 新しいシステムではスコア計算は別途実装のため、検証結果の妥当性を返す
-      return validationResult.isValid && validationResult.optimizedKeywords.length > 0;
+      return (
+        validationResult.isValid &&
+        validationResult.optimizedKeywords.length > 0
+      );
     } catch (error) {
       console.error('❌ SEO score calculation test failed:', error);
       return false;
@@ -211,14 +237,20 @@ export class DataFlowBuilder {
       const testData = {
         title: 'Test Title',
         content: 'Test content for validation',
-        metadata: { exists: true, data: { metaDescription: 'Test description' } }
+        metadata: {
+          exists: true,
+          data: { metaDescription: 'Test description' },
+        },
       };
-      
+
       // 基本的なバリデーション
-      const hasValidTitle = testData.title.length > 0 && testData.title.length <= 100;
+      const hasValidTitle =
+        testData.title.length > 0 && testData.title.length <= 100;
       const hasValidContent = testData.content.length > 0;
-      const hasValidMetadata = Boolean(testData.metadata.exists && testData.metadata.data);
-      
+      const hasValidMetadata = Boolean(
+        testData.metadata.exists && testData.metadata.data
+      );
+
       return hasValidTitle && hasValidContent && hasValidMetadata;
     } catch (error) {
       console.error('❌ Validation flow test failed:', error);
@@ -230,11 +262,12 @@ export class DataFlowBuilder {
     try {
       // メタデータ構造の検証
       if (!metadata) return false;
-      
+
       // 基本的な構造チェック
-      const hasValidStructure = typeof metadata === 'object' && 
+      const hasValidStructure =
+        typeof metadata === 'object' &&
         (metadata.exists !== undefined || metadata.data !== undefined);
-      
+
       return hasValidStructure;
     } catch (error) {
       console.error('❌ Metadata structure validation failed:', error);
@@ -247,15 +280,15 @@ export class DataFlowBuilder {
       // データ整合性の検証
       const testContentPath = 'test-content.md';
       const metadata = await loadMetadata(testContentPath);
-      
+
       if (metadata.exists && metadata.data) {
         // メタデータとコンテンツの整合性チェック
         const seoData = getSEOFromMetadata(metadata, 'Fallback description');
         const recommendations = getRecommendationsFromMetadata(metadata);
-        
+
         return seoData.hasMetadata || recommendations.length >= 0;
       }
-      
+
       return true; // メタデータが存在しない場合は整合性ありとみなす
     } catch (error) {
       console.error('❌ Data consistency validation failed:', error);
@@ -272,13 +305,13 @@ export class DataFlowBuilder {
       // 新しいSEOシステムとの統合検証
       const validationResult = this.keywordValidator.validateAll({
         primary: [testTitle],
-        article: [testContent]
+        article: [testContent],
       });
 
       const metaConfig: AdvancedMetaConfig = {
         robots: 'index,follow',
         themeColor: '#ffffff',
-        colorScheme: 'light'
+        colorScheme: 'light',
       };
       const metaTags = this.metaManager.generateAdvancedMeta(metaConfig);
 
@@ -287,7 +320,10 @@ export class DataFlowBuilder {
       const seoData = getSEOFromMetadata(testMetadata, 'Cross system fallback');
 
       // 統合の成功判定
-      const hasValidSEO = validationResult.isValid && validationResult.optimizedKeywords.length > 0 && metaTags.length > 0;
+      const hasValidSEO =
+        validationResult.isValid &&
+        validationResult.optimizedKeywords.length > 0 &&
+        metaTags.length > 0;
       const hasValidMetadata = seoData.description.length > 0;
 
       return hasValidSEO && hasValidMetadata;
@@ -304,12 +340,15 @@ export class DataFlowBuilder {
   }): number {
     const totalFlows = 3;
     const successfulFlows = Object.values(flowResults).filter(Boolean).length;
-    
+
     return Math.round((successfulFlows / totalFlows) * 100);
   }
 
   private generateDataFlowFallback(error: Error): DataFlowResult {
-    console.warn('⚠️ Generating data flow fallback due to error:', error.message);
+    console.warn(
+      '⚠️ Generating data flow fallback due to error:',
+      error.message
+    );
 
     const timestamp = new Date();
     return {
@@ -323,7 +362,7 @@ export class DataFlowBuilder {
       flowStatus: 'error',
       lastProcessed: timestamp,
       processedCount: 0,
-      errorCount: 1
+      errorCount: 1,
     };
   }
 
@@ -346,7 +385,10 @@ export class DataFlowBuilder {
       metadataFlow: this.metadataFlow,
       seoFlow: this.seoFlow,
       validationFlow: this.validationFlow,
-      isConfigured: this.config.metadataFlow || this.config.seoFlow || this.config.validation
+      isConfigured:
+        this.config.metadataFlow ||
+        this.config.seoFlow ||
+        this.config.validation,
     };
   }
 }

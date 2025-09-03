@@ -23,11 +23,10 @@ export type {
   AlgorithmEnhancementConfig,
   AlgorithmEnhancementResult,
   PhaseCompletionStatus,
-  PhaseQualityGate
+  PhaseQualityGate,
 } from './new-seo-system/validation-types.js';
 
 // ========== UTILITY TYPES ==========
 // Utility types now imported from unified validation system (DRY principle)
 // This eliminates code duplication and centralizes type definitions
 // All advanced optimization utility types have been moved to the unified system
-

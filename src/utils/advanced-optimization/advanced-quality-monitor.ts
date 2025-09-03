@@ -5,7 +5,7 @@
 
 import type {
   AdvancedQualityMonitoringConfig,
-  AdvancedQualityMonitoringResult
+  AdvancedQualityMonitoringResult,
 } from '../../types/new-seo-system';
 
 // 既存の品質監視パターンを活用（DRY原則）
@@ -17,28 +17,28 @@ const QUALITY_METRICS = {
     headingStructure: { min: 1, max: 6, weight: 15 },
     imageAltText: { min: 0, max: 100, weight: 10 },
     internalLinks: { min: 1, max: 10, weight: 10 },
-    loadSpeed: { min: 0, max: 3000, weight: 10 }
+    loadSpeed: { min: 0, max: 3000, weight: 10 },
   },
   content: {
     readability: { min: 60, max: 100, weight: 25 },
     contentLength: { min: 300, max: 2000, weight: 20 },
     grammarCheck: { min: 90, max: 100, weight: 20 },
     uniqueness: { min: 80, max: 100, weight: 15 },
-    relevance: { min: 70, max: 100, weight: 20 }
+    relevance: { min: 70, max: 100, weight: 20 },
   },
   technical: {
     mobileFriendly: { min: 80, max: 100, weight: 20 },
     accessibility: { min: 80, max: 100, weight: 20 },
     performance: { min: 80, max: 100, weight: 20 },
     security: { min: 90, max: 100, weight: 20 },
-    compatibility: { min: 80, max: 100, weight: 20 }
-  }
+    compatibility: { min: 80, max: 100, weight: 20 },
+  },
 };
 
 /**
  * 高度な品質監視システム
  * シンプルで確実な監視ルールによる品質監視
- * 
+ *
  * @param config - 品質監視設定
  * @param currentMetrics - 現在のメトリクス値
  * @returns 品質監視結果
@@ -56,11 +56,11 @@ export function monitorAdvancedQuality(
     if (config.realTime) {
       const realTimeResult = performRealTimeMonitoring(currentMetrics);
       monitoredMetrics.realTimeScore = realTimeResult.score;
-      
+
       if (realTimeResult.issues.length > 0) {
         issues.push(...realTimeResult.issues);
       }
-      
+
       if (realTimeResult.recommendations.length > 0) {
         recommendations.push(...realTimeResult.recommendations);
       }
@@ -68,13 +68,16 @@ export function monitorAdvancedQuality(
 
     // 自動問題検出の実装（シンプルで確実、KISS原則）
     if (config.autoDetection) {
-      const detectionResult = performAutoProblemDetection(currentMetrics, config.thresholds);
+      const detectionResult = performAutoProblemDetection(
+        currentMetrics,
+        config.thresholds
+      );
       monitoredMetrics.autoDetectionScore = detectionResult.score;
-      
+
       if (detectionResult.issues.length > 0) {
         issues.push(...detectionResult.issues);
       }
-      
+
       if (detectionResult.recommendations.length > 0) {
         recommendations.push(...detectionResult.recommendations);
       }
@@ -83,11 +86,11 @@ export function monitorAdvancedQuality(
     // 包括的な品質指標の監視（シンプルな監視ルール）
     const comprehensiveResult = performComprehensiveMonitoring(currentMetrics);
     monitoredMetrics.comprehensiveScore = comprehensiveResult.score;
-    
+
     if (comprehensiveResult.issues.length > 0) {
       issues.push(...comprehensiveResult.issues);
     }
-    
+
     if (comprehensiveResult.recommendations.length > 0) {
       recommendations.push(...comprehensiveResult.recommendations);
     }
@@ -99,22 +102,23 @@ export function monitorAdvancedQuality(
       status,
       metrics: monitoredMetrics,
       issues: [...new Set(issues)], // 重複除去
-      recommendations: [...new Set(recommendations)] // 重複除去
+      recommendations: [...new Set(recommendations)], // 重複除去
     };
-
   } catch (error) {
     return {
       status: 'error',
       metrics: {},
-      issues: [`Monitoring error: ${error instanceof Error ? error.message : 'Unknown error'}`],
-      recommendations: ['Check monitoring configuration and try again']
+      issues: [
+        `Monitoring error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      ],
+      recommendations: ['Check monitoring configuration and try again'],
     };
   }
 }
 
 /**
  * リアルタイム監視の実行（シンプルで確実）
- * 
+ *
  * @param currentMetrics - 現在のメトリクス値
  * @returns リアルタイム監視結果
  */
@@ -130,9 +134,10 @@ function performRealTimeMonitoring(currentMetrics: Record<string, number>): {
   // シンプルなリアルタイム監視ルール（KISS原則）
   Object.entries(currentMetrics).forEach(([metric, value]) => {
     if (QUALITY_METRICS.seo[metric as keyof typeof QUALITY_METRICS.seo]) {
-      const threshold = QUALITY_METRICS.seo[metric as keyof typeof QUALITY_METRICS.seo];
+      const threshold =
+        QUALITY_METRICS.seo[metric as keyof typeof QUALITY_METRICS.seo];
       const metricScore = calculateMetricScore(value, threshold);
-      score += metricScore * threshold.weight / 100;
+      score += (metricScore * threshold.weight) / 100;
 
       if (metricScore < 60) {
         issues.push(`${metric} is below acceptable threshold (${value})`);
@@ -144,13 +149,13 @@ function performRealTimeMonitoring(currentMetrics: Record<string, number>): {
   return {
     score: Math.min(score, 100),
     issues,
-    recommendations
+    recommendations,
   };
 }
 
 /**
  * 自動問題検出の実行（シンプルで確実）
- * 
+ *
  * @param currentMetrics - 現在のメトリクス値
  * @param thresholds - 品質閾値
  * @returns 自動問題検出結果
@@ -170,7 +175,7 @@ function performAutoProblemDetection(
   // シンプルな自動問題検出ルール（KISS原則）
   Object.entries(currentMetrics).forEach(([metric, value]) => {
     const threshold = thresholds[metric] || 80;
-    
+
     if (value < threshold) {
       issues.push(`${metric} below threshold: ${value} < ${threshold}`);
       recommendations.push(`Increase ${metric} to at least ${threshold}`);
@@ -183,17 +188,19 @@ function performAutoProblemDetection(
   return {
     score: Math.min(score / Object.keys(currentMetrics).length, 100),
     issues,
-    recommendations
+    recommendations,
   };
 }
 
 /**
  * 包括的な品質監視の実行（シンプルな監視ルール）
- * 
+ *
  * @param currentMetrics - 現在のメトリクス値
  * @returns 包括的監視結果
  */
-function performComprehensiveMonitoring(currentMetrics: Record<string, number>): {
+function performComprehensiveMonitoring(
+  currentMetrics: Record<string, number>
+): {
   score: number;
   issues: string[];
   recommendations: string[];
@@ -221,13 +228,13 @@ function performComprehensiveMonitoring(currentMetrics: Record<string, number>):
   return {
     score: metricCount > 0 ? Math.min(totalScore / metricCount, 100) : 0,
     issues,
-    recommendations
+    recommendations,
   };
 }
 
 /**
  * メトリクススコアの計算（シンプルで確実）
- * 
+ *
  * @param value - 現在の値
  * @param threshold - 閾値設定
  * @returns 計算されたスコア
@@ -247,7 +254,7 @@ function calculateMetricScore(
 
 /**
  * 監視状態の決定（シンプルで確実）
- * 
+ *
  * @param issues - 検出された問題
  * @param metrics - 監視メトリクス
  * @returns 監視状態
@@ -267,7 +274,7 @@ function determineMonitoringStatus(
 
 /**
  * 品質向上のための改善提案機能
- * 
+ *
  * @param issues - 検出された問題
  * @param metrics - 現在のメトリクス
  * @returns 改善提案
@@ -300,9 +307,13 @@ export function generateQualityImprovements(
   // メトリクスベースの改善提案（DRY原則）
   Object.entries(metrics).forEach(([metricName, metricValue]) => {
     if (metricValue < 50) {
-      improvements.push(`Critical: ${metricName} needs immediate attention (current: ${metricValue})`);
+      improvements.push(
+        `Critical: ${metricName} needs immediate attention (current: ${metricValue})`
+      );
     } else if (metricValue < 80) {
-      improvements.push(`Warning: ${metricName} could be improved (current: ${metricValue})`);
+      improvements.push(
+        `Warning: ${metricName} could be improved (current: ${metricValue})`
+      );
     }
   });
 
@@ -311,11 +322,13 @@ export function generateQualityImprovements(
 
 /**
  * 品質監視システムの健全性チェック
- * 
+ *
  * @param config - 監視設定
  * @returns 健全性チェック結果
  */
-export function checkMonitoringHealth(config: AdvancedQualityMonitoringConfig): {
+export function checkMonitoringHealth(
+  config: AdvancedQualityMonitoringConfig
+): {
   healthy: boolean;
   issues: string[];
   recommendations: string[];
@@ -342,6 +355,6 @@ export function checkMonitoringHealth(config: AdvancedQualityMonitoringConfig): 
   return {
     healthy: issues.length === 0,
     issues,
-    recommendations
+    recommendations,
   };
 }

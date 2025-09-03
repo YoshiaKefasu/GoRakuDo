@@ -1,14 +1,14 @@
 # <!-- Powered by BMAD™ Core -->
-# Quality Gate: epic-base-integration.story-day4-build-test
+# Quality Gate: epic-base-integration.story-day4
 
 # Required fields (keep these first)
 schema: 1
 story: "epic-base-integration.story-day4"
 story_title: "Day 4 - ビルドテスト"
-gate: "PASS"
-status_reason: "ビルドテスト成功、Day 2/3の統合成果を適切に継承"
+gate: "PASS" # PASS|CONCERNS|FAIL|WAIVED
+status_reason: "Day 4ビルドテスト成功、TypeScript strictモード準拠、Astroビルド成功、エラー0件"
 reviewer: "Quinn (Test Architect)"
-updated: "2025-01-12T10:00:00Z"
+updated: "2025-01-13T00:00:00Z"
 
 # Always present but only active when WAIVED
 waiver: { active: false }
@@ -23,34 +23,49 @@ risk_summary:
     must_fix: []
     monitor: []
 
-# Extended fields
-quality_score: 100
-expires: "2025-01-26T00:00:00Z"
+# Quality score calculation
+quality_score: 100  # 100 - (20*FAILs) - (10*CONCERNS)
+expires: "2025-01-27T00:00:00Z"  # 2 weeks from review
 
+# Evidence
 evidence:
-  tests_reviewed: 3
+  tests_reviewed: 6
   risks_identified: 0
   trace:
-    ac_covered: [1, 2, 3, 4]
-    ac_gaps: []
+    ac_covered: [1, 2, 3, 4]  # AC numbers with test coverage
+    ac_gaps: []  # AC numbers lacking coverage
 
+# NFR validation
 nfr_validation:
   security:
     status: PASS
-    notes: "Day 2の型安全性強化成果を継承、ビルドテストでの完全検証完了"
+    notes: "TypeScript strictモードによる型安全性、ES Modules準拠"
   performance:
     status: PASS
-    notes: "Day 2のビルド最適化成果（20%速度向上）を継承、14.65秒でのビルド成功確認"
+    notes: "ビルド時間34.83秒、出力サイズ3.15MB、75ファイル生成"
   reliability:
     status: PASS
-    notes: "TypeScript strictモード、エラー0件、Astroビルド成功"
+    notes: "エラー0件、ビルド成功率100%"
   maintainability:
     status: PASS
-    notes: "DRY/KISS原則準拠、新システム統合完了"
+    notes: "DRY/KISS原則準拠、クリーンな構造、適切なドキュメント"
 
+# Recommendations
 recommendations:
   immediate: # Must fix before production
     []
   future: # Can be addressed later
-    - action: "Phase 2: 新システムのプロジェクト全体適用"
-      refs: ["全ページでの新システム適用"]
+    - action: "CI/CD統合の設定（GitHub Actions）"
+      refs: ["全プロジェクト"]
+    - action: "ESLint/Prettier設定の最適化"
+      refs: ["全プロジェクト"]
+    - action: "単体テストの追加"
+      refs: ["主要コンポーネント"]
+    - action: "パフォーマンス監視の実装"
+      refs: ["ビルドプロセス"]
+
+# History
+history:  # Append-only audit trail
+  - at: "2025-01-13T00:00:00Z"
+    gate: PASS
+    note: "Day 4ビルドテスト完了、全ての品質基準達成"

@@ -19,7 +19,11 @@ export const generateMetaTag = (name: string, content: string): string => {
  * @param type - Optional MIME type
  * @returns HTML string for link tag
  */
-export const generateLinkTag = (rel: string, href: string, type?: string): string => {
+export const generateLinkTag = (
+  rel: string,
+  href: string,
+  type?: string
+): string => {
   const typeAttr = type ? ` type="${type}"` : '';
   return `<link rel="${rel}" href="${href}"${typeAttr} />`;
 };
@@ -41,14 +45,14 @@ export const generatePreloadTag = (href: string, as: string): string => {
  */
 export const generateFaviconTags = (faviconPath: string): string[] => {
   const tags: string[] = [];
-  
+
   // SVG favicon (primary)
   tags.push(generateLinkTag('icon', faviconPath, 'image/svg+xml'));
-  
+
   // ICO favicon (fallback)
   const icoPath = faviconPath.replace('.svg', '.ico');
   tags.push(generateLinkTag('icon', icoPath, 'image/x-icon'));
-  
+
   return tags;
 };
 
@@ -57,26 +61,28 @@ export const generateFaviconTags = (faviconPath: string): string[] => {
  * @param hints - Resource hints configuration
  * @returns Array of HTML strings for resource hint tags
  */
-export const generateResourceHintTags = (hints: Record<string, any>): string[] => {
+export const generateResourceHintTags = (
+  hints: Record<string, any>
+): string[] => {
   const tags: string[] = [];
-  
+
   if (hints.preload) {
     hints.preload.forEach((resource: string) => {
       tags.push(generatePreloadTag(resource, 'style'));
     });
   }
-  
+
   if (hints.dnsPrefetch) {
     hints.dnsPrefetch.forEach((domain: string) => {
       tags.push(`<link rel="dns-prefetch" href="${domain}" />`);
     });
   }
-  
+
   if (hints.preconnect) {
     hints.preconnect.forEach((url: string) => {
       tags.push(`<link rel="preconnect" href="${url}" />`);
     });
   }
-  
+
   return tags;
 };

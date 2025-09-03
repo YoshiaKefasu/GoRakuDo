@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
@@ -27,7 +27,7 @@ export class NodeEnvSetup {
 
   async initializeAI(): Promise<any> {
     // AI processing disabled for security
-    throw new Error("AI processing disabled for security");
+    throw new Error('AI processing disabled for security');
   }
 
   getConfig() {
@@ -41,7 +41,7 @@ export class NodeEnvSetup {
   getEnvironmentInfo() {
     return {
       hasApiKey: false,
-      model: "disabled",
+      model: 'disabled',
       rateLimits: { rpd: 0, rpm: 0 },
       isInitialized: false,
     };
@@ -54,15 +54,15 @@ export class NodeEnvSetup {
 
   async generateContent(_prompt: string): Promise<string> {
     // AI processing disabled for security
-    throw new Error("AI processing disabled for security");
+    throw new Error('AI processing disabled for security');
   }
 
   async generateContentWithOptions(
     _prompt: string,
-    _options: any = {},
+    _options: any = {}
   ): Promise<string> {
     // AI processing disabled for security
-    throw new Error("AI processing disabled for security");
+    throw new Error('AI processing disabled for security');
   }
 }
 

@@ -1,66 +1,66 @@
 ---
-title: "Panduan Lengkap Anki untuk Pembelajaran Bahasa Jepang"
-description: "Setup dan penggunaan Anki dengan Spaced Repetition System (SRS) untuk menghafal kosakata dan kanji bahasa Jepang secara efektif."
-publishedDate: "2025-01-25"
-author: "Tim GoRakuDo"
+title: 'Panduan Lengkap Anki untuk Pembelajaran Bahasa Jepang'
+description: 'Setup dan penggunaan Anki dengan Spaced Repetition System (SRS) untuk menghafal kosakata dan kanji bahasa Jepang secara efektif.'
+publishedDate: '2025-01-25'
+author: 'Tim GoRakuDo'
 
 # Tool-Specific Metadata
-toolName: "Anki"
-toolVersion: "2.1.66"
-toolWebsite: "https://apps.ankiweb.net/"
-toolCategory: "flashcard"
+toolName: 'Anki'
+toolVersion: '2.1.66'
+toolWebsite: 'https://apps.ankiweb.net/'
+toolCategory: 'flashcard'
 
 # Difficulty and Setup Information
-difficulty: "intermediate"
-setupTime: "10-15 minutes"
-cost: "free"
+difficulty: 'intermediate'
+setupTime: '10-15 minutes'
+cost: 'free'
 
 # Visual Elements
-emoji: "📚"
-icon: "/img/tools/anki-icon.png"
+emoji: '📚'
+icon: '/img/tools/anki-icon.png'
 
 # Content Classification
-tags: ["anki", "srs", "flashcard", "vocabulary", "kanji", "memorization"]
+tags: ['anki', 'srs', 'flashcard', 'vocabulary', 'kanji', 'memorization']
 featured: true
 
 # Mind Map Integration
-mindMapBranch: "D"
+mindMapBranch: 'D'
 
 # Content Type
-contentType: "tool-guide"
+contentType: 'tool-guide'
 
 # Read Time Estimation
 readTime: 12
 
 # Tool Features
 features:
-  - "Spaced Repetition System (SRS)"
-  - "Customizable card templates"
-  - "Media support (images, audio, video)"
-  - "Statistics and progress tracking"
-  - "Cross-platform sync"
-  - "Community decks available"
+  - 'Spaced Repetition System (SRS)'
+  - 'Customizable card templates'
+  - 'Media support (images, audio, video)'
+  - 'Statistics and progress tracking'
+  - 'Cross-platform sync'
+  - 'Community decks available'
 
 # Requirements
 requirements:
-  - "Windows, macOS, or Linux computer"
-  - "Internet connection for initial setup"
-  - "Basic computer literacy"
+  - 'Windows, macOS, or Linux computer'
+  - 'Internet connection for initial setup'
+  - 'Basic computer literacy'
 
 # SEO and Discovery
 keywords:
-  - "anki"
-  - "srs"
-  - "flashcard"
-  - "japanese"
-  - "vocabulary"
-  - "kanji"
-  - "memorization"
-  - "spaced repetition"
+  - 'anki'
+  - 'srs'
+  - 'flashcard'
+  - 'japanese'
+  - 'vocabulary'
+  - 'kanji'
+  - 'memorization'
+  - 'spaced repetition'
 relatedTools:
-  - "yomichan"
-  - "migaku"
-  - "language-reactor"
+  - 'yomichan'
+  - 'migaku'
+  - 'language-reactor'
 ---
 
 # Panduan Lengkap Anki untuk Pembelajaran Bahasa Jepang

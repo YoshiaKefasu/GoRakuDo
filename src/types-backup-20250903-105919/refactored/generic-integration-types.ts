@@ -60,7 +60,9 @@ export interface GenericValidationResult<T> {
  * Generic Validation Error
  * Type-safe error with field-level specificity
  */
-export interface GenericValidationError<TField extends string | number | symbol> {
+export interface GenericValidationError<
+  TField extends string | number | symbol,
+> {
   readonly field: TField;
   readonly code: string;
   readonly message: string;
@@ -71,7 +73,9 @@ export interface GenericValidationError<TField extends string | number | symbol>
  * Generic Validation Warning
  * Type-safe warning with field-level specificity
  */
-export interface GenericValidationWarning<TField extends string | number | symbol> {
+export interface GenericValidationWarning<
+  TField extends string | number | symbol,
+> {
   readonly field: TField;
   readonly code: string;
   readonly message: string;
@@ -84,7 +88,9 @@ export interface GenericValidationWarning<TField extends string | number | symbo
  * Integration Type Guard
  * Conditional type for type-safe operations
  */
-export type IntegrationTypeGuard<T extends BaseIntegrationType> = (value: unknown) => value is T;
+export type IntegrationTypeGuard<T extends BaseIntegrationType> = (
+  value: unknown
+) => value is T;
 
 /**
  * Integration Factory Type
@@ -109,7 +115,9 @@ export type IntegrationMerger<T> = T extends BaseIntegrationType
  * Mapped type for making all properties readonly
  */
 export type ReadonlyIntegrationConfig<T> = {
-  readonly [K in keyof T]: T[K] extends object ? ReadonlyIntegrationConfig<T[K]> : T[K];
+  readonly [K in keyof T]: T[K] extends object
+    ? ReadonlyIntegrationConfig<T[K]>
+    : T[K];
 };
 
 /**
@@ -125,7 +133,9 @@ export type PartialIntegrationConfig<T> = {
  * Mapped type for making all properties required
  */
 export type RequiredIntegrationConfig<T> = {
-  [K in keyof T]-?: T[K] extends object ? RequiredIntegrationConfig<T[K]> : T[K];
+  [K in keyof T]-?: T[K] extends object
+    ? RequiredIntegrationConfig<T[K]>
+    : T[K];
 };
 
 // ========== TEMPLATE LITERAL TYPES ==========
@@ -155,17 +165,15 @@ export type IntegrationLogMessage<TLevel extends IntegrationLogLevel> =
  * Integration Configuration Keys
  * Extract keys from integration configurations
  */
-export type IntegrationConfigKeys<T> = T extends Record<string, unknown>
-  ? keyof T
-  : never;
+export type IntegrationConfigKeys<T> =
+  T extends Record<string, unknown> ? keyof T : never;
 
 /**
  * Integration Configuration Values
  * Extract values from integration configurations
  */
-export type IntegrationConfigValues<T> = T extends Record<string, infer V>
-  ? V
-  : never;
+export type IntegrationConfigValues<T> =
+  T extends Record<string, infer V> ? V : never;
 
 /**
  * Non-Nullable Integration Configuration
@@ -196,14 +204,18 @@ export function validateGenericIntegration<T extends BaseIntegrationType>(
         field: rule.field,
         code: result.code,
         message: result.message,
-        severity: result.severity as 'CRITICAL' | 'HIGH' | 'MEDIUM'
+        severity: result.severity as 'CRITICAL' | 'HIGH' | 'MEDIUM',
       });
     } else if (result.type === 'warning') {
       warnings.push({
         field: rule.field,
         code: result.code,
         message: result.message,
-        impact: result.impact as 'PERFORMANCE' | 'SEO' | 'USER_EXPERIENCE' | 'ACCESSIBILITY'
+        impact: result.impact as
+          | 'PERFORMANCE'
+          | 'SEO'
+          | 'USER_EXPERIENCE'
+          | 'ACCESSIBILITY',
       });
     }
   }
@@ -211,7 +223,7 @@ export function validateGenericIntegration<T extends BaseIntegrationType>(
   return {
     isValid: errors.length === 0,
     errors,
-    warnings
+    warnings,
   };
 }
 
@@ -219,7 +231,9 @@ export function validateGenericIntegration<T extends BaseIntegrationType>(
  * Generic Validation Rule Interface
  * Type-safe validation rule definition
  */
-export interface GenericValidationRule<TField extends string | number | symbol> {
+export interface GenericValidationRule<
+  TField extends string | number | symbol,
+> {
   readonly field: TField;
   readonly validate: (config: Record<TField, unknown>) => ValidationResult;
 }
@@ -258,7 +272,9 @@ export class GenericIntegrationBuilder<T extends BaseIntegrationType> {
     return { ...this.defaultConfig, ...this.config } as T;
   }
 
-  validate(rules: readonly GenericValidationRule<keyof T>[]): GenericValidationResult<T> {
+  validate(
+    rules: readonly GenericValidationRule<keyof T>[]
+  ): GenericValidationResult<T> {
     const built = this.build();
     return validateGenericIntegration(built, rules);
   }

@@ -16,7 +16,7 @@ export class ContentExtractor {
         priority: 100,
         maxLength: 100,
         qualityThreshold: 80,
-        field: 'title'
+        field: 'title',
       },
       // Description extraction rule (first paragraph)
       {
@@ -24,7 +24,7 @@ export class ContentExtractor {
         priority: 90,
         maxLength: 200,
         qualityThreshold: 70,
-        field: 'description'
+        field: 'description',
       },
       // Subheading extraction rule
       {
@@ -32,8 +32,8 @@ export class ContentExtractor {
         priority: 80,
         maxLength: 150,
         qualityThreshold: 75,
-        field: 'description'
-      }
+        field: 'description',
+      },
     ];
   }
 
@@ -47,10 +47,12 @@ export class ContentExtractor {
     if (titleMatch) {
       return this.cleanText(titleMatch[1], 100);
     }
-    
+
     // Fallback: extract from filename or first line
     const firstLine = content.split('\n')[0].trim();
-    return firstLine.length > 0 ? this.cleanText(firstLine, 100) : 'Untitled Article';
+    return firstLine.length > 0
+      ? this.cleanText(firstLine, 100)
+      : 'Untitled Article';
   }
 
   /**
@@ -62,7 +64,7 @@ export class ContentExtractor {
   extractDescription(content, title) {
     // Remove title from content for description extraction
     const contentWithoutTitle = content.replace(/^#\s+.+$/m, '');
-    
+
     // Extract from first valid paragraph
     const paragraphs = contentWithoutTitle
       .split('\n\n')
@@ -88,7 +90,7 @@ export class ContentExtractor {
    */
   async extractTags(content, title, category, language = 'id') {
     const tags = new Set();
-    
+
     // Add category as tag
     if (category && category !== 'general') {
       tags.add(category);
@@ -99,7 +101,10 @@ export class ContentExtractor {
     titleKeywords.forEach(keyword => tags.add(keyword));
 
     // Extract keywords from content
-    const contentKeywords = await this.extractKeywordsFromText(content, language);
+    const contentKeywords = await this.extractKeywordsFromText(
+      content,
+      language
+    );
     contentKeywords.forEach(keyword => tags.add(keyword));
 
     // Limit tag count (KISS principle)
@@ -168,13 +173,49 @@ export class ContentExtractor {
   getFallbackStopWords(language) {
     const fallbackStopWords = {
       id: [
-        'yang', 'dan', 'atau', 'dengan', 'ke', 'dari', 'di', 'untuk', 'pada', 'sebagai',
-        'adalah', 'akan', 'sudah', 'bisa', 'harus', 'boleh', 'mungkin', 'ini', 'itu', 'mereka'
+        'yang',
+        'dan',
+        'atau',
+        'dengan',
+        'ke',
+        'dari',
+        'di',
+        'untuk',
+        'pada',
+        'sebagai',
+        'adalah',
+        'akan',
+        'sudah',
+        'bisa',
+        'harus',
+        'boleh',
+        'mungkin',
+        'ini',
+        'itu',
+        'mereka',
       ],
       ja: [
-        'の', 'に', 'は', 'を', 'が', 'と', 'で', 'から', 'まで', 'より',
-        'です', 'ます', 'である', 'いる', 'ある', 'なる', 'する', 'この', 'その', 'あの'
-      ]
+        'の',
+        'に',
+        'は',
+        'を',
+        'が',
+        'と',
+        'で',
+        'から',
+        'まで',
+        'より',
+        'です',
+        'ます',
+        'である',
+        'いる',
+        'ある',
+        'なる',
+        'する',
+        'この',
+        'その',
+        'あの',
+      ],
     };
     return new Set(fallbackStopWords[language] || fallbackStopWords.id);
   }
@@ -201,13 +242,13 @@ export class ContentExtractor {
    */
   cleanText(text, maxLength) {
     let cleaned = text.trim();
-    
+
     // Remove HTML tags
     cleaned = cleaned.replace(/<[^>]*>/g, '');
-    
+
     // Normalize special characters
     cleaned = cleaned.replace(/[^\w\s\-.,!?]/g, ' ');
-    
+
     // Limit length
     if (cleaned.length > maxLength) {
       cleaned = cleaned.substring(0, maxLength - 3) + '...';
@@ -233,7 +274,7 @@ export class ContentExtractor {
     return {
       content: extractedContent,
       rule,
-      quality: this.assessQuality(extractedContent, rule.qualityThreshold)
+      quality: this.assessQuality(extractedContent, rule.qualityThreshold),
     };
   }
 
@@ -246,7 +287,7 @@ export class ContentExtractor {
   assessQuality(content, threshold) {
     const length = content.length;
     const readability = this.calculateReadability(content);
-    
+
     // Simple quality calculation (KISS principle)
     const quality = (length / 100) * 0.4 + (readability / 100) * 0.6;
     return quality >= threshold / 100;
@@ -260,26 +301,26 @@ export class ContentExtractor {
   calculateReadability(text) {
     const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
     const words = text.split(/\s+/).filter(w => w.trim().length > 0);
-    
+
     if (sentences.length === 0 || words.length === 0) {
       return 0;
     }
-    
+
     const avgWordsPerSentence = words.length / sentences.length;
-    
+
     // Optimal sentence length (10-25 words)
     if (avgWordsPerSentence >= 10 && avgWordsPerSentence <= 25) {
       return 100;
     }
-    
+
     if (avgWordsPerSentence >= 5 && avgWordsPerSentence <= 35) {
       return 80;
     }
-    
+
     if (avgWordsPerSentence >= 3 && avgWordsPerSentence <= 50) {
       return 60;
     }
-    
+
     return 40;
   }
 }

@@ -41,7 +41,7 @@ export class PerformanceEnhancementLoader {
    */
   private async loadCriticalEnhancements(): Promise<void> {
     const criticalEnhancements = Array.from(this.enhancements.values()).filter(
-      (enhancement: any) => enhancement.enabled && enhancement.isCritical,
+      (enhancement: any) => enhancement.enabled && enhancement.isCritical
     );
 
     for (const enhancement of criticalEnhancements) {
@@ -76,7 +76,7 @@ export class PerformanceEnhancementLoader {
   private async loadProgressiveEnhancements(): Promise<void> {
     const sortedEnhancements = Array.from(this.enhancements.values())
       .filter(
-        (enhancement: any) => enhancement.enabled && !enhancement.isCritical,
+        (enhancement: any) => enhancement.enabled && !enhancement.isCritical
       )
       .sort((a: any, b: any) => {
         const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
@@ -125,7 +125,7 @@ export class PerformanceEnhancementLoader {
     // Check user preferences
     if (
       !this.userPreferences.enableAllFeatures &&
-      enhancement.priority === "low"
+      enhancement.priority === 'low'
     ) {
       return false;
     }
@@ -146,7 +146,7 @@ export class PerformanceEnhancementLoader {
     }
 
     if (enhancement.minConnection && this.metrics.connection) {
-      const connectionOrder = { "slow-2g": 0, "2g": 1, "3g": 2, "4g": 3 };
+      const connectionOrder = { 'slow-2g': 0, '2g': 1, '3g': 2, '4g': 3 };
       const minConnection =
         connectionOrder[
           enhancement.minConnection as keyof typeof connectionOrder
@@ -178,23 +178,23 @@ export class PerformanceEnhancementLoader {
       loadTime: 0,
       deviceMemory: 0,
       hardwareConcurrency: 0,
-      connection: "unknown",
+      connection: 'unknown',
     };
 
     // Capture load time
-    if (typeof performance !== "undefined" && performance.now) {
+    if (typeof performance !== 'undefined' && performance.now) {
       metrics.loadTime = performance.now();
     }
 
     // Capture hardware info
-    if (typeof navigator !== "undefined") {
+    if (typeof navigator !== 'undefined') {
       metrics.hardwareConcurrency = navigator.hardwareConcurrency || 0;
       if ((navigator as any).deviceMemory) {
         metrics.deviceMemory = (navigator as any).deviceMemory;
       }
       if ((navigator as any).connection) {
         metrics.connection =
-          (navigator as any).connection.effectiveType || "unknown";
+          (navigator as any).connection.effectiveType || 'unknown';
       }
     }
 
@@ -206,7 +206,7 @@ export class PerformanceEnhancementLoader {
    */
   private async loadScript(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
+      const script = document.createElement('script');
       script.src = url;
       script.onload = () => resolve();
       script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
@@ -218,7 +218,7 @@ export class PerformanceEnhancementLoader {
    * Report error to Discord
    */
   private reportErrorToDiscord(enhancementName: string, error: Error): void {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // Store error for reporting
       this.storeErrorForDiscord({
         enhancementName,
@@ -233,12 +233,12 @@ export class PerformanceEnhancementLoader {
    * Store error for Discord reporting
    */
   private storeErrorForDiscord(errorData: any): void {
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       const errors = JSON.parse(
-        localStorage.getItem("enhancement-errors") || "[]",
+        localStorage.getItem('enhancement-errors') || '[]'
       );
       errors.push(errorData);
-      localStorage.setItem("enhancement-errors", JSON.stringify(errors));
+      localStorage.setItem('enhancement-errors', JSON.stringify(errors));
     }
   }
 
@@ -322,10 +322,10 @@ export class PerformanceEnhancementLoader {
    * Save user preferences
    */
   private saveUserPreferences(): void {
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       localStorage.setItem(
-        "enhancement-preferences",
-        JSON.stringify(this.userPreferences),
+        'enhancement-preferences',
+        JSON.stringify(this.userPreferences)
       );
     }
   }

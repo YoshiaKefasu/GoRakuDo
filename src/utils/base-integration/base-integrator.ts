@@ -8,7 +8,7 @@ import type {
   SEOIntegrationResult,
   FallbackIntegrationResult,
   DataFlowResult,
-  IntegrationQualityResult
+  IntegrationQualityResult,
 } from '../../types/new-seo-system/integration-types.js';
 
 import { SEOConnector } from './seo-connector.js';
@@ -43,18 +43,18 @@ export class BaseIntegrator {
     try {
       // Phase 1: SEOシステム統合
       const seoIntegration = await this.integrateSEOSystem();
-      
+
       // Phase 2: Fallbackシステム統合
       const fallbackIntegration = await this.integrateFallbackSystem();
-      
+
       // Phase 3: データフロー統合
       const dataFlow = await this.buildDataFlow();
-      
+
       // Phase 4: 品質測定
       const quality = await this.measureIntegrationQuality({
         seo: seoIntegration,
         fallback: fallbackIntegration,
-        dataFlow: dataFlow
+        dataFlow: dataFlow,
       });
 
       // 統合結果の生成
@@ -66,7 +66,7 @@ export class BaseIntegrator {
         fallbackIntegration,
         dataFlow,
         quality,
-        version: this.config.version
+        version: this.config.version,
       };
 
       return result;
@@ -86,7 +86,7 @@ export class BaseIntegrator {
       return {
         success: false,
         status: 'disabled',
-        timestamp
+        timestamp,
       };
     }
 
@@ -95,7 +95,7 @@ export class BaseIntegrator {
       const response: SEOIntegrationResult = {
         success: result.status === 'connected',
         status: result.status,
-        timestamp
+        timestamp,
       };
 
       // Handle optional properties with exactOptionalPropertyTypes
@@ -111,11 +111,12 @@ export class BaseIntegrator {
 
       return response;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       const response: SEOIntegrationResult = {
         success: false,
         status: 'error',
-        timestamp
+        timestamp,
       };
 
       // Handle optional errorMessage property with exactOptionalPropertyTypes
@@ -137,7 +138,7 @@ export class BaseIntegrator {
       return {
         success: false,
         status: 'disabled',
-        timestamp
+        timestamp,
       };
     }
 
@@ -146,7 +147,7 @@ export class BaseIntegrator {
       const response: FallbackIntegrationResult = {
         success: result.status === 'connected',
         status: result.status,
-        timestamp
+        timestamp,
       };
 
       // Handle optional properties with exactOptionalPropertyTypes
@@ -162,11 +163,12 @@ export class BaseIntegrator {
 
       return response;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       const response: FallbackIntegrationResult = {
         success: false,
         status: 'error',
-        timestamp
+        timestamp,
       };
 
       // Handle optional errorMessage property with exactOptionalPropertyTypes
@@ -195,7 +197,7 @@ export class BaseIntegrator {
         validation: result.validation,
         flowStatus: result.flowStatus,
         processedCount: result.processedCount,
-        errorCount: result.errorCount
+        errorCount: result.errorCount,
       };
 
       // Handle optional lastProcessed property with exactOptionalPropertyTypes
@@ -215,7 +217,7 @@ export class BaseIntegrator {
         validation: false,
         flowStatus: 'error',
         processedCount: 0,
-        errorCount: 1
+        errorCount: 1,
       };
     }
   }
@@ -232,10 +234,6 @@ export class BaseIntegrator {
     return this.qualityMeasurer.measure(params);
   }
 
-
-
-
-
   /**
    * 統合フォールバック生成
    * 統合失敗時のフォールバック処理
@@ -250,13 +248,13 @@ export class BaseIntegrator {
         success: false,
         status: 'error',
         timestamp,
-        errorMessage: error.message
+        errorMessage: error.message,
       },
       fallbackIntegration: {
         success: false,
         status: 'error',
         timestamp,
-        errorMessage: error.message
+        errorMessage: error.message,
       },
       dataFlow: {
         success: false,
@@ -268,7 +266,7 @@ export class BaseIntegrator {
         validation: false,
         flowStatus: 'error',
         processedCount: 0,
-        errorCount: 1
+        errorCount: 1,
       },
       quality: {
         overall: 0,
@@ -278,9 +276,12 @@ export class BaseIntegrator {
         stability: 0,
         performance: 0,
         lastMeasured: timestamp,
-        recommendations: ['Check system configuration', 'Verify existing system status']
+        recommendations: [
+          'Check system configuration',
+          'Verify existing system status',
+        ],
       },
-      version: this.config.version
+      version: this.config.version,
     };
   }
 
@@ -290,16 +291,16 @@ export class BaseIntegrator {
    */
   updateConfig(newConfig: Partial<IntegrationConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    
+
     // 各コンポーネントの設定を更新
     if (newConfig.seoSystem) {
       this.seoConnector.updateConfig(newConfig.seoSystem);
     }
-    
+
     if (newConfig.fallbackSystem) {
       this.fallbackConnector.updateConfig(newConfig.fallbackSystem);
     }
-    
+
     if (newConfig.dataFlow) {
       this.dataFlowBuilder.updateConfig(newConfig.dataFlow);
     }
@@ -317,7 +318,9 @@ export class BaseIntegrator {
     return {
       seoStatus: this.seoConnector.getStatus(),
       fallbackStatus: this.fallbackConnector.getStatus(),
-      dataFlowStatus: this.dataFlowBuilder.getDataFlowStatus().isConfigured ? 'configured' : 'not-configured'
+      dataFlowStatus: this.dataFlowBuilder.getDataFlowStatus().isConfigured
+        ? 'configured'
+        : 'not-configured',
     };
   }
 }
@@ -326,7 +329,9 @@ export class BaseIntegrator {
  * 基盤統合関数
  * 既存の統合パターンを活用した統合関数
  */
-export async function integrateBaseSystems(config: IntegrationConfig): Promise<IntegrationResult> {
+export async function integrateBaseSystems(
+  config: IntegrationConfig
+): Promise<IntegrationResult> {
   const integrator = new BaseIntegrator(config);
   return integrator.integrateBaseSystems();
 }

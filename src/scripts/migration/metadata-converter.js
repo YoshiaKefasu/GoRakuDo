@@ -18,14 +18,14 @@ function extractMetadata(filePath) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
     const frontMatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    
+
     if (!frontMatterMatch) {
       return null;
     }
-    
+
     const frontMatter = frontMatterMatch[1];
     const metadata = {};
-    
+
     // Simple parsing (KISS principle - straightforward approach)
     frontMatter.split('\n').forEach(line => {
       const [key, ...valueParts] = line.split(':');
@@ -35,13 +35,16 @@ function extractMetadata(filePath) {
         if (value.startsWith('"') && value.endsWith('"')) {
           metadata[key.trim()] = value.slice(1, -1);
         } else if (value.startsWith('[') && value.endsWith(']')) {
-          metadata[key.trim()] = value.slice(1, -1).split(',').map(s => s.trim().replace(/"/g, ''));
+          metadata[key.trim()] = value
+            .slice(1, -1)
+            .split(',')
+            .map(s => s.trim().replace(/"/g, ''));
         } else {
           metadata[key.trim()] = value;
         }
       }
     });
-    
+
     return metadata;
   } catch (error) {
     console.error(`Error reading file ${filePath}:`, error.message);
@@ -65,7 +68,7 @@ function convertToManualFormat(metadata) {
     category: metadata.category || '',
     tags: Array.isArray(metadata.tags) ? metadata.tags : [],
     featured: metadata.featured || false,
-    contentType: metadata.contentType || 'article'
+    contentType: metadata.contentType || 'article',
   };
 }
 
@@ -75,23 +78,23 @@ function convertToManualFormat(metadata) {
 function processAllContentFiles() {
   const contentDir = path.join(process.cwd(), 'src', 'content');
   const files = fs.readdirSync(contentDir).filter(f => f.endsWith('.md'));
-  
+
   const results = [];
-  
+
   files.forEach(file => {
     const filePath = path.join(contentDir, file);
     const metadata = extractMetadata(filePath);
-    
+
     if (metadata) {
       const converted = convertToManualFormat(metadata);
       results.push({
         file,
         originalMetadata: metadata,
-        convertedMetadata: converted
+        convertedMetadata: converted,
       });
     }
   });
-  
+
   return results;
 }
 
@@ -104,15 +107,16 @@ function generateMigrationReport(results) {
     totalFiles: results.length,
     successfulConversions: results.length,
     failedConversions: 0,
-    metadataSummary: {}
+    metadataSummary: {},
   };
-  
+
   // Simple summary (KISS principle)
   results.forEach(result => {
     const category = result.convertedMetadata.category || 'uncategorized';
-    report.metadataSummary[category] = (report.metadataSummary[category] || 0) + 1;
+    report.metadataSummary[category] =
+      (report.metadataSummary[category] || 0) + 1;
   });
-  
+
   return report;
 }
 
@@ -121,18 +125,22 @@ function generateMigrationReport(results) {
  */
 function main() {
   console.log('Starting metadata conversion...');
-  
+
   try {
     const results = processAllContentFiles();
     const report = generateMigrationReport(results);
-    
+
     // Save report (DRY principle - consistent file handling)
-    const reportPath = path.join(process.cwd(), 'backups', `migration-report-${Date.now()}.json`);
+    const reportPath = path.join(
+      process.cwd(),
+      'backups',
+      `migration-report-${Date.now()}.json`
+    );
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    
+
     console.log(`Conversion completed: ${results.length} files processed`);
     console.log(`Report saved to: ${reportPath}`);
-    
+
     return results;
   } catch (error) {
     console.error('Migration failed:', error.message);
@@ -146,7 +154,7 @@ export {
   convertToManualFormat,
   processAllContentFiles,
   generateMigrationReport,
-  main
+  main,
 };
 
 // Run if called directly

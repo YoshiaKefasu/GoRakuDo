@@ -3,15 +3,15 @@
 // Integrates with existing export patterns
 
 // Core Base Integration System
-export { BaseIntegrator, integrateBaseSystems } from "./base-integrator.js";
+export { BaseIntegrator, integrateBaseSystems } from './base-integrator.js';
 
 // System Connectors
-export { SEOConnector } from "./seo-connector.js";
-export { FallbackConnector } from "./fallback-connector.js";
+export { SEOConnector } from './seo-connector.js';
+export { FallbackConnector } from './fallback-connector.js';
 
 // Data Flow and Quality
-export { DataFlowBuilder } from "./data-flow-builder.js";
-export { QualityMeasurer } from "./quality-measurer.js";
+export { DataFlowBuilder } from './data-flow-builder.js';
+export { QualityMeasurer } from './quality-measurer.js';
 
 // Types from unified integration system
 export type {
@@ -29,8 +29,8 @@ export type {
   IntegrationValidationResult,
   ValidationError as IntegrationValidationError,
   ValidationWarning as IntegrationValidationWarning,
-  ValidationResult
-} from "../../types/new-seo-system/integration-types.js";
+  ValidationResult,
+} from '../../types/new-seo-system/integration-types.js';
 
 // Default Configuration
-export { DEFAULT_INTEGRATION_CONFIG as DEFAULT_BASE_INTEGRATION_CONFIG } from "../../types/new-seo-system/integration-types.js";
+export { DEFAULT_INTEGRATION_CONFIG as DEFAULT_BASE_INTEGRATION_CONFIG } from '../../types/new-seo-system/integration-types.js';

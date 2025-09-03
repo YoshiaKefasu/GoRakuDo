@@ -1,5 +1,5 @@
-import * as fs from "fs/promises";
-import * as path from "path";
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 export interface ContentManifest {
   version: string;
@@ -22,24 +22,24 @@ export class ContentTracker {
   constructor() {
     this.manifestPath = path.join(
       process.cwd(),
-      "src",
-      "data",
-      "ai-generated",
-      "manifest.json",
+      'src',
+      'data',
+      'ai-generated',
+      'manifest.json'
     );
     this.manifest = this.getDefaultManifest();
   }
 
   async loadManifest(): Promise<ContentManifest> {
     try {
-      const data = await fs.readFile(this.manifestPath, "utf-8");
+      const data = await fs.readFile(this.manifestPath, 'utf-8');
       this.manifest = JSON.parse(data);
       console.log(
-        `📋 Loaded content manifest with ${Object.keys(this.manifest.processedContent).length} entries`,
+        `📋 Loaded content manifest with ${Object.keys(this.manifest.processedContent).length} entries`
       );
       return this.manifest;
     } catch (error) {
-      console.log("📋 No existing manifest found, creating new one");
+      console.log('📋 No existing manifest found, creating new one');
       await this.saveManifest();
       return this.manifest;
     }
@@ -50,11 +50,11 @@ export class ContentTracker {
       await fs.mkdir(path.dirname(this.manifestPath), { recursive: true });
       await fs.writeFile(
         this.manifestPath,
-        JSON.stringify(this.manifest, null, 2),
+        JSON.stringify(this.manifest, null, 2)
       );
-      console.log("💾 Content manifest saved");
+      console.log('💾 Content manifest saved');
     } catch (error) {
-      console.error("❌ Failed to save content manifest:", error);
+      console.error('❌ Failed to save content manifest:', error);
     }
   }
 
@@ -67,14 +67,14 @@ export class ContentTracker {
     contentId: string,
     title: string,
     dataFile: string,
-    checksum: string,
+    checksum: string
   ): Promise<void> {
     this.manifest.processedContent[contentId] = {
       title,
       processedAt: new Date().toISOString(),
       dataFile,
       checksum,
-      version: "1.0",
+      version: '1.0',
     };
     this.manifest.lastUpdated = new Date().toISOString();
     await this.saveManifest();
@@ -93,7 +93,7 @@ export class ContentTracker {
     }
 
     console.log(
-      `🔍 Found ${unprocessed.length} unprocessed posts out of ${availablePosts.length} total`,
+      `🔍 Found ${unprocessed.length} unprocessed posts out of ${availablePosts.length} total`
     );
     return unprocessed;
   }
@@ -103,14 +103,14 @@ export class ContentTracker {
     const invalidEntries: string[] = [];
 
     for (const [contentId, entry] of Object.entries(
-      this.manifest.processedContent,
+      this.manifest.processedContent
     )) {
       const dataFilePath = path.join(
         process.cwd(),
-        "src",
-        "data",
-        "ai-generated",
-        entry.dataFile,
+        'src',
+        'data',
+        'ai-generated',
+        entry.dataFile
       );
       try {
         await fs.access(dataFilePath);
@@ -129,17 +129,17 @@ export class ContentTracker {
       this.manifest.lastUpdated = new Date().toISOString();
       await this.saveManifest();
       console.log(
-        `🧹 Cleaned up ${invalidEntries.length} invalid manifest entries`,
+        `🧹 Cleaned up ${invalidEntries.length} invalid manifest entries`
       );
     }
   }
 
   generateContentId(post: any): string {
-    const title = post.title || post.slug || "unknown";
+    const title = post.title || post.slug || 'unknown';
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-");
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-');
   }
 
   generateChecksum(content: string): string {
@@ -155,7 +155,7 @@ export class ContentTracker {
 
   async hasContentChanged(
     contentId: string,
-    content: string,
+    content: string
   ): Promise<boolean> {
     await this.loadManifest();
     const entry = this.manifest.processedContent[contentId];
@@ -174,7 +174,7 @@ export class ContentTracker {
 
   private getDefaultManifest(): ContentManifest {
     return {
-      version: "1.0",
+      version: '1.0',
       lastUpdated: new Date().toISOString(),
       processedContent: {},
     };

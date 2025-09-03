@@ -1,9 +1,9 @@
 /**
  * Base Integration Types - Legacy System Integration
- * 
+ *
  * This file provides backward compatibility for the old base-integration.ts
  * while maintaining DRY and KISS principles.
- * 
+ *
  * DRY原則: 共通の基本設定型を作成し、各システム固有の設定型で継承
  * KISS原則: 複雑な型定義をシンプルで理解しやすい構造に統合
  */

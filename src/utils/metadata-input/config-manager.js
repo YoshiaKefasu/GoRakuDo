@@ -15,7 +15,7 @@ export class ConfigManager {
       qualityThresholds: {
         minLength: 50,
         maxLength: 200,
-        minOverall: 70
+        minOverall: 70,
       },
       extractionRules: [
         {
@@ -23,36 +23,36 @@ export class ConfigManager {
           priority: 100,
           maxLength: 100,
           qualityThreshold: 80,
-          field: 'title'
+          field: 'title',
         },
         {
           pattern: 'content',
           priority: 90,
           maxLength: 200,
           qualityThreshold: 70,
-          field: 'description'
+          field: 'description',
         },
         {
           pattern: 'keywords',
           priority: 80,
           maxLength: 150,
           qualityThreshold: 75,
-          field: 'tags'
-        }
+          field: 'tags',
+        },
       ],
       priorityConfig: {
         manual: 100,
         auto: 80,
         fallback: 60,
-        default: 40
+        default: 40,
       },
       language: 'id',
       autoSave: true,
       autoSaveInterval: 30000, // 30 seconds
       showQualityScores: true,
-      enableNotifications: true
+      enableNotifications: true,
     };
-    
+
     this.config = this.loadConfig();
   }
 
@@ -70,7 +70,7 @@ export class ConfigManager {
     } catch (error) {
       console.warn('Failed to load configuration:', error);
     }
-    
+
     return { ...this.defaultConfig };
   }
 
@@ -97,17 +97,20 @@ export class ConfigManager {
    */
   mergeConfig(base, override) {
     const merged = { ...base };
-    
+
     Object.keys(override).forEach(key => {
       if (override[key] !== undefined) {
-        if (typeof override[key] === 'object' && !Array.isArray(override[key])) {
+        if (
+          typeof override[key] === 'object' &&
+          !Array.isArray(override[key])
+        ) {
           merged[key] = this.mergeConfig(merged[key] || {}, override[key]);
         } else {
           merged[key] = override[key];
         }
       }
     });
-    
+
     return merged;
   }
 
@@ -119,7 +122,7 @@ export class ConfigManager {
   get(key) {
     const keys = key.split('.');
     let value = this.config;
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
@@ -127,7 +130,7 @@ export class ConfigManager {
         return undefined;
       }
     }
-    
+
     return value;
   }
 
@@ -140,7 +143,7 @@ export class ConfigManager {
     const keys = key.split('.');
     const lastKey = keys.pop();
     let target = this.config;
-    
+
     // Navigate to the target object
     for (const k of keys) {
       if (!target[k] || typeof target[k] !== 'object') {
@@ -148,10 +151,10 @@ export class ConfigManager {
       }
       target = target[k];
     }
-    
+
     // Set the value
     target[lastKey] = value;
-    
+
     // Save the updated configuration
     this.saveConfig(this.config);
   }
@@ -173,7 +176,7 @@ export class ConfigManager {
       config: { ...this.config },
       version: '1.0.0',
       exportDate: new Date().toISOString(),
-      description: 'Fallback System Configuration Export'
+      description: 'Fallback System Configuration Export',
     };
   }
 
@@ -187,16 +190,18 @@ export class ConfigManager {
       if (!importData.config) {
         throw new Error('Invalid configuration format');
       }
-      
+
       // Validate imported configuration
       const validation = this.validateConfig(importData.config);
       if (!validation.isValid) {
-        throw new Error(`Configuration validation failed: ${validation.errors.join(', ')}`);
+        throw new Error(
+          `Configuration validation failed: ${validation.errors.join(', ')}`
+        );
       }
-      
+
       this.config = this.mergeConfig(this.defaultConfig, importData.config);
       this.saveConfig(this.config);
-      
+
       return true;
     } catch (error) {
       console.error('Failed to import configuration:', error);
@@ -212,63 +217,69 @@ export class ConfigManager {
   validateConfig(config) {
     const errors = [];
     const warnings = [];
-    
+
     // Check required fields
     if (typeof config.enableAutoExtraction !== 'boolean') {
       errors.push('enableAutoExtraction must be a boolean');
     }
-    
+
     if (typeof config.enableKeywordSuggestions !== 'boolean') {
       errors.push('enableKeywordSuggestions must be a boolean');
     }
-    
+
     // Validate quality thresholds
     if (config.qualityThresholds) {
       const { minLength, maxLength, minOverall } = config.qualityThresholds;
-      
+
       if (typeof minLength !== 'number' || minLength < 0) {
         errors.push('minLength must be a positive number');
       }
-      
+
       if (typeof maxLength !== 'number' || maxLength < minLength) {
         errors.push('maxLength must be greater than minLength');
       }
-      
-      if (typeof minOverall !== 'number' || minOverall < 0 || minOverall > 100) {
+
+      if (
+        typeof minOverall !== 'number' ||
+        minOverall < 0 ||
+        minOverall > 100
+      ) {
         errors.push('minOverall must be between 0 and 100');
       }
     }
-    
+
     // Validate priority configuration
     if (config.priorityConfig) {
       const priorities = Object.values(config.priorityConfig);
       const uniquePriorities = new Set(priorities);
-      
+
       if (uniquePriorities.size !== priorities.length) {
         errors.push('Priority levels must be unique');
       }
-      
+
       priorities.forEach(priority => {
         if (typeof priority !== 'number' || priority < 0 || priority > 100) {
           errors.push('Priority values must be between 0 and 100');
         }
       });
     }
-    
+
     // Validate language
     if (config.language && !['id', 'ja', 'en'].includes(config.language)) {
       errors.push('Language must be one of: id, ja, en');
     }
-    
+
     // Check for deprecated settings
     if (config.legacySettings) {
-      warnings.push('Legacy settings detected - consider updating to new format');
+      warnings.push(
+        'Legacy settings detected - consider updating to new format'
+      );
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -281,12 +292,12 @@ export class ConfigManager {
       enableAutoExtraction: {
         type: 'boolean',
         description: 'Enable automatic content extraction',
-        default: true
+        default: true,
       },
       enableKeywordSuggestions: {
         type: 'boolean',
         description: 'Enable keyword suggestions',
-        default: true
+        default: true,
       },
       qualityThresholds: {
         type: 'object',
@@ -295,36 +306,36 @@ export class ConfigManager {
           minLength: {
             type: 'number',
             description: 'Minimum text length',
-            default: 50
+            default: 50,
           },
           maxLength: {
             type: 'number',
             description: 'Maximum text length',
-            default: 200
+            default: 200,
           },
           minOverall: {
             type: 'number',
             description: 'Minimum overall quality score',
-            default: 70
-          }
-        }
+            default: 70,
+          },
+        },
       },
       language: {
         type: 'string',
         description: 'Default language for processing',
         enum: ['id', 'ja', 'en'],
-        default: 'id'
+        default: 'id',
       },
       autoSave: {
         type: 'boolean',
         description: 'Enable automatic saving',
-        default: true
+        default: true,
       },
       autoSaveInterval: {
         type: 'number',
         description: 'Auto-save interval in milliseconds',
-        default: 30000
-      }
+        default: 30000,
+      },
     };
   }
 
@@ -340,12 +351,12 @@ export class ConfigManager {
         keywordSuggestions: this.config.enableKeywordSuggestions,
         autoSave: this.config.autoSave,
         qualityScores: this.config.showQualityScores,
-        notifications: this.config.enableNotifications
+        notifications: this.config.enableNotifications,
       },
       qualityThresholds: this.config.qualityThresholds,
       language: this.config.language,
       lastModified: this.getLastModified(),
-      isValid: this.validateConfig(this.config).isValid
+      isValid: this.validateConfig(this.config).isValid,
     };
   }
 
@@ -363,7 +374,7 @@ export class ConfigManager {
     } catch (error) {
       console.warn('Failed to get last modified time:', error);
     }
-    
+
     return 'Unknown';
   }
 
@@ -383,7 +394,7 @@ export class ConfigManager {
     if (config.enableNotifications) {
       // Dispatch custom event for configuration changes
       const event = new CustomEvent('fallbackConfigChanged', {
-        detail: { config }
+        detail: { config },
       });
       window.dispatchEvent(event);
     }
@@ -395,9 +406,9 @@ export class ConfigManager {
    * @returns {Function} Unsubscribe function
    */
   subscribeToChanges(callback) {
-    const handler = (event) => callback(event.detail.config);
+    const handler = event => callback(event.detail.config);
     window.addEventListener('fallbackConfigChanged', handler);
-    
+
     return () => {
       window.removeEventListener('fallbackConfigChanged', handler);
     };

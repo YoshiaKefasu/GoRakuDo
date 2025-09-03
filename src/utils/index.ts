@@ -2,16 +2,16 @@
 // Centralized exports for all utility functions with backward compatibility
 
 // AI Content Utilities
-export * from "./ai-content";
+export * from './ai-content';
 
 // Performance Utilities
-export * from "./performance";
+export * from './performance';
 
 // Error Handling Utilities
-export * from "./error-handling";
+export * from './error-handling';
 
 // Content Structure Utilities
-export * from "./content-structure";
+export * from './content-structure';
 
 // Testing Utilities (Note: Test files removed after successful testing)
 // export * from "./testing"; // Removed - no test utilities currently available
@@ -25,15 +25,15 @@ export {
   getLearningPathRecommendations,
   getPostsWithSemanticRelationships,
   analyzeSemanticRelationships,
-} from "./ai-content";
+} from './ai-content';
 
 export {
   generateAIPrefetchHints,
   generatePageSpecificAIOptimizations,
   // performanceLoader, // Removed to prevent 404 errors in development server
-} from "./performance";
+} from './performance';
 
-export { discordErrorReporter, errorHandler } from "./error-handling";
+export { discordErrorReporter, errorHandler } from './error-handling';
 
 export {
   // MindMap functionality deprecated - MIND_MAP_BRANCHES removed
@@ -46,4 +46,4 @@ export {
   showSkeleton,
   hideSkeleton,
   SkeletonManager,
-} from "./content-structure";
+} from './content-structure';

@@ -125,7 +125,7 @@ export class WaveAnimationPerformanceMonitor {
 
           if (this.metrics.memoryUsage > this.config.memoryThreshold) {
             console.warn(
-              `🚨 High canvas memory usage: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`,
+              `🚨 High canvas memory usage: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`
             );
             this.optimizeMemoryUsage();
           }
@@ -153,7 +153,7 @@ export class WaveAnimationPerformanceMonitor {
     }
 
     console.log(
-      `📱 Wave animation device detection: ${screenWidth}px screen, target FPS: ${this.config.targetFPS}`,
+      `📱 Wave animation device detection: ${screenWidth}px screen, target FPS: ${this.config.targetFPS}`
     );
   }
 
@@ -167,32 +167,32 @@ export class WaveAnimationPerformanceMonitor {
     }
 
     // Simple heuristics for low-end device detection
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     let gl;
 
     try {
       gl =
-        canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+        canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
       if (!gl) {
         this._isLowEndDevice = true;
         return true;
       }
 
-      const renderer = gl.getParameter(gl.RENDERER)?.toLowerCase() || "";
+      const renderer = gl.getParameter(gl.RENDERER)?.toLowerCase() || '';
       const isSoftwareRenderer =
-        renderer.includes("software") || renderer.includes("llvmpipe");
+        renderer.includes('software') || renderer.includes('llvmpipe');
       const hasLimitedMemory =
         navigator.deviceMemory && navigator.deviceMemory < 4;
 
       this._isLowEndDevice = isSoftwareRenderer || hasLimitedMemory;
     } catch (error) {
-      console.warn("WebGL context creation failed:", error);
+      console.warn('WebGL context creation failed:', error);
       this._isLowEndDevice = true;
     } finally {
       // Properly clean up the temporary canvas and context
       if (gl) {
-        gl.getExtension("WEBGL_lose_context")?.loseContext();
+        gl.getExtension('WEBGL_lose_context')?.loseContext();
       }
       canvas.remove();
     }
@@ -243,7 +243,7 @@ export class WaveAnimationPerformanceMonitor {
     this.canvas.height = newHeight;
 
     console.log(
-      `🎨 Reduced canvas resolution from ${originalWidth}x${originalHeight} to ${newWidth}x${newHeight}`,
+      `🎨 Reduced canvas resolution from ${originalWidth}x${originalHeight} to ${newWidth}x${newHeight}`
     );
   }
 
@@ -256,7 +256,7 @@ export class WaveAnimationPerformanceMonitor {
     if (this.metrics.averageFPS < this.config.targetFPS * 0.6) {
       this.config.targetFPS = Math.max(25, this.config.targetFPS - 10);
       console.log(
-        `🔄 Reduced wave animation target FPS to ${this.config.targetFPS}`,
+        `🔄 Reduced wave animation target FPS to ${this.config.targetFPS}`
       );
     }
   }
@@ -267,7 +267,7 @@ export class WaveAnimationPerformanceMonitor {
   optimizeMemoryUsage() {
     // Force canvas context cleanup
     if (this.canvas) {
-      const ctx = this.canvas.getContext("2d");
+      const ctx = this.canvas.getContext('2d');
       if (ctx) {
         // Clear canvas completely
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -294,13 +294,13 @@ export class WaveAnimationPerformanceMonitor {
    */
   logPerformanceStatus() {
     const emoji =
-      this.metrics.averageFPS > this.config.targetFPS * 0.9 ? "✅" : "⚠️";
+      this.metrics.averageFPS > this.config.targetFPS * 0.9 ? '✅' : '⚠️';
 
     console.log(
       `${emoji} Wave Animation FPS: ${this.metrics.averageFPS.toFixed(1)} ` +
         `(Target: ${this.config.targetFPS}) | ` +
         `Memory: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB | ` +
-        `Frames: ${this.metrics.frameCount}`,
+        `Frames: ${this.metrics.frameCount}`
     );
   }
 }

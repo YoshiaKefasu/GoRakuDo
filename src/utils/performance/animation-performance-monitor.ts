@@ -83,7 +83,7 @@ export class AnimationPerformanceMonitor {
   private startMemoryMonitoring(): void {
     // Memory monitoring is not available in all browsers
     // This is a basic implementation
-    if (typeof performance !== "undefined" && (performance as any).memory) {
+    if (typeof performance !== 'undefined' && (performance as any).memory) {
       const checkMemory = () => {
         this.metrics.memoryUsage = (performance as any).memory.usedJSHeapSize;
 
@@ -103,20 +103,20 @@ export class AnimationPerformanceMonitor {
    * Setup performance observers
    */
   private setupPerformanceObservers(): void {
-    if (typeof window !== "undefined" && "PerformanceObserver" in window) {
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
       try {
         // Monitor long animation frames
         const observer = new (window as any).PerformanceObserver(
           (list: any) => {
             const entries = list.getEntries();
             this.metrics.frameDrops = entries.length;
-          },
+          }
         );
 
-        observer.observe({ entryTypes: ["long-animation-frame"] });
+        observer.observe({ entryTypes: ['long-animation-frame'] });
         this.observers.push(observer);
       } catch (error) {
-        console.warn("Long animation frame monitoring not supported:", error);
+        console.warn('Long animation frame monitoring not supported:', error);
       }
     }
   }
@@ -125,25 +125,25 @@ export class AnimationPerformanceMonitor {
    * Detect device capabilities
    */
   private detectDeviceCapabilities(): void {
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     const gl =
-      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
-    let gpuTier: "high" | "medium" | "low" = "medium";
+    let gpuTier: 'high' | 'medium' | 'low' = 'medium';
     const deviceMemory = (navigator as any).deviceMemory;
 
     if (gl) {
       const renderer =
-        (gl as any).getParameter((gl as any).RENDERER)?.toLowerCase() || "";
+        (gl as any).getParameter((gl as any).RENDERER)?.toLowerCase() || '';
       const isSoftwareRenderer =
-        renderer.includes("software") || renderer.includes("llvmpipe");
+        renderer.includes('software') || renderer.includes('llvmpipe');
 
       if (isSoftwareRenderer) {
-        gpuTier = "low";
+        gpuTier = 'low';
       } else {
         // Check for high-end GPU indicators
         const hasLimitedMemory = deviceMemory && deviceMemory < 4;
-        gpuTier = hasLimitedMemory ? "medium" : "high";
+        gpuTier = hasLimitedMemory ? 'medium' : 'high';
       }
     }
 
@@ -184,13 +184,13 @@ export class AnimationPerformanceMonitor {
    */
   private getRecommendedSettings(): any {
     const isLowEnd =
-      this.deviceCapabilities.gpuTier === "low" ||
+      this.deviceCapabilities.gpuTier === 'low' ||
       this.deviceCapabilities.deviceMemory < 4;
 
     if (isLowEnd) {
       return {
         targetFPS: 30,
-        complexity: "low" as const,
+        complexity: 'low' as const,
         disableHeavyAnimations: true,
         optimizeCSS: true,
       };
@@ -198,7 +198,7 @@ export class AnimationPerformanceMonitor {
 
     return {
       targetFPS: 60,
-      complexity: "medium" as const,
+      complexity: 'medium' as const,
       disableHeavyAnimations: false,
       optimizeCSS: false,
     };
@@ -207,14 +207,14 @@ export class AnimationPerformanceMonitor {
   /**
    * Adjust canvas quality
    */
-  private adjustCanvasQuality(complexity: "high" | "medium" | "low"): void {
-    const canvases = document.querySelectorAll("canvas");
+  private adjustCanvasQuality(complexity: 'high' | 'medium' | 'low'): void {
+    const canvases = document.querySelectorAll('canvas');
 
-    canvases.forEach((canvas) => {
-      const ctx = (canvas as HTMLCanvasElement).getContext("2d");
+    canvases.forEach(canvas => {
+      const ctx = (canvas as HTMLCanvasElement).getContext('2d');
       if (ctx) {
         // Adjust image smoothing based on complexity
-        (ctx as any).imageSmoothingEnabled = complexity !== "low";
+        (ctx as any).imageSmoothingEnabled = complexity !== 'low';
         (ctx as any).imageSmoothingQuality = complexity;
       }
     });
@@ -227,13 +227,13 @@ export class AnimationPerformanceMonitor {
    */
   private disableHeavyAnimations(): void {
     // Disable animations on stars or other heavy elements
-    const starsContainer = document.getElementById("stars");
+    const starsContainer = document.getElementById('stars');
     if (starsContainer) {
-      const stars = starsContainer.querySelectorAll("*");
+      const stars = starsContainer.querySelectorAll('*');
       stars.forEach((star, index) => {
         if (index >= 50) {
           // Keep only first 50 stars
-          (star as HTMLElement).style.display = "none";
+          (star as HTMLElement).style.display = 'none';
         }
       });
     }
@@ -242,8 +242,8 @@ export class AnimationPerformanceMonitor {
   /**
    * Optimize CSS animations
    */
-  private optimizeCSSAnimations(complexity: "high" | "medium" | "low"): void {
-    const styleId = "animation-performance-optimizations";
+  private optimizeCSSAnimations(complexity: 'high' | 'medium' | 'low'): void {
+    const styleId = 'animation-performance-optimizations';
 
     // Remove existing style if it exists
     const existingStyle = document.getElementById(styleId);
@@ -251,10 +251,10 @@ export class AnimationPerformanceMonitor {
       existingStyle.remove();
     }
 
-    let css = "";
+    let css = '';
 
     switch (complexity) {
-      case "low":
+      case 'low':
         css = `
           * {
             animation-duration: 0.3s !important;
@@ -265,14 +265,14 @@ export class AnimationPerformanceMonitor {
           }
         `;
         break;
-      case "medium":
+      case 'medium':
         css = `
           * {
             animation-duration: 0.5s !important;
           }
         `;
         break;
-      case "high":
+      case 'high':
         css = `
           /* High quality animations enabled */
         `;
@@ -280,7 +280,7 @@ export class AnimationPerformanceMonitor {
     }
 
     // Create and append style
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.id = styleId;
     style.textContent = css;
     document.head.appendChild(style);
@@ -293,7 +293,7 @@ export class AnimationPerformanceMonitor {
    */
   private optimizeMemoryUsage(): void {
     // Force garbage collection if available
-    if (typeof window !== "undefined" && (window as any).gc) {
+    if (typeof window !== 'undefined' && (window as any).gc) {
       (window as any).gc();
     }
 
@@ -301,7 +301,7 @@ export class AnimationPerformanceMonitor {
     this.frameTimes = [];
 
     // Adjust canvas quality to low if memory is critical
-    this.adjustCanvasQuality("low");
+    this.adjustCanvasQuality('low');
   }
 
   /**
@@ -309,13 +309,13 @@ export class AnimationPerformanceMonitor {
    */
   private logPerformanceStatus(): void {
     const emoji =
-      this.metrics.averageFPS > this.config.targetFPS * 0.9 ? "✅" : "⚠️";
+      this.metrics.averageFPS > this.config.targetFPS * 0.9 ? '✅' : '⚠️';
 
     console.log(
       `${emoji} Animation FPS: ${this.metrics.averageFPS.toFixed(1)} ` +
         `(Target: ${this.config.targetFPS}) | ` +
         `Memory: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB | ` +
-        `Frame Drops: ${this.metrics.frameDrops}`,
+        `Frame Drops: ${this.metrics.frameDrops}`
     );
   }
 
@@ -345,11 +345,11 @@ export class AnimationPerformanceMonitor {
    */
   applyDeviceOptimizations(): void {
     // Apply optimizations based on device capabilities
-    if (this.deviceCapabilities.gpuTier === "low") {
-      this.adjustCanvasQuality("low");
+    if (this.deviceCapabilities.gpuTier === 'low') {
+      this.adjustCanvasQuality('low');
       this.disableHeavyAnimations();
-    } else if (this.deviceCapabilities.gpuTier === "medium") {
-      this.adjustCanvasQuality("medium");
+    } else if (this.deviceCapabilities.gpuTier === 'medium') {
+      this.adjustCanvasQuality('medium');
     }
   }
 
@@ -358,7 +358,7 @@ export class AnimationPerformanceMonitor {
    */
   stop(): void {
     // Disconnect all observers
-    this.observers.forEach((observer) => {
+    this.observers.forEach(observer => {
       if (observer.disconnect) {
         observer.disconnect();
       }

@@ -1,8 +1,8 @@
-import type { APIRoute } from "astro";
+import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ site }) => {
   if (!site) {
-    return new Response("Site not configured", { status: 500 });
+    return new Response('Site not configured', { status: 500 });
   }
 
   const baseUrl = site.toString();
@@ -12,19 +12,19 @@ export const GET: APIRoute = async ({ site }) => {
     {
       url: baseUrl,
       lastmod: new Date().toISOString(),
-      changefreq: "weekly",
+      changefreq: 'weekly',
       priority: 1.0,
     },
     {
       url: `${baseUrl}/docs`,
       lastmod: new Date().toISOString(),
-      changefreq: "weekly",
+      changefreq: 'weekly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/discord`,
       lastmod: new Date().toISOString(),
-      changefreq: "monthly",
+      changefreq: 'monthly',
       priority: 0.6,
     },
   ];
@@ -34,21 +34,21 @@ export const GET: APIRoute = async ({ site }) => {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages
   .map(
-    (page) => `  <url>
+    page => `  <url>
     <loc>${page.url}</loc>
     <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
-  </url>`,
+  </url>`
   )
-  .join("\n")}
+  .join('\n')}
 </urlset>`;
 
   return new Response(sitemap, {
     status: 200,
     headers: {
-      "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=3600", // Cache for 1 hour
+      'Content-Type': 'application/xml',
+      'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
     },
   });
 };

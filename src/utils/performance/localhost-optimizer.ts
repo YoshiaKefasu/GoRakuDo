@@ -93,38 +93,38 @@ export function generateLocalhostResourceHints(): Array<{
   return [
     // Critical resources for localhost
     {
-      rel: "preload",
-      href: "/css/homepage-styles.css",
-      as: "style",
-      fetchpriority: "high",
+      rel: 'preload',
+      href: '/css/homepage-styles.css',
+      as: 'style',
+      fetchpriority: 'high',
     },
     {
-      rel: "preload",
-      href: "/scripts/hompage-script.js",
-      as: "script",
-      fetchpriority: "high",
+      rel: 'preload',
+      href: '/scripts/hompage-script.js',
+      as: 'script',
+      fetchpriority: 'high',
     },
     {
-      rel: "preload",
-      href: "/img/SlideshowHomepage/Slide-post-0.webp",
-      as: "image",
-      type: "image/webp",
-      fetchpriority: "high",
+      rel: 'preload',
+      href: '/img/SlideshowHomepage/Slide-post-0.webp',
+      as: 'image',
+      type: 'image/webp',
+      fetchpriority: 'high',
     },
 
     // DNS prefetch for localhost
-    { rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
-    { rel: "dns-prefetch", href: "https://fonts.gstatic.com" },
-    { rel: "dns-prefetch", href: "https://discord.gg" },
+    { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
+    { rel: 'dns-prefetch', href: 'https://fonts.gstatic.com' },
+    { rel: 'dns-prefetch', href: 'https://discord.gg' },
 
     // Preconnect for localhost
-    { rel: "preconnect", href: "https://fonts.googleapis.com" },
-    { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
-    { rel: "preconnect", href: "https://discord.gg" },
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+    { rel: 'preconnect', href: 'https://discord.gg' },
 
     // Prefetch for localhost navigation
-    { rel: "prefetch", href: "/docs" },
-    { rel: "prefetch", href: "/discord" },
+    { rel: 'prefetch', href: '/docs' },
+    { rel: 'prefetch', href: '/discord' },
   ];
 }
 
@@ -134,16 +134,16 @@ export function generateLocalhostResourceHints(): Array<{
 export function getLocalhostBundleSplitting(): Record<string, string[]> {
   return {
     // Critical chunks for localhost
-    "vue-core": ["vue"],
-    "vue-runtime": ["vue/dist/runtime-dom.esm-bundler.js"],
+    'vue-core': ['vue'],
+    'vue-runtime': ['vue/dist/runtime-dom.esm-bundler.js'],
 
     // Non-critical chunks for localhost
-    settings: ["./src/pages/settings.astro"],
-    discord: ["./src/utils/error-handling/discord-error-reporter.js"],
-    slideshow: ["./src/components/ImageSlideshow.astro"],
-    performance: ["./src/utils/performance/performance-monitor.js"],
-    "ai-content": ["./src/utils/ai-content/content-analysis.js"],
-    semantic: ["./src/utils/ai-content/semantic-relationships.js"],
+    settings: ['./src/pages/settings.astro'],
+    discord: ['./src/utils/error-handling/discord-error-reporter.js'],
+    slideshow: ['./src/components/ImageSlideshow.astro'],
+    performance: ['./src/utils/performance/performance-monitor.js'],
+    'ai-content': ['./src/utils/ai-content/content-analysis.js'],
+    semantic: ['./src/utils/ai-content/semantic-relationships.js'],
     // enhancement: ["./src/utils/performance/performance-enhancement-loader.js"], // Removed to prevent 404 errors
   };
 }
@@ -222,14 +222,14 @@ export function generateLocalhostPerformanceMonitoring(): string {
  */
 export function getLocalhostOptimizationRecommendations(): string[] {
   return [
-    "✅ Vue tree-shaking implemented",
-    "✅ Critical CSS inlined",
-    "✅ Bundle splitting optimized",
-    "✅ Resource hints generated",
-    "✅ Performance monitoring active",
-    "🎯 Target: Sub-10ms localhost performance",
-    "📊 Monitor: Real-time performance tracking",
-    "🔧 Optimize: Large bundles identified and split",
+    '✅ Vue tree-shaking implemented',
+    '✅ Critical CSS inlined',
+    '✅ Bundle splitting optimized',
+    '✅ Resource hints generated',
+    '✅ Performance monitoring active',
+    '🎯 Target: Sub-10ms localhost performance',
+    '📊 Monitor: Real-time performance tracking',
+    '🔧 Optimize: Large bundles identified and split',
   ];
 }
 
@@ -237,7 +237,7 @@ export function getLocalhostOptimizationRecommendations(): string[] {
  * Main localhost optimization function
  */
 export function optimizeForLocalhost(
-  config: Partial<LocalhostOptimizationConfig> = {},
+  config: Partial<LocalhostOptimizationConfig> = {}
 ): {
   criticalCSS: string;
   resourceHints: Array<{
@@ -256,7 +256,7 @@ export function optimizeForLocalhost(
   return {
     criticalCSS: finalConfig.enableCriticalCSSInlining
       ? generateCriticalCSS()
-      : "",
+      : '',
     resourceHints: finalConfig.enableResourceHints
       ? generateLocalhostResourceHints()
       : [],

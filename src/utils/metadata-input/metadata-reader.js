@@ -25,37 +25,36 @@ export class MetadataReader {
         return {
           success: false,
           error: 'Invalid file path or content',
-          filePath: filePath || 'unknown'
+          filePath: filePath || 'unknown',
         };
       }
 
       // Extract frontmatter from content
       const frontmatter = this.extractFrontmatter(content);
-      
+
       if (!frontmatter) {
         return {
           success: false,
           error: 'No frontmatter found in file',
           filePath,
-          frontmatter: {}
+          frontmatter: {},
         };
       }
 
       // Parse and validate frontmatter
       const metadata = this.parseFrontmatter(frontmatter);
-      
+
       return {
         success: true,
         metadata,
         filePath,
-        frontmatter
+        frontmatter,
       };
-
     } catch (error) {
       return {
         success: false,
         error: `Error reading metadata: ${error.message}`,
-        filePath
+        filePath,
       };
     }
   }
@@ -68,14 +67,17 @@ export class MetadataReader {
   extractFrontmatter(content) {
     try {
       const lines = content.split('\n');
-      const startIndex = lines.findIndex(line => line.trim() === this.frontmatterDelimiter);
-      
+      const startIndex = lines.findIndex(
+        line => line.trim() === this.frontmatterDelimiter
+      );
+
       if (startIndex === -1) {
         return null; // No frontmatter found
       }
 
-      const endIndex = lines.findIndex((line, index) => 
-        index > startIndex && line.trim() === this.frontmatterDelimiter
+      const endIndex = lines.findIndex(
+        (line, index) =>
+          index > startIndex && line.trim() === this.frontmatterDelimiter
       );
 
       if (endIndex === -1) {
@@ -88,7 +90,6 @@ export class MetadataReader {
 
       // Parse YAML-like frontmatter
       return this.parseYamlLike(frontmatterText);
-
     } catch (error) {
       console.error('Error extracting frontmatter:', error);
       return null;
@@ -106,7 +107,7 @@ export class MetadataReader {
 
     for (const line of lines) {
       const trimmedLine = line.trim();
-      
+
       // Skip empty lines and comments
       if (!trimmedLine || trimmedLine.startsWith('#')) {
         continue;
@@ -119,8 +120,10 @@ export class MetadataReader {
         let value = trimmedLine.substring(colonIndex + 1).trim();
 
         // Remove quotes if present
-        if ((value.startsWith('"') && value.endsWith('"')) || 
-            (value.startsWith("'") && value.endsWith("'"))) {
+        if (
+          (value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))
+        ) {
           value = value.slice(1, -1);
         }
 
@@ -159,16 +162,20 @@ export class MetadataReader {
         return [];
       }
 
-      return content.split(',').map(item => {
-        const trimmed = item.trim();
-        // Remove quotes if present
-        if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || 
-            (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-          return trimmed.slice(1, -1);
-        }
-        return trimmed;
-      }).filter(item => item.length > 0);
-
+      return content
+        .split(',')
+        .map(item => {
+          const trimmed = item.trim();
+          // Remove quotes if present
+          if (
+            (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+            (trimmed.startsWith("'") && trimmed.endsWith("'"))
+          ) {
+            return trimmed.slice(1, -1);
+          }
+          return trimmed;
+        })
+        .filter(item => item.length > 0);
     } catch (error) {
       console.error('Error parsing array value:', error);
       return [];
@@ -193,7 +200,10 @@ export class MetadataReader {
       tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
       featured: Boolean(frontmatter.featured),
       contentType: this.validateContentType(frontmatter.contentType),
-      readTime: typeof frontmatter.readTime === 'number' ? frontmatter.readTime : undefined
+      readTime:
+        typeof frontmatter.readTime === 'number'
+          ? frontmatter.readTime
+          : undefined,
     };
   }
 
@@ -231,7 +241,7 @@ export class MetadataReader {
       value: tag,
       priority: 3, // Default priority
       relatedKeywords: [],
-      usageCount: 1
+      usageCount: 1,
     }));
   }
 
@@ -249,7 +259,7 @@ export class MetadataReader {
       errors.push({
         field: 'title',
         message: 'Title is required',
-        code: 'REQUIRED_FIELD'
+        code: 'REQUIRED_FIELD',
       });
     }
 
@@ -257,7 +267,7 @@ export class MetadataReader {
       errors.push({
         field: 'description',
         message: 'Description is required',
-        code: 'REQUIRED_FIELD'
+        code: 'REQUIRED_FIELD',
       });
     }
 
@@ -266,7 +276,7 @@ export class MetadataReader {
       errors.push({
         field: 'title',
         message: 'Title must be 100 characters or less',
-        code: 'LENGTH_EXCEEDED'
+        code: 'LENGTH_EXCEEDED',
       });
     }
 
@@ -274,7 +284,7 @@ export class MetadataReader {
       errors.push({
         field: 'description',
         message: 'Description must be 300 characters or less',
-        code: 'LENGTH_EXCEEDED'
+        code: 'LENGTH_EXCEEDED',
       });
     }
 
@@ -283,14 +293,14 @@ export class MetadataReader {
       warnings.push({
         field: 'tags',
         message: 'Too many tags (maximum 10 recommended)',
-        code: 'TOO_MANY_TAGS'
+        code: 'TOO_MANY_TAGS',
       });
     }
 
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -307,13 +317,13 @@ export class MetadataReader {
       totalTags: 0,
       uniqueTags: new Set(),
       categories: new Set(),
-      difficulties: { beginner: 0, intermediate: 0, advanced: 0 }
+      difficulties: { beginner: 0, intermediate: 0, advanced: 0 },
     };
 
     for (const result of fileResults) {
       if (result.success && result.metadata) {
         stats.successfulReads++;
-        
+
         // Count tags
         if (result.metadata.tags) {
           stats.totalTags += result.metadata.tags.length;
@@ -324,7 +334,7 @@ export class MetadataReader {
         if (result.metadata.category) {
           stats.categories.add(result.metadata.category);
         }
-        
+
         if (result.metadata.difficulty) {
           stats.difficulties[result.metadata.difficulty]++;
         }
@@ -336,7 +346,7 @@ export class MetadataReader {
     return {
       ...stats,
       uniqueTags: Array.from(stats.uniqueTags),
-      categories: Array.from(stats.categories)
+      categories: Array.from(stats.categories),
     };
   }
 
@@ -348,7 +358,7 @@ export class MetadataReader {
   detectMetadataGaps(metadata) {
     const gaps = [];
     const requiredFields = ['title', 'description', 'tags'];
-    
+
     for (const field of requiredFields) {
       const value = metadata[field];
       if (this.isFieldIncomplete(field, value)) {
@@ -356,11 +366,11 @@ export class MetadataReader {
           field,
           type: this.determineGapType(field, value),
           priority: this.calculateGapPriority(field, value),
-          suggestedValue: this.generateSuggestedValue(field, metadata)
+          suggestedValue: this.generateSuggestedValue(field, metadata),
         });
       }
     }
-    
+
     return gaps;
   }
 
@@ -419,7 +429,9 @@ export class MetadataReader {
       case 'description':
         return metadata.title ? `${metadata.title}に関する詳細情報` : undefined;
       case 'tags':
-        return metadata.category ? [metadata.category, metadata.difficulty].join(', ') : undefined;
+        return metadata.category
+          ? [metadata.category, metadata.difficulty].join(', ')
+          : undefined;
       default:
         return undefined;
     }

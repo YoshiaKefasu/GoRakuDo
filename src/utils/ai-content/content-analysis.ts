@@ -12,9 +12,9 @@
  * SIMPLIFIED VERSION: Text-editor based configuration system
  */
 
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 // import { MIND_MAP_CONFIG } from "../../components/mind-map/mind-map-config"; // Removed - MindMap functionality deprecated
-import { logger } from "../logging/console-logger";
+import { logger } from '../logging/console-logger';
 
 // Use the simplified mind map configuration - DISABLED: MindMap functionality deprecated
 // MindMap functionality deprecated - constant removed
@@ -24,8 +24,8 @@ export interface ContentAnalysisResult {
   // mindMapBranch: string; // Removed - MindMap functionality deprecated
   // mindMapBranchData: import("../../components/mind-map/mind-map-config").MindMapBranch; // Removed - MindMap functionality deprecated
   keywords: string[];
-  difficulty: "beginner" | "intermediate" | "advanced";
-  contentType: "guide" | "tutorial" | "theory" | "practice" | "tool" | "review";
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  contentType: 'guide' | 'tutorial' | 'theory' | 'practice' | 'tool' | 'review';
 }
 
 // Export the interface as ContentAnalysis for backward compatibility
@@ -111,7 +111,7 @@ export type LinkSuggestion = InternalLinkSuggestion;
  * Enhanced content analysis with mind map customization support
  */
 export function analyzeContent(
-  post: CollectionEntry<"docs">,
+  post: CollectionEntry<'docs'>
 ): ContentAnalysisResult {
   // Content analysis started for post: "${post.data.title}"
 
@@ -121,16 +121,16 @@ export function analyzeContent(
     return {
       // mindMapBranch: "general", // Removed - MindMap functionality deprecated
       // mindMapBranchData: MIND_MAP_BRANCHES.A, // Removed - MindMap functionality deprecated
-      keywords: ["immersion", "filosofi", "teori", "konsep", "metodologi"],
-      difficulty: "beginner",
-      contentType: "guide",
+      keywords: ['immersion', 'filosofi', 'teori', 'konsep', 'metodologi'],
+      difficulty: 'beginner',
+      contentType: 'guide',
     };
   }
 
   const { title, description, tags } = post.data;
-  const content = post.body || "";
+  const content = post.body || '';
   const text =
-    `${title || ""} ${description || ""} ${(tags || []).join(" ")} ${content}`.toLowerCase();
+    `${title || ''} ${description || ''} ${(tags || []).join(' ')} ${content}`.toLowerCase();
 
   // MindMap branch detection removed - functionality deprecated
   // const branches = MIND_MAP_BRANCHES;
@@ -156,40 +156,40 @@ export function analyzeContent(
   // Enhanced difficulty detection
   const difficulty =
     content.length > 5000
-      ? "advanced"
+      ? 'advanced'
       : content.length > 2000
-        ? "intermediate"
-        : "beginner";
+        ? 'intermediate'
+        : 'beginner';
 
   // Enhanced content type detection - check both tags and category with priority for tools
   let contentType:
-    | "guide"
-    | "tutorial"
-    | "theory"
-    | "practice"
-    | "tool"
-    | "review" = "review"; // default
+    | 'guide'
+    | 'tutorial'
+    | 'theory'
+    | 'practice'
+    | 'tool'
+    | 'review' = 'review'; // default
 
   // Priority 1: Check for tool-related content first (highest priority)
   if (
-    (tags || []).includes("tool") ||
-    post.data.category === "tools" ||
-    text.includes("anki") ||
-    text.includes("flashcard") ||
-    text.includes("srs") ||
-    text.includes("spaced-repetition")
+    (tags || []).includes('tool') ||
+    post.data.category === 'tools' ||
+    text.includes('anki') ||
+    text.includes('flashcard') ||
+    text.includes('srs') ||
+    text.includes('spaced-repetition')
   ) {
-    contentType = "tool";
+    contentType = 'tool';
   }
   // Priority 2: Check for other content types
-  else if ((tags || []).includes("guide") || text.includes("panduan")) {
-    contentType = "guide";
-  } else if ((tags || []).includes("tutorial")) {
-    contentType = "tutorial";
-  } else if ((tags || []).includes("theory")) {
-    contentType = "theory";
-  } else if ((tags || []).includes("practice")) {
-    contentType = "practice";
+  else if ((tags || []).includes('guide') || text.includes('panduan')) {
+    contentType = 'guide';
+  } else if ((tags || []).includes('tutorial')) {
+    contentType = 'tutorial';
+  } else if ((tags || []).includes('theory')) {
+    contentType = 'theory';
+  } else if ((tags || []).includes('practice')) {
+    contentType = 'practice';
   }
 
   // Content type detection completed for "${post.data.title}"
@@ -197,7 +197,7 @@ export function analyzeContent(
   return {
     // mindMapBranch: "general", // Removed - MindMap functionality deprecated
     // mindMapBranchData: branchData, // Removed - MindMap functionality deprecated
-    keywords: ["immersion", "filosofi", "teori", "konsep", "metodologi"], // Default keywords
+    keywords: ['immersion', 'filosofi', 'teori', 'konsep', 'metodologi'], // Default keywords
     difficulty,
     contentType,
   };
@@ -217,16 +217,16 @@ export function analyzeContent(
  * Enhanced internal link generation with mind map context and adaptive count
  */
 export function generateInternalLinks(
-  currentPost: CollectionEntry<"docs">,
-  allPosts: CollectionEntry<"docs">[],
-  maxLinks: number = 3,
+  currentPost: CollectionEntry<'docs'>,
+  allPosts: CollectionEntry<'docs'>[],
+  maxLinks: number = 3
 ): InternalLinkSuggestion[] {
   // const currentAnalysis = analyzeContent(currentPost); // Removed - not used after MindMap cleanup
   const suggestions: InternalLinkSuggestion[] = [];
 
   // Safety check for post body
   if (!currentPost.body) {
-    logger.log(`Post ${currentPost.slug} has no body content`, "warning");
+    logger.log(`Post ${currentPost.slug} has no body content`, 'warning');
     return suggestions;
   }
 
@@ -235,18 +235,18 @@ export function generateInternalLinks(
   const adaptiveMaxLinks = calculateAdaptiveLinkCount(contentLength, maxLinks);
 
   logger.verbose(
-    `Content length: ${contentLength} chars, adaptive links: ${adaptiveMaxLinks}`,
+    `Content length: ${contentLength} chars, adaptive links: ${adaptiveMaxLinks}`
   );
 
   // Find related posts with enhanced scoring and mind map context
   const relatedPosts = allPosts
-    .filter((post) => post.slug !== currentPost.slug)
-    .map((post) => {
+    .filter(post => post.slug !== currentPost.slug)
+    .map(post => {
       const analysis = analyzeContent(post);
       const relevance = 0.6; // Default relevance for deprecated MindMap functionality
 
       // Determine relationship type for mind map context - DISABLED: MindMap functionality deprecated
-      const relationshipType = "related-branch"; // Default relationship type
+      const relationshipType = 'related-branch'; // Default relationship type
 
       return { post, relevance, analysis, relationshipType };
     })
@@ -256,23 +256,22 @@ export function generateInternalLinks(
   // Intelligent positioning strategy
   const optimalSpacing = Math.max(
     800,
-    Math.floor(contentLength / (adaptiveMaxLinks + 1)),
+    Math.floor(contentLength / (adaptiveMaxLinks + 1))
   ); // Minimum 800 chars between links
 
   // Find optimal insertion points based on content structure
   const insertionPoints = findOptimalInsertionPoints(
     currentPost.body,
     adaptiveMaxLinks,
-    optimalSpacing,
+    optimalSpacing
   );
 
   // Generate suggestions with intelligent positioning - MindMap context removed
-  relatedPosts.forEach(
-    ({ post, relevance }, index) => {
-      const insertPosition = insertionPoints[index] || currentPost.body.length;
+  relatedPosts.forEach(({ post, relevance }, index) => {
+    const insertPosition = insertionPoints[index] || currentPost.body.length;
 
-      // Create mind map context for better user understanding - DISABLED: MindMap functionality deprecated
-      /*
+    // Create mind map context for better user understanding - DISABLED: MindMap functionality deprecated
+    /*
       const mindMapContext = {
         sourceBranch: currentAnalysis.mindMapBranch,
         targetBranch: analysis.mindMapBranch,
@@ -284,16 +283,15 @@ export function generateInternalLinks(
       };
       */
 
-      suggestions.push({
-        targetSlug: post.slug,
-        targetTitle: post.data.title,
-        reason: `Related content in the same branch`, // MindMap functionality deprecated
-        relevance,
-        position: insertPosition,
-        // mindMapContext, // Removed - MindMap functionality deprecated
-      });
-    },
-  );
+    suggestions.push({
+      targetSlug: post.slug,
+      targetTitle: post.data.title,
+      reason: `Related content in the same branch`, // MindMap functionality deprecated
+      relevance,
+      position: insertPosition,
+      // mindMapContext, // Removed - MindMap functionality deprecated
+    });
+  });
 
   return suggestions;
 }
@@ -309,7 +307,7 @@ export function generateInternalLinks(
  */
 function calculateAdaptiveLinkCount(
   contentLength: number,
-  maxLinks: number,
+  maxLinks: number
 ): number {
   // Content length thresholds
   const SHORT_CONTENT_THRESHOLD = 2568;
@@ -336,15 +334,15 @@ function calculateAdaptiveLinkCount(
 function findOptimalInsertionPoints(
   content: string,
   maxLinks: number,
-  optimalSpacing: number,
+  optimalSpacing: number
 ): number[] {
   const insertionPoints: number[] = [];
   const contentLength = content.length;
 
   // Find ALL header positions to avoid them completely
   const headerMatches = [...content.matchAll(/^#{1,6}\s+.+$/gm)];
-  const headerPositions = headerMatches.map((match) => {
-    const endOfHeader = content.indexOf("\n", match.index!);
+  const headerPositions = headerMatches.map(match => {
+    const endOfHeader = content.indexOf('\n', match.index!);
     return endOfHeader > 0 ? endOfHeader : match.index! + match[0].length;
   });
 
@@ -352,12 +350,12 @@ function findOptimalInsertionPoints(
   const paragraphBreaks = [...content.matchAll(/\n\n+/g)];
   const safePositions: number[] = [];
 
-  paragraphBreaks.forEach((match) => {
+  paragraphBreaks.forEach(match => {
     const position = match.index! + match[0].length;
 
     // Check if this position is too close to any header
     const isTooCloseToHeader = headerPositions.some(
-      (headerPos) => Math.abs(position - headerPos) < 500, // Minimum 500 characters from any header
+      headerPos => Math.abs(position - headerPos) < 500 // Minimum 500 characters from any header
     );
 
     if (!isTooCloseToHeader) {
@@ -369,12 +367,12 @@ function findOptimalInsertionPoints(
   if (safePositions.length < maxLinks) {
     for (let i = 1; i <= maxLinks; i++) {
       const candidatePosition = Math.floor(
-        (contentLength * i) / (maxLinks + 1),
+        (contentLength * i) / (maxLinks + 1)
       );
 
       // Check if this candidate is safe from headers
       const isTooCloseToHeader = headerPositions.some(
-        (headerPos) => Math.abs(candidatePosition - headerPos) < 500,
+        headerPos => Math.abs(candidatePosition - headerPos) < 500
       );
 
       if (!isTooCloseToHeader && !safePositions.includes(candidatePosition)) {
@@ -399,12 +397,12 @@ function findOptimalInsertionPoints(
         const bestDistance = Math.abs(best - midContentPosition);
         return distanceFromIdeal < bestDistance ? pos : best;
       },
-      safePositions[0] || Math.floor(contentLength * 0.6),
+      safePositions[0] || Math.floor(contentLength * 0.6)
     );
 
     // Final safety check
     const finalCheck = headerPositions.some(
-      (headerPos) => Math.abs(bestPosition - headerPos) < 500,
+      headerPos => Math.abs(bestPosition - headerPos) < 500
     );
 
     if (!finalCheck && bestPosition) {
@@ -427,7 +425,7 @@ function findOptimalInsertionPoints(
           position,
           currentPosition,
           optimalSpacing,
-          contentLength,
+          contentLength
         );
         if (score > bestScore) {
           bestScore = score;
@@ -453,12 +451,12 @@ function calculateSafePositionScore(
   position: number,
   lastPosition: number,
   optimalSpacing: number,
-  contentLength: number,
+  contentLength: number
 ): number {
   const spacing = position - lastPosition;
   const spacingScore = Math.max(
     0,
-    100 - Math.abs(spacing - optimalSpacing) / 10,
+    100 - Math.abs(spacing - optimalSpacing) / 10
   );
 
   // Bonus for positions in the middle sections of content

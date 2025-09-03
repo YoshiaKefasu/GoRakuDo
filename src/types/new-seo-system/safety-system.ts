@@ -44,20 +44,22 @@ export class SafetyChecker {
       recommendations: [],
       riskLevel: 'LOW',
       timestamp: new Date(),
-      checker: 'SafetyChecker'
+      checker: 'SafetyChecker',
     };
 
     // 変更禁止ゾーンのチェック
     const restrictedPaths = [
       'src/utils/performance/',
       'src/utils/security/',
-      'src/utils/error-handling/'
+      'src/utils/error-handling/',
     ];
 
     restrictedPaths.forEach(path => {
       // 実際のファイルシステムチェック
       if (this.hasModifications(path)) {
-        result.violations.push(`変更禁止ゾーン "${path}" に変更が検出されました`);
+        result.violations.push(
+          `変更禁止ゾーン "${path}" に変更が検出されました`
+        );
         result.isSafe = false;
         result.riskLevel = 'CRITICAL';
       }

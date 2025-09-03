@@ -67,11 +67,15 @@ export type PromiseResult<T> = T extends Promise<infer U> ? U : never;
 
 // ========== FUNCTION PARAMETERS HELPER ==========
 // Helper type for extracting function parameter types
-export type FunctionParameters<T> = T extends (...args: infer P) => any ? P : never;
+export type FunctionParameters<T> = T extends (...args: infer P) => any
+  ? P
+  : never;
 
 // ========== FUNCTION RETURN TYPE HELPER ==========
 // Helper type for extracting function return types
-export type FunctionReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+export type FunctionReturnType<T> = T extends (...args: any[]) => infer R
+  ? R
+  : never;
 
 // ========== CONDITIONAL TYPES ==========
 // Advanced conditional type utilities
@@ -82,7 +86,10 @@ export type If<C extends boolean, T, F> = C extends true ? T : F;
 
 // ========== EQUALS CONDITIONAL TYPE ==========
 // Conditional type for equality checking
-export type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends (<T>() => T extends Y ? 1 : 2) ? true : false;
+export type Equals<X, Y> =
+  (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2
+    ? true
+    : false;
 
 // ========== EXTENDS CONDITIONAL TYPE ==========
 // Conditional type for extends checking
@@ -94,15 +101,25 @@ export type Not<T extends boolean> = T extends true ? false : true;
 
 // ========== AND CONDITIONAL TYPE ==========
 // Conditional type for logical AND
-export type And<A extends boolean, B extends boolean> = A extends true ? B extends true ? true : false : false;
+export type And<A extends boolean, B extends boolean> = A extends true
+  ? B extends true
+    ? true
+    : false
+  : false;
 
 // ========== OR CONDITIONAL TYPE ==========
 // Conditional type for logical OR
-export type Or<A extends boolean, B extends boolean> = A extends true ? true : B extends true ? true : false;
+export type Or<A extends boolean, B extends boolean> = A extends true
+  ? true
+  : B extends true
+    ? true
+    : false;
 
 // ========== XOR CONDITIONAL TYPE ==========
 // Conditional type for logical XOR
-export type Xor<A extends boolean, B extends boolean> = A extends B ? false : true;
+export type Xor<A extends boolean, B extends boolean> = A extends B
+  ? false
+  : true;
 
 // ========== STRING UTILITY TYPES ==========
 // String manipulation utility types
@@ -121,7 +138,10 @@ export type StringSuffix<T extends string, S extends string> = `${T}${S}`;
 
 // ========== STRING TEMPLATE HELPER ==========
 // Helper type for string template literals (simplified for compatibility)
-export type StringTemplate<_T extends string, _U extends Record<string, any>> = string;
+export type StringTemplate<
+  _T extends string,
+  _U extends Record<string, any>,
+> = string;
 
 // ========== NUMBER UTILITY TYPES ==========
 // Number manipulation utility types
@@ -155,15 +175,27 @@ export type ArrayLength<T extends readonly any[]> = T['length'];
 
 // ========== ARRAY FIRST ELEMENT HELPER ==========
 // Helper type for first array element
-export type ArrayFirst<T extends readonly any[]> = T extends [infer First, ...any[]] ? First : never;
+export type ArrayFirst<T extends readonly any[]> = T extends [
+  infer First,
+  ...any[],
+]
+  ? First
+  : never;
 
 // ========== ARRAY LAST ELEMENT HELPER ==========
 // Helper type for last array element
-export type ArrayLast<T extends readonly any[]> = T extends [...any[], infer Last] ? Last : never;
+export type ArrayLast<T extends readonly any[]> = T extends [
+  ...any[],
+  infer Last,
+]
+  ? Last
+  : never;
 
 // ========== ARRAY REST ELEMENTS HELPER ==========
 // Helper type for rest array elements
-export type ArrayRest<T extends readonly any[]> = T extends [any, ...infer Rest] ? Rest : never;
+export type ArrayRest<T extends readonly any[]> = T extends [any, ...infer Rest]
+  ? Rest
+  : never;
 
 // ========== ARRAY PUSH HELPER ==========
 // Helper type for pushing to arrays
@@ -171,11 +203,18 @@ export type ArrayPush<T extends readonly any[], U> = [...T, U];
 
 // ========== ARRAY POP HELPER ==========
 // Helper type for popping from arrays
-export type ArrayPop<T extends readonly any[]> = T extends [...infer Rest, any] ? Rest : never;
+export type ArrayPop<T extends readonly any[]> = T extends [...infer Rest, any]
+  ? Rest
+  : never;
 
 // ========== ARRAY SHIFT HELPER ==========
 // Helper type for shifting from arrays
-export type ArrayShift<T extends readonly any[]> = T extends [any, ...infer Rest] ? Rest : never;
+export type ArrayShift<T extends readonly any[]> = T extends [
+  any,
+  ...infer Rest,
+]
+  ? Rest
+  : never;
 
 // ========== ARRAY UNSHIFT HELPER ==========
 // Helper type for unshifting to arrays
@@ -183,11 +222,18 @@ export type ArrayUnshift<T extends readonly any[], U> = [U, ...T];
 
 // ========== ARRAY CONCAT HELPER ==========
 // Helper type for concatenating arrays
-export type ArrayConcat<T extends readonly any[], U extends readonly any[]> = [...T, ...U];
+export type ArrayConcat<T extends readonly any[], U extends readonly any[]> = [
+  ...T,
+  ...U,
+];
 
 // ========== ARRAY SLICE HELPER ==========
 // Helper type for slicing arrays (simplified for compatibility)
-export type ArraySlice<T extends readonly any[], _Start extends number, _End extends number> = T;
+export type ArraySlice<
+  T extends readonly any[],
+  _Start extends number,
+  _End extends number,
+> = T;
 
 // ========== OBJECT UTILITY TYPES ==========
 // Object manipulation utility types
@@ -231,7 +277,10 @@ export type FunctionOverload<T> = T extends (...args: any[]) => any ? T : never;
 
 // ========== FUNCTION CURRY HELPER ==========
 // Helper type for function currying
-export type FunctionCurry<T> = T extends (a: infer A, ...args: infer B) => infer R
+export type FunctionCurry<T> = T extends (
+  a: infer A,
+  ...args: infer B
+) => infer R
   ? B extends []
     ? T
     : (a: A) => FunctionCurry<(...args: B) => R>
@@ -239,31 +288,31 @@ export type FunctionCurry<T> = T extends (a: infer A, ...args: infer B) => infer
 
 // ========== FUNCTION COMPOSE HELPER ==========
 // Helper type for function composition
-export type FunctionCompose<T extends readonly ((...args: any[]) => any)[]> = T extends [
-  infer First,
-  ...infer Rest
-]
-  ? First extends (...args: any[]) => any
-    ? Rest extends readonly ((...args: any[]) => any)[]
-      ? FunctionCompose<Rest> extends (...args: infer _Args) => infer R
-        ? (arg: R) => ReturnType<First>
+export type FunctionCompose<T extends readonly ((...args: any[]) => any)[]> =
+  T extends [infer First, ...infer Rest]
+    ? First extends (...args: any[]) => any
+      ? Rest extends readonly ((...args: any[]) => any)[]
+        ? FunctionCompose<Rest> extends (...args: infer _Args) => infer R
+          ? (arg: R) => ReturnType<First>
+          : never
         : never
       : never
-    : never
-  : never;
+    : never;
 
 // ========== VALIDATION UTILITY TYPES ==========
 // Validation utility types for type safety
 
 // ========== VALIDATION RESULT HELPER ==========
 // Helper type for validation results
-export type ValidationResult<T> = {
-  isValid: true;
-  value: T;
-} | {
-  isValid: false;
-  errors: string[];
-};
+export type ValidationResult<T> =
+  | {
+      isValid: true;
+      value: T;
+    }
+  | {
+      isValid: false;
+      errors: string[];
+    };
 
 // ========== VALIDATION RULE HELPER ==========
 // Helper type for validation rules
@@ -288,13 +337,15 @@ export type ErrorType<T extends Error = Error> = T;
 
 // ========== ERROR RESULT HELPER ==========
 // Helper type for error results
-export type ErrorResult<T, E extends Error = Error> = {
-  success: true;
-  data: T;
-} | {
-  success: false;
-  error: E;
-};
+export type ErrorResult<T, E extends Error = Error> =
+  | {
+      success: true;
+      data: T;
+    }
+  | {
+      success: false;
+      error: E;
+    };
 
 // ========== ERROR HANDLER HELPER ==========
 // Helper type for error handlers
@@ -302,7 +353,9 @@ export type ErrorHandler<T extends Error = Error> = (error: T) => void;
 
 // ========== ERROR MAPPER HELPER ==========
 // Helper type for error mappers
-export type ErrorMapper<T extends Error = Error, U extends Error = Error> = (error: T) => U;
+export type ErrorMapper<T extends Error = Error, U extends Error = Error> = (
+  error: T
+) => U;
 
 // ========== PERFORMANCE UTILITY TYPES ==========
 // Performance utility types
@@ -376,11 +429,18 @@ export type TranslationValue = string;
 
 // ========== TRANSLATION MAP HELPER ==========
 // Helper type for translation maps
-export type TranslationMap = Record<Locale, Record<TranslationKey, TranslationValue>>;
+export type TranslationMap = Record<
+  Locale,
+  Record<TranslationKey, TranslationValue>
+>;
 
 // ========== TRANSLATION FUNCTION HELPER ==========
 // Helper type for translation functions
-export type TranslationFunction = (key: TranslationKey, locale: Locale, params?: Record<string, any>) => TranslationValue;
+export type TranslationFunction = (
+  key: TranslationKey,
+  locale: Locale,
+  params?: Record<string, any>
+) => TranslationValue;
 
 // ========== ACCESSIBILITY UTILITY TYPES ==========
 // Accessibility utility types
@@ -447,7 +507,11 @@ export type SEOReport = {
 
 // ========== KEYWORD TYPE HELPER ==========
 // Helper type for keyword types
-export type KeywordType = 'PRIMARY' | 'SECONDARY' | 'LONG_TAIL' | 'LATENT_SEMANTIC';
+export type KeywordType =
+  | 'PRIMARY'
+  | 'SECONDARY'
+  | 'LONG_TAIL'
+  | 'LATENT_SEMANTIC';
 
 // ========== KEYWORD DIFFICULTY HELPER ==========
 // Helper type for keyword difficulty
@@ -486,7 +550,14 @@ export type MetaTagPriority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 
 // ========== META TAG CATEGORY HELPER ==========
 // Helper type for meta tag categories
-export type MetaTagCategory = 'BASIC_SEO' | 'SOCIAL_MEDIA' | 'PERFORMANCE' | 'SECURITY' | 'ACCESSIBILITY' | 'ANALYTICS' | 'CUSTOM';
+export type MetaTagCategory =
+  | 'BASIC_SEO'
+  | 'SOCIAL_MEDIA'
+  | 'PERFORMANCE'
+  | 'SECURITY'
+  | 'ACCESSIBILITY'
+  | 'ANALYTICS'
+  | 'CUSTOM';
 
 // ========== META TAG VALIDATION HELPER ==========
 // Helper type for meta tag validation

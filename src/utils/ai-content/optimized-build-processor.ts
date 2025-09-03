@@ -2,7 +2,7 @@
 // Provides optimized build processing capabilities for AI content generation
 // Handles build-time content analysis and optimization
 
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 
 // Build processing statistics interface
 export interface BuildProcessingStats {
@@ -41,17 +41,17 @@ export class OptimizedBuildProcessor {
    */
   static shouldEnableOptimizedProcessing(): boolean {
     // Enable in production builds
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === 'production') {
       return true;
     }
 
     // Enable if content size is large
-    if (process.env.CONTENT_SIZE === "large") {
+    if (process.env.CONTENT_SIZE === 'large') {
       return true;
     }
 
     // Enable if explicitly requested
-    if (process.env.ENABLE_OPTIMIZED_PROCESSING === "true") {
+    if (process.env.ENABLE_OPTIMIZED_PROCESSING === 'true') {
       return true;
     }
 
@@ -62,26 +62,26 @@ export class OptimizedBuildProcessor {
    * Process posts with optimization
    */
   async processPosts(
-    posts: CollectionEntry<"docs">[],
-  ): Promise<CollectionEntry<"docs">[]> {
+    posts: CollectionEntry<'docs'>[]
+  ): Promise<CollectionEntry<'docs'>[]> {
     this.stats.totalPosts = posts.length;
     this.stats.startTime = Date.now();
 
     try {
       const processedPosts = await Promise.all(
-        posts.map(async (post) => {
+        posts.map(async post => {
           try {
             const processedPost = await this.processSinglePost(post);
             this.stats.processedPosts++;
             return processedPost;
           } catch (error) {
             this.stats.errors.push(
-              `Error processing post ${post.id}: ${error}`,
+              `Error processing post ${post.id}: ${error}`
             );
             this.stats.skippedPosts++;
             return post; // Return original post on error
           }
-        }),
+        })
       );
 
       this.stats.processingTime = Date.now() - this.startTime;
@@ -98,18 +98,18 @@ export class OptimizedBuildProcessor {
    * Process a single post with optimization
    */
   private async processSinglePost(
-    post: CollectionEntry<"docs">,
-  ): Promise<CollectionEntry<"docs">> {
+    post: CollectionEntry<'docs'>
+  ): Promise<CollectionEntry<'docs'>> {
     // Basic optimization: validate and enhance metadata
     const enhancedPost = {
       ...post,
       data: {
         ...post.data,
         // Ensure required fields are present
-        title: post.data.title || "Untitled",
-        description: post.data.description || "",
+        title: post.data.title || 'Untitled',
+        description: post.data.description || '',
         publishedDate: post.data.publishedDate || new Date().toISOString(),
-        author: post.data.author || "Tim GoRakuDo",
+        author: post.data.author || 'Tim GoRakuDo',
       },
     };
 
@@ -129,7 +129,7 @@ export class OptimizedBuildProcessor {
    * Get current memory usage
    */
   private getMemoryUsage(): number {
-    if (typeof process !== "undefined" && process.memoryUsage) {
+    if (typeof process !== 'undefined' && process.memoryUsage) {
       return process.memoryUsage().heapUsed / 1024 / 1024; // MB
     }
     return 0;
@@ -165,8 +165,8 @@ export class OptimizedBuildProcessor {
  * Convenience function for processing posts with optimization
  */
 export async function runOptimizedBuildProcessing(
-  posts: CollectionEntry<"docs">[],
-): Promise<{ posts: CollectionEntry<"docs">[]; stats: BuildProcessingStats }> {
+  posts: CollectionEntry<'docs'>[]
+): Promise<{ posts: CollectionEntry<'docs'>[]; stats: BuildProcessingStats }> {
   const processor = new OptimizedBuildProcessor();
   const processedPosts = await processor.processPosts(posts);
   const stats = processor.getStats();

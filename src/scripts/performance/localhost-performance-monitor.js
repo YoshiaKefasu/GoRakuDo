@@ -25,82 +25,82 @@ class LocalhostPerformanceMonitor {
     // Monitor localhost long tasks
     this.observeLocalhostLongTasks();
 
-    console.log("🚀 Localhost Performance Monitor initialized - Target: 10ms");
+    console.log('🚀 Localhost Performance Monitor initialized - Target: 10ms');
   }
 
   observeLocalhostNavigationTiming() {
-    if ("PerformanceObserver" in window) {
-      const observer = new PerformanceObserver((list) => {
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
-          if (entry.entryType === "navigation") {
+          if (entry.entryType === 'navigation') {
             this.measureLocalhostPageLoad(entry);
           }
         }
       });
 
-      observer.observe({ entryTypes: ["navigation"] });
+      observer.observe({ entryTypes: ['navigation'] });
       this.observers.push(observer);
     }
   }
 
   observeLocalhostCoreWebVitals() {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       // First Contentful Paint for localhost
-      const fcpObserver = new PerformanceObserver((list) => {
+      const fcpObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureLocalhostFCP(entry);
         }
       });
-      fcpObserver.observe({ entryTypes: ["paint"] });
+      fcpObserver.observe({ entryTypes: ['paint'] });
       this.observers.push(fcpObserver);
 
       // Largest Contentful Paint for localhost
-      const lcpObserver = new PerformanceObserver((list) => {
+      const lcpObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureLocalhostLCP(entry);
         }
       });
-      lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
       this.observers.push(lcpObserver);
 
       // First Input Delay for localhost
-      const fidObserver = new PerformanceObserver((list) => {
+      const fidObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureLocalhostFID(entry);
         }
       });
-      fidObserver.observe({ entryTypes: ["first-input"] });
+      fidObserver.observe({ entryTypes: ['first-input'] });
       this.observers.push(fidObserver);
 
       // Cumulative Layout Shift for localhost
-      const clsObserver = new PerformanceObserver((list) => {
+      const clsObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.measureLocalhostCLS(entry);
         }
       });
-      clsObserver.observe({ entryTypes: ["layout-shift"] });
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
       this.observers.push(clsObserver);
     }
   }
 
   observeLocalhostResourceTiming() {
-    if ("PerformanceObserver" in window) {
-      const observer = new PerformanceObserver((list) => {
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
-          if (entry.entryType === "resource") {
+          if (entry.entryType === 'resource') {
             this.measureLocalhostResourceLoad(entry);
           }
         }
       });
 
-      observer.observe({ entryTypes: ["resource"] });
+      observer.observe({ entryTypes: ['resource'] });
       this.observers.push(observer);
     }
   }
 
   observeLocalhostLongTasks() {
-    if ("PerformanceObserver" in window) {
-      const observer = new PerformanceObserver((list) => {
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           if (entry.duration > 10) {
             // Tasks longer than 10ms for localhost
@@ -109,7 +109,7 @@ class LocalhostPerformanceMonitor {
         }
       });
 
-      observer.observe({ entryTypes: ["longtask"] });
+      observer.observe({ entryTypes: ['longtask'] });
       this.observers.push(observer);
     }
   }
@@ -128,25 +128,25 @@ class LocalhostPerformanceMonitor {
       performance: this.getLocalhostPerformanceGrade(loadTime),
     };
 
-    this.reportLocalhostMetrics("Localhost Page Load", {
-      "Total Load Time": `${loadTime.toFixed(2)}ms`,
-      "DOM Content Loaded": `${domContentLoaded.toFixed(2)}ms`,
-      "First Paint": `${firstPaint.toFixed(2)}ms`,
-      "Target Met": loadTime <= this.targetLoadTime ? "✅" : "❌",
+    this.reportLocalhostMetrics('Localhost Page Load', {
+      'Total Load Time': `${loadTime.toFixed(2)}ms`,
+      'DOM Content Loaded': `${domContentLoaded.toFixed(2)}ms`,
+      'First Paint': `${firstPaint.toFixed(2)}ms`,
+      'Target Met': loadTime <= this.targetLoadTime ? '✅' : '❌',
     });
   }
 
   measureLocalhostFCP(entry) {
-    if (entry.name === "first-contentful-paint") {
+    if (entry.name === 'first-contentful-paint') {
       this.metrics.fcp = {
         value: entry.startTime,
         targetMet: entry.startTime <= 500, // 500ms target for localhost
         performance: this.getLocalhostPerformanceGrade(entry.startTime),
       };
 
-      this.reportLocalhostMetrics("Localhost First Contentful Paint", {
+      this.reportLocalhostMetrics('Localhost First Contentful Paint', {
         FCP: `${entry.startTime.toFixed(2)}ms`,
-        "Target Met": entry.startTime <= 500 ? "✅" : "❌",
+        'Target Met': entry.startTime <= 500 ? '✅' : '❌',
       });
     }
   }
@@ -158,9 +158,9 @@ class LocalhostPerformanceMonitor {
       performance: this.getLocalhostPerformanceGrade(entry.startTime),
     };
 
-    this.reportLocalhostMetrics("Localhost Largest Contentful Paint", {
+    this.reportLocalhostMetrics('Localhost Largest Contentful Paint', {
       LCP: `${entry.startTime.toFixed(2)}ms`,
-      "Target Met": entry.startTime <= 750 ? "✅" : "❌",
+      'Target Met': entry.startTime <= 750 ? '✅' : '❌',
     });
   }
 
@@ -169,13 +169,13 @@ class LocalhostPerformanceMonitor {
       value: entry.processingStart - entry.startTime,
       targetMet: entry.processingStart - entry.startTime <= 50, // 50ms target for localhost
       performance: this.getLocalhostPerformanceGrade(
-        entry.processingStart - entry.startTime,
+        entry.processingStart - entry.startTime
       ),
     };
 
-    this.reportLocalhostMetrics("Localhost First Input Delay", {
+    this.reportLocalhostMetrics('Localhost First Input Delay', {
       FID: `${(entry.processingStart - entry.startTime).toFixed(2)}ms`,
-      "Target Met": entry.processingStart - entry.startTime <= 50 ? "✅" : "❌",
+      'Target Met': entry.processingStart - entry.startTime <= 50 ? '✅' : '❌',
     });
   }
 
@@ -186,13 +186,13 @@ class LocalhostPerformanceMonitor {
 
     this.metrics.cls.entries.push(entry);
     this.metrics.cls.value = this.calculateLocalhostCLS(
-      this.metrics.cls.entries,
+      this.metrics.cls.entries
     );
     this.metrics.cls.targetMet = this.metrics.cls.value <= 0.05; // 0.05 target for localhost
 
-    this.reportLocalhostMetrics("Localhost Cumulative Layout Shift", {
+    this.reportLocalhostMetrics('Localhost Cumulative Layout Shift', {
       CLS: this.metrics.cls.value.toFixed(3),
-      "Target Met": this.metrics.cls.value <= 0.05 ? "✅" : "❌",
+      'Target Met': this.metrics.cls.value <= 0.05 ? '✅' : '❌',
     });
   }
 
@@ -211,27 +211,27 @@ class LocalhostPerformanceMonitor {
 
     if (loadTime > 50) {
       // Report slow resources for localhost
-      this.reportLocalhostMetrics("Localhost Slow Resource", {
+      this.reportLocalhostMetrics('Localhost Slow Resource', {
         Resource: entry.name,
-        "Load Time": `${loadTime.toFixed(2)}ms`,
+        'Load Time': `${loadTime.toFixed(2)}ms`,
         Size: `${(entry.transferSize / 1024).toFixed(2)}KB`,
       });
     }
   }
 
   reportLocalhostLongTask(entry) {
-    this.reportLocalhostMetrics("Localhost Long Task Detected", {
+    this.reportLocalhostMetrics('Localhost Long Task Detected', {
       Duration: `${entry.duration.toFixed(2)}ms`,
-      "Start Time": `${entry.startTime.toFixed(2)}ms`,
+      'Start Time': `${entry.startTime.toFixed(2)}ms`,
     });
   }
 
   getLocalhostPerformanceGrade(value) {
-    if (value <= 5) return "EXCELLENT";
-    if (value <= 10) return "GOOD";
-    if (value <= 15) return "ACCEPTABLE";
-    if (value <= 25) return "NEEDS IMPROVEMENT";
-    return "CRITICAL";
+    if (value <= 5) return 'EXCELLENT';
+    if (value <= 10) return 'GOOD';
+    if (value <= 15) return 'ACCEPTABLE';
+    if (value <= 25) return 'NEEDS IMPROVEMENT';
+    return 'CRITICAL';
   }
 
   reportLocalhostMetrics(category, data) {
@@ -241,7 +241,7 @@ class LocalhostPerformanceMonitor {
       category,
       data,
       url: window.location.href,
-      environment: "localhost",
+      environment: 'localhost',
     };
 
     // Console reporting for localhost
@@ -263,12 +263,12 @@ class LocalhostPerformanceMonitor {
 
   sendLocalhostToAnalytics(report) {
     // Send to Google Analytics or other analytics service
-    if (typeof gtag !== "undefined") {
-      gtag("event", "localhost_performance_metric", {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'localhost_performance_metric', {
         event_category: report.category,
         event_label: report.url,
         value: Object.values(report.data)[0],
-        environment: "localhost",
+        environment: 'localhost',
       });
     }
   }
@@ -278,7 +278,7 @@ class LocalhostPerformanceMonitor {
       timestamp: new Date().toISOString(),
       url: window.location.href,
       targetLoadTime: this.targetLoadTime,
-      environment: "localhost",
+      environment: 'localhost',
       metrics: this.metrics,
       overall: this.calculateLocalhostOverallScore(),
     };
@@ -311,14 +311,14 @@ class LocalhostPerformanceMonitor {
   }
 
   disconnect() {
-    this.observers.forEach((observer) => observer.disconnect());
+    this.observers.forEach(observer => observer.disconnect());
     this.observers = [];
   }
 }
 
 // Initialize localhost performance monitor when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
     window.localhostPerformanceMonitor = new LocalhostPerformanceMonitor();
   });
 } else {
@@ -326,6 +326,6 @@ if (document.readyState === "loading") {
 }
 
 // Export for module systems
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = LocalhostPerformanceMonitor;
 }

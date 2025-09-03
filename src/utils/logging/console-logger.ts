@@ -28,10 +28,10 @@ export class ConsoleLogger {
   private detectBuildMode(): boolean {
     // Check for common build environment indicators
     return (
-      process.env.NODE_ENV === "production" ||
-      process.env.ASTRO_ENV === "build" ||
-      (typeof process !== "undefined" && process.argv.includes("build")) ||
-      (typeof process !== "undefined" && process.argv.includes("astro")) ||
+      process.env.NODE_ENV === 'production' ||
+      process.env.ASTRO_ENV === 'build' ||
+      (typeof process !== 'undefined' && process.argv.includes('build')) ||
+      (typeof process !== 'undefined' && process.argv.includes('astro')) ||
       false
     );
   }
@@ -81,9 +81,9 @@ export class ConsoleLogger {
 
     // Only show for critical errors
     if (!this.isBuildMode && !this.criticalErrorsOnly) {
-      console.log(`\n${"=".repeat(50)}`);
+      console.log(`\n${'='.repeat(50)}`);
       console.log(`🚀 ${title}`);
-      console.log(`${"=".repeat(50)}`);
+      console.log(`${'='.repeat(50)}`);
     }
   }
 
@@ -95,13 +95,13 @@ export class ConsoleLogger {
 
     const duration = this.currentGroup.startTime
       ? ` (${(performance.now() - this.currentGroup.startTime).toFixed(2)}ms)`
-      : "";
+      : '';
 
     // Only show for critical errors
     if (!this.isBuildMode && !this.criticalErrorsOnly) {
-      console.log(`${"=".repeat(50)}`);
+      console.log(`${'='.repeat(50)}`);
       console.log(`✅ ${this.currentGroup.title}${duration}`);
-      console.log(`${"=".repeat(50)}\n`);
+      console.log(`${'='.repeat(50)}\n`);
     }
 
     this.groups.push(this.currentGroup);
@@ -113,13 +113,13 @@ export class ConsoleLogger {
    */
   log(
     message: string,
-    level: "info" | "success" | "warning" | "error" = "info",
+    level: 'info' | 'success' | 'warning' | 'error' = 'info'
   ): void {
     const emoji = {
-      info: "ℹ️",
-      success: "✅",
-      warning: "⚠️",
-      error: "❌",
+      info: 'ℹ️',
+      success: '✅',
+      warning: '⚠️',
+      error: '❌',
     }[level];
 
     const formattedMessage = `${emoji} ${message}`;
@@ -131,7 +131,7 @@ export class ConsoleLogger {
     // Only show critical errors, suppress everything else
     if (
       !this.isBuildMode &&
-      (this.criticalErrorsOnly ? level === "error" : true)
+      (this.criticalErrorsOnly ? level === 'error' : true)
     ) {
       console.log(formattedMessage);
     }
@@ -146,7 +146,7 @@ export class ConsoleLogger {
       console.log(`\n📊 ${title}:`);
       Object.entries(data).forEach(([key, value]) => {
         const formattedValue =
-          typeof value === "number" && value > 1000
+          typeof value === 'number' && value > 1000
             ? value.toLocaleString()
             : value;
         console.log(`   ${key}: ${formattedValue}`);
@@ -162,7 +162,7 @@ export class ConsoleLogger {
     if (!this.isBuildMode && !this.criticalErrorsOnly) {
       console.log(`\n🔗 Word-to-Link Results for "${slug}":`);
       console.log(
-        `   📊 Stats: ${stats.convertedWords}/${stats.totalWords} words converted`,
+        `   📊 Stats: ${stats.convertedWords}/${stats.totalWords} words converted`
       );
       console.log(`   ⏱️  Time: ${stats.processingTime.toFixed(2)}ms`);
 
@@ -170,7 +170,7 @@ export class ConsoleLogger {
         console.log(`   🔗 Conversions:`);
         conversions.slice(0, 3).forEach((conv, index) => {
           console.log(
-            `     ${index + 1}. "${conv.originalWord}" → "${conv.targetTitle}"`,
+            `     ${index + 1}. "${conv.originalWord}" → "${conv.targetTitle}"`
           );
         });
         if (conversions.length > 3) {
@@ -186,7 +186,7 @@ export class ConsoleLogger {
   logPaginationInfo(
     totalPosts: number,
     postsPerPage: number,
-    currentPage: number,
+    currentPage: number
   ): void {
     const totalPages = Math.ceil(totalPosts / postsPerPage);
     const startIndex = (currentPage - 1) * postsPerPage;
@@ -239,11 +239,11 @@ export class ConsoleLogger {
   logContentPreview(
     title: string,
     content: string,
-    maxLength: number = 150,
+    maxLength: number = 150
   ): void {
     const preview =
       content.length > maxLength
-        ? content.substring(0, maxLength) + "..."
+        ? content.substring(0, maxLength) + '...'
         : content;
 
     // Only show for critical errors

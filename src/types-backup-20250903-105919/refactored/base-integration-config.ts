@@ -125,7 +125,7 @@ export function createBaseIntegrationConfig(
 ): BaseIntegrationConfig {
   return {
     enabled,
-    timeout
+    timeout,
   };
 }
 
@@ -155,6 +155,6 @@ export function mergeBaseIntegrationConfig(
 ): BaseIntegrationConfig {
   return {
     enabled: overrides.enabled ?? base.enabled,
-    timeout: overrides.timeout ?? base.timeout
+    timeout: overrides.timeout ?? base.timeout,
   };
 }

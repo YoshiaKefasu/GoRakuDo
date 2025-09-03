@@ -1,6 +1,6 @@
-import * as fs from "fs/promises";
-import * as path from "path";
-import * as crypto from "crypto";
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import * as crypto from 'crypto';
 
 export interface FileInfo {
   path: string;
@@ -13,7 +13,7 @@ export class FileDetector {
   private dataDir: string;
 
   constructor() {
-    this.dataDir = path.join(process.cwd(), "src", "data", "ai-generated");
+    this.dataDir = path.join(process.cwd(), 'src', 'data', 'ai-generated');
   }
 
   async checkDataFileExists(title: string): Promise<boolean> {
@@ -32,7 +32,7 @@ export class FileDetector {
       const filename = this.generateFilename(title);
       const filepath = path.join(this.dataDir, filename);
       const stats = await fs.stat(filepath);
-      const content = await fs.readFile(filepath, "utf-8");
+      const content = await fs.readFile(filepath, 'utf-8');
 
       return {
         path: filepath,
@@ -49,7 +49,7 @@ export class FileDetector {
     try {
       const filename = this.generateFilename(title);
       const filepath = path.join(this.dataDir, filename);
-      const content = await fs.readFile(filepath, "utf-8");
+      const content = await fs.readFile(filepath, 'utf-8');
       const data = JSON.parse(content);
 
       // Validate data structure
@@ -63,10 +63,10 @@ export class FileDetector {
     try {
       const files = await fs.readdir(this.dataDir);
       return files.filter(
-        (file) =>
-          file.endsWith("-ai-data.json") &&
-          file !== "manifest.json" &&
-          file !== ".gitkeep",
+        file =>
+          file.endsWith('-ai-data.json') &&
+          file !== 'manifest.json' &&
+          file !== '.gitkeep'
       );
     } catch {
       return [];
@@ -81,7 +81,7 @@ export class FileDetector {
       for (const file of files) {
         const filepath = path.join(this.dataDir, file);
         const isValid = await this.validateDataFile(
-          file.replace("-ai-data.json", ""),
+          file.replace('-ai-data.json', '')
         );
 
         if (!isValid) {
@@ -95,31 +95,31 @@ export class FileDetector {
         console.log(`🧹 Cleaned up ${invalidFiles.length} invalid files`);
       }
     } catch (error) {
-      console.warn("⚠️ Failed to cleanup invalid files:", error);
+      console.warn('⚠️ Failed to cleanup invalid files:', error);
     }
   }
 
   private generateFilename(title: string): string {
     const sanitized = title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
       .substring(0, 50);
 
     return `${sanitized}-ai-data.json`;
   }
 
   private generateContentHash(content: string): string {
-    return crypto.createHash("sha256").update(content).digest("hex");
+    return crypto.createHash('sha256').update(content).digest('hex');
   }
 
   private isValidAIProcessingResult(data: any): boolean {
     return (
       data &&
-      typeof data.metaDescription === "object" &&
-      typeof data.recommendations === "object" &&
+      typeof data.metaDescription === 'object' &&
+      typeof data.recommendations === 'object' &&
       Array.isArray(data.keywords) &&
-      typeof data.seoScore === "number"
+      typeof data.seoScore === 'number'
     );
   }
 }

@@ -55,10 +55,10 @@ A: {
 
 ```typescript
 keywords: [
-  "immersion", 
-  "filosofi", 
-  "teori", 
-  "konsep", 
+  "immersion",
+  "filosofi",
+  "teori",
+  "konsep",
   "metodologi",
   "new-keyword"  // ← Add your keyword here
 ],
@@ -113,20 +113,31 @@ Each branch (A-E) can be customized with:
 
 ```typescript
 export const MIND_MAP_CONFIG: MindMapConfig = {
-  version: "3.0.0",
-  title: "Japanese Immersion Learning Mind Map",
-  description: "Visual representation of Japanese immersion learning methodology",
-  
+  version: '3.0.0',
+  title: 'Japanese Immersion Learning Mind Map',
+  description:
+    'Visual representation of Japanese immersion learning methodology',
+
   branches: {
-    A: { /* Branch A configuration */ },
-    B: { /* Branch B configuration */ },
-    C: { /* Branch C configuration */ },
-    D: { /* Branch D configuration */ },
-    E: { /* Branch E configuration */ },
+    A: {
+      /* Branch A configuration */
+    },
+    B: {
+      /* Branch B configuration */
+    },
+    C: {
+      /* Branch C configuration */
+    },
+    D: {
+      /* Branch D configuration */
+    },
+    E: {
+      /* Branch E configuration */
+    },
   },
-  
+
   connections: [
-    { from: "A", to: "B", type: "progression", description: "..." },
+    { from: 'A', to: 'B', type: 'progression', description: '...' },
     // ... more connections
   ],
 };
@@ -137,19 +148,19 @@ export const MIND_MAP_CONFIG: MindMapConfig = {
 The system provides utility functions for common operations:
 
 ```typescript
-import { MindMapUtils } from "./mind-map-config";
+import { MindMapUtils } from './mind-map-config';
 
 // Get all branches
 const branches = MindMapUtils.getBranches();
 
 // Get specific branch
-const branchA = MindMapUtils.getBranch("A");
+const branchA = MindMapUtils.getBranch('A');
 
 // Get connections for a branch
-const connections = MindMapUtils.getBranchConnections("A");
+const connections = MindMapUtils.getBranchConnections('A');
 
 // Find related branches
-const related = MindMapUtils.getRelatedBranches("A");
+const related = MindMapUtils.getRelatedBranches('A');
 
 // Export data
 const data = MindMapUtils.exportData();
@@ -189,15 +200,15 @@ const validation = MindMapUtils.validate();
 
 ## 🎯 Benefits Over Complex UI
 
-| Feature | Complex Vue UI | Simple Text Config |
-|---------|---------------|-------------------|
-| **Setup Time** | 30+ minutes | 2 minutes |
-| **Customization** | Complex UI interactions | Direct text editing |
-| **Performance** | Heavy JavaScript | Static generation |
-| **Maintenance** | Complex state management | Simple file editing |
-| **Version Control** | Complex diffs | Clean, readable diffs |
-| **Learning Curve** | Vue + TypeScript + UI patterns | Basic TypeScript |
-| **Debugging** | Browser dev tools | Text editor + build logs |
+| Feature             | Complex Vue UI                 | Simple Text Config       |
+| ------------------- | ------------------------------ | ------------------------ |
+| **Setup Time**      | 30+ minutes                    | 2 minutes                |
+| **Customization**   | Complex UI interactions        | Direct text editing      |
+| **Performance**     | Heavy JavaScript               | Static generation        |
+| **Maintenance**     | Complex state management       | Simple file editing      |
+| **Version Control** | Complex diffs                  | Clean, readable diffs    |
+| **Learning Curve**  | Vue + TypeScript + UI patterns | Basic TypeScript         |
+| **Debugging**       | Browser dev tools              | Text editor + build logs |
 
 ## 🔍 Validation
 

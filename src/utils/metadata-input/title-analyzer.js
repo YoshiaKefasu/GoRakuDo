@@ -16,9 +16,9 @@ export class TitleAnalyzer {
       // Technical terms
       technical: /\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g,
       // Acronyms
-      acronyms: /\b[A-Z]{2,}\b/g
+      acronyms: /\b[A-Z]{2,}\b/g,
     };
-    
+
     this.minKeywordLength = 2;
     this.maxKeywordLength = 20;
     this.maxKeywordsPerTitle = 8;
@@ -37,18 +37,25 @@ export class TitleAnalyzer {
 
     // Normalize title
     const normalizedTitle = this.normalizeTitle(title);
-    
+
     // Extract different types of keywords
     const nounKeywords = this.extractNounKeywords(normalizedTitle);
     const technicalKeywords = this.extractTechnicalKeywords(normalizedTitle);
     const acronymKeywords = this.extractAcronymKeywords(normalizedTitle);
-    
+
     // Combine and filter keywords
-    const allKeywords = [...nounKeywords, ...technicalKeywords, ...acronymKeywords];
+    const allKeywords = [
+      ...nounKeywords,
+      ...technicalKeywords,
+      ...acronymKeywords,
+    ];
     const filteredKeywords = await this.filterKeywords(allKeywords, language);
-    
+
     // Rank and limit keywords
-    return this.rankKeywords(filteredKeywords, title).slice(0, this.maxKeywordsPerTitle);
+    return this.rankKeywords(filteredKeywords, title).slice(
+      0,
+      this.maxKeywordsPerTitle
+    );
   }
 
   /**
@@ -72,18 +79,20 @@ export class TitleAnalyzer {
   extractNounKeywords(title) {
     const words = title.split(/\s+/);
     const nouns = [];
-    
+
     words.forEach(word => {
       if (this.isValidKeyword(word)) {
         // Simple noun detection (avoid complex NLP)
-        if (word.length >= this.minKeywordLength && 
-            word.length <= this.maxKeywordLength &&
-            !this.isCommonWord(word)) {
+        if (
+          word.length >= this.minKeywordLength &&
+          word.length <= this.maxKeywordLength &&
+          !this.isCommonWord(word)
+        ) {
           nouns.push(word);
         }
       }
     });
-    
+
     return nouns;
   }
 
@@ -95,7 +104,7 @@ export class TitleAnalyzer {
   extractTechnicalKeywords(title) {
     const matches = title.match(this.keywordPatterns.technical);
     if (!matches) return [];
-    
+
     return matches
       .map(match => match.toLowerCase())
       .filter(word => this.isValidKeyword(word));
@@ -109,7 +118,7 @@ export class TitleAnalyzer {
   extractAcronymKeywords(title) {
     const matches = title.match(this.keywordPatterns.acronyms);
     if (!matches) return [];
-    
+
     return matches.filter(acronym => {
       // Filter out very short or very long acronyms
       return acronym.length >= 2 && acronym.length <= 6;
@@ -123,7 +132,7 @@ export class TitleAnalyzer {
    */
   isValidKeyword(word) {
     if (!word || typeof word !== 'string') return false;
-    
+
     const length = word.length;
     return length >= this.minKeywordLength && length <= this.maxKeywordLength;
   }
@@ -135,11 +144,38 @@ export class TitleAnalyzer {
    */
   isCommonWord(word) {
     const commonWords = [
-      'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
-      'yang', 'dan', 'atau', 'dengan', 'ke', 'dari', 'di', 'untuk', 'pada',
-      'の', 'に', 'は', 'を', 'が', 'と', 'で', 'から', 'まで', 'より'
+      'the',
+      'a',
+      'an',
+      'and',
+      'or',
+      'but',
+      'in',
+      'on',
+      'at',
+      'to',
+      'for',
+      'yang',
+      'dan',
+      'atau',
+      'dengan',
+      'ke',
+      'dari',
+      'di',
+      'untuk',
+      'pada',
+      'の',
+      'に',
+      'は',
+      'を',
+      'が',
+      'と',
+      'で',
+      'から',
+      'まで',
+      'より',
     ];
-    
+
     return commonWords.includes(word.toLowerCase());
   }
 
@@ -151,13 +187,13 @@ export class TitleAnalyzer {
    */
   async filterKeywords(keywords, language) {
     const filtered = [];
-    
+
     for (const keyword of keywords) {
       if (!(await this.isStopWord(keyword, language))) {
         filtered.push(keyword);
       }
     }
-    
+
     return filtered;
   }
 
@@ -174,10 +210,10 @@ export class TitleAnalyzer {
       if (!response.ok) {
         return this.isCommonWord(word); // Fallback to common words
       }
-      
+
       const stopWordsData = await response.json();
       const stopWords = new Set(stopWordsData.words || []);
-      
+
       return stopWords.has(word.toLowerCase());
     } catch (error) {
       console.warn(`Using fallback stopword check for ${language}:`, error);
@@ -193,7 +229,7 @@ export class TitleAnalyzer {
    */
   rankKeywords(keywords, title) {
     const titleWords = title.toLowerCase().split(/\s+/);
-    
+
     return keywords
       .map(keyword => {
         const relevance = this.calculateKeywordRelevance(keyword, titleWords);
@@ -211,20 +247,22 @@ export class TitleAnalyzer {
    */
   calculateKeywordRelevance(keyword, titleWords) {
     let relevance = 0;
-    
+
     // Exact match gets highest score
     if (titleWords.includes(keyword.toLowerCase())) {
       relevance += 100;
     }
-    
+
     // Partial match gets medium score
     titleWords.forEach(titleWord => {
-      if (titleWord.includes(keyword.toLowerCase()) || 
-          keyword.toLowerCase().includes(titleWord)) {
+      if (
+        titleWord.includes(keyword.toLowerCase()) ||
+        keyword.toLowerCase().includes(titleWord)
+      ) {
         relevance += 50;
       }
     });
-    
+
     // Length bonus (optimal length gets bonus)
     const length = keyword.length;
     if (length >= 4 && length <= 8) {
@@ -232,12 +270,12 @@ export class TitleAnalyzer {
     } else if (length >= 3 && length <= 10) {
       relevance += 10;
     }
-    
+
     // Technical term bonus
     if (this.keywordPatterns.acronyms.test(keyword)) {
       relevance += 30;
     }
-    
+
     return relevance;
   }
 
@@ -255,9 +293,9 @@ export class TitleAnalyzer {
       keywords,
       keywordCount: keywords.length,
       extractionQuality: this.assessExtractionQuality(keywords, title),
-      suggestions: this.generateKeywordSuggestions(keywords, title)
+      suggestions: this.generateKeywordSuggestions(keywords, title),
     };
-    
+
     return analysis;
   }
 
@@ -270,16 +308,16 @@ export class TitleAnalyzer {
   assessExtractionQuality(keywords, title) {
     const titleWords = title.split(/\s+/).length;
     const keywordRatio = keywords.length / Math.max(titleWords, 1);
-    
+
     let quality = 'good';
     if (keywordRatio < 0.3) quality = 'poor';
     else if (keywordRatio < 0.6) quality = 'fair';
-    
+
     return {
       quality,
       score: Math.min(100, keywordRatio * 100),
       keywordRatio,
-      recommendations: this.getQualityRecommendations(keywords, title)
+      recommendations: this.getQualityRecommendations(keywords, title),
     };
   }
 
@@ -292,20 +330,22 @@ export class TitleAnalyzer {
   generateKeywordSuggestions(keywords, title) {
     const suggestions = [];
     const titleWords = title.toLowerCase().split(/\s+/);
-    
+
     // Suggest missing important words
     titleWords.forEach(word => {
-      if (word.length >= 3 && 
-          !keywords.includes(word) && 
-          !this.isCommonWord(word)) {
+      if (
+        word.length >= 3 &&
+        !keywords.includes(word) &&
+        !this.isCommonWord(word)
+      ) {
         suggestions.push({
           word,
           reason: 'タイトルに含まれる重要な単語',
-          priority: 'high'
+          priority: 'high',
         });
       }
     });
-    
+
     // Suggest related terms
     if (keywords.length < this.maxKeywordsPerTitle) {
       const relatedTerms = this.getRelatedTerms(keywords);
@@ -314,12 +354,12 @@ export class TitleAnalyzer {
           suggestions.push({
             word: term,
             reason: '関連キーワード',
-            priority: 'medium'
+            priority: 'medium',
           });
         }
       });
     }
-    
+
     return suggestions;
   }
 
@@ -331,7 +371,7 @@ export class TitleAnalyzer {
   getRelatedTerms(keywords) {
     // Simple related terms (avoid complex semantic analysis)
     const relatedTerms = [];
-    
+
     keywords.forEach(keyword => {
       // Add variations
       if (keyword.endsWith('ing')) {
@@ -341,7 +381,7 @@ export class TitleAnalyzer {
         relatedTerms.push(keyword.slice(0, -1));
       }
     });
-    
+
     return relatedTerms.filter(term => this.isValidKeyword(term));
   }
 
@@ -353,19 +393,25 @@ export class TitleAnalyzer {
    */
   getQualityRecommendations(keywords, title) {
     const recommendations = [];
-    
+
     if (keywords.length === 0) {
-      recommendations.push('タイトルからキーワードが抽出できませんでした。タイトルの内容を確認してください。');
+      recommendations.push(
+        'タイトルからキーワードが抽出できませんでした。タイトルの内容を確認してください。'
+      );
     }
-    
+
     if (keywords.length < 3) {
-      recommendations.push('より多くのキーワードを抽出するため、タイトルを具体的にしてください。');
+      recommendations.push(
+        'より多くのキーワードを抽出するため、タイトルを具体的にしてください。'
+      );
     }
-    
+
     if (keywords.length > this.maxKeywordsPerTitle) {
-      recommendations.push('キーワードが多すぎます。重要なものに絞り込んでください。');
+      recommendations.push(
+        'キーワードが多すぎます。重要なものに絞り込んでください。'
+      );
     }
-    
+
     return recommendations;
   }
 }
