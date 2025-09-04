@@ -1,21 +1,10 @@
-/* POST PAGE STYLES - Tailwind v4 Unified */
-/* Enhanced with unified design system and Tailwind v4 integration */
-/* 
- * NOTE: AI-Recommendations component styles have been externalized to:
- * src/components/docs/AI-Recommendations.css
- * This file now only contains post-specific styles for better modularity.
- * 
- * UNIT OPTIMIZATION:
- * - PX: Used for precise borders, shadows, and fixed positioning
- * - REM: Used for responsive typography, spacing, and layout
- * - EM: Used for relative scaling elements like code font-size
- */
+/* POST PAGE STYLES - Tailwind v4 with Typography Plugin */
+/* Professional styling with Tailwind-inspired utilities */
+
 @import "../global.css";
-/* Import word internal links styles (replaces inline system) */
 @import "./word-internal-links.css";
 
 /* ========== FONT LOADING OPTIMIZATION ========== */
-/* Optimize font loading for better performance */
 @font-face {
   font-family: "Inter";
   font-display: swap;
@@ -23,254 +12,100 @@
 
 /* ========== TAILWIND V4 THEME INTEGRATION ========== */
 @theme {
-  /* Article-specific design tokens - Enhanced with globals.css integration */
-  --color-post-background: rgba(25, 25, 25, 0.75);
-  --color-post-title: rgba(
-    255,
-    255,
-    255,
-    0.95
-  ); /* ENHANCED: Better contrast for titles */
-  --color-post-h1-h5: rgba(
-    255,
-    255,
-    255,
-    0.85
-  ); /* ENHANCED: Better contrast for headings */
-  --color-post-content: rgba(
-    255,
-    255,
-    255,
-    0.75
-  ); /* ENHANCED: Better contrast for content */
-  --color-post-meta: rgba(
-    255,
-    255,
-    255,
-    0.65
-  ); /* NEW: Dedicated meta text color with good contrast */
-  --color-post-border: var(--color-border); /* Use global border color */
-  --color-post-glow: rgba(139, 93, 255, 0.015);
-  --color-post-card: var(--color-card); /* Integrate with global card color */
-  --color-post-accent: var(--color-accent-purple); /* Use global accent */
-
-  /* Enhanced spacing system - Converted to REM for responsive scaling */
-  --post-padding-x-small: 1.5rem;
-  --post-padding-x-medium: 2.5rem;
-  --post-padding-x-large: 4rem;
-  --post-max-width-small: 100%;
-  --post-max-width-medium: 95%;
-  --post-max-width-large: 64rem; /* Convert to REM for responsive max-width */
-  --post-header-spacing: clamp(
-    0.75rem,
-    2.5vw,
-    1.25rem
-  ); /* REDUCED BY HALF: From clamp(1.5rem, 5vw, 2.5rem) for more compact layout */
-
-  /* Golden ratio container sizing - Preserved mathematical precision */
-  --golden-ratio: 1.618;
-  --golden-ratio-left: calc(100vh * 0.236);
-  --golden-ratio-content: calc(100vh * 0.382);
-  --golden-ratio-right: calc(100vh * 0.236);
-
-  /* Readability-optimized spacing - Enhanced with accessibility focus */
-  --readability-padding-large: 4rem;
-  --readability-padding-xl: 5rem;
-  --readability-margin-adjustment: 0.05;
-
-  /* Animation timing - Aligned with global animation system */
-  --post-fade-duration: 0.6s;
-  --post-slide-duration: 0.8s;
-  --post-transition-fast: var(--animate-duration-fast);
-  --post-transition-normal: var(--animate-duration-normal);
-  --post-transition-slow: var(--animate-duration-slow);
-
-  /* Enhanced Z-index system */
-  --z-post-background: 0;
-  --z-post-content: 1;
-  --z-post-progress: 50;
-  --z-post-modal: 100;
-
-  /* Add compact spacing options for better control - Converted to REM */
-  --spacing-compact-xs: 0.25rem; /* 4px */
-  --spacing-compact-sm: 0.5rem; /* 8px */
-  --spacing-compact-md: 0.75rem; /* 12px */
-  --spacing-compact-lg: 1rem; /* 16px */
-  --spacing-compact-xl: 1.25rem; /* 20px */
+  /* Article-specific design tokens */
+  --color-post-background: rgba(15, 15, 25, 0.95);
+  --color-post-title: rgba(255, 255, 255, 0.95);
+  --color-post-h1-h5: rgba(255, 255, 255, 0.9);
+  --color-post-content: rgba(255, 255, 255, 0.85);
+  --color-post-meta: rgba(255, 255, 255, 0.7);
+  --color-post-border: rgba(139, 93, 255, 0.15);
+  --color-post-accent: var(--color-accent-purple);
+  
+  /* Spacing system */
+  --post-header-spacing: clamp(1rem, 3vw, 1.5rem);
+  --post-content-padding: clamp(1rem, 4vw, 2rem);
+  
+  /* Shadows */
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 8px 30px rgba(139, 93, 255, 0.2);
 }
 
-/* ========== POST PAGE SPECIFIC STYLES ========== */
-/* Note: Base styles and reset are handled by global.css */
-
-/* Background Elements - Simplified like index.astro */
-
-/* ========== POST PAGE LAYOUT & CONTENT ========== */
-
-/* ========== INTERNAL LINK STYLES ========== */
-.internal-link {
-  display: inline;
-  color: var(--color-primary);
-  text-decoration: none;
-  background: none;
-  padding: 0;
-  border: none;
-  margin: 0;
-  transition: color var(--duration-normal) var(--ease-out);
-  position: relative;
-}
-
-.internal-link::before {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px; /* PX for precise underline height */
-  background: var(--color-primary);
-  transform: scaleX(0);
-  transition: transform var(--duration-normal) var(--ease-out);
-  transform-origin: left;
-}
-
-.internal-link:hover {
-  color: var(--color-primary-dark);
-  transform: none;
-  box-shadow: none;
-  border-color: transparent;
-  background: none;
-}
-
-.internal-link:hover::before {
-  transform: scaleX(1);
-}
-
-.internal-link:active {
-  transform: none;
-}
-
-/* Internal link container styling */
-.markdown-content p:has(.internal-link) {
-  margin: 0.75rem 0; /* REM for responsive margin - reduced since no button styling */
-  padding: 0;
-}
-
-/* Internal link text styling */
-.internal-link strong {
-  color: inherit;
-  font-weight: var(--font-weight-semibold);
-}
-
-/* Post Actions - Improved layout and organization */
-.post-actions {
-  display: flex;
-  flex-direction: row !important; /* Ensure items stay side by side */
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem; /* Added bottom margin to create gap */
-  padding: 1.5rem;
-  background: rgba(25, 25, 25, 0.3);
-  backdrop-filter: blur(10px);
-  border-radius: 0.75rem;
-  border: 1px solid var(--color-border);
-  flex-wrap: nowrap; /* Prevent wrapping */
-}
-
-/* ========== POST PAGE SPECIFIC STYLES ========== */
-.post-navigation-top {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--color-border);
-  background: rgba(25, 25, 25, 0.3);
-  backdrop-filter: blur(12px);
-  border-radius: 0.5rem;
-}
-
-/* Post Navigation */
-.post-navigation {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-accent-purple-glow-faint);
-  transition: box-shadow var(--post-transition-normal) var(--ease-out);
-}
-
-/* Post Page Container - Enhanced with unified design system */
+/* ========== POST PAGE LAYOUT ========== */
 .post-page {
-  width: 100%;
   min-height: 100vh;
-  background: var(--color-post-background);
-  /* ENHANCED: Add grainy noise texture for improved readability */
-  background-image:
-    radial-gradient(
-      circle at 25% 25%,
-      rgba(255, 255, 255, 0.02) 1px,
-      transparent 1px
-    ),
-    radial-gradient(
-      circle at 75% 75%,
-      rgba(255, 255, 255, 0.02) 1px,
-      transparent 1px
-    );
-  background-size:
-    4rem 4rem,
-    4rem 4rem;
-  background-position:
-    0 0,
-    8rem 8rem; /* Convert 128px to REM for responsive background positioning */
-  color: var(--color-foreground);
-  padding-top: 6rem; /* Convert 80px to REM for responsive navbar offset */
-  position: relative;
-  z-index: var(--z-docked);
-  /* Enhanced content layout */
-  display: flex;
-  flex-direction: column;
-  /* Enhanced performance */
-  contain: layout style paint;
-  will-change: transform;
-  /* Enable hardware acceleration */
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  /* Add rounded corners */
-  border-radius: 1rem;
-  overflow: hidden; 
-}
-
-/* Base styles - Full width on mobile */
-.post-page .post-container {
   width: 100%;
-  max-width: 100%; /* Full width on small screens */
-  margin: 0 auto;
-  padding: 0 1rem; /* Standard mobile padding */
-  background: transparent;
-  /* Enhanced layout positioning */
-  display: flex;
-  flex-direction: column;
-  min-height: calc(
-    100vh - 6rem
-  ); /* Convert to REM for responsive navbar height calculation */
-  justify-content: flex-start;
-  align-items: stretch;
-  /* Enhanced performance */
-  contain: layout style paint;
-  will-change: transform;
-  container-type: inline-size;
   position: relative;
-  /* Enable hardware acceleration */
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  gap: 1.5rem;
+  z-index: 10;
+  background: rgba(15, 15, 25, 0.7); /* Even more transparent background */
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(139, 93, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 85% 85%, rgba(139, 93, 255, 0.07) 1px, transparent 1px);
+  background-size: 30px 30px;
+  padding-top: 5rem;
+  backdrop-filter: blur(1px); /* Minimal blur */
+  -webkit-backdrop-filter: blur(1px);
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
 }
 
-/* Breadcrumb transparent styling */
+.post-container {
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Responsive fix for very small screens */
+@media (max-width: 480px) {
+  .post-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .post-container {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .post-container {
+    padding-left: 0.125rem;
+    padding-right: 0.125rem;
+  }
+}
+
+/* Ensure full width on extremely small screens */
+@media (max-width: 320px) {
+  .post-container {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+  }
+  
+  .post-page {
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* ========== BREADCRUMB ========== */
 .breadcrumb-transparent {
   background: transparent !important;
   backdrop-filter: none !important;
@@ -279,263 +114,379 @@
   box-shadow: none !important;
 }
 
-
-
-/* ========== BREADCRUMB LAYOUT FIX ========== */
-/* Fix breadcrumb container to prevent overflow and cut-off issues */
-
-/* Override breadcrumb width to fit within container */
-.post-container .modern-breadcrumb-nav {
-  width: 100% !important; /* Override 100vw to fit container */
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Prevent horizontal overflow */
-}
-
-/* Ensure breadcrumb container respects parent boundaries */
-.post-container .breadcrumb-container {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Adjust breadcrumb list to fit within container */
-.post-container .breadcrumb-list {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0;
-  margin: 0;
-}
-
-/* Ensure breadcrumb items don't overflow */
-.post-container .breadcrumb-item {
-  flex-shrink: 0;
-  max-width: fit-content;
-}
-
-/* Responsive breadcrumb adjustments */
-@media (max-width: 768px) {
-  .post-container .modern-breadcrumb-nav {
-    margin-block: 0.5rem;
-    padding-block: 0.5rem;
-  }
-
-  .post-container .breadcrumb-pill {
-    max-width: 200px; /* Limit pill width on mobile */
-  }
-
-  .post-container .breadcrumb-text {
-    max-width: 160px; /* Limit text width on mobile */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 480px) {
-  .post-page .post-container {
-    padding: 0 0.75rem; /* Slightly less padding on very small screens */
-  }
-}
-
-@media (max-width: 360px) {
-  .post-page .post-container {
-    padding: 0 0.5rem; /* Minimal padding on tiny screens */
-  }
-}
-
-/* Ensure breadcrumb icons are properly sized */
-.post-container .breadcrumb-icon {
-  flex-shrink: 0;
-  font-size: 1rem;
-  line-height: 1;
-}
-
-/* Fix breadcrumb separator positioning */
-.post-container .breadcrumb-separator {
-  flex-shrink: 0;
-  margin: 0 0.25rem;
-}
-
-/* Ensure proper spacing between breadcrumb elements */
-.post-container .breadcrumb-item {
-  gap: 0.25rem;
-  align-items: center;
-}
-
-/* Back to Docs Button - Enhanced with SEGMENT 4 improvements */
-.back-to-docs {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem; /* REM for responsive spacing */
-  color: var(--color-primary);
-  transition: all var(--post-transition-normal) var(--ease-out); /* Enhanced transition */
-  margin-bottom: 0.25rem; /* REM for responsive margin */
-  font-size: 0.875rem; /* REM for responsive typography */
-  font-weight: var(--font-weight-medium);
-  /* Enhanced accessibility - SEGMENT 4 */
-  outline: none; /* Remove default outline */
-}
-
-.back-to-docs:hover {
-  color: var(--color-accent-purple-dark);
-  transform: translateY(-1px); /* PX for precise hover effect */
-  transition: all var(--post-transition-normal) var(--ease-out);
-}
-
-.back-to-docs:focus-visible {
-  outline: 2px solid #8b5dff; /* PX for precise focus outline */
-  outline-offset: 2px; /* PX for precise outline offset */
-  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
-}
-
-/* Post Header - Enhanced with unified design system */
+/* ========== POST HEADER ========== */
 .post-header {
-  margin-bottom: var(
-    --post-header-spacing
-  ); /* Use custom variable for better spacing */
   text-align: center;
-  /* Improved header layout */
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  margin-bottom: 2rem;
   padding: 1.5rem;
-  background: rgba(25, 25, 25, 0.2);
-  backdrop-filter: blur(6px);
-  border-radius: 0.75rem;
-  /* GitHub Pages optimized border - more subtle and fallback */
-  border: 1px solid rgba(139, 93, 255, 0.1);
-  /* FIXED: Ensure proper centering */
-  box-sizing: border-box;
+  border-radius: 1rem;
+  border: 1px solid var(--color-post-border);
+  background: rgba(30, 30, 40, 0.2); /* More transparent with less blur */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: var(--shadow-card);
 }
 
 .post-header h1 {
-  /* Responsive font sizing with proper breakpoints - INCREASED for better readability */
-  font-size: var(
-    --font-size-4xl
-  ); /* INCREASED base size for better hierarchy */
-  font-weight: var(--font-weight-medium); /* Consistent medium weight */
-  margin-bottom: var(--post-header-spacing);
-  color: var(--color-post-title);
-  line-height: 1.75;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  /* FIXED: Ensure proper centering */
-  text-align: center;
-  width: 100%;
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+  line-height: 1.3;
 }
 
-.post-meta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem; /* REM for responsive spacing */
-  margin-bottom: 0.75rem; /* REM for responsive margin */
-  font-size: 0.875rem; /* REM for responsive typography */
-  color: var(--color-post-meta); /* ENHANCED: Better contrast for meta text */
-  flex-wrap: wrap; /* Allow wrapping on small screens */
-  /* FIXED: Ensure proper centering both horizontally and vertically */
-  width: 100%;
-  text-align: center;
-  /* Reset default browser styles */
-  margin: 0;
-  padding: 0;
-  border: none;
-  list-style: none;
+@media (min-width: 768px) {
+  .post-header h1 {
+    font-size: 2.25rem;
+  }
 }
 
-/* FIXED: Ensure post-date and post-author are properly centered */
-.post-date,
-.post-author {
-  color: var(--color-post-meta);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  /* Add explicit width to ensure proper centering */
-  width: auto;
-  /* Reset default browser styles */
-  margin: 0;
-  padding: 0;
-  border: none;
+@media (min-width: 1024px) {
+  .post-header h1 {
+    font-size: 3rem;
+  }
 }
 
-/* FIXED: Ensure the time element is properly styled */
-.post-date time {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  /* Reset default browser styles */
-  margin: 0;
-  padding: 0;
-  border: none;
+/* ========== GRID LAYOUT SOLUTION (PALING RELIABLE) ========== */
+
+.post-meta-grid {
+  display: grid !important;
+  grid-template-columns: auto auto auto !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  margin: 0 auto 1rem auto !important;
+  padding: 0.5rem !important;
+  font-size: 0.875rem !important;
+  color: var(--color-post-meta) !important;
+  width: 100% !important;
+  text-align: center !important;
 }
 
-/* Add more specific selectors */
-div.post-meta {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.post-meta-grid .post-date,
+.post-meta-grid .post-author,
+.post-meta-grid .separator {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.post-meta .post-date,
-.post-meta .post-author {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+.post-meta-grid .separator {
+  color: var(--color-post-meta) !important;
+  font-weight: 300 !important;
 }
 
+/* Mobile: Stack vertically */
+@media (max-width: 768px) {
+  .post-meta-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto auto !important;
+    gap: 0.25rem !important;
+    text-align: center !important;
+  }
+  
+  .post-meta-grid .separator {
+    display: none !important;
+  }
+}
+
+/* ========== SIMPLE TABLE SOLUTION (BACKUP) ========== */
+
+.post-meta-table {
+  display: table !important;
+  width: 100% !important;
+  margin: 0 auto 1rem auto !important;
+  text-align: center !important;
+  font-size: 0.875rem !important;
+  color: var(--color-post-meta) !important;
+}
+
+.post-meta-table-row {
+  display: table-row !important;
+}
+
+.post-meta-table-cell {
+  display: table-cell !important;
+  vertical-align: middle !important;
+  text-align: center !important;
+  padding: 0.25rem 0.5rem !important;
+  white-space: nowrap !important;
+}
+
+/* ========== ABSOLUTE POSITIONING SOLUTION (LAST RESORT) ========== */
+
+.post-meta-absolute {
+  position: relative !important;
+  width: 100% !important;
+  height: 2rem !important;
+  margin: 0 auto 1rem auto !important;
+  font-size: 0.875rem !important;
+  color: var(--color-post-meta) !important;
+}
+
+.post-meta-absolute .post-date {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-100%, -50%) !important;
+  white-space: nowrap !important;
+  margin-right: 0.5rem !important;
+}
+
+.post-meta-absolute .separator {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.post-meta-absolute .post-author {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(0%, -50%) !important;
+  white-space: nowrap !important;
+  margin-left: 0.5rem !important;
+}
+
+/* ========== POST TAGS (DIFFICULTY BADGE CONTAINER) ========== */
 .post-tags {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem; /* REM for responsive spacing */
-  /* FIXED: Ensure proper centering */
-  width: 100%;
-}
-
-.post-tags {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem; /* REM for responsive spacing */
-  /* FIXED: Ensure proper centering */
-  width: 100%;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  margin-top: 1rem !important;
+  width: 100% !important;
+  text-align: center !important;
 }
 
 .difficulty-badge {
-  padding: 0.375rem 0.75rem; /* REM for responsive padding */
-  border-radius: 9999px; /* PX equivalent for pill shape */
-  font-size: 0.75rem; /* REM for responsive typography */
-  font-weight: var(--font-weight-medium);
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  border-radius: 9999px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  display: inline-block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
 }
 
 .difficulty-badge.difficulty-beginner {
-  background: var(--color-success);
-  color: var(--color-foreground);
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #86efac !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
 }
 
 .difficulty-badge.difficulty-intermediate {
-  background: var(--color-warning);
-  color: var(--color-foreground);
+  background: rgba(234, 179, 8, 0.2) !important;
+  color: #fde047 !important;
+  border: 1px solid rgba(234, 179, 8, 0.3) !important;
 }
 
 .difficulty-badge.difficulty-advanced {
-  background: var(--color-error);
-  color: var(--color-foreground);
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
 }
 
-/* Enhanced Back to Docs Button */
-.back-to-docs {
+/* ========== POST CONTENT ========== */
+.post-content {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  color: var(--color-post-content);
+  max-width: none;
+  background: rgba(20, 20, 30, 0.15); /* Even more subtle transparent background */
+  border-radius: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* ========== PROSE CONTENT AREA ========== */
+.prose {
+  color: var(--color-post-content);
+  max-width: none;
+  background: rgba(25, 25, 35, 0.15); /* More transparent background */
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(139, 93, 255, 0.05);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+.prose :where(h1):not(:where([class~="not-prose"] *)) {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+  color: white;
+}
+
+.prose :where(h2):not(:where([class~="not-prose"] *)) {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  color: white;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.prose :where(h2):not(:where([class~="not-prose"] *))::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 0.125rem;
+  border-radius: 0.125rem;
+  background: linear-gradient(90deg, var(--color-post-accent), transparent);
+}
+
+.prose :where(h3):not(:where([class~="not-prose"] *)) {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+  color: white;
+}
+
+.prose :where(h4):not(:where([class~="not-prose"] *)) {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  margin-top: 1.25rem;
+  color: white;
+}
+
+.prose :where(h5):not(:where([class~="not-prose"] *)) {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  color: white;
+}
+
+.prose :where(p):not(:where([class~="not-prose"] *)) {
+  margin-bottom: 1rem;
+  line-height: 1.625;
+}
+
+.prose :where(ul):not(:where([class~="not-prose"] *)),
+.prose :where(ol):not(:where([class~="not-prose"] *)) {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.prose :where(li):not(:where([class~="not-prose"] *)) {
+  margin-bottom: 0.5rem;
+}
+
+.prose :where(ul li):not(:where([class~="not-prose"] *))::before {
+  content: "●";
+  color: #c084fc;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+  color: #c084fc;
+  text-decoration: underline;
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)):hover {
+  color: #d8b4fe;
+}
+
+.prose :where(code):not(:where([class~="not-prose"] *)) {
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  border-radius: 0.125rem;
+  font-size: 0.875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background: rgba(107, 33, 168, 0.3);
+  color: #d8b4fe;
+  border: 1px solid rgba(192, 132, 252, 0.2);
+}
+
+.prose :where(pre):not(:where([class~="not-prose"] *)) {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  background: rgba(17, 24, 39, 0.5);
+  border: 1px solid rgba(192, 132, 252, 0.2);
+}
+
+.prose :where(pre code):not(:where([class~="not-prose"] *)) {
+  background: transparent;
+  padding: 0;
+  border: 0;
+  font-size: 0.875rem;
+}
+
+.prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+  border-left-width: 4px;
+  border-color: #c084fc;
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  background: rgba(107, 33, 168, 0.1);
+}
+
+.prose :where(hr):not(:where([class~="not-prose"] *)) {
+  border-color: rgba(192, 132, 252, 0.2);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ========== INTERNAL LINKS ========== */
+.internal-link {
+  color: #c084fc;
+  text-decoration: underline;
+  border-bottom: 1px solid rgba(192, 132, 252, 0.3);
+}
+
+.internal-link:hover {
+  color: #d8b4fe;
+  border-bottom: 1px solid #d8b4fe;
+}
+
+/* ========== POST ACTIONS ========== */
+.post-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-post-border);
+  background: rgba(30, 30, 40, 0.2); /* More transparent with less blur */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: var(--shadow-card);
+}
+@media (min-width: 320px) {
+  .post-actions {
+    flex-direction: row;
+  }
+}
+
+.back-to-docs, .share-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -550,9 +501,10 @@ div.post-meta {
   text-decoration: none;
   margin-bottom: 0;
   outline: none;
+  cursor: pointer;
 }
 
-.back-to-docs:hover {
+.back-to-docs:hover, .share-btn:hover {
   color: var(--color-accent-purple-dark);
   background: rgba(139, 93, 255, 0.15);
   border-color: rgba(139, 93, 255, 0.3);
@@ -560,391 +512,20 @@ div.post-meta {
   box-shadow: 0 4px 12px rgba(139, 93, 255, 0.2);
 }
 
-.back-to-docs:focus-visible {
-  outline: 2px solid #8b5dff;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(139, 93, 255, 0.3);
-}
-
-/* Post Content - Enhanced layout */
-.post-content {
-  max-width: none;
-  /* Enhanced content layout */
-  flex: 1;
-  margin: 1.25rem 0; /* REM for responsive margin */
-  line-height: 1.75;
-  /* Improved content positioning */
-  width: 100%;
-  position: relative;
-  /* Better content flow */
-  display: block;
-  /* Enhanced reading performance */
-  font-feature-settings:
-    "kern" 1,
-    "liga" 1,
-    "calt" 1;
-  text-rendering: optimizeLegibility;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  hyphens: auto;
-  padding: 0.5rem !important;
-}
-
-.post-content h1 {
-  /* Responsive content heading */
-  font-size: 1.5rem; /* REM for responsive typography */
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: 1.25rem; /* REM for responsive margin */
-  color: var(--color-post-h1-h5);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  margin-top: 2rem;
-  scroll-margin-top: 2rem;
-}
-
-.post-content h2 {
-  /* Responsive content subheading */
-  font-size: 1.25rem; /* REM for responsive typography */
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: 0.75rem; /* REM for responsive margin */
-  color: var(--color-post-h1-h5);
-  position: relative;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  margin-top: 2rem;
-  scroll-margin-top: 2rem;
-}
-
-.post-content h2:before {
-  content: "";
-  position: absolute;
-  left: -1.25rem; /* REM for responsive positioning */
-  top: 50%;
-  width: 4px; /* PX for precise border width */
-  height: 1.25rem; /* REM for responsive sizing */
-  border-radius: 2px; /* PX for precise border radius */
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-primary-dark)
-  );
-  transform: translateY(calc(-50% + 11px)); 
-}
-
-.post-content h3 {
-  font-size: 1.5rem;
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: 0.5rem;
-  color: var(--color-post-h1-h5);
-  margin-top: 2rem;
-  scroll-margin-top: 2rem;
-}
-
-/* H4 Styling - Enhanced with unified design system */
-.post-content h4 {
-  font-size: 1.25rem; /* REM for responsive typography */
-  font-weight: var(--font-weight-semibold);
-  margin-top: 1.25rem; /* REM for responsive margin */
-  margin-bottom: 0.25rem; /* REM for responsive margin */
-  color: var(--color-post-h1-h5);
-  position: relative;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  /* Enhanced visual hierarchy */
-  border-bottom: 1px solid var(--color-accent-purple-glow-faint); /* PX for precise border */
-  padding-bottom: 0.5rem; /* REM for responsive padding */
-  margin-top: 2rem;
-  scroll-margin-top: 2rem;
-}
-
-/* H5 Styling - Enhanced with unified design system */
-.post-content h5 {
-  font-size: 1rem; /* REM for responsive typography */
-  font-weight: var(--font-weight-semibold);
-  margin-top: 1rem; /* REM for responsive margin */
-  margin-bottom: 0.5rem; /* REM for responsive margin */
-  color: var(--color-post-h1-h5);
-  position: relative;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  /* Enhanced visual hierarchy with subtle accent */
-  padding-left: 0.75rem; /* REM for responsive padding */
-  border-left: 3px solid var(--color-accent-purple-glow-medium); /* PX for precise border */
-  margin-top: 2rem;
-  scroll-margin-top: 2rem;
-}
-
-/* First heading should have no top margin */
-.post-content h1:first-child,
-.post-content h2:first-child,
-.post-content h3:first-child,
-.post-content h4:first-child,
-.post-content h5:first-child {
-  margin-top: 0;
-}
-
-/* Content Paragraphs */
-.post-content p {
-  margin-top: 0.75rem; /* REM for responsive margin */
-  margin-bottom: 1rem; /* REM for responsive margin */
-  color: var(--color-post-content);
-  font-size: 1rem; /* REM for responsive typography */
-  /* ENHANCED: Google Team readability standards */
-  line-height: 1.75; /* Improved line height for better readability */
-  text-rendering: optimizeLegibility; /* Enhanced text rendering */
-  font-feature-settings:
-    "kern" 1,
-    "liga" 1,
-    "calt" 1; /* Better typography */
-}
-
-/* Content Lists */
-.post-content ul,
-.post-content ol {
-  margin-bottom: 1.5rem; /* REM for responsive margin */
-  padding-left: 1.5rem; /* REM for responsive padding */
-  color: var(
-    --color-post-content
-  ); /* ENHANCED: Better contrast for list text */
-}
-
-.post-content li {
-  margin-top: 0.5rem; /* REM for responsive margin */
-  margin-bottom: 0.5rem; /* REM for responsive margin */
-  position: relative;
-  /* ENHANCED: Google Team readability standards */
-  line-height: 1.6; /* Improved line height for list items */
-  color: var(--color-post-content); /* Ensure consistent color */
-}
-
-.post-content ul li:before {
-  content: "〆";
-  color: var(--color-primary);
-  font-weight: 900; /* Make arrow bolder than standard bold */
-  position: absolute;
-  left: -1.25rem; /* REM for responsive positioning */
-}
-
-/* Content Blockquotes */
-.post-content blockquote {
-  position: relative;
-  background: rgba(139, 93, 255, 0.05);
-  border-left: 4px solid var(--color-accent-purple); /* PX for precise border */
-  border-radius: var(--radius-lg);
-  padding: 1rem 1.5rem; /* REM for responsive padding */
-  margin: 1.5rem 0; /* REM for responsive margin */
-  font-style: italic;
-  color: var(
-    --color-post-content
-  ); /* ENHANCED: Better contrast for blockquote text */
-}
-
-.post-content blockquote::before {
-  content: "";
-  position: absolute;
-  left: -4px; /* PX for precise positioning */
-  top: 0;
-  bottom: 0;
-  width: 4px; /* PX for precise border width */
-  background: linear-gradient(
-    180deg,
-    var(--color-accent-purple) 0%,
-    var(--color-accent-cyan) 100%
-  );
-  box-shadow: 0 0 12px rgba(139, 93, 255, 0.4); /* PX for precise shadow */
-  border-radius: 2px; /* PX for precise border radius */
-}
-
-/* Content Code */
-.post-content code {
-  font-size: 0.875em;
-  background: rgba(139, 93, 255, 0.1);
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-  font-family:
-    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New",
-    monospace;
-  color: var(--color-primary);
-}
-
-.post-content pre {
-  position: relative;
-  overflow-x: auto;
-  background: rgba(25, 25, 25, 0.5);
-  border: 1px solid var(--color-border); /* PX for precise border */
-  border-radius: var(--radius-lg);
-  margin: 1.5rem 0; /* REM for responsive margin */
-  padding: 1.5rem; /* REM for responsive padding */
-}
-
-.post-content pre::before {
-  content: "CODE";
-  position: absolute;
-  top: 0.5rem; /* REM for responsive positioning */
-  right: 1rem; /* REM for responsive positioning */
-  font-size: var(--font-size-xs);
-  color: var(--color-muted-foreground);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 0.1em;
-}
-
-.post-content pre code {
-  background: transparent;
-  padding: 0;
-  color: inherit;
-}
-
-/* Content Links */
-.post-content a {
-  color: var(--color-primary);
-  transition: color var(--duration-normal) var(--ease-out);
-}
-
-.post-content a:hover {
-  color: var(--color-primary-dark);
-}
-
-/* Post Navigation - Enhanced with SEGMENT 4 improvements */
-.post-navigation {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 1.25rem; /* REM for responsive margin */
-  padding-top: 1rem; /* REM for responsive padding */
-  border-top: 1px solid var(--color-accent-purple-glow-faint); /* PX for precise border */
-  /* Enhanced focus-within support - SEGMENT 4 */
-  transition: box-shadow var(--post-transition-normal) var(--ease-out);
-}
-
-.post-navigation:focus-within {
-  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.5); /* PX for precise focus shadow */
-}
-
-.post-meta:focus-within {
-  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.5); /* PX for precise focus shadow */
-}
-
-/* Navigation Buttons */
-.nav-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  justify-content: center;
-  min-width: 200px;
-  outline: none;
-}
-
-.nav-btn:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 93, 255, 0.3);
-}
-
-.nav-btn:focus-visible {
-  outline: 2px solid #8b5dff;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(139, 93, 255, 0.3);
-}
-
-/* Share Buttons */
-.share-buttons {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  flex-shrink: 0; /* Don't shrink the button group */
-  white-space: nowrap; /* Prevent text wrapping */
-}
-
-.share-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem; /* REM for responsive spacing */
-  background: rgba(139, 93, 255, 0.1);
-  color: var(--color-primary);
-  padding: 0.75rem 1.25rem; /* REM for responsive padding */
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-  font-size: 0.875rem; /* REM for responsive typography */
-  font-weight: var(--font-weight-medium); /* Enhanced font weight - SEGMENT 4 */
-  /* Enhanced accessibility - SEGMENT 4 */
-  outline: none; /* Remove default outline */
-  border: 1px solid rgba(139, 93, 255, 0.2); /* PX for precise border */
-  cursor: pointer;
-  white-space: nowrap; /* Prevent text wrapping */
-  flex-shrink: 0; /* Don't shrink the button */
-}
-
-.share-btn:hover {
-  background: rgba(139, 93, 255, 0.15);
-  border-color: rgba(139, 93, 255, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 93, 255, 0.2);
-}
-
-.share-btn:focus-visible {
-  outline: 2px solid #8b5dff; /* PX for precise focus outline */
-  outline-offset: 2px; /* PX for precise outline offset */
-  box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
-}
-
-/* Back to Docs Button in Footer */
-.post-actions .back-to-docs {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-primary);
-  background: rgba(139, 93, 255, 0.1);
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  transition: all 0.3s ease;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  outline: none;
-}
-
-.post-actions .back-to-docs:hover {
-  color: var(--color-accent-purple-dark);
-  background: rgba(139, 93, 255, 0.15);
-  border-color: rgba(139, 93, 255, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 93, 255, 0.2);
-}
-
-.post-actions .back-to-docs:focus-visible {
-  outline: 2px solid #8b5dff;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(139, 93, 255, 0.3);
-}
-
-/* Skeleton Loading Styles - Enhanced Performance & Visual Effects */
+/* ========== SKELETON LOADING ========== */
 .skeleton-content {
   opacity: 0.7;
   background: var(--color-card);
-  border: 1px solid var(--color-border); /* PX for precise border */
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 2.5rem; /* REM for responsive padding */
-  margin-bottom: 1.875rem; /* REM for responsive margin */
+  padding: 2.5rem;
+  margin-bottom: 1.875rem;
   animation: skeleton-pulse 1.5s ease-in-out infinite;
-
-  /* Enhanced performance - isolate layout changes for better rendering */
   contain: layout;
 }
 
 @keyframes skeleton-pulse {
-  0%,
-  100% {
+  0%, 100% {
     opacity: 0.7;
   }
   50% {
@@ -952,677 +533,36 @@ div.post-meta {
   }
 }
 
-.skeleton-content-title {
-  height: 2rem; /* REM for responsive height */
-  border-radius: 6px; /* PX for precise border radius */
-  margin-bottom: 0.9375rem; /* REM for responsive margin */
-  width: 90%;
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-.skeleton-content-meta {
-  display: flex;
-  gap: 1.25rem; /* REM for responsive spacing */
-  margin-bottom: 1.5rem; /* REM for responsive margin */
-}
-
-.skeleton-content-author,
-.skeleton-content-date,
-.skeleton-content-read-time {
-  height: 1.125rem; /* REM for responsive height */
-  border-radius: var(--radius-sm);
-  width: 6rem; /* REM for responsive width */
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-.skeleton-paragraph {
-  height: 1rem; /* REM for responsive height */
-  border-radius: var(--radius-sm);
-  margin-bottom: 0.75rem; /* REM for responsive margin */
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-.skeleton-paragraph.short {
-  width: 70%;
-}
-
-.skeleton-content-tags {
-  display: flex;
-  gap: 0.5rem; /* REM for responsive spacing */
-  margin-top: 1.25rem; /* REM for responsive margin */
-}
-
-.skeleton-content-tag {
-  height: 1.25rem; /* REM for responsive height */
-  border-radius: 12px; /* PX for precise border radius */
-  width: 3.125rem; /* REM for responsive width */
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.skeleton-loading {
-  pointer-events: none;
-  user-select: none;
-}
-
-.skeleton-fade-in {
-  animation: skeleton-fade-in 0.5s ease-in-out;
-}
-
-@keyframes skeleton-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px); /* PX for precise animation */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Reading Progress Bar */
+/* ========== READING PROGRESS ========== */
 .reading-progress {
   position: fixed;
   top: 0;
   left: 0;
   width: 0;
-  height: 3px; /* PX for precise progress bar height */
+  height: 3px;
   z-index: var(--z-dropdown);
   transition: width 0.1s ease;
-  background: linear-gradient(
-    90deg,
-    var(--color-primary),
-    var(--color-primary-dark)
-  );
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
 }
 
-/* ========== GOOGLE-STANDARD LIST STYLING - ENHANCED ACCESSIBILITY & CONSISTENCY ========== */
-/* 
- * REASONING: Implementing Google Material Design 3 list standards for consistent rendering
- * CHANGE: Adding comprehensive list styling that works across all browsers and devices
- * BENEFIT: Improved readability, accessibility, and visual consistency
- */
-
-/* ===== LIST STYLING - USING GLOBAL STYLES ONLY ===== */
-/* REASONING: All list styling is now handled by global.css with custom bullets */
-/* Global styles apply to all lists including .post-content lists */
-
-/* ========== ALL BREAKPOINT ADJUSTMENTS - MOVED TO BOTTOM ========== */
-
-/* Responsive container sizing - FIXED for better readability */
-@media (min-width: 640px) {
-  .post-page .post-container {
-    padding: 0 var(--post-padding-x-medium) !important; /* Use custom variable for better spacing */
-    max-width: var(
-      --post-max-width-medium
-    ) !important; /* 95% instead of 90% for less restriction */
-    gap: 2rem !important;
-  }
-
-  .post-navigation-top {
-    padding: 1rem 1.5rem;
-  }
-
-  .post-actions {
-    padding: 2rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .post-page .post-container {
-    max-width: 92% !important; /* INCREASED from 85% for less restriction */
-  }
-
-  .post-header {
-    padding: 2rem !important;
-  }
-
-  .post-navigation-top {
-    padding: 1.25rem 2rem !important;
-  }
-
-  .post-actions {
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-  }
-}
-
-@media (min-width: 1024px) {
-  .post-page .post-container {
-    /* SIMPLIFIED Golden Ratio - More Readable and Less Restrictive */
-    max-width: min(85%, var(--post-max-width-large)) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding: 0 var(--post-padding-x-large) !important; /* Use custom variable for optimal spacing */
-    gap: 3rem !important;
-  }
-
-  .post-content {
-    padding: 2rem !important;
-  }
-
-  .post-header {
-    padding: 2.5rem !important;
-  }
-
-  .post-navigation-top {
-    padding: 1.5rem 2.5rem !important;
-  }
-
-  .post-actions {
-    padding: 2.5rem !important;
-  }
-}
-
-@media (min-width: 1280px) {
-  .post-page .post-container {
-    /* FIXED max-width with readability optimization - Less Restrictive */
-    max-width: min(
-      85%,
-      68rem
-    ) !important; /* Convert 1024px to REM for responsive max-width */
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding: 0 var(--post-padding-x-large) !important; /* Use custom variable for optimal spacing */
-    gap: 3.5rem !important;
-  }
-}
-
-
-/* Enhanced Mobile Navigation */
-@media (max-width: 768px) {
-  .post-navigation-top {
-    margin-bottom: 1rem !important;
-    padding: 0.75rem 1rem !important;
-  }
-
-  .back-to-docs {
-    padding: 0.5rem 1rem !important;
-    font-size: 1rem !important; /* Larger for better touch targets */
-  }
-
-  .post-actions {
-    margin-top: 2rem !important;
-    padding: 1.5rem !important;
-    gap: 1rem !important;
-    flex-direction: row !important; /* Keep items side by side */
-    flex-wrap: nowrap !important; /* Prevent wrapping */
-    align-items: center !important; /* Center items vertically */
-    justify-content: space-between !important; /* Space items apart */
-    width: 100% !important; /* Ensure full width */
-    box-sizing: border-box !important; /* Include padding in width */
-  }
-
-  .nav-btn {
-    padding: 1rem 1.5rem !important;
-    font-size: 1rem !important;
-    min-width: auto !important;
-    width: auto !important; /* Don't force full width */
-    border-radius: 0.75rem !important; /* Larger radius for modern look */
-    margin-bottom: 0 !important; /* Remove bottom margin */
-  }
-
-  .share-btn {
-    padding: 0.75rem 1.25rem !important;
-    font-size: 1rem !important;
-    border-radius: 0.75rem !important; /* Consistent radius */
-    width: auto !important; /* Don't force full width */
-    margin-bottom: 0 !important; /* Remove bottom margin */
-  }
-
-  .ai-recommendations-section {
-    margin-top: 2.5rem !important;
-    padding: 2rem !important;
-  }
-
-  .post-header {
-    padding: 1.5rem !important;
-    margin-bottom: 1.5rem !important;
-  }
-}
-
-/* Responsive post meta */
-@media (min-width: 480px) {
-  .post-meta {
-    gap: 0.75rem; /* REM for responsive spacing */
-    font-size: 0.75rem; /* REM for responsive typography */
-  }
-}
-
-@media (min-width: 680px) {
-  .post-meta {
-    gap: 1.5rem; /* REM for responsive spacing */
-    font-size: 0.875rem; /* REM for responsive typography */
-  }
-}
-
-/* Responsive content headings */
-@media (min-width: 480px) {
-  .post-content h1 {
-    font-size: 1.75rem; /* REM for responsive typography */
-  }
-  .post-content h2 {
-    font-size: 1.5rem; /* REM for responsive typography */
-  }
-  .post-content h4 {
-    font-size: 1.25rem; /* REM for responsive typography */
-  }
-  .post-content h5 {
-    font-size: 1rem; /* REM for responsive typography */
-  }
-}
-
-@media (min-width: 680px) {
-  .post-content h1 {
-    font-size: 2rem; /* REM for responsive typography */
-  }
-  .post-content h2 {
-    font-size: 1.75rem; /* REM for responsive typography */
-  }
-  .post-content h4 {
-    font-size: 1.375rem; /* REM for responsive typography */
-  }
-  .post-content h5 {
-    font-size: 1.125rem; /* REM for responsive typography */
-  }
-}
-
-@media (min-width: 768px) {
-  .post-content h1 {
-    font-size: 2.25rem; /* REM for responsive typography */
-  }
-  .post-content h2 {
-    font-size: 2rem; /* REM for responsive typography */
-  }
-  .post-content h4 {
-    font-size: 1.5rem; /* REM for responsive typography */
-  }
-  .post-content h5 {
-    font-size: 1.25rem; /* REM for responsive typography */
-  }
-}
-
-@media (min-width: 1024px) {
-  .post-content h1 {
-    font-size: 2.5rem; /* REM for responsive typography */
-  }
-  .post-content h2 {
-    font-size: 2.25rem; /* REM for responsive typography */
-  }
-  .post-content h4 {
-    font-size: 1.625rem; /* REM for responsive typography */
-  }
-  .post-content h5 {
-    font-size: 1.375rem; /* REM for responsive typography */
-  }
-}
-
-/* ========== MOBILE LIST SPACING OPTIMIZATION ========== */
-/* 
- * REASONING: Current list padding (var(--spacing-2xl) = 30px) is excessive on mobile screens
- * SOLUTION: Progressive spacing reduction for different mobile screen sizes
- * BENEFIT: Improved readability and visual alignment on small screens
- * APPROACH: Maintain visual hierarchy while optimizing for mobile constraints
- */
-
-/* Tablet and Small Desktop List Spacing */
-@media (min-width: 768px) {
-  .post-content ul,
-  .post-content ol {
-    padding-left: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .post-content li {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .post-content ul li:before {
-    left: -1.5rem;
-  }
-}
-
-/* Medium Mobile Screen List Spacing */
-@media (min-width: 480px) {
-  .post-content ul,
-  .post-content ol {
-    padding-left: 1rem;
-  }
-
-  .post-content ul li:before {
-    left: -1rem;
-  }
-}
-
-/* Small Mobile Screen List Spacing */
-@media (min-width: 360px) {
-  .post-content ul li:before {
-    left: -0.75rem;
-  }
-}
-
-/* Ultra Small Screen List Spacing */
-@media (min-width: 320px) {
-  .post-content ul,
-  .post-content ol {
-    padding-left: 0.5rem;
-  }
-
-  .post-content ul li:before {
-    left: -0.5rem;
-  }
-}
-
-/* ========== ENHANCED RESPONSIVE DESIGN - SEGMENT 7 ========== */
-
-/* Enhanced Mobile Breakpoints - Improved spacing and typography */
-@media (min-width: 768px) {
-  .post-page .post-container {
-    padding: 0 1.5rem; /* Slightly more padding for better spacing */
-  }
-
-  .post-header {
-    margin-bottom: 1rem; /* Standard margin */
-    padding: 1.75rem; /* Generous but not excessive padding */
-  }
-
-  .post-header h1 {
-    font-size: var(--font-size-4xl); /* Large, prominent title */
-    font-weight: var(--font-weight-medium); /* Consistent with base style */
-  }
-
-  .post-meta {
-    flex-direction: row;
-    gap: 1rem; /* Comfortable spacing */
-  }
-
-  .post-navigation {
-    flex-direction: column;
-    gap: 0.75rem; /* REM for responsive spacing */
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 480px) {
-  .post-header {
-    padding: 1.25rem 1rem !important;
-    margin-bottom: 0.75rem !important;
-    background: rgba(25, 25, 25, 0.25); /* Slightly more opaque for better contrast */
-    border-radius: 0.75rem; /* Standard radius for consistency */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  }
-
-  .post-header h1 {
-    font-size: var(--font-size-3xl); /* Reduced from 4xl to 3xl */
-    font-weight: var(--font-weight-medium); /* Consistent medium weight */
-    line-height: 1.4; /* Optimal line height for readability */
-    padding: 0 0.5rem; /* Add slight padding for breathing room */
-    margin-bottom: 1rem; /* Standard margin for spacing */
-  }
-
-  .post-meta {
-    flex-direction: column;
-    gap: 0.75rem !important;
-    font-size: 0.875rem !important; /* Standard readable size */
-    padding: 0 0.75rem;
-  }
-
-  .post-date,
-  .post-author,
-  .post-read-time {
-    text-align: center;
-  }
-
-  .post-tags {
-    margin-top: 0.75rem;
-    gap: 0.75rem;
-    justify-content: center;
-  }
-
-  .difficulty-badge {
-    font-size: 0.875rem; /* Standard readable font size */
-    padding: 0.375rem 0.75rem; /* Comfortable padding for touch targets */
-    border-radius: 1rem; /* Pill shape for modern look */
-  }
-  
-  /* Ensure footer buttons stay side by side */
-  .post-actions {
-    flex-direction: row !important; /* Keep items side by side */
-    flex-wrap: nowrap !important; /* Prevent wrapping */
-    gap: 0.75rem !important; /* Slightly reduced gap */
-    padding: 1.25rem !important; /* Slightly reduced padding */
-    justify-content: space-between !important; /* Space items apart */
-    align-items: center !important; /* Center items vertically */
-    width: 100% !important; /* Ensure full width */
-    box-sizing: border-box !important; /* Include padding in width */
-  }
-
-  .nav-btn {
-    padding: 0.875rem 1.25rem !important; /* Slightly reduced padding */
-    font-size: 0.875rem !important; /* Smaller font for very small screens */
-    width: auto !important; /* Don't force full width */
-    margin-bottom: 0 !important; /* Remove bottom margin */
-  }
-
-  .share-btn {
-    padding: 0.625rem 1rem !important; /* Slightly reduced padding */
-    font-size: 0.875rem !important; /* Smaller font for very small screens */
-    width: auto !important; /* Don't force full width */
-    margin-bottom: 0 !important; /* Remove bottom margin */
-  }
-}
-
-@media (max-width: 360px) {
-  .post-header {
-    padding: 1rem 0.75rem !important;
-  }
-
-  .post-header h1 {
-    font-size: var(--font-size-2xl); /* Keep consistent size */
-    font-weight: var(--font-weight-medium); /* Same weight as larger breakpoints */
-    line-height: 1.35;
-    margin-bottom: 0.75rem;
-  }
-
-  .post-meta {
-    gap: 0.5rem !important;
-    font-size: 0.8125rem !important; /* Slightly smaller but still readable */
-  }
-  
-  .difficulty-badge {
-    font-size: 0.8125rem; /* Slightly smaller */
-    padding: 0.25rem 0.5rem; /* Reduced padding */
-  }
-  
-  /* Ensure footer buttons stay side by side even on tiny screens */
-  .post-actions {
-    flex-direction: row !important; /* Keep items side by side */
-    flex-wrap: nowrap !important; /* Prevent wrapping */
-    gap: 0.5rem !important; /* Minimal gap */
-    padding: 1rem !important; /* Minimal padding */
-    justify-content: space-between !important; /* Space items apart */
-    align-items: center !important; /* Center items vertically */
-    width: 100% !important; /* Ensure full width */
-    box-sizing: border-box !important; /* Include padding in width */
-  }
-
-  .nav-btn {
-    padding: 0.75rem 1rem !important; /* Reduced padding */
-    font-size: 0.8125rem !important; /* Smaller font for tiny screens */
-    width: auto !important; /* Don't force full width */
-    margin-bottom: 0 !important; /* Remove bottom margin */
-  }
-
-  .share-btn {
-    padding: 0.5rem 0.75rem !important; /* Reduced padding */
-    font-size: 0.8125rem !important; /* Smaller font for tiny screens */
-    width: auto !important; /* Don't force full width */
-    margin-bottom: 0 !important; /* Remove bottom margin */
-  }
-}
-
-/* ========== HIGH CONTRAST MODE SUPPORT ========== */
-/* REASONING: Google Team accessibility standards require high contrast mode support */
-@media (prefers-contrast: high) {
-  .post-content {
-    /* ENHANCED: High contrast mode for better accessibility */
-    --color-post-title: rgba(
-      255,
-      255,
-      255,
-      1
-    ); /* Full white for maximum contrast */
-    --color-post-h1-h5: rgba(
-      255,
-      255,
-      255,
-      1
-    ); /* Full white for maximum contrast */
-    --color-post-content: rgba(
-      255,
-      255,
-      255,
-      1
-    ); /* Full white for maximum contrast */
-    --color-post-meta: rgba(255, 255, 255, 0.95); /* High contrast meta text */
-  }
-
-  .post-content h1,
-  .post-content h2,
-  .post-content h3,
-  .post-content h4,
-  .post-content h5 {
-    color: rgba(255, 255, 255, 1); /* Full white for maximum contrast */
-    text-shadow: none; /* Remove any text shadows in high contrast */
-  }
-
-  .post-content p,
-  .post-content li,
-  .post-content blockquote {
-    color: rgba(255, 255, 255, 1); /* Full white for maximum contrast */
-  }
-
-  .post-meta,
-  .post-date,
-  .post-author,
-  .post-read-time {
-    color: rgba(255, 255, 255, 0.95); /* High contrast meta text */
-  }
-
-  .back-to-docs {
-    color: #ffff00; /* High contrast yellow for links */
-    text-decoration: underline; /* Always underline in high contrast */
-  }
-
-  .back-to-docs:hover {
-    color: #ffffff; /* Full white on hover */
-    background-color: #000000; /* Black background on hover */
-  }
-}
-
-/* ========== REDUCED MOTION SUPPORT ========== */
-/* REASONING: Google Team accessibility standards require reduced motion support */
+/* ========== ACCESSIBILITY ========== */
 @media (prefers-reduced-motion: reduce) {
-  .post-page,
-  .post-container,
-  .back-to-docs,
-  .nav-btn,
-  .share-btn {
-    /* ENHANCED: Disable animations for users who prefer reduced motion */
+  .back-to-docs, .share-btn, .reading-progress {
+    transition: none !important;
+  }
+  
+  .skeleton-content {
     animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
-
-  .reading-progress {
-    /* ENHANCED: Disable reading progress animation */
-    transition: none !important;
   }
 }
 
-/* Enhanced accessibility for skeleton loading */
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-content-title,
-  .skeleton-content-author,
-  .skeleton-content-date,
-  .skeleton-content-read-time,
-  .skeleton-paragraph,
-  .skeleton-content-tag {
-    animation: none;
+/* ========== HIGH CONTRAST MODE ========== */
+@media (prefers-contrast: high) {
+  .post-header, .post-actions {
+    border: 2px solid #6b7280;
   }
-}
-
-@media print {
-  .post-content ul,
-  .post-content ol {
-    /* REASONING: Ensure lists print correctly */
-    margin: 0.5rem 0 0.5rem 1rem; /* REM for responsive margins */
-    page-break-inside: avoid; /* Prevent list breaking across pages */
+  
+  .back-to-docs, .share-btn {
+    border: 2px solid var(--color-primary);
   }
-
-  .post-content li {
-    /* REASONING: Ensure list items print clearly */
-    page-break-inside: avoid; /* Prevent item breaking across pages */
-    orphans: 2; /* Minimum 2 lines before page break */
-    widows: 2; /* Minimum 2 lines after page break */
-  }
-}
-
-/* ===== SCROLL BEHAVIOR ===== */
-
-/* Enhanced Scroll Behavior */
-html {
-  scroll-behavior: smooth !important;
-}
-
-/* ===== LOADING STATES ===== */
-
-/* Enhanced Loading States */
-.post-content.loading {
-  opacity: 0.7 !important;
-  pointer-events: none !important;
-}
-
-.post-content.loaded {
-  opacity: 1 !important;
-  transition: opacity 0.3s ease !important;
 }

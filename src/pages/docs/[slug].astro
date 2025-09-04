@@ -167,10 +167,9 @@ try {
         <header class="post-header">
           <h1 class="post-title">{post.data.title}</h1>
 
-          <div class="post-meta" aria-label="Post metadata">
-            <time class="post-date" datetime={post.data.publishedDate}>
-              {formatDate(post.data.publishedDate)}
-            </time>
+          <div class="post-meta-grid" aria-label="Post metadata">
+            <span class="post-date">{formatDate(post.data.publishedDate)}</span>
+            <span class="separator">|</span>
             <span class="post-author">by {post.data.author}</span>
           </div>
 
@@ -184,13 +183,13 @@ try {
         </header>
 
         <!-- Article Content -->
-        <article class="post-content" id="postContent" aria-label="Post content" set:html={enhancedContent} />
+        <article class="post-content prose prose-invert max-w-none" id="postContent" aria-label="Post content" set:html={enhancedContent} />
         
         {/* AI-Powered Content Recommendations Section */}
         {
           relatedContent && (
             <section
-              class="ai-recommendations-section"
+              class="ai-recommendations-section parent"
               aria-label="Rekomendasi konten terkait">
               <AIRecommendations
                 relatedContent={relatedContent}

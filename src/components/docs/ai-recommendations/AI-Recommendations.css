@@ -21,6 +21,28 @@
   max-width: 100%; /* Ensure no max-width constraints */
 }
 
+/* Special handling for nested sections at 768px width */
+@media (max-width: 768px) {
+  /* Make parent section transparent without blur effect */
+  .ai-recommendations-section:not(.ai-recommendations-section .ai-recommendations-section) {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  /* Child section maintains translucent appearance */
+  .ai-recommendations-section .ai-recommendations-section {
+    background: rgba(25, 25, 25, 0.6) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--color-border) !important;
+    margin: 0 !important;
+    padding: 2rem 0 !important;
+  }
+}
+
 .ai-recommendations-container {
   max-width: 100%;
   margin: 0 auto;
@@ -73,7 +95,7 @@
   margin-bottom: 0;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Mobile - Stacked layout (1, 2, 3, 4 vertically) */
   .ai-recommendations-grid {
     display: flex;
@@ -392,7 +414,7 @@
   .ai-recommendations-section {                                                          
     padding: 2rem 1.5rem; /* Consistent padding */                                       
   }                                                                                      
-                                                                                         
+  
   .ai-recommendations-container {                                                        
     padding: 0 1.5rem; /* Consistent container padding */                                
   } 
@@ -473,7 +495,7 @@
     grid-template-columns: 1fr 1fr;          
   }                                                                                                    
                                                                                               
-  .ai-recommendation-card {                                                                     
+  .ai-recommendation-card {                                                                    
     /* Ensure consistent card behavior */                                                      
     flex: none; /* Reset flex properties */                                                     
     max-width: 100%; /* Prevent overflow */                                                     
