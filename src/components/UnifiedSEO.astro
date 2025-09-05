@@ -40,12 +40,30 @@ const {
   gtag
 } = Astro.props;
 
+// URL正規化関数（ダブルパスを防ぐ）
+const normalizeUrl = (baseUrl: string, path: string): string => {
+  // ベースURLの末尾スラッシュを削除
+  const cleanBase = baseUrl.replace(/\/+$/, '');
+  // パスの先頭スラッシュを確保
+  const cleanPath = path.startsWith('/') ? path : '/' + path;
+  // 結合してダブルスラッシュを正規化
+  return `${cleanBase}${cleanPath}`.replace(/([^:]\/)\/+/g, '$1');
+};
+
 // Astroネイティブでcanonical URLを自動生成
 // GitHub Pages対応: site設定 + 現在のパス（二重スラッシュを防ぐ）
-const autoCanonical = canonical || `${Astro.site}${Astro.url.pathname}`.replace(/([^:]\/)\/+/g, '$1');
+const autoCanonical = canonical || normalizeUrl(String(Astro.site || 'https://gorakudo.org'), Astro.url.pathname || '/');
+
+// GitHub Pages SEO最適化: トレイリングスラッシュの統一
+const normalizedCanonical = autoCanonical.endsWith('/') && autoCanonical !== `${Astro.site}/` 
+  ? autoCanonical.slice(0, -1) 
+  : autoCanonical;
 
 // 画像パスを完全なURLに変換（OG画像は完全なURLである必要がある）
-const fullImageUrl = image.startsWith('http') ? image : `${Astro.site}${image.startsWith('/') ? image : '/' + image}`;
+// ダブルパスを防ぐため、正規化関数を使用
+const fullImageUrl = image.startsWith('http') 
+  ? image 
+  : normalizeUrl(String(Astro.site || 'https://gorakudo.org'), image || '/img/FullDC Logo.webp');
 
 // デフォルト設定（Astroネイティブ）
 const defaultConfig = {
@@ -61,7 +79,7 @@ const jsonLD = {
   '@type': pageType === 'article' ? 'Article' : 'WebSite',
   name: title,
   description,
-  url: autoCanonical, // 自動生成されたcanonical URLを使用
+  url: normalizedCanonical, // GitHub Pages最適化されたcanonical URLを使用
   inLanguage: lang, // 言語情報を追加
   ...(pageType === 'article' && {
     datePublished: publishedDate,
@@ -86,13 +104,13 @@ const jsonLD = {
 {author && <meta name="author" content={author} />}
 
 <!-- ロボット設定 -->
-<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
 
 <!-- Open Graph -->
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:type" content={pageType} />
-<meta property="og:url" content={autoCanonical} />
+<meta property="og:url" content={normalizedCanonical} />
 <meta property="og:image" content={fullImageUrl} />
 <meta property="og:image:width" content="320" />
 <meta property="og:image:height" content="320" />
@@ -109,7 +127,7 @@ const jsonLD = {
 <meta name="twitter:image:alt" content={title} />
 
 <!-- 正規化リンク -->
-<link rel="canonical" href={autoCanonical} />
+<link rel="canonical" href={normalizedCanonical} />
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href={defaultConfig.favicon} />
@@ -127,6 +145,11 @@ const jsonLD = {
 
 <!-- 言語設定 -->
 <meta name="language" content={lang} />
+
+<!-- GitHub Pages SEO最適化 -->
+<meta name="generator" content="Astro" />
+<meta name="googlebot" content="index, follow" />
+<meta name="bingbot" content="index, follow" />
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(jsonLD)} />
