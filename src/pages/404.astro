@@ -10,9 +10,9 @@ const seoData = {
 }
 
 // Redirect mapping for old URLs with dynamic path support
-import { getCollectionMetadata } from "../utils/content-path-resolver"
+import { getCollectionInfo } from "../utils/collections"
 
-const collectionMetadata = getCollectionMetadata("blog")
+const collectionMetadata = getCollectionInfo("docs")
 const defaultPath = collectionMetadata.basePath
 
 const redirectMap = {

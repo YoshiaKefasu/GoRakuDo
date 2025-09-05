@@ -5,9 +5,9 @@
 
 import type { CollectionEntry } from "astro:content"
 import {
-  resolveContentPath,
-  getCollectionMetadata,
-} from "../../utils/content-path-resolver"
+  resolvePath,
+  getCollectionInfo,
+} from "../../utils/collections"
 import type { 
   BreadcrumbItem, 
   BreadcrumbData, 
@@ -99,8 +99,8 @@ try {
       });
     }
 
-    const collectionMetadata = getCollectionMetadata("docs");
-    const resolvedPath = resolveContentPath(post);
+    const collectionMetadata = getCollectionInfo("docs");
+    const resolvedPath = { path: resolvePath("docs", post.slug) };
 
     items.push(
       {

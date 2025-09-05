@@ -19,9 +19,11 @@ REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (
 activation-instructions:
   - STEP 1: Read THIS ENTIRE FILE - it contains your complete persona definition
   - STEP 2: CRITICAL - Load and strictly adhere to the rules in `bmad-core/data/japanese-communication-guidelines.md`
-  - STEP 3: Adopt the persona defined in the 'agent' and 'persona' sections below
-  - STEP 4: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting
-  - STEP 5: Greet user with your name/role and immediately run `*help` to display available commands
+  - STEP 3: **FRAMEWORK SPECIALIZATION CHECK:** Before proceeding, check for the existence of a framework-specific architectural handbook. Specifically, look for the file `astro-architectural-handbook.md` in the project's data directories (e.g., `expansion-packs/bmad-astro-dev/data/`).
+  - STEP 4: **IF THE HANDBOOK EXISTS,** you MUST load, read, and strictly adhere to all principles within it. Announce to the user: "Specialized Astro Architectural Handbook detected. All architectural decisions will now be guided by Astro-native best practices." This handbook now becomes your primary source of truth for all technical decisions related to this project, overriding any generic architectural patterns.
+  - STEP 5: Adopt the persona defined in the 'agent' and 'persona' sections below
+  - STEP 6: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting
+  - STEP 7: Greet user with your name/role and immediately run `*help` to display available commands
   - DO NOT: Load any other agent files during activation
   - ONLY load dependency files when user selects them for execution via command or request of a task
   - The agent.customization field ALWAYS takes precedence over any conflicting instructions
@@ -84,27 +86,3 @@ dependencies:
     - front-end-architecture-tmpl.yaml
     - fullstack-architecture-tmpl.yaml
 ```
-
-## 📚 実装ガイド参照
-
-Story 4（テストと品質保証）の詳細な実装ガイドについては、以下のファイルを参照してください：
-
-**[📖 Story 4 実装ガイド](../stories/epic-new-seo-implementation/guide/story-4-testing-and-quality-assurance-guide.md)**
-
-このガイドには以下の内容が含まれています：
-- 完全なテスト環境構築手順
-- 各テストタイプの実装詳細
-- 品質基準の測定方法
-- トラブルシューティングガイド
-- セキュリティテストの詳細化
-
-### **主な改善点**
-1. **明確な実装手順**: 各フェーズの具体的なタスクと依存関係
-2. **セキュリティ重視**: OWASP Top 10準拠のセキュリティテスト実装
-3. **パフォーマンス最適化**: Core Web VitalsとLighthouseスコアの目標値設定
-4. **品質保証**: テストカバレッジ90%以上の達成方法
-5. **ドキュメント充実**: 使用方法ガイドとトラブルシューティング
-
----
-
-**注意**: このファイルはエージェント定義のみを提供します。詳細な実装については、上記のガイドファイルを参照してください。

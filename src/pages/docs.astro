@@ -20,7 +20,7 @@ import UnifiedSEO from "../components/UnifiedSEO.astro"
 import Breadcrumb from "../components/public-components/Breadcrumb.astro"
 import Navbar from "../components/public-components/Navbar.vue"
 import "../styles/docs/docs.css"
-import { resolveContentPath, getCollectionMetadata } from "../utils/content-path-resolver"
+import { resolvePath, getCollectionInfo } from "../utils/collections"
 // AI content utilities removed - functionality no longer needed
 // import { triggerAIBuildProcessing, testAIFunctionality } from "../utils/ai" - removed
 // Optimized build processing removed - no longer needed
@@ -110,11 +110,11 @@ const aiMetadataMap = new Map(
 
 // Dynamic content path resolution for all posts
 const postsWithDynamicPaths = sortedPosts.map((post) => {
-  const resolvedPath = resolveContentPath(post)
+  const resolvedPath = { path: resolvePath("docs", post.slug) }
   return {
     ...post,
     resolvedPath: resolvedPath.path,
-    collectionMetadata: getCollectionMetadata("blog"),
+    collectionMetadata: getCollectionInfo("docs"),
   }
 })
 // Semantic relationships removed - functionality no longer needed

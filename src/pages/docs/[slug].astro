@@ -10,9 +10,9 @@ import Navbar from "../../components/public-components/Navbar.vue"
 // Content analysis utilities removed - functionality no longer needed
 // AI metadata utilities removed - functionality no longer needed
 import {
-  resolveContentPath,
-  getCollectionMetadata,
-} from "../../utils/content-path-resolver"
+  resolvePath,
+  getCollectionInfo,
+} from "../../utils/collections"
 
 // Import post[slug]-specific styles with Tailwind v4 optimization
 import "../../styles/docs/[slug].css"
@@ -36,8 +36,8 @@ if (!post) {
 }
 
 // Dynamic content path resolution for SEO
-const resolvedPath = resolveContentPath(post)
-const collectionMetadata = getCollectionMetadata("docs") // Default to docs for backward compatibility
+const resolvedPath = { path: resolvePath("docs", post.slug) }
+const collectionMetadata = getCollectionInfo("docs")
 
 // ファイルシステムから自動的に作成日・更新日を取得
 function getFileDates(slug: string) {

@@ -2,8 +2,8 @@
 // Provides comprehensive search data for client-side Fuse.js search
 import { getCollection } from 'astro:content';
 import {
-  resolveContentPath,
-} from '../utils/content-path-resolver';
+  resolvePath,
+} from '../utils/collections';
 import { logger } from '../utils/logging/console-logger';
 
 export async function GET() {
@@ -101,8 +101,7 @@ export async function GET() {
         // URL for navigation with dynamic path resolution
         url: (() => {
           try {
-            const resolvedPath = resolveContentPath(post);
-            return resolvedPath.path;
+            return resolvePath("docs", post.slug);
           } catch (error) {
             logger.log(
               `Failed to resolve path for ${post.slug}: ${error.message}`,
