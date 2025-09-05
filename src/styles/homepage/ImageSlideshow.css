@@ -1,5 +1,5 @@
 /* Import Tailwind CSS v4 */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Mobile-optimized slideshow styles */
 .slideshow-container {
@@ -15,7 +15,7 @@
   .slideshow-container {
     margin: 0 1rem;
   }
-  
+
   /* Navigation dots above slideshow for mobile */
   .dot {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Stronger shadow for visibility */
@@ -57,7 +57,9 @@
 /* Enhanced progress bar container */
 .slideshow-container .progress-bar {
   opacity: 0.8; /* Slightly transparent but always visible */
-  transition: opacity 0.3s ease, width 0.1s linear;
+  transition:
+    opacity 0.3s ease,
+    width 0.1s linear;
 }
 
 /* Hover enhancement - makes progress bar more prominent but doesn't hide it */
@@ -78,14 +80,21 @@
 .dot {
   transition: all 0.3s ease;
   opacity: 1 !important; /* Ensure dots are always visible */
-  background-color: rgba(139, 93, 255, 0.4) !important; /* Semi-transparent purple for inactive dots */
+  background-color: rgba(
+    139,
+    93,
+    255,
+    0.4
+  ) !important; /* Semi-transparent purple for inactive dots */
   transform: scale(0.5); /* Default scale */
   border: none !important; /* Remove white border */
 }
 
 /* Active dot styles - matches the 'active-dot' class from Astro */
 .dot.active-dot {
-  background-color: var(--color-accent-purple) !important; /* Active dot uses bright purple */
+  background-color: var(
+    --color-accent-purple
+  ) !important; /* Active dot uses bright purple */
   box-shadow: 0 4px 12px var(--color-accent-shadow);
   border: none !important; /* Remove white border */
   transform: scale(1.1); /* Active dot is larger */
@@ -102,7 +111,8 @@
 }
 
 @keyframes pulse-gentle {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.9;
   }
@@ -120,12 +130,12 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    
+
     /* Prevent context menu on long-press */
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
   }
-  
+
   .slide {
     /* Ensure touch events work properly */
     touch-action: manipulation;
@@ -135,7 +145,7 @@
     -ms-user-select: none;
     user-select: none;
   }
-  
+
   .dot {
     min-width: 0.75rem;
     min-height: 0.75rem;
@@ -150,12 +160,16 @@
   .dot:hover {
     transform: scale(1.15);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-    background-color: var(--color-accent-purple) !important; /* Hover shows bright purple */
+    background-color: var(
+      --color-accent-purple
+    ) !important; /* Hover shows bright purple */
   }
-  
+
   /* Active dot hover effect */
   .dot.active-dot:hover {
-    background-color: var(--color-accent-purple) !important; /* Active dot stays bright purple */
+    background-color: var(
+      --color-accent-purple
+    ) !important; /* Active dot stays bright purple */
     box-shadow: 0 6px 16px var(--color-accent-shadow);
     transform: scale(1.1); /* Slightly larger on hover */
   }
@@ -167,7 +181,7 @@
     transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   }
-  
+
   .dot.active-dot:hover {
     background-color: var(--color-accent-purple) !important;
     box-shadow: 0 6px 16px var(--color-accent-shadow);

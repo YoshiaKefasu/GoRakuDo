@@ -39,6 +39,6 @@ recommendations:
   immediate: [] # 即時対応不要
   future:
     - action: 'パフォーマンス監視ダッシュボードのUI改善'
-      refs: ['src/utils/performance/']
+      refs: [] # 'src/utils/performance/' 削除済み
     - action: 'テスト実行レポートの自動メール通知機能追加'
       refs: ['package.json']

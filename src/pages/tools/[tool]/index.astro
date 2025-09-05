@@ -10,6 +10,8 @@ import { readdir } from "fs/promises";
 import { join } from "path";
 import ArticleCard from "../../../components/content/ArticleCard.astro";
 import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro";
+import Breadcrumb from "../../../components/public-components/Breadcrumb.astro";
+import type { ToolName } from "../../../utils/content/breadcrumb-utils";
 
 // ========== PERFORMANCE MONITORING ==========
 // Subtask 8.1: Build time measurement for index page generation
@@ -202,8 +204,19 @@ if (performanceMetrics.cachingMetrics.cacheSize > 100) {
   title={`${tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo`}
   description={`All articles and guides for ${tool} tool`}
   lang="id"
-  showBreadcrumb={true}
+  showBreadcrumb={false}
   currentPath={validatedCurrentPath}>
+  <!-- Enhanced Breadcrumb Navigation -->
+  <Breadcrumb 
+    toolConfig={{
+      toolName: tool as ToolName,
+      showHome: true
+    }}
+    variant="compact"
+    showIcons={true}
+    ariaLabel={`${tool.charAt(0).toUpperCase() + tool.slice(1)} tool navigation breadcrumb`}
+  />
+
   <!-- Page Header -->
   <header class="tool-index-header">
     <h1 class="tool-index-title">{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>

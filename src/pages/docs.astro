@@ -16,27 +16,19 @@ declare global {
 }
 
 import { getCollection } from "astro:content"
-import HeadSEO from "../components/public-components/HeadSEO.astro"
+import UnifiedSEO from "../components/UnifiedSEO.astro"
 import Breadcrumb from "../components/public-components/Breadcrumb.astro"
 import Navbar from "../components/public-components/Navbar.vue"
 import "../styles/docs/docs.css"
 import { resolveContentPath, getCollectionMetadata } from "../utils/content-path-resolver"
-import {
-  getContentWithAIMetadata,
-  getContentByLearningStageWithAI,
-  getContentByTypeWithAI,
-  getContentRecommendationsWithAI,
-} from "../utils/ai-content"
-import { triggerAIBuildProcessing, testAIFunctionality } from "../utils/ai"
-import {
-  runOptimizedBuildProcessing,
-  shouldEnableOptimizedProcessing,
-} from "../utils/ai-content"
-import {
-  getPostsWithSemanticRelationships,
-  getLearningPathRecommendations,
-} from "../utils/ai-content"
-import { searchDataGenerator } from "../utils/content/search-data-generator"
+// AI content utilities removed - functionality no longer needed
+// import { triggerAIBuildProcessing, testAIFunctionality } from "../utils/ai" - removed
+// Optimized build processing removed - no longer needed
+// import {
+//   runOptimizedBuildProcessing,
+//   shouldEnableOptimizedProcessing,
+// } from "../utils/ai-content"
+// Semantic relationships removed - functionality no longer needed
 import { CONTENT_CONFIG, ContentConfigUtils } from "../content/content-config"
 
 import { logger, ConsoleLogger } from "../utils/logging/console-logger"
@@ -125,14 +117,9 @@ const postsWithDynamicPaths = sortedPosts.map((post) => {
     collectionMetadata: getCollectionMetadata("blog"),
   }
 })
-const postsWithRelationships = getPostsWithSemanticRelationships(
-  sortedPosts[0], // Pass first post as current post
-  sortedPosts // Pass the actual posts array
-)
-const learningPathRecommendations = getLearningPathRecommendations(
-  sortedPosts[0], // Pass first post as current post
-  sortedPosts // Pass the actual posts array
-)
+// Semantic relationships removed - functionality no longer needed
+const postsWithRelationships = []
+const learningPathRecommendations = []
 
 // AI Metadata Generated Automatically
 
@@ -407,36 +394,33 @@ logger.log(
   "success"
 )
 
-// Automated content extraction started
-const searchData = await searchDataGenerator.generateSearchData()
-const clientSearchData = searchDataGenerator.exportForClient()
-// Automated content extraction completed
+// Automated content extraction removed - using search.json.js endpoint instead
 
+// Optimized AI processing removed - no longer needed
 // Trigger optimized AI processing during build
-if (shouldEnableOptimizedProcessing()) {
-  logger.startGroup("Optimized Build Processing")
-  logger.log("Running optimized build processing...")
-  const result = await runOptimizedBuildProcessing(sortedPosts)
-  logger.logSummary("Processing Results", {
-    "Processed posts": result.stats.processedPosts,
-    "Skipped posts": result.stats.skippedPosts,
-    "Total posts": result.stats.totalPosts,
-  })
-  logger.endGroup()
-} else {
-  logger.log("Optimized processing disabled - using fallback", "warning")
-  await triggerAIBuildProcessing()
-}
+// if (shouldEnableOptimizedProcessing()) {
+//   logger.startGroup("Optimized Build Processing")
+//   logger.log("Running optimized build processing...")
+//   const result = await runOptimizedBuildProcessing(sortedPosts)
+//   logger.logSummary("Processing Results", {
+//     "Processed posts": result.stats.processedPosts,
+//     "Skipped posts": result.stats.skippedPosts,
+//     "Total posts": result.stats.totalPosts,
+//   })
+//   logger.endGroup()
+// } else {
+  logger.log("Optimized processing disabled - fallback removed", "warning")
+  // triggerAIBuildProcessing() - removed
+// }
 
-// SEO data with proper HeadSEO props
+// SEO data - Astroネイティブアプローチ（設定ファイル不要）
 const seoData = {
   title: "Dokumentasi & Panduan",
-  description:
-    "Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.",
-  canonicalUrl: "https://gorakudo.org/docs",
-  pageType: "website" as const,
-  authorName: "Tim GoRakuDo",
-}
+  description: "Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.",
+  keywords: ["dokumentasi", "panduan", "tutorial", "jepang", "belajar", "immersion"],
+  pageType: "article" as const,
+  author: "Tim GoRakuDo"
+};
 
 // Helper function to format numbers with K, M, B suffixes
 function formatNumber(num: number): string {
@@ -482,7 +466,18 @@ function formatDate(dateString: string): string {
 <!doctype html>
 <html lang="id">
   <head>
-    <HeadSEO {...seoData} aiPageType="docs" enableAIOptimizations={true} />
+    <!-- UnifiedSEO - Astroネイティブアプローチ（設定ファイル不要） -->
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType={seoData.pageType}
+      author={seoData.author}
+      publishedDate={new Date().toISOString()}
+      modifiedDate={new Date().toISOString()}
+      gtag={import.meta.env.PUBLIC_GA_ID}
+    />
+
     <link rel="stylesheet" href="/css/homepage-styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap"

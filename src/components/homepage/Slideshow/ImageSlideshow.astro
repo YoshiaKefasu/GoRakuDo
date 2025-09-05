@@ -38,7 +38,7 @@ import { Image } from 'astro:assets';
     <!-- Slides -->
     {slides.map((slide, index) => (
       <div 
-        class={`slide absolute inset-0 opacity-0 transition-opacity duration-500 cursor-pointer ${index === 0 ? 'opacity-100' : ''}`}
+        class={`slide absolute inset-0 transition-opacity duration-500 cursor-pointer ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
         data-slide-index={index}
         data-link={slide.link}
       >

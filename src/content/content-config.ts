@@ -42,7 +42,7 @@ export interface ContentFilter {
   id: string;
   name: string;
   displayName: string;
-  type: "category" | "tag" | "custom";
+  type: 'category' | 'tag' | 'custom';
   target: string; // category ID, tag ID, or custom logic
   color: string;
   icon: string;
@@ -51,8 +51,6 @@ export interface ContentFilter {
   showCount: boolean;
   priority: number;
 }
-
-
 
 export interface SearchSuggestions {
   enabled: boolean;
@@ -78,74 +76,74 @@ export interface ContentConfig {
 
 // Main Configuration - EDIT THIS FILE TO CUSTOMIZE YOUR CONTENT!
 export const CONTENT_CONFIG: ContentConfig = {
-  version: "2.0.0",
+  version: '2.0.0',
 
   // Categories - Main content organization (aligned with actual content themes)
   categories: {
     getting_started: {
-      id: "getting_started",
-      name: "getting-started",
-      displayName: "Memulai",
-      description: "Getting started guides and tutorials for beginners",
-      color: "#3B82F6",
-      icon: "🚀",
+      id: 'getting_started',
+      name: 'getting-started',
+      displayName: 'Memulai',
+      description: 'Getting started guides and tutorials for beginners',
+      color: '#3B82F6',
+      icon: '🚀',
       keywords: [
-        "memulai",
-        "getting started",
-        "tutorial",
-        "guide",
-        "awal",
-        "perjalanan",
+        'memulai',
+        'getting started',
+        'tutorial',
+        'guide',
+        'awal',
+        'perjalanan',
       ],
       priority: 1,
       isActive: true,
     },
 
     methodology: {
-      id: "methodology",
-      name: "methodology",
-      displayName: "Metodologi",
-      description: "Learning methodology, theory, and immersion philosophy",
-      color: "#8B5CF6",
-      icon: "🧠",
+      id: 'methodology',
+      name: 'methodology',
+      displayName: 'Metodologi',
+      description: 'Learning methodology, theory, and immersion philosophy',
+      color: '#8B5CF6',
+      icon: '🧠',
       keywords: [
-        "metodologi",
-        "methodology",
-        "teori",
-        "theory",
-        "filosofi",
-        "immersion",
+        'metodologi',
+        'methodology',
+        'teori',
+        'theory',
+        'filosofi',
+        'immersion',
       ],
       priority: 2,
       isActive: true,
     },
 
     tools: {
-      id: "tools",
-      name: "tools",
-      displayName: "Tools",
-      description: "Tools, applications, and resources for Japanese learning",
-      color: "#F59E0B",
-      icon: "🛠️",
-      keywords: ["tools", "anki", "aplikasi", "software", "resource", "srs"],
+      id: 'tools',
+      name: 'tools',
+      displayName: 'Tools',
+      description: 'Tools, applications, and resources for Japanese learning',
+      color: '#F59E0B',
+      icon: '🛠️',
+      keywords: ['tools', 'anki', 'aplikasi', 'software', 'resource', 'srs'],
       priority: 3,
       isActive: true,
     },
 
     content_selection: {
-      id: "content_selection",
-      name: "content-selection",
-      displayName: "Pemilihan Konten",
-      description: "How to choose appropriate content for your level",
-      color: "#10B981",
-      icon: "📚",
+      id: 'content_selection',
+      name: 'content-selection',
+      displayName: 'Pemilihan Konten',
+      description: 'How to choose appropriate content for your level',
+      color: '#10B981',
+      icon: '📚',
       keywords: [
-        "konten",
-        "content",
-        "selection",
-        "pemilihan",
-        "anime",
-        "manga",
+        'konten',
+        'content',
+        'selection',
+        'pemilihan',
+        'anime',
+        'manga',
       ],
       priority: 4,
       isActive: true,
@@ -155,82 +153,82 @@ export const CONTENT_CONFIG: ContentConfig = {
   // Tags - Specific content labels (aligned with actual content)
   tags: {
     immersion: {
-      id: "immersion",
-      name: "immersion",
-      displayName: "Immersion",
-      description: "Immersion learning techniques and philosophy",
-      color: "#8B5CF6",
-      category: "methodology",
+      id: 'immersion',
+      name: 'immersion',
+      displayName: 'Immersion',
+      description: 'Immersion learning techniques and philosophy',
+      color: '#8B5CF6',
+      category: 'methodology',
       isActive: true,
     },
 
     anki: {
-      id: "anki",
-      name: "anki",
-      displayName: "Anki",
-      description: "Anki flashcard system and setup",
-      color: "#F59E0B",
-      category: "tools",
+      id: 'anki',
+      name: 'anki',
+      displayName: 'Anki',
+      description: 'Anki flashcard system and setup',
+      color: '#F59E0B',
+      category: 'tools',
       isActive: true,
     },
 
     beginner: {
-      id: "beginner",
-      name: "beginner",
-      displayName: "Pemula",
-      description: "Content suitable for beginners",
-      color: "#10B981",
-      category: "getting_started",
+      id: 'beginner',
+      name: 'beginner',
+      displayName: 'Pemula',
+      description: 'Content suitable for beginners',
+      color: '#10B981',
+      category: 'getting_started',
       isActive: true,
     },
 
     hiragana: {
-      id: "hiragana",
-      name: "hiragana",
-      displayName: "Hiragana",
-      description: "Hiragana writing system",
-      color: "#3B82F6",
-      category: "getting_started",
+      id: 'hiragana',
+      name: 'hiragana',
+      displayName: 'Hiragana',
+      description: 'Hiragana writing system',
+      color: '#3B82F6',
+      category: 'getting_started',
       isActive: true,
     },
 
     katakana: {
-      id: "katakana",
-      name: "katakana",
-      displayName: "Katakana",
-      description: "Katakana writing system",
-      color: "#3B82F6",
-      category: "getting_started",
+      id: 'katakana',
+      name: 'katakana',
+      displayName: 'Katakana',
+      description: 'Katakana writing system',
+      color: '#3B82F6',
+      category: 'getting_started',
       isActive: true,
     },
 
     kanji: {
-      id: "kanji",
-      name: "kanji",
-      displayName: "Kanji",
-      description: "Kanji characters and learning methods",
-      color: "#DC2626",
-      category: "getting_started",
+      id: 'kanji',
+      name: 'kanji',
+      displayName: 'Kanji',
+      description: 'Kanji characters and learning methods',
+      color: '#DC2626',
+      category: 'getting_started',
       isActive: true,
     },
 
     filosofi: {
-      id: "filosofi",
-      name: "filosofi",
-      displayName: "Filosofi",
-      description: "Philosophical foundations of immersion learning",
-      color: "#8B5CF6",
-      category: "methodology",
+      id: 'filosofi',
+      name: 'filosofi',
+      displayName: 'Filosofi',
+      description: 'Philosophical foundations of immersion learning',
+      color: '#8B5CF6',
+      category: 'methodology',
       isActive: true,
     },
 
     panduan: {
-      id: "panduan",
-      name: "panduan",
-      displayName: "Panduan",
-      description: "Step-by-step guides and tutorials",
-      color: "#10B981",
-      category: "getting_started",
+      id: 'panduan',
+      name: 'panduan',
+      displayName: 'Panduan',
+      description: 'Step-by-step guides and tutorials',
+      color: '#10B981',
+      category: 'getting_started',
       isActive: true,
     },
   },
@@ -238,94 +236,92 @@ export const CONTENT_CONFIG: ContentConfig = {
   // Filters - What appears in the filter buttons
   filters: {
     all: {
-      id: "all",
-      name: "all",
-      displayName: "Semua",
-      type: "custom",
-      target: "all",
-      color: "#6B7280",
-      icon: "📚",
-      description: "Show all content",
+      id: 'all',
+      name: 'all',
+      displayName: 'Semua',
+      type: 'custom',
+      target: 'all',
+      color: '#6B7280',
+      icon: '📚',
+      description: 'Show all content',
       isActive: true,
       showCount: true,
       priority: 1,
     },
 
     getting_started_filter: {
-      id: "getting_started_filter",
-      name: "getting-started",
-      displayName: "Memulai",
-      type: "category",
-      target: "getting_started",
-      color: "#3B82F6",
-      icon: "🚀",
-      description: "Getting started guides",
+      id: 'getting_started_filter',
+      name: 'getting-started',
+      displayName: 'Memulai',
+      type: 'category',
+      target: 'getting_started',
+      color: '#3B82F6',
+      icon: '🚀',
+      description: 'Getting started guides',
       isActive: true,
       showCount: true,
       priority: 2,
     },
 
     methodology_filter: {
-      id: "methodology_filter",
-      name: "methodology",
-      displayName: "Metodologi",
-      type: "category",
-      target: "methodology",
-      color: "#8B5CF6",
-      icon: "🧠",
-      description: "Learning methodology",
+      id: 'methodology_filter',
+      name: 'methodology',
+      displayName: 'Metodologi',
+      type: 'category',
+      target: 'methodology',
+      color: '#8B5CF6',
+      icon: '🧠',
+      description: 'Learning methodology',
       isActive: true,
       showCount: true,
       priority: 3,
     },
 
     tools_filter: {
-      id: "tools_filter",
-      name: "tools",
-      displayName: "Tools",
-      type: "category",
-      target: "tools",
-      color: "#F59E0B",
-      icon: "🛠️",
-      description: "Tools and resources",
+      id: 'tools_filter',
+      name: 'tools',
+      displayName: 'Tools',
+      type: 'category',
+      target: 'tools',
+      color: '#F59E0B',
+      icon: '🛠️',
+      description: 'Tools and resources',
       isActive: true,
       showCount: true,
       priority: 4,
     },
 
     content_selection_filter: {
-      id: "content_selection_filter",
-      name: "content-selection",
-      displayName: "Pemilihan Konten",
-      type: "category",
-      target: "content_selection",
-      color: "#10B981",
-      icon: "📚",
-      description: "Content selection guides",
+      id: 'content_selection_filter',
+      name: 'content-selection',
+      displayName: 'Pemilihan Konten',
+      type: 'category',
+      target: 'content_selection',
+      color: '#10B981',
+      icon: '📚',
+      description: 'Content selection guides',
       isActive: true,
       showCount: true,
       priority: 5,
     },
   },
 
-
-
   // Search Suggestions - Based on actual content themes
   search: {
     enabled: true,
     suggestions: [
-      "immersion",
-      "anki",
-      "memulai",
-      "filosofi",
-      "panduan",
-      "hiragana",
-      "katakana",
-      "kanji",
-      "pemula",
-      "metodologi",
-      "tools",
-      "konten",
+      'immersion',
+      'anki',
+      'memulai',
+      'filosofi',
+      'panduan',
+      'hiragana',
+      'katakana',
+      'kanji',
+      'pemula',
+      'metodologi',
+      'tools',
+      'konten',
     ],
     maxSuggestions: 6,
     autoGenerate: true,
@@ -346,16 +342,14 @@ export const ContentConfigUtils = {
    * Get all active categories
    */
   getActiveCategories(): ContentCategory[] {
-    return Object.values(CONTENT_CONFIG.categories).filter(
-      (cat) => cat.isActive,
-    );
+    return Object.values(CONTENT_CONFIG.categories).filter(cat => cat.isActive);
   },
 
   /**
    * Get all active tags
    */
   getActiveTags(): ContentTag[] {
-    return Object.values(CONTENT_CONFIG.tags).filter((tag) => tag.isActive);
+    return Object.values(CONTENT_CONFIG.tags).filter(tag => tag.isActive);
   },
 
   /**
@@ -363,7 +357,7 @@ export const ContentConfigUtils = {
    */
   getActiveFilters(): ContentFilter[] {
     return Object.values(CONTENT_CONFIG.filters).filter(
-      (filter) => filter.isActive,
+      filter => filter.isActive
     );
   },
 
@@ -399,10 +393,8 @@ export const ContentConfigUtils = {
    * Get tags by category
    */
   getTagsByCategory(categoryId: string): ContentTag[] {
-    return this.getActiveTags().filter((tag) => tag.category === categoryId);
+    return this.getActiveTags().filter(tag => tag.category === categoryId);
   },
-
-
 
   /**
    * Get search suggestions
@@ -412,17 +404,17 @@ export const ContentConfigUtils = {
 
     if (CONTENT_CONFIG.search.autoGenerate) {
       // Auto-generate from active tags and categories
-      const tagNames = this.getActiveTags().map((tag) => tag.name);
-      const categoryNames = this.getActiveCategories().map((cat) => cat.name);
+      const tagNames = this.getActiveTags().map(tag => tag.name);
+      const categoryNames = this.getActiveCategories().map(cat => cat.name);
       return [...tagNames, ...categoryNames].slice(
         0,
-        CONTENT_CONFIG.search.maxSuggestions,
+        CONTENT_CONFIG.search.maxSuggestions
       );
     }
 
     return CONTENT_CONFIG.search.suggestions.slice(
       0,
-      CONTENT_CONFIG.search.maxSuggestions,
+      CONTENT_CONFIG.search.maxSuggestions
     );
   },
 
@@ -430,19 +422,19 @@ export const ContentConfigUtils = {
    * Count posts by category
    */
   countPostsByCategory(posts: any[], categoryId: string): number {
-    return posts.filter((post) => {
+    return posts.filter(post => {
       const category = this.getCategory(categoryId);
       if (!category) return false;
 
       // Check if post matches category keywords
       return category.keywords.some(
-        (keyword) =>
+        keyword =>
           post.data.title?.toLowerCase().includes(keyword.toLowerCase()) ||
           post.data.description
             ?.toLowerCase()
             .includes(keyword.toLowerCase()) ||
           post.data.category === category.name ||
-          post.data.contentType === category.name,
+          post.data.contentType === category.name
       );
     }).length;
   },
@@ -451,19 +443,17 @@ export const ContentConfigUtils = {
    * Count posts by tag
    */
   countPostsByTag(posts: any[], tagId: string): number {
-    return posts.filter((post) => {
+    return posts.filter(post => {
       const tag = this.getTag(tagId);
       if (!tag) return false;
 
       return (
         post.data.tags?.some(
-          (postTag: string) => postTag.toLowerCase() === tag.name.toLowerCase(),
+          (postTag: string) => postTag.toLowerCase() === tag.name.toLowerCase()
         ) || false
       );
     }).length;
   },
-
-
 
   /**
    * Filter posts by category
@@ -472,16 +462,16 @@ export const ContentConfigUtils = {
     const category = this.getCategory(categoryId);
     if (!category) return [];
 
-    return posts.filter((post) =>
+    return posts.filter(post =>
       category.keywords.some(
-        (keyword) =>
+        keyword =>
           post.data.title?.toLowerCase().includes(keyword.toLowerCase()) ||
           post.data.description
             ?.toLowerCase()
             .includes(keyword.toLowerCase()) ||
           post.data.category === category.name ||
-          post.data.contentType === category.name,
-      ),
+          post.data.contentType === category.name
+      )
     );
   },
 
@@ -493,10 +483,10 @@ export const ContentConfigUtils = {
     if (!tag) return [];
 
     return posts.filter(
-      (post) =>
+      post =>
         post.data.tags?.some(
-          (postTag: string) => postTag.toLowerCase() === tag.name.toLowerCase(),
-        ) || false,
+          (postTag: string) => postTag.toLowerCase() === tag.name.toLowerCase()
+        ) || false
     );
   },
 
@@ -512,13 +502,13 @@ export const ContentConfigUtils = {
    */
   getFilterCount(posts: any[], filter: ContentFilter): number {
     switch (filter.type) {
-      case "category":
+      case 'category':
         return this.countPostsByCategory(posts, filter.target);
-      case "tag":
+      case 'tag':
         return this.countPostsByTag(posts, filter.target);
 
-      case "custom":
-        if (filter.target === "all") return posts.length;
+      case 'custom':
+        if (filter.target === 'all') return posts.length;
         return 0;
       default:
         return 0;
@@ -530,13 +520,13 @@ export const ContentConfigUtils = {
    */
   applyFilter(posts: any[], filter: ContentFilter): any[] {
     switch (filter.type) {
-      case "category":
+      case 'category':
         return this.filterPostsByCategory(posts, filter.target);
-      case "tag":
+      case 'tag':
         return this.filterPostsByTag(posts, filter.target);
 
-      case "custom":
-        if (filter.target === "all") return posts;
+      case 'custom':
+        if (filter.target === 'all') return posts;
         return [];
       default:
         return [];
@@ -574,19 +564,18 @@ export const ContentConfigUtils = {
 
       // Validate filter targets
       switch (filter.type) {
-        case "category":
+        case 'category':
           if (!CONTENT_CONFIG.categories[filter.target]) {
             errors.push(
-              `Filter ${id}: Invalid category target '${filter.target}'`,
+              `Filter ${id}: Invalid category target '${filter.target}'`
             );
           }
           break;
-        case "tag":
+        case 'tag':
           if (!CONTENT_CONFIG.tags[filter.target]) {
             errors.push(`Filter ${id}: Invalid tag target '${filter.target}'`);
           }
           break;
-
       }
     });
 

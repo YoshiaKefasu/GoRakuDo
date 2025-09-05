@@ -1,7 +1,8 @@
 ---
-import Head from "../components/public-components/HeadSEO.astro";
+import UnifiedSEO from "../components/UnifiedSEO.astro";
 import "../styles/global.css";
-import homepageOgImage from "../assets/images/Logo Discord.png";
+// デフォルトOG画像のパス（publicフォルダ内のファイル）
+const defaultOgImage = "/img/Logo Discord 1x.webp";
 
 export interface Props {
   // このレイアウトが受け取るプロパティを定義
@@ -12,10 +13,16 @@ export interface Props {
   publishedDate?: string;
   // langプロパティを追加
   lang?: "id" | "ja";
+  keywords?: string[];
+  seoProperties?: {
+    articleType?: string;
+    learningStage?: string;
+    searchIntent?: string;
+  };
 }
 
 // propsを受け取ります
-const { title, description, ogImage, pageType, publishedDate, lang } =
+const { title, description, ogImage, pageType, publishedDate, lang, keywords, seoProperties } =
   Astro.props;
 ---
 
@@ -23,15 +30,20 @@ const { title, description, ogImage, pageType, publishedDate, lang } =
 <!-- <html>タグのlang属性も動的に設定 -->
 <html lang={lang || "id"}>
   <head>
-    <!-- HeadSEOコンポーネントに、受け取ったpropsをすべて渡します -->
-    <Head
+    <!-- UnifiedSEO - 統合SEOコンポーネント (DRY原則適用) -->
+    <UnifiedSEO
       title={title}
       description={description}
-      ogImage={homepageOgImage}
-      pageType={pageType}
+      keywords={keywords}
+      canonical={new URL(Astro.request.url).toString()}
+      lang={lang || "id"}
+      pageType={pageType || "website"}
+      image={ogImage || defaultOgImage}
+      author="GoRakuDo Team"
       publishedDate={publishedDate}
-      lang={lang}
+      gtag={import.meta.env.PUBLIC_GA_ID || undefined}
     />
+
     <!-- スタイルシートの<link>タグは不要です。上のimport文がその役割を果たします。 -->
   </head>
   <body>

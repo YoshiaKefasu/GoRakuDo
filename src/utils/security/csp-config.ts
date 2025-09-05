@@ -31,32 +31,32 @@ export const productionCSP: CSPConfig = {
     "'self'",
     "'unsafe-inline'", // Required for Astro's inline scripts
     "'unsafe-eval'", // Required for Vue's reactivity system
-    "https://www.googletagmanager.com", // Google Analytics
-    "https://www.google-analytics.com", // Google Analytics
+    'https://www.googletagmanager.com', // Google Analytics
+    'https://www.google-analytics.com', // Google Analytics
   ],
   styleSrc: [
     "'self'",
     "'unsafe-inline'", // Required for Tailwind CSS
-    "https://fonts.googleapis.com", // Google Fonts
+    'https://fonts.googleapis.com', // Google Fonts
   ],
   imgSrc: [
     "'self'",
-    "data:",
-    "https:",
-    "https://www.google-analytics.com", // Google Analytics
-    "https://stats.g.doubleclick.net", // Google Analytics
+    'data:',
+    'https:',
+    'https://www.google-analytics.com', // Google Analytics
+    'https://stats.g.doubleclick.net', // Google Analytics
   ],
   fontSrc: [
     "'self'",
-    "data:",
-    "https://fonts.gstatic.com", // Google Fonts
+    'data:',
+    'https://fonts.gstatic.com', // Google Fonts
   ],
   connectSrc: [
     "'self'",
-    "https:",
-    "https://www.google-analytics.com", // Google Analytics
-    "https://analytics.google.com", // Google Analytics
-    "https://discord.gg", // Discord integration
+    'https:',
+    'https://www.google-analytics.com', // Google Analytics
+    'https://analytics.google.com', // Google Analytics
+    'https://discord.gg', // Discord integration
   ],
   mediaSrc: ["'self'"],
   objectSrc: ["'none'"], // Block all plugins
@@ -76,32 +76,32 @@ export const developmentCSP: CSPConfig = {
     "'self'",
     "'unsafe-inline'",
     "'unsafe-eval'",
-    "http://localhost:*", // Development server
+    'http://localhost:*', // Development server
   ],
   styleSrc: [
     "'self'",
     "'unsafe-inline'",
-    "http://localhost:*", // Development server
+    'http://localhost:*', // Development server
   ],
   imgSrc: [
     "'self'",
-    "data:",
-    "https:",
-    "http://localhost:*", // Development server
+    'data:',
+    'https:',
+    'http://localhost:*', // Development server
   ],
   fontSrc: [
     "'self'",
-    "data:",
-    "https:",
-    "http://localhost:*", // Development server
+    'data:',
+    'https:',
+    'http://localhost:*', // Development server
   ],
   connectSrc: [
     "'self'",
-    "https:",
-    "http://localhost:*", // Development server
-    "ws://localhost:*", // WebSocket for HMR
+    'https:',
+    'http://localhost:*', // Development server
+    'ws://localhost:*', // WebSocket for HMR
   ],
-  mediaSrc: ["'self'", "http://localhost:*"],
+  mediaSrc: ["'self'", 'http://localhost:*'],
   objectSrc: ["'none'"],
   baseUri: ["'self'"],
   formAction: ["'self'"],
@@ -116,24 +116,24 @@ export const developmentCSP: CSPConfig = {
  */
 export function generateCSPHeader(config: CSPConfig): string {
   const directives = [
-    `default-src ${config.defaultSrc.join(" ")}`,
-    `script-src ${config.scriptSrc.join(" ")}`,
-    `style-src ${config.styleSrc.join(" ")}`,
-    `img-src ${config.imgSrc.join(" ")}`,
-    `font-src ${config.fontSrc.join(" ")}`,
-    `connect-src ${config.connectSrc.join(" ")}`,
-    `media-src ${config.mediaSrc.join(" ")}`,
-    `object-src ${config.objectSrc.join(" ")}`,
-    `base-uri ${config.baseUri.join(" ")}`,
-    `form-action ${config.formAction.join(" ")}`,
-    `frame-ancestors ${config.frameAncestors.join(" ")}`,
+    `default-src ${config.defaultSrc.join(' ')}`,
+    `script-src ${config.scriptSrc.join(' ')}`,
+    `style-src ${config.styleSrc.join(' ')}`,
+    `img-src ${config.imgSrc.join(' ')}`,
+    `font-src ${config.fontSrc.join(' ')}`,
+    `connect-src ${config.connectSrc.join(' ')}`,
+    `media-src ${config.mediaSrc.join(' ')}`,
+    `object-src ${config.objectSrc.join(' ')}`,
+    `base-uri ${config.baseUri.join(' ')}`,
+    `form-action ${config.formAction.join(' ')}`,
+    `frame-ancestors ${config.frameAncestors.join(' ')}`,
   ];
 
   if (config.upgradeInsecureRequests) {
-    directives.push("upgrade-insecure-requests");
+    directives.push('upgrade-insecure-requests');
   }
 
-  return directives.join("; ");
+  return directives.join('; ');
 }
 
 /**
@@ -141,7 +141,7 @@ export function generateCSPHeader(config: CSPConfig): string {
  * @param isProduction Whether running in production mode
  * @returns Appropriate CSP configuration
  */
-export function getCSPConfig(isProduction: boolean = false): CSPConfig {
+export function getCSPConfig(isProduction = false): CSPConfig {
   return isProduction ? productionCSP : developmentCSP;
 }
 
@@ -150,27 +150,27 @@ export function getCSPConfig(isProduction: boolean = false): CSPConfig {
  * @param isProduction Whether running in production mode
  * @returns Object with security headers
  */
-export function generateSecurityHeaders(isProduction: boolean = false) {
+export function generateSecurityHeaders(isProduction = false) {
   const cspConfig = getCSPConfig(isProduction);
 
   return {
-    "Content-Security-Policy": generateCSPHeader(cspConfig),
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY",
-    "X-XSS-Protection": "1; mode=block",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy": [
-      "camera=()",
-      "microphone=()",
-      "geolocation=()",
-      "payment=()",
-      "usb=()",
-      "magnetometer=()",
-      "gyroscope=()",
-      "accelerometer=()",
-    ].join(", "),
-    "Strict-Transport-Security": isProduction
-      ? "max-age=31536000; includeSubDomains; preload"
+    'Content-Security-Policy': generateCSPHeader(cspConfig),
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': [
+      'camera=()',
+      'microphone=()',
+      'geolocation=()',
+      'payment=()',
+      'usb=()',
+      'magnetometer=()',
+      'gyroscope=()',
+      'accelerometer=()',
+    ].join(', '),
+    'Strict-Transport-Security': isProduction
+      ? 'max-age=31536000; includeSubDomains; preload'
       : undefined,
   };
 }
@@ -188,28 +188,28 @@ export function validateCSPConfig(config: CSPConfig): {
 
   // Validate required directives
   if (!config.defaultSrc.length) {
-    errors.push("default-src directive is required");
+    errors.push('default-src directive is required');
   }
 
   if (!config.scriptSrc.length) {
-    errors.push("script-src directive is required");
+    errors.push('script-src directive is required');
   }
 
   if (!config.styleSrc.length) {
-    errors.push("style-src directive is required");
+    errors.push('style-src directive is required');
   }
 
   // Validate security best practices
-  if (config.objectSrc.includes("'self'") || config.objectSrc.includes("*")) {
+  if (config.objectSrc.includes("'self'") || config.objectSrc.includes('*')) {
     errors.push("object-src should be set to 'none' for security");
   }
 
   if (
     config.frameAncestors.includes("'self'") ||
-    config.frameAncestors.includes("*")
+    config.frameAncestors.includes('*')
   ) {
     errors.push(
-      "frame-ancestors should be set to 'none' to prevent clickjacking",
+      "frame-ancestors should be set to 'none' to prevent clickjacking"
     );
   }
 

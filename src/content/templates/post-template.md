@@ -1,16 +1,45 @@
 ---
 # Template Collection Item - Post Template for GoRakuDo Blog
-templateName: "Post Template"
-templateType: "post"
-description: "Comprehensive template for creating new blog posts with AI-ready metadata and mind map integration"
-version: "1.0.0"
-lastUpdated: "2024-12-19T00:00:00.000Z"
+templateName: 'Post Template'
+templateType: 'post'
+description: 'Comprehensive template for creating new blog posts with AI-ready metadata and mind map integration'
+version: '1.0.0'
+lastUpdated: '2024-12-19T00:00:00.000Z'
 isActive: true
-category: "content-creation"
-requiredFields: ["title", "description", "publishedDate", "readTime", "author", "difficulty", "category", "tags", "featured", "mindMapBranch", "understandingLevel", "learningStage"]
-optionalFields: ["aiMetadata", "aiMetadata.contentType", "aiMetadata.learningStage", "aiMetadata.complexityScore", "aiMetadata.estimatedStudyTime", "aiMetadata.primaryKeywords", "aiMetadata.searchIntent", "aiMetadata.languageEntities", "aiMetadata.relationships", "aiMetadata.contentAnalysis", "aiMetadata.seoMetadata", "aiMetadata.technicalMetadata"]
-instructions: "Copy this template to create new posts. Replace all placeholder values with actual content. Remove comment blocks when publishing. Ensure all required fields are filled. Test the post locally before publishing."
-examples: ["anki-guide", "choosing-content", "getting-started", "immersion-philosophy"]
+category: 'content-creation'
+requiredFields:
+  [
+    'title',
+    'description',
+    'publishedDate',
+    'readTime',
+    'author',
+    'difficulty',
+    'category',
+    'tags',
+    'featured',
+    'mindMapBranch',
+    'understandingLevel',
+    'learningStage',
+  ]
+optionalFields:
+  [
+    'aiMetadata',
+    'aiMetadata.contentType',
+    'aiMetadata.learningStage',
+    'aiMetadata.complexityScore',
+    'aiMetadata.estimatedStudyTime',
+    'aiMetadata.primaryKeywords',
+    'aiMetadata.searchIntent',
+    'aiMetadata.languageEntities',
+    'aiMetadata.relationships',
+    'aiMetadata.contentAnalysis',
+    'aiMetadata.seoMetadata',
+    'aiMetadata.technicalMetadata',
+  ]
+instructions: 'Copy this template to create new posts. Replace all placeholder values with actual content. Remove comment blocks when publishing. Ensure all required fields are filled. Test the post locally before publishing.'
+examples:
+  ['anki-guide', 'choosing-content', 'getting-started', 'immersion-philosophy']
 templateContent: |
   # ========================================
   # TEMPLATE: Post Template for GoRakuDo Blog
@@ -162,8 +191,8 @@ templateContent: |
   - [Related post 2](/docs/related-post-2)
   - [External resource](https://example.com)
 
-author: "Tim GoRakuDo"
-tags: ["template", "content-creation", "blog-post", "ai-metadata", "mind-map"]
+author: 'Tim GoRakuDo'
+tags: ['template', 'content-creation', 'blog-post', 'ai-metadata', 'mind-map']
 ---
 
 # Post Template Content

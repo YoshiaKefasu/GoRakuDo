@@ -64,7 +64,7 @@ recommendations:
     - action: "Add performance monitoring to production environment"
       refs:
         [
-          "src/utils/performance/",
+          // "src/utils/performance/", // 削除済み
           "src/pages/tools.astro performance monitoring",
         ]
 

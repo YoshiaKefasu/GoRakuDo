@@ -1,16 +1,16 @@
 ---
-title: "SAMPLE POST ASAL:Panduan Setup Migaku"
-description: "Setup dan penggunaan Migaku suite untuk immersion learning dengan browser extension dan Anki integration."
-publishedDate: "2024-01-25T00:00:00.000Z"
+title: 'SAMPLE POST ASAL:Panduan Setup Migaku'
+description: 'Setup dan penggunaan Migaku suite untuk immersion learning dengan browser extension dan Anki integration.'
+publishedDate: '2024-01-25T00:00:00.000Z'
 readTime: 20
-author: "Tim GoRakuDo"
-emoji: "🎯"
-difficulty: "intermediate"
-category: "tools"
-tags: ["migaku", "browser-extension", "anki-integration", "immersion", "suite"]
+author: 'Tim GoRakuDo'
+emoji: '🎯'
+difficulty: 'intermediate'
+category: 'tools'
+tags: ['migaku', 'browser-extension', 'anki-integration', 'immersion', 'suite']
 featured: false
-mindMapBranch: "D"
-contentType: "resource"
+mindMapBranch: 'D'
+contentType: 'resource'
 ---
 
 # SAMPLE POST ASAL:Panduan Setup Migaku

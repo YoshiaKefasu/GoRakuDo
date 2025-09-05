@@ -1,22 +1,14 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
-import Head from "../../components/public-components/HeadSEO.astro"
+import { readFileSync, statSync } from "fs"
+import { join } from "path"
+import UnifiedSEO from "../../components/UnifiedSEO.astro"
 import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
 import Navbar from "../../components/public-components/Navbar.vue"
-import { AIRecommendations } from "../../components/docs/ai-recommendations"
-import {
-  getRelatedContent,
-  getContentWithSimpleAIMetadata,
-  loadAndEnhanceRecommendations,
-  convertPostsToPostInfo,
-  processPostWithOptimization,
-} from "../../utils/ai-content"
-import { generateInternalLinks, analyzeContent } from "../../utils/ai-content"
-import {
-  loadMetadata,
-  getSEOFromMetadata,
-  getRecommendationsFromMetadata,
-} from "../../utils/metadata-loader"
+// AI Recommendations removed - functionality no longer needed
+// AI content utilities removed - functionality no longer needed
+// Content analysis utilities removed - functionality no longer needed
+// AI metadata utilities removed - functionality no longer needed
 import {
   resolveContentPath,
   getCollectionMetadata,
@@ -47,14 +39,40 @@ if (!post) {
 const resolvedPath = resolveContentPath(post)
 const collectionMetadata = getCollectionMetadata("docs") // Default to docs for backward compatibility
 
-// SEO data with proper optional prop handling
+// ファイルシステムから自動的に作成日・更新日を取得
+function getFileDates(slug: string) {
+  try {
+    const filePath = join(process.cwd(), 'src/content/docs', `${slug}.md`)
+    const stats = statSync(filePath)
+    
+    return {
+      createdDate: stats.birthtime.toISOString(),
+      modifiedDate: stats.mtime.toISOString()
+    }
+  } catch (error) {
+    console.warn(`⚠️ Could not get file dates for ${slug}:`, error)
+    return {
+      createdDate: new Date().toISOString(),
+      modifiedDate: new Date().toISOString()
+    }
+  }
+}
+
+// ファイルの作成日・更新日を自動取得
+const fileDates = getFileDates(post.slug)
+
+// Dynamic SEO data based on document content (フロントマター完全対応 + 自動日付)
 const seoData = {
-  title: post.data.title,
-  description: String(post.data.description),
-  canonicalUrl: `https://gorakudo.org${resolvedPath.path}`,
-  pageType: "article" as const,
-  authorName: String(post.data.author),
-  publishedDate: String(post.data.publishedDate),
+  title: post.data.title || `Documentation - ${post.slug}`,
+  description: post.data.description || `Learn about ${post.slug} in GoRakuDo documentation`,
+  keywords: post.data.tags || ["documentation", post.slug, "guide"], // ✅ tagsフィールドを使用
+  articleType: "guide",
+  learningStage: post.data.difficulty || "intermediate", // ✅ difficultyフィールドを使用
+  searchIntent: "informational",
+  // フロントマターの日付があれば使用、なければファイルシステムの日付を使用
+  publishedDate: post.data.publishedDate || fileDates.createdDate,
+  modifiedDate: post.data.modifiedDate || fileDates.modifiedDate,
+  isDraft: post.data.isDraft || false
 }
 
 // Helper function to format date
@@ -90,32 +108,28 @@ let relatedContent: any = null
 let internalLinks: any = null
 let enhancedContent: string = post.body
 
-try {
-  // Use optimized post processor that checks for existing metadata
-  const result = await processPostWithOptimization(post)
+// Post processing removed - functionality no longer needed
+relatedContent = []
+internalLinks = []
+enhancedContent = post.body
 
-  relatedContent = result.relatedContent
-  internalLinks = result.internalLinks
-  enhancedContent = result.enhancedContent
-
-  if (result.usedExistingMetadata) {
-    console.log(
-      `⏭️  Used existing metadata for "${post.slug}" (${result.processingTime}ms)`
-    )
-  } else {
-    console.log(
-      `🤖 Generated new recommendations for "${post.slug}" (${result.processingTime}ms)`
-    )
-  }
-} catch (error) {
-  console.warn(`⚠️ Failed to process post "${post.slug}":`, error)
-}
+// Metadata processing removed
+console.log(`📝 Post "${post.slug}" processed without AI features`)
 ---
 
-<!doctype html>
-<html lang="id">
+<html lang="ja">
   <head>
-    <Head {...seoData} aiPageType="post" enableAIOptimizations={true} />
+    <!-- UnifiedSEO - シンプルなAstroネイティブ実装 -->
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType="article"
+      author={post.data.author || "GoRakuDo Team"}
+      publishedDate={seoData.publishedDate}
+      modifiedDate={seoData.modifiedDate}
+      noindex={seoData.isDraft}
+    />
 
     <!-- Preload critical resources for better performance -->
     <link
@@ -229,28 +243,13 @@ try {
           </div>
         </footer>
 
-        {/* AI-Powered Content Recommendations Section */}
-        {
-          relatedContent && (
-            <section
-              class="ai-recommendations-section"
-              aria-label="Rekomendasi konten terkait">
-              <AIRecommendations
-                relatedContent={relatedContent}
-                maxRecommendations={3}
-                showHeader={true}
-                className=""
-                showFallback={true}
-              />
-            </section>
-          )
-        }
+        {/* AI-Powered Content Recommendations Section - REMOVED */}
+        {/* AI Recommendations functionality removed - no longer needed */}
       </div>
     </main>
 
     <!-- Scripts Section - Organized and Optimized -->
     <script is:inline src="/core/post-script.js"></script>
-    <script src="/scripts/ui/post-skeleton-loader.js" is:inline></script>
 
     <!-- Main Application Script -->
     <script define:vars={{ postData, enhancedContent }}>
@@ -380,50 +379,15 @@ try {
       // ========== SKELETON LOADING ==========
 
       function showPostSkeleton(container) {
-        if (!container) return
-
-        container.innerHTML = `
-          <div class="post-content skeleton-content">
-            <div class="skeleton-content-header">
-              <div class="skeleton-content-title"></div>
-              <div class="skeleton-content-meta">
-                <div class="skeleton-content-author"></div>
-                <div class="skeleton-content-date"></div>
-                <div class="skeleton-content-read-time"></div>
-              </div>
-            </div>
-            <div class="skeleton-content-body">
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph short"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph short"></div>
-            </div>
-            <div class="skeleton-content-tags">
-              <div class="skeleton-content-tag"></div>
-              <div class="skeleton-content-tag"></div>
-              <div class="skeleton-content-tag"></div>
-            </div>
-          </div>
-        `
-        container.classList.add("skeleton-loading")
-        console.log("✅ Post skeleton shown")
+        // Skeleton functionality disabled
+        console.log("🚫 Post skeleton disabled")
+        return
       }
 
       function hidePostSkeleton(container) {
-        if (!container) return
-
-        container.classList.remove("skeleton-loading")
-        container.classList.add("skeleton-fade-in")
-
-        setTimeout(() => {
-          container.classList.remove("skeleton-fade-in")
-        }, 500)
-
-        console.log("✅ Post skeleton hidden")
+        // Skeleton functionality disabled
+        console.log("🚫 Post skeleton hiding disabled")
+        return
       }
 
       // ========== INITIALIZATION ==========

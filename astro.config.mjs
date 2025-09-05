@@ -52,26 +52,15 @@ export default defineConfig({
             "vue-runtime": ["vue/dist/runtime-dom.esm-bundler.js"],
             // Non-critical Vue components (load after)
             "vue-components": ["@astrojs/vue"],
-            // Performance monitoring (load after page load)
-            performance: ["./src/utils/performance/performance-monitor.js"],
+            // Performance monitoring removed
             // Scripts (migrated from public/scripts/)
-            "scripts-performance": [
-              "./src/scripts/performance/performance-monitor.js",
-            ],
             "scripts-ui": [
               "./src/scripts/ui/docs-pagination.js",
-              // "./src/scripts/ui/docs-search.js", // Removed - search handled inline in docs.astro
-              // FIX #131: 404 error for docs-search.js - Unused file reference
-              // ROOT CAUSE: File referenced but not actually loaded
-              // SOLUTION: Removed reference, search handled inline
-              // STATUS: ✅ RESOLVED
             ],
             // AI content utilities (load on demand)
             "ai-content": ["./src/utils/ai-content/content-analysis.js"],
             // Semantic relationships (load on demand)
             semantic: ["./src/utils/ai-content/semantic-relationships.js"],
-            // Settings page optimization (load on demand)
-            settings: ["./src/pages/settings.astro"],
             // Discord error reporter (load on demand)
             discord: ["./src/utils/error-handling/discord-error-reporter.js"],
             // Image slideshow (load on demand)

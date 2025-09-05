@@ -1,6 +1,6 @@
 /* Google UI/UX Team 2025: Docs Page Styles - Tailwind v4 Conversion */
 /* Converted from post-styles.css with accessibility-first approach */
-@import "../global.css";
+@import '../global.css';
 /* --- Background Elements --- */
 
 /* Posts/Documentation page styles */
@@ -133,84 +133,7 @@
   @apply opacity-100;
 }
 
-/* Progressive Loading & Skeleton Animations */
-.post-card-skeleton {
-  @apply mb-6 rounded-xl border border-gray-200 bg-white p-6;
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
-}
-
-.skeleton-header {
-  @apply mb-4;
-}
-
-.skeleton-title {
-  @apply mb-2 h-6 rounded-md bg-gray-300;
-  width: 70%;
-  animation: skeleton-shimmer 1.5s ease-in-out infinite;
-}
-
-.skeleton-meta {
-  @apply h-4 rounded-md bg-gray-200;
-  width: 40%;
-  animation: skeleton-shimmer 1.5s ease-in-out infinite;
-  animation-delay: 0.2s;
-}
-
-.skeleton-description {
-  @apply mb-4 h-4 rounded-md bg-gray-200;
-  width: 90%;
-  animation: skeleton-shimmer 1.5s ease-in-out infinite;
-  animation-delay: 0.4s;
-}
-
-.skeleton-tags {
-  @apply mb-4 flex gap-2;
-}
-
-.skeleton-tag {
-  @apply h-6 rounded-full bg-gray-200;
-  width: 60px;
-  animation: skeleton-shimmer 1.5s ease-in-out infinite;
-}
-
-.skeleton-tag:nth-child(1) {
-  animation-delay: 0.6s;
-}
-.skeleton-tag:nth-child(2) {
-  animation-delay: 0.8s;
-}
-.skeleton-tag:nth-child(3) {
-  animation-delay: 1s;
-}
-
-.skeleton-button {
-  @apply h-10 rounded-lg bg-gray-300;
-  width: 150px;
-  animation: skeleton-shimmer 1.5s ease-in-out infinite;
-  animation-delay: 1.2s;
-}
-
-/* Skeleton Animations */
-@keyframes skeleton-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-  }
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
+/* Skeleton loading styles removed - functionality disabled */
 
 /* Search Results Animation */
 @keyframes fadeInUp {
@@ -224,15 +147,7 @@
   }
 }
 
-.skeleton-title,
-.skeleton-meta,
-.skeleton-description,
-.skeleton-tag,
-.skeleton-button {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200px 100%;
-  background-repeat: no-repeat;
-}
+/* Skeleton gradient styles removed - functionality disabled */
 
 /* Loading Trigger */
 .loading-trigger {
@@ -332,7 +247,7 @@
 }
 
 .post-content h2:before {
-  content: "";
+  content: '';
   @apply absolute -left-5 top-1/2 h-5 w-1 -translate-y-1/2 rounded bg-gradient-to-br from-purple-500 to-purple-600;
 }
 
@@ -354,7 +269,7 @@
 }
 
 .post-content ul li:before {
-  content: "→";
+  content: '→';
   @apply absolute -left-5 font-bold text-purple-400;
 }
 
@@ -371,7 +286,7 @@
 }
 
 .post-content pre:before {
-  content: "";
+  content: '';
   @apply absolute left-0 right-0 top-0 h-0.5 rounded-t-lg bg-gradient-to-r from-purple-500 to-purple-600;
 }
 
@@ -463,51 +378,7 @@
   }
 }
 
-/* 🌊 GOOGLE ENGINEERING TEAM 2025: ENHANCED SKELETON LOADING & DOCS PAGE STYLES */
-
-/* Skeleton Loading Styles - SAFE INLINE STYLES */
-.loading-container {
-  @apply py-5;
-}
-
-.skeleton-grid {
-  @apply mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3;
-}
-
-.skeleton-card {
-  @apply animate-pulse rounded-xl border border-purple-500/10 bg-white/5 p-5;
-}
-
-.skeleton-title {
-  @apply mb-3 h-6 w-4/5 rounded bg-purple-500/20;
-}
-
-.skeleton-description {
-  @apply mb-2 h-4 w-full rounded bg-purple-500/10;
-}
-
-.skeleton-description:nth-child(3) {
-  @apply w-3/5;
-}
-
-.skeleton-meta {
-  @apply mt-4 flex gap-3;
-}
-
-.skeleton-date,
-.skeleton-readtime {
-  @apply h-3.5 w-20 rounded bg-purple-500/10;
-}
-
-@keyframes skeleton-pulse {
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
+/* Skeleton loading styles removed - functionality disabled */
 
 /* Progressive Loading Animation */
 .posts-grid {
@@ -675,7 +546,7 @@
 }
 
 .tag-popup::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 20px;
@@ -867,7 +738,7 @@
 
 /* Rocket Graphic - Positioned like screenshot */
 .post-card::before {
-  content: "";
+  content: '';
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
@@ -898,7 +769,7 @@
 
 .post-card .post-title {
   @apply text-3xl/5! mb-2 leading-tight text-gray-800;
-  font-family: "Gochi Hand", cursive, system-ui;
+  font-family: 'Gochi Hand', cursive, system-ui;
   font-size: 2em;
   min-height: 2.5rem;
 }
@@ -1090,7 +961,7 @@
 }
 
 .cta-button::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -1136,7 +1007,7 @@
 }
 
 .features-cta::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -1630,7 +1501,7 @@
 
 /* Design #17: Search icon badge for visual indicator */
 .search-result-card::before {
-  content: "🔍";
+  content: '🔍';
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
@@ -1792,7 +1663,7 @@
 
 /* Design #17: Add "Search Context" label */
 .content-snippet::before {
-  content: "🔍 Konteks Pencarian";
+  content: '🔍 Konteks Pencarian';
   position: absolute;
   top: -0.5rem;
   left: 1rem;
@@ -1923,7 +1794,7 @@
 }
 
 .semantic-label::before {
-  content: "🔍";
+  content: '🔍';
   position: absolute;
   left: 0;
   top: 0;
@@ -2329,7 +2200,7 @@
   font-size: 14px;
 }
 
-.pagination-mode-toggle input[type="checkbox"] {
+.pagination-mode-toggle input[type='checkbox'] {
   display: none;
 }
 
@@ -2343,7 +2214,7 @@
 }
 
 .toggle-slider:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 20px;
   height: 20px;
@@ -2354,11 +2225,11 @@
   transition: all 0.3s ease;
 }
 
-.pagination-mode-toggle input[type="checkbox"]:checked + .toggle-slider {
+.pagination-mode-toggle input[type='checkbox']:checked + .toggle-slider {
   background: var(--color-accent-purple);
 }
 
-.pagination-mode-toggle input[type="checkbox"]:checked + .toggle-slider:before {
+.pagination-mode-toggle input[type='checkbox']:checked + .toggle-slider:before {
   transform: translateX(26px);
 }
 
@@ -2383,7 +2254,7 @@
 
 /* Add calendar icon for date */
 .post-card .post-meta .post-date::before {
-  content: "📅";
+  content: '📅';
   font-size: 0.875rem;
 }
 
@@ -2417,46 +2288,46 @@
 
 /* Search Results Styles */
 .search-results {
-margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .search-stats {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 1.5rem;
-padding: 1rem;
-background: rgba(139, 93, 255, 0.05);
-border-radius: var(--radius-lg);
-border: 1px solid rgba(139, 93, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(139, 93, 255, 0.05);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(139, 93, 255, 0.1);
 }
 
 .search-results-count {
-font-weight: 500;
-color: var(--color-text-primary);
+  font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 .clear-search-btn {
-background: none;
-border: 1px solid var(--color-border);
-color: var(--color-text-secondary);
-padding: 0.5rem 1rem;
-border-radius: var(--radius-md);
-cursor: pointer;
-transition: all var(--duration-normal) var(--ease-out);
-font-size: var(--font-size-sm);
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  font-size: var(--font-size-sm);
 }
 
 .clear-search-btn:hover {
-background: var(--color-background-secondary);
-border-color: var(--color-border-hover);
-color: var(--color-text-primary);
+  background: var(--color-background-secondary);
+  border-color: var(--color-border-hover);
+  color: var(--color-text-primary);
 }
 
 .search-results-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
 /* Design #17: Search result cards now use enhanced CSS styling */
@@ -2464,74 +2335,74 @@ gap: 1.5rem;
 /* All search result card styles now use enhanced CSS from docs.css */
 
 .search-no-results {
-text-align: center;
-padding: 3rem 1rem;
-background: var(--color-background-card);
-border: 1px solid var(--color-border);
-border-radius: var(--radius-lg);
-margin-top: 2rem;
+  text-align: center;
+  padding: 3rem 1rem;
+  background: var(--color-background-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-top: 2rem;
 }
 
 .search-no-results .no-results-icon {
-font-size: 3rem;
-margin-bottom: 1rem;
-opacity: 0.5;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
 }
 
 .search-no-results h3 {
-font-size: var(--font-size-xl);
-font-weight: 600;
-margin-bottom: 0.5rem;
-color: var(--color-text-primary);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
 }
 
 .search-no-results p {
-color: var(--color-text-secondary);
-margin-bottom: 1.5rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
 }
 
 .search-suggestions {
-margin: 1.5rem 0;
+  margin: 1.5rem 0;
 }
 
 .suggestion-text {
-font-size: var(--font-size-sm);
-color: var(--color-text-secondary);
-margin-bottom: 0.75rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
 }
 
 .suggestion-tags {
-display: flex;
-gap: 0.5rem;
-flex-wrap: wrap;
-justify-content: center;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .suggestion-tag {
-background: rgba(139, 93, 255, 0.1);
-color: var(--color-accent-purple-glow-medium);
-padding: 0.5rem 1rem;
-border-radius: var(--radius-md);
-cursor: pointer;
-transition: all var(--duration-normal) var(--ease-out);
-font-size: var(--font-size-sm);
-font-weight: 500;
-border: 1px solid rgba(139, 93, 255, 0.2);
+  background: rgba(139, 93, 255, 0.1);
+  color: var(--color-accent-purple-glow-medium);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border: 1px solid rgba(139, 93, 255, 0.2);
 }
 
 .suggestion-tag:hover {
-background: rgba(139, 93, 255, 0.2);
-transform: translateY(-1px);
-box-shadow: var(--shadow-sm);
+  background: rgba(139, 93, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Search Input Enhancement */
 .search-input-ready {
-border-color: var(--color-accent-purple-glow-medium) !important;
-background: var(--color-background-input) !important;
+  border-color: var(--color-accent-purple-glow-medium) !important;
+  background: var(--color-background-input) !important;
 }
 
 .search-input-ready:focus {
-border-color: var(--color-primary) !important;
-box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1) !important;
 }

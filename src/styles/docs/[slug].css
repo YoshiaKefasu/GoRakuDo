@@ -10,14 +10,14 @@
  * - REM: Used for responsive typography, spacing, and layout
  * - EM: Used for relative scaling elements like code font-size
  */
-@import "../global.css";
+@import '../global.css';
 /* Import word internal links styles (replaces inline system) */
-@import "./word-internal-links.css";
+@import './word-internal-links.css';
 
 /* ========== FONT LOADING OPTIMIZATION ========== */
 /* Optimize font loading for better performance */
 @font-face {
-  font-family: "Inter";
+  font-family: 'Inter';
   font-display: swap;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .internal-link::before {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -510,9 +510,9 @@
   display: block;
   /* Enhanced reading performance */
   font-feature-settings:
-    "kern" 1,
-    "liga" 1,
-    "calt" 1;
+    'kern' 1,
+    'liga' 1,
+    'calt' 1;
   text-rendering: optimizeLegibility;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -546,7 +546,7 @@
 }
 
 .post-content h2:before {
-  content: "";
+  content: '';
   position: absolute;
   left: -1.25rem; /* REM for responsive positioning */
   top: 50%;
@@ -623,9 +623,9 @@
   line-height: 1.75; /* Improved line height for better readability */
   text-rendering: optimizeLegibility; /* Enhanced text rendering */
   font-feature-settings:
-    "kern" 1,
-    "liga" 1,
-    "calt" 1; /* Better typography */
+    'kern' 1,
+    'liga' 1,
+    'calt' 1; /* Better typography */
 }
 
 /* Content Lists */
@@ -648,7 +648,7 @@
 }
 
 .post-content ul li:before {
-  content: "〆";
+  content: '〆';
   color: var(--color-primary);
   font-weight: 900; /* Make arrow bolder than standard bold */
   position: absolute;
@@ -670,7 +670,7 @@
 }
 
 .post-content blockquote::before {
-  content: "";
+  content: '';
   position: absolute;
   left: -4px; /* PX for precise positioning */
   top: 0;
@@ -692,7 +692,7 @@
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-family:
-    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New",
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New',
     monospace;
   color: var(--color-primary);
 }
@@ -708,7 +708,7 @@
 }
 
 .post-content pre::before {
-  content: "CODE";
+  content: 'CODE';
   position: absolute;
   top: 0.5rem; /* REM for responsive positioning */
   right: 1rem; /* REM for responsive positioning */
@@ -823,134 +823,7 @@
   box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
 }
 
-/* Skeleton Loading Styles - Enhanced Performance & Visual Effects */
-.skeleton-content {
-  opacity: 0.7;
-  background: var(--color-card);
-  border: 1px solid var(--color-border); /* PX for precise border */
-  border-radius: var(--radius-lg);
-  padding: 2.5rem; /* REM for responsive padding */
-  margin-bottom: 1.875rem; /* REM for responsive margin */
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
-
-  /* Enhanced performance - isolate layout changes for better rendering */
-  contain: layout;
-}
-
-@keyframes skeleton-pulse {
-  0%,
-  100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
-
-.skeleton-content-title {
-  height: 2rem; /* REM for responsive height */
-  border-radius: 6px; /* PX for precise border radius */
-  margin-bottom: 0.9375rem; /* REM for responsive margin */
-  width: 90%;
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-.skeleton-content-meta {
-  display: flex;
-  gap: 1.25rem; /* REM for responsive spacing */
-  margin-bottom: 1.5rem; /* REM for responsive margin */
-}
-
-.skeleton-content-author,
-.skeleton-content-date,
-.skeleton-content-read-time {
-  height: 1.125rem; /* REM for responsive height */
-  border-radius: var(--radius-sm);
-  width: 6rem; /* REM for responsive width */
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-.skeleton-paragraph {
-  height: 1rem; /* REM for responsive height */
-  border-radius: var(--radius-sm);
-  margin-bottom: 0.75rem; /* REM for responsive margin */
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-.skeleton-paragraph.short {
-  width: 70%;
-}
-
-.skeleton-content-tags {
-  display: flex;
-  gap: 0.5rem; /* REM for responsive spacing */
-  margin-top: 1.25rem; /* REM for responsive margin */
-}
-
-.skeleton-content-tag {
-  height: 1.25rem; /* REM for responsive height */
-  border-radius: 12px; /* PX for precise border radius */
-  width: 3.125rem; /* REM for responsive width */
-  background: linear-gradient(
-    90deg,
-    rgba(139, 93, 255, 0.05) 25%,
-    rgba(139, 93, 255, 0.1) 50%,
-    rgba(139, 93, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite;
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.skeleton-loading {
-  pointer-events: none;
-  user-select: none;
-}
-
-.skeleton-fade-in {
-  animation: skeleton-fade-in 0.5s ease-in-out;
-}
-
-@keyframes skeleton-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px); /* PX for precise animation */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Skeleton loading styles removed - functionality disabled */
 
 /* Reading Progress Bar */
 .reading-progress {
@@ -1091,10 +964,11 @@
     font-size: 0.8rem !important;
   }
 
-  .ai-recommendations-section {
+  /* AI recommendations section removed - functionality no longer needed */
+  /* .ai-recommendations-section {
     margin-top: 2rem !important;
     padding: 1.5rem !important;
-  }
+  } */
 
   .post-header {
     padding: 1rem !important;
@@ -1342,17 +1216,7 @@
   }
 }
 
-/* Enhanced accessibility for skeleton loading */
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-content-title,
-  .skeleton-content-author,
-  .skeleton-content-date,
-  .skeleton-content-read-time,
-  .skeleton-paragraph,
-  .skeleton-content-tag {
-    animation: none;
-  }
-}
+/* Skeleton accessibility styles removed - functionality disabled */
 
 @media print {
   .post-content ul,

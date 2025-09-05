@@ -178,7 +178,7 @@
 }
 
 .word-internal-link[title]:hover::before {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 100%;
   left: 50%;
@@ -382,7 +382,7 @@
 
   /* Show URL in print (optional - can be enabled if needed) */
   .word-internal-link[href]::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
     font-size: 0.75rem;
     color: var(--color-gray-600, #4b5563);
   }

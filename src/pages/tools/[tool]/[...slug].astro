@@ -3,6 +3,8 @@
 import { getCollection, type CollectionEntry } from "astro:content"
 import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro"
 import { logger } from "../../../utils/logging/console-logger"
+import Breadcrumb from "../../../components/public-components/Breadcrumb.astro"
+import type { ToolName } from "../../../utils/content/breadcrumb-utils"
 
 // Generate static paths for all tool articles
 export async function getStaticPaths() {
@@ -92,8 +94,21 @@ console.log("✅ Tool article accessed:", {
   description={post.data.description}
   publishedDate={post.data.publishedDate}
   lang="id"
-  showBreadcrumb={true}
+  showBreadcrumb={false}
   currentPath={validatedCurrentPath}>
+  <!-- Enhanced Breadcrumb Navigation -->
+  <Breadcrumb 
+    toolConfig={{
+      toolName: toolName as ToolName,
+      articleTitle: post.data.title,
+      articleSlug: sanitizedSlug,
+      showHome: true
+    }}
+    variant="compact"
+    showIcons={true}
+    ariaLabel={`${toolName} ${post.data.title} navigation breadcrumb`}
+  />
+
   <!-- Article Header -->
   <header class="mb-8">
     <h1 class="text-3xl font-bold text-foreground mb-4 sm:text-4xl lg:text-5xl">
@@ -143,36 +158,13 @@ console.log("✅ Tool article accessed:", {
 </ToolArticleLayout>
 
 <script>
-  // Performance monitoring integration
-  import {
-    initPerformanceMonitoring,
-    measureBuildPerformance,
-    measureCssBundleSize,
-    calibrateBaselineBuildTime,
-  } from "../../../utils/performance/performance-monitor.js"
-
-  // Initialize performance monitoring on page load
+  // Performance monitoring removed
   document.addEventListener("DOMContentLoaded", () => {
-    // Initialize core web vitals monitoring
-    initPerformanceMonitoring()
-
-    // Log article-specific performance metrics
+    // Log article-specific metrics
     console.log("📊 Article Page Performance:")
     console.log("  🎯 Article loaded successfully")
     console.log("  🏷️ Tag validation status:", "{tagValidationStatus}")
     console.log("  📄 Title:", "{post.data.title}")
-
-    // Measure Story 2.7 performance metrics
-    setTimeout(() => {
-      console.log("\n=== STORY 2.7 PERFORMANCE VALIDATION ===")
-      measureCssBundleSize()
-
-      // Note: Build time measurement happens during build process
-      console.log("📝 Build time measurement available in build logs")
-      console.log(
-        "💡 To set Story 2.6 baseline: calibrateBaselineBuildTime(buildTimeInMs)"
-      )
-    }, 100)
   })
 
   // Accessibility enhancements

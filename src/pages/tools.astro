@@ -1,5 +1,5 @@
 ---
-import Head from "../components/public-components/HeadSEO.astro"
+import UnifiedSEO from "../components/UnifiedSEO.astro"
 import BaseLayout from "../layouts/BaseLayout.astro"
 import Navbar from "../components/public-components/Navbar.vue"
 
@@ -9,6 +9,14 @@ import "../styles/tools/tools.css"
 
 // Import images
 import homepageOgImage from "../assets/images/Logo Discord.png"
+
+// SEO data - Astroネイティブアプローチ（設定ファイル不要）
+const seoData = {
+  title: "Alat Belajar Bahasa Jepang - GoRakuDo",
+  description: "Alat bantu pembelajaran bahasa Jepang yang efektif untuk memperoleh kemahiran berbahasa Jepang. Utilitas pembelajaran terbaik di Indonesia",
+  keywords: ["alat", "bantu", "pembelajaran", "bahasa", "jepang", "belajar", "efektif", "kemahiran", "utilitas", "learning"],
+  pageType: "website" as const
+}
 
 // Tools data - structured for easy management and expansion
 const tools = [
@@ -70,19 +78,14 @@ const tools = [
 ]
 ---
 
-<!doctype html>
-<!-- eslint-disable-next-line compat-api/html, compat-api/css -->
-<html lang="id">
+<html lang="ja">
   <head>
-    <Head
-      title="Tools Immersion - Alat Pembelajaran Bahasa Jepang"
-      description="Kumpulan tools dan aplikasi terbaik untuk pembelajaran bahasa Jepang dengan metode immersion. Setup dan panduan lengkap."
-      ogImage={homepageOgImage}
-      pageType="website"
-      publishedDate="2025/08/10"
-      lang="id"
-      aiPageType="docs"
-      enableAIOptimizations={true}
+    <!-- UnifiedSEO - シンプルなAstroネイティブ実装 -->
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType={seoData.pageType}
     />
     <!-- Prefetch critical resources -->
     <link fetchpriority="low" rel="prefetch" href="/docs" />
@@ -289,10 +292,6 @@ const tools = [
         function animate() {
           if (!ctx) return
 
-          // ENHANCED: Performance monitoring - track draw calls
-          if ((window as any).waveAnimationMonitor) {
-            ;(window as any).waveAnimationMonitor.metrics.drawCalls++
-          }
 
           ctx.clearRect(
             0,
@@ -405,21 +404,6 @@ const tools = [
             cleanup: cleanup || (() => {}),
           }
 
-          // Initialize wave animation performance monitoring
-          const canvas = document.getElementById("waveCanvas")
-          if (canvas) {
-            import(
-              "../scripts/ui/background-animations/wave-animation-performance.js"
-            ).then((module) => {
-              const waveMonitor = module.initWaveAnimationPerformanceMonitor(canvas, {
-                targetFPS: 60,
-                adaptiveQuality: true,
-              })
-              waveMonitor.startMonitoring()
-              ;(window as any).waveAnimationMonitor = waveMonitor
-              console.log("✅ Wave animation performance monitoring initialized")
-            })
-          }
 
           console.log("✅ Docs page wave animation initialized successfully")
         } catch (error) {
@@ -509,12 +493,6 @@ const tools = [
       window.addEventListener("beforeunload", function () {
         if (waveAnimation) {
           waveAnimation.cleanup()
-        }
-        if ((window as any).waveAnimationMonitor) {
-          ;(window as any).waveAnimationMonitor.stopMonitoring()
-        }
-        if (animationPerformanceMonitor) {
-          animationPerformanceMonitor.stopMonitoring()
         }
       })
 
@@ -881,28 +859,6 @@ const tools = [
       // Device-specific animation optimization and performance monitoring
       // Implements PERF-001: Animation Performance Degradation mitigation
 
-      import { animationPerformanceMonitor } from "../utils/performance/animation-performance-monitor"
-
-      // Initialize animation performance monitoring
-      window.addEventListener("load", () => {
-        try {
-          // Start monitoring with device-specific optimizations
-          animationPerformanceMonitor.startMonitoring()
-
-          // Apply device-specific optimizations after a short delay
-          setTimeout(() => {
-            animationPerformanceMonitor.applyDeviceOptimizations()
-          }, 2000)
-
-          console.log("✅ Animation performance monitoring initialized")
-        } catch (error) {
-          console.error(
-            "❌ Failed to initialize animation performance monitoring:",
-            error
-          )
-        }
-      })
-
       // Enhanced performance monitoring for interactive features
       const performanceMonitor = {
         startTime: performance.now(),
@@ -953,9 +909,6 @@ const tools = [
 
       // Cleanup on page unload
       window.addEventListener("beforeunload", () => {
-        if (animationPerformanceMonitor) {
-          animationPerformanceMonitor.stopMonitoring()
-        }
         if (performanceMonitor.animationObserver) {
           performanceMonitor.animationObserver.disconnect()
         }

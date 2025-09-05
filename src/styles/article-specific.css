@@ -49,8 +49,8 @@
 .article-content {
   /* Optimized font loading and rendering */
   font-feature-settings:
-    "kern" 1,
-    "liga" 1;
+    'kern' 1,
+    'liga' 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -110,7 +110,7 @@
 }
 
 .article-content pre::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -171,7 +171,7 @@
 }
 
 .article-content ul li::before {
-  content: "•";
+  content: '•';
   color: var(--color-primary);
   font-weight: bold;
   margin-right: 0.75rem;
@@ -189,7 +189,7 @@
 }
 
 .article-content ol li::before {
-  content: counter(item) ".";
+  content: counter(item) '.';
   color: var(--color-primary);
   font-weight: 600;
   margin-right: 0.75rem;
@@ -249,7 +249,7 @@
 }
 
 .article-content hr::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 50%;
   top: 50%;
@@ -292,26 +292,7 @@
   box-shadow: 0 0 0 4px oklch(65% 0.18 280 / 0.1);
 }
 
-/* Optimized loading states */
-.article-content .loading-skeleton {
-  background: linear-gradient(
-    90deg,
-    oklch(15% 0.02 270 / 0.1) 25%,
-    oklch(20% 0.03 270 / 0.2) 50%,
-    oklch(15% 0.02 270 / 0.1) 75%
-  );
-  background-size: 200% 100%;
-  animation: loading-shimmer 1.5s infinite;
-}
-
-@keyframes loading-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
+/* Skeleton loading styles removed - functionality disabled */
 
 /* Print optimizations for articles */
 @media print {
@@ -327,7 +308,7 @@
   }
 
   .article-content a::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
     font-size: 9pt;
     color: #666;
   }

@@ -1,38 +1,37 @@
 // Google Engineering Team 2025: Search Data JSON Endpoint
 // Provides comprehensive search data for client-side Fuse.js search
-import { getCollection } from "astro:content";
+import { getCollection } from 'astro:content';
 import {
   resolveContentPath,
-  getCollectionMetadata,
-} from "../utils/content-path-resolver";
-import { logger } from "../utils/logging/console-logger";
+} from '../utils/content-path-resolver';
+import { logger } from '../utils/logging/console-logger';
 
 export async function GET() {
   try {
-    logger.startGroup("Search Data Generation");
-    logger.log("Generating search data JSON endpoint...", "info");
+    logger.startGroup('Search Data Generation');
+    logger.log('Generating search data JSON endpoint...', 'info');
 
     // Get all blog posts
-    const posts = await getCollection("docs");
-    logger.log(`Found ${posts.length} posts for search indexing`, "success");
+    const posts = await getCollection('docs');
+    logger.log(`Found ${posts.length} posts for search indexing`, 'success');
 
     // Process posts for search data
-    const searchData = posts.map((post) => {
+    const searchData = posts.map(post => {
       // Extract full markdown content for comprehensive search
-      const fullContent = post.body || "";
+      const fullContent = post.body || '';
 
       // Clean markdown content for search indexing
       const cleanedContent = fullContent
-        .replace(/---[\s\S]*?---/, "") // Remove frontmatter
-        .replace(/```[\s\S]*?```/g, " ") // Remove code blocks
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, " $1 ") // Replace images with alt text
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1") // Remove links, keep text
-        .replace(/#{1,6}\s+/g, "") // Remove header markers
-        .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove bold formatting
-        .replace(/\*([^*]+)\*/g, "$1") // Remove italic formatting
-        .replace(/`([^`]+)`/g, "$1") // Remove inline code formatting
-        .replace(/\n+/g, " ") // Replace newlines with spaces
-        .replace(/\s+/g, " ") // Normalize spaces
+        .replace(/---[\s\S]*?---/, '') // Remove frontmatter
+        .replace(/```[\s\S]*?```/g, ' ') // Remove code blocks
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, ' $1 ') // Replace images with alt text
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1') // Remove links, keep text
+        .replace(/#{1,6}\s+/g, '') // Remove header markers
+        .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold formatting
+        .replace(/\*([^*]+)\*/g, '$1') // Remove italic formatting
+        .replace(/`([^`]+)`/g, '$1') // Remove inline code formatting
+        .replace(/\n+/g, ' ') // Replace newlines with spaces
+        .replace(/\s+/g, ' ') // Normalize spaces
         .trim();
 
       // Create comprehensive search data structure
@@ -60,7 +59,7 @@ export async function GET() {
         contentType: post.data.aiMetadata?.contentType || post.data.category,
         learningPath: post.data.aiMetadata?.learningPath || [],
         aiRecommendations: post.data.aiMetadata?.recommendations || [],
-        contentComplexity: post.data.aiMetadata?.complexity || "medium",
+        contentComplexity: post.data.aiMetadata?.complexity || 'medium',
         semanticKeywords: post.data.aiMetadata?.semanticKeywords || [],
         learningObjectives: post.data.aiMetadata?.learningObjectives || [],
 
@@ -81,23 +80,23 @@ export async function GET() {
           ...(post.data.aiMetadata?.learningPath || []),
         ]
           .filter(Boolean)
-          .join(" "),
+          .join(' '),
 
         // Content analysis
-        wordCount: cleanedContent.split(/\s+/).filter((word) => word.length > 0)
+        wordCount: cleanedContent.split(/\s+/).filter(word => word.length > 0)
           .length,
         contentLength: cleanedContent.length,
 
         // Feature flags for specialized searches
         isRecommended: post.data.aiMetadata?.isRecommended || false,
         isBeginner:
-          post.data.difficulty === "beginner" ||
-          post.data.learningStage === "pemanasan",
+          post.data.difficulty === 'beginner' ||
+          post.data.learningStage === 'pemanasan',
         isTool:
-          post.data.category === "tools" ||
-          post.data.title.toLowerCase().includes("anki"),
-        hasCodeBlocks: fullContent.includes("```"),
-        hasImages: fullContent.includes("![") || fullContent.includes("!["),
+          post.data.category === 'tools' ||
+          post.data.title.toLowerCase().includes('anki'),
+        hasCodeBlocks: fullContent.includes('```'),
+        hasImages: fullContent.includes('![') || fullContent.includes('!['),
 
         // URL for navigation with dynamic path resolution
         url: (() => {
@@ -107,7 +106,7 @@ export async function GET() {
           } catch (error) {
             logger.log(
               `Failed to resolve path for ${post.slug}: ${error.message}`,
-              "warning",
+              'warning'
             );
             return `/docs/${post.slug}`;
           }
@@ -119,21 +118,21 @@ export async function GET() {
 
     logger.log(
       `Generated search data for ${searchData.length} posts`,
-      "success",
+      'success'
     );
-    logger.logSummary("Search Data Summary", {
-      "Total posts": searchData.length,
-      "Total words": searchData.reduce((sum, item) => sum + item.wordCount, 0),
-      "Total content length": searchData.reduce(
+    logger.logSummary('Search Data Summary', {
+      'Total posts': searchData.length,
+      'Total words': searchData.reduce((sum, item) => sum + item.wordCount, 0),
+      'Total content length': searchData.reduce(
         (sum, item) => sum + item.contentLength,
-        0,
+        0
       ),
     });
 
     // Log sample search data structure for troubleshooting
     if (searchData.length > 0) {
       logger.logContentPreview(
-        "Sample search data structure",
+        'Sample search data structure',
         JSON.stringify({
           slug: searchData[0].slug,
           title: searchData[0].title,
@@ -141,8 +140,8 @@ export async function GET() {
           hasContent: !!searchData[0].content,
           contentLength: searchData[0].content?.length || 0,
           hasKrashen:
-            searchData[0].content?.toLowerCase().includes("krashen") || false,
-        }),
+            searchData[0].content?.toLowerCase().includes('krashen') || false,
+        })
       );
     }
 
@@ -151,25 +150,25 @@ export async function GET() {
     return new Response(JSON.stringify(searchData, null, 2), {
       status: 200,
       headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=3600", // Cache for 1 hour
-        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+        'Access-Control-Allow-Origin': '*',
       },
     });
   } catch (error) {
-    logger.log(`Error generating search data: ${error.message}`, "error");
+    logger.log(`Error generating search data: ${error.message}`, 'error');
 
     return new Response(
       JSON.stringify({
-        error: "Failed to generate search data",
+        error: 'Failed to generate search data',
         message: error.message,
       }),
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      },
+      }
     );
   }
 }

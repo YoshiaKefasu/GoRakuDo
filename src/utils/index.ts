@@ -1,49 +1,21 @@
 // Utils Main Index File
 // Centralized exports for all utility functions with backward compatibility
 
-// AI Content Utilities
-export * from "./ai-content";
+// AI Content Utilities removed - functionality no longer needed
 
-// Performance Utilities
-export * from "./performance";
+// Performance Utilities removed
 
-// Error Handling Utilities
-export * from "./error-handling";
+// Error Handling Utilities removed - functionality no longer needed
 
-// Content Structure Utilities
-export * from "./content-structure";
+// Content Structure Utilities removed - functionality no longer needed
 
 // Testing Utilities (Note: Test files removed after successful testing)
 // export * from "./testing"; // Removed - no test utilities currently available
 
-// Legacy exports for backward compatibility
-// These maintain the old import paths for existing code
-export {
-  analyzeContent,
-  generateInternalLinks,
-  getRelatedContent,
-  getLearningPathRecommendations,
-  getPostsWithSemanticRelationships,
-  analyzeSemanticRelationships,
-} from "./ai-content";
+// Legacy AI exports removed - functionality no longer needed
 
-export {
-  generateAIPrefetchHints,
-  generatePageSpecificAIOptimizations,
-  // performanceLoader, // Removed to prevent 404 errors in development server
-} from "./performance";
+// AI performance exports removed - functionality no longer needed
 
-export { discordErrorReporter, errorHandler } from "./error-handling";
+// Error handling exports removed - functionality no longer needed
 
-export {
-  // MindMap functionality deprecated - MIND_MAP_BRANCHES removed
-  UNDERSTANDING_LEVELS,
-  LEARNING_STAGES,
-  generateSkeletonPostCard,
-  generateSkeletonSearchResult,
-  generateSkeletonPagination,
-  generateSkeletonContent,
-  showSkeleton,
-  hideSkeleton,
-  SkeletonManager,
-} from "./content-structure";
+// Content structure exports removed - functionality no longer needed
