@@ -27,8 +27,10 @@
       "@/*": ["src/*"],
       "@/types/*": ["src/types/*"]
     },
+    "types": ["node"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "skipLibCheck": true
   }
 }

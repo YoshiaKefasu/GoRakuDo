@@ -140,7 +140,7 @@ export class ConsoleLogger {
   /**
    * Log a summary of processing results
    */
-  logSummary(title: string, data: Record<string, any>): void {
+  logSummary(title: string, data: Record<string, unknown>): void {
     // Only show for critical errors
     if (!this.isBuildMode && !this.criticalErrorsOnly) {
       console.log(`\n📊 ${title}:`);
@@ -157,20 +157,35 @@ export class ConsoleLogger {
   /**
    * Log word-to-link conversion results in a clean format
    */
-  logWordToLinkResults(slug: string, stats: any, conversions: any[]): void {
+  logWordToLinkResults(
+    slug: string, 
+    stats: { 
+      convertedWords?: number; 
+      totalWords?: number; 
+      processingTime?: number; 
+      [key: string]: unknown; 
+    }, 
+    conversions: Array<{ 
+      from: string; 
+      to: string; 
+      count: number; 
+      originalWord?: string; 
+      targetTitle?: string; 
+    }>
+  ): void {
     // Only show for critical errors
     if (!this.isBuildMode && !this.criticalErrorsOnly) {
       console.log(`\n🔗 Word-to-Link Results for "${slug}":`);
       console.log(
-        `   📊 Stats: ${stats.convertedWords}/${stats.totalWords} words converted`
+        `   📊 Stats: ${stats.convertedWords || 0}/${stats.totalWords || 0} words converted`
       );
-      console.log(`   ⏱️  Time: ${stats.processingTime.toFixed(2)}ms`);
+      console.log(`   ⏱️  Time: ${(stats.processingTime || 0).toFixed(2)}ms`);
 
       if (conversions.length > 0) {
         console.log(`   🔗 Conversions:`);
         conversions.slice(0, 3).forEach((conv, index) => {
           console.log(
-            `     ${index + 1}. "${conv.originalWord}" → "${conv.targetTitle}"`
+            `     ${index + 1}. "${conv.originalWord || conv.from}" → "${conv.targetTitle || conv.to}"`
           );
         });
         if (conversions.length > 3) {

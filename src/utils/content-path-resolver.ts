@@ -82,9 +82,14 @@ const CONTENT_PATH_CONFIG: ContentPathConfig[] = [
  * @returns PathResolutionResult with resolved path and metadata
  */
 export function resolveContentPath(
-  post: CollectionEntry<any> & {
+  post: CollectionEntry<"docs"> & {
     slug: string;
-    data?: any;
+    data?: {
+      title?: string;
+      description?: string;
+      category?: string;
+      tags?: string[];
+    };
     collection?: string;
   },
   collectionName?: string
@@ -200,12 +205,17 @@ export function getCollectionMetadata(collectionName: string): {
  * @param post - Collection entry
  * @returns Detected collection name
  */
-function detectCollectionFromEntry(post: CollectionEntry<any>): string {
+function detectCollectionFromEntry(post: CollectionEntry<"docs">): string {
   try {
     // Add type assertion for better TypeScript inference
-    const typedPost = post as CollectionEntry<any> & {
+    const typedPost = post as CollectionEntry<"docs"> & {
       collection?: string;
-      data?: any;
+      data?: {
+        title?: string;
+        description?: string;
+        category?: string;
+        tags?: string[];
+      };
     };
 
     // Check if entry has collection-specific properties

@@ -42,6 +42,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-ignore Vue import resolved by Astro
 import { ref, computed, onMounted } from 'vue';
 import { SimpleSearch } from '../../utils/search/simple-search';
 import type { SearchPost } from '../../utils/search/types';

@@ -43,4 +43,5 @@ export function initializeScripts() {
   } else if (path === '/docs') {
     // Docs listing page
     import('./ui/docs-pagination.js');
+  }
 }

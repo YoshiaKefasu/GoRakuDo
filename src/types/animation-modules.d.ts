@@ -41,8 +41,8 @@ declare module '../scripts/ui/background-animations/stars-animation.js' {
     init(containerId: string): void;
     destroy(): void;
     updateConfig(config: Partial<StarsConfig>): void;
-    getPerformanceStatus(): any;
-    getErrorState(): any;
+    getPerformanceStatus(): { isRunning: boolean; fps: number; memoryUsage: number };
+    getErrorState(): { hasError: boolean; errorMessage?: string; errorCode?: string };
   }
 
   export function initStarsAnimation(

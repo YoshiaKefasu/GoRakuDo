@@ -3,6 +3,8 @@
 // SOLUTION: Updated all imports and aligned with actual content themes
 // STATUS: ✅ MIGRATED
 
+import type { CollectionEntry } from "astro:content";
+
 /**
  * Content Configuration System
  *
@@ -421,7 +423,7 @@ export const ContentConfigUtils = {
   /**
    * Count posts by category
    */
-  countPostsByCategory(posts: any[], categoryId: string): number {
+  countPostsByCategory(posts: CollectionEntry<"docs">[], categoryId: string): number {
     return posts.filter(post => {
       const category = this.getCategory(categoryId);
       if (!category) return false;
@@ -442,7 +444,7 @@ export const ContentConfigUtils = {
   /**
    * Count posts by tag
    */
-  countPostsByTag(posts: any[], tagId: string): number {
+  countPostsByTag(posts: CollectionEntry<"docs">[], tagId: string): number {
     return posts.filter(post => {
       const tag = this.getTag(tagId);
       if (!tag) return false;
@@ -458,7 +460,7 @@ export const ContentConfigUtils = {
   /**
    * Filter posts by category
    */
-  filterPostsByCategory(posts: any[], categoryId: string): any[] {
+  filterPostsByCategory(posts: CollectionEntry<"docs">[], categoryId: string): CollectionEntry<"docs">[] {
     const category = this.getCategory(categoryId);
     if (!category) return [];
 
@@ -478,7 +480,7 @@ export const ContentConfigUtils = {
   /**
    * Filter posts by tag
    */
-  filterPostsByTag(posts: any[], tagId: string): any[] {
+  filterPostsByTag(posts: CollectionEntry<"docs">[], tagId: string): CollectionEntry<"docs">[] {
     const tag = this.getTag(tagId);
     if (!tag) return [];
 
@@ -500,7 +502,7 @@ export const ContentConfigUtils = {
   /**
    * Get filter count for display
    */
-  getFilterCount(posts: any[], filter: ContentFilter): number {
+  getFilterCount(posts: CollectionEntry<"docs">[], filter: ContentFilter): number {
     switch (filter.type) {
       case 'category':
         return this.countPostsByCategory(posts, filter.target);
@@ -518,7 +520,7 @@ export const ContentConfigUtils = {
   /**
    * Apply filter to posts
    */
-  applyFilter(posts: any[], filter: ContentFilter): any[] {
+  applyFilter(posts: CollectionEntry<"docs">[], filter: ContentFilter): CollectionEntry<"docs">[] {
     switch (filter.type) {
       case 'category':
         return this.filterPostsByCategory(posts, filter.target);

@@ -38,7 +38,7 @@ export class SimpleSearch {
       // Handle optional element property with exactOptionalPropertyTypes
       const element = this.findPostElement(post.slug);
       if (element !== undefined) {
-        (post as any).element = element;
+        (post as SearchPost & { element?: HTMLElement }).element = element;
       }
     });
   }

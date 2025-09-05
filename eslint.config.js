@@ -1,6 +1,9 @@
 import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
+import vuePlugin from 'eslint-plugin-vue';
+import vueParser from 'vue-eslint-parser';
+import * as espree from 'espree';
 
 export default [
   js.configs.recommended,
@@ -37,10 +40,18 @@ export default [
       },
     },
     rules: {
-      'no-console': 'warn',
+      'no-console': 'off', // Allow console.log for development
       'prefer-const': 'error',
       'no-var': 'error',
       'no-undef': 'off', // Browser globals are defined above
+    },
+  },
+  {
+    files: ['**/*.js', '**/*.mjs'],
+    languageOptions: {
+      parser: espree,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
     },
   },
   {
@@ -67,6 +78,30 @@ export default [
       // Disable base rules that are covered by TypeScript equivalents
       'no-unused-vars': 'off',
       'no-undef': 'off',
+    },
+  },
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        parser: {
+          js: 'espree',
+          ts: '@typescript-eslint/parser',
+        },
+      },
+    },
+    plugins: {
+      vue: vuePlugin,
+    },
+    rules: {
+      'vue/multi-word-component-names': 'off',
+      'vue/no-unused-vars': 'error',
+      'vue/no-v-html': 'warn',
+      'vue/require-default-prop': 'off',
+      'vue/require-explicit-emits': 'off',
     },
   },
 

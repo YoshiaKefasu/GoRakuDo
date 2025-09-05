@@ -79,28 +79,19 @@ export default defineConfig({
     css: {
       devSourcemap: false, // Disable sourcemaps in production
     },
+    // Enhanced resolve configuration for Vue
+    resolve: {
+      alias: {
+        '@': './src'
+      }
+    },
     // Performance optimizations
     optimizeDeps: {
       include: ["vue"], // Pre-bundle Vue for faster loading
       exclude: [], // Don't exclude anything for localhost
     },
     // Simplified chunking for development stability
-    build: {
-      chunkSizeWarningLimit: 500, // Increased for development stability
-      rollupOptions: {
-        output: {
-          // Simplified chunking to prevent dev toolbar conflicts
-          manualChunks: (id) => {
-            // Basic Vue chunking
-            if (id.includes("vue")) {
-              return "vue";
-            }
-            // Default chunking
-            return "vendor";
-          },
-        },
-      },
-    },
+    // build configuration moved to main build section above
     // Development server configuration for stability
     server: {
       // Enable error overlay for better debugging
@@ -125,6 +116,12 @@ export default defineConfig({
       include: ["**/*.vue"],
       // Disable experimental features to prevent conflicts
       experimentalReactivityTransform: false,
+      // Enable global imports for composition API
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('ion-')
+        }
+      }
     }),
     // Enable View Transitions API for smooth page transitions
     {
