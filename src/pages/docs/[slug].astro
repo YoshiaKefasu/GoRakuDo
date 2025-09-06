@@ -133,8 +133,9 @@ enhancedContent = post.body
       rel="preload"
       href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
       as="script"
+      crossorigin="anonymous"
     />
-    <script is:inline src="/core/post-script.js"></script>
+    <!-- post-script.jsはTypeScript分離版に置き換えられました -->
 
     <!-- Fonts with display=swap for better performance -->
     <link
@@ -143,7 +144,7 @@ enhancedContent = post.body
     />
 
     <!-- Core: Always load marked for markdown rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" crossorigin="anonymous"></script>
   </head>
 
   <body>
@@ -245,42 +246,57 @@ enhancedContent = post.body
       </div>
     </main>
 
-    <!-- Scripts Section - Organized and Optimized -->
-    <script is:inline src="/core/post-script.js"></script>
+    <!-- Scripts Section - TypeScript分離版 -->
+    <!-- post-script.jsは不要になりました -->
 
-    <!-- Main Application Script -->
+    <!-- Main Application Script - TypeScript分離版 -->
     <script define:vars={{ postData, enhancedContent }}>
+      // TypeScript分離スクリプトの機能を直接実装
+      // （define:vars内ではimport文が使用できないため）
+      
       // ========== GLOBAL VARIABLES ==========
-      let enhancedContentLoaded = false
+      let enhancedContentLoaded = false;
 
       // ========== UTILITY FUNCTIONS ==========
 
       // Share functionality with dynamic path support
-      function sharePost() {
+      async function sharePost() {
         const shareUrl = postData?.resolvedPath
           ? `${window.location.origin}${postData.resolvedPath}`
-          : window.location.href
+          : window.location.href;
 
-        if (navigator.share) {
-          navigator.share({
-            title: postData?.title || "GoRakuDo Post",
-            text: postData?.description || "Check out this post from GoRakuDo",
-            url: shareUrl,
-          })
-        } else {
-          // Fallback: copy to clipboard
-          navigator.clipboard.writeText(shareUrl).then(() => {
-            alert("Link berhasil disalin ke clipboard!")
-          })
+        const shareData = {
+          title: postData?.title || "GoRakuDo Post",
+          description: postData?.description || "Check out this post from GoRakuDo",
+          url: shareUrl,
+        };
+
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+          } else {
+            // Fallback: copy to clipboard
+            await navigator.clipboard.writeText(shareUrl);
+            alert("Link berhasil disalin ke clipboard!");
+          }
+        } catch (error) {
+          console.error('Share failed:', error);
+          // Fallback to clipboard
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            alert("Link berhasil disalin ke clipboard!");
+          } catch (clipboardError) {
+            console.error('Clipboard fallback failed:', clipboardError);
+          }
         }
       }
 
       // Reading progress indicator
       function addReadingProgress() {
-        const progressBar = document.createElement("div")
-        progressBar.className = "reading-progress"
-        progressBar.setAttribute("role", "progressbar")
-        progressBar.setAttribute("aria-label", "Reading progress")
+        const progressBar = document.createElement("div");
+        progressBar.className = "reading-progress";
+        progressBar.setAttribute("role", "progressbar");
+        progressBar.setAttribute("aria-label", "Reading progress");
         progressBar.style.cssText = `
           position: fixed;
           top: 0;
@@ -290,45 +306,55 @@ enhancedContent = post.body
           background: linear-gradient(90deg, #8b5dff, #7b4def);
           z-index: 1000;
           transition: width 0.1s ease;
-        `
-        document.body.appendChild(progressBar)
+        `;
+        
+        document.body.appendChild(progressBar);
 
-        window.addEventListener("scroll", () => {
-          const scrollTop = window.pageYOffset
-          const docHeight = document.body.scrollHeight - window.innerHeight
-          const scrollPercent = (scrollTop / docHeight) * 100
-          progressBar.style.width = scrollPercent + "%"
-          progressBar.setAttribute("aria-valuenow", Math.round(scrollPercent))
-        })
+        const handleScroll = () => {
+          const scrollTop = window.pageYOffset;
+          const docHeight = document.body.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          progressBar.style.width = scrollPercent + "%";
+          progressBar.setAttribute("aria-valuenow", Math.round(scrollPercent).toString());
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return {
+          cleanup: () => {
+            progressBar.remove();
+            window.removeEventListener("scroll", handleScroll);
+          }
+        };
       }
 
       // Enhanced loading with performance optimizations
       async function loadEnhancements() {
         try {
-          console.log("⚡ Loading enhancements...")
+          console.log("⚡ Loading enhancements...");
 
           // Add reading progress
-          addReadingProgress()
+          addReadingProgress();
 
           // Set up error handling
           window.addEventListener("error", function (e) {
-            console.error("Content load error:", e.error)
-          })
+            console.error("Content load error:", e.error);
+          });
 
           window.addEventListener("unhandledrejection", function (e) {
-            console.error("Unhandled promise rejection:", e.reason)
-          })
+            console.error("Unhandled promise rejection:", e.reason);
+          });
 
           // Performance optimizations
           if ("requestIdleCallback" in window) {
             requestIdleCallback(() => {
-              console.log("⚡ Idle time optimizations applied")
-            })
+              console.log("⚡ Idle time optimizations applied");
+            });
           }
 
-          console.log("✅ Enhancements loaded successfully")
+          console.log("✅ Enhancements loaded successfully");
         } catch (error) {
-          console.error("Failed to load enhancements:", error)
+          console.error("Failed to load enhancements:", error);
         }
       }
 
@@ -336,55 +362,72 @@ enhancedContent = post.body
 
       // Initialize enhanced content
       if (enhancedContent) {
-        window.enhancedContent = enhancedContent
-        enhancedContentLoaded = true
-        console.log("🤖 Enhanced content with internal links loaded")
+        window.enhancedContent = enhancedContent;
+        enhancedContentLoaded = true;
+        console.log("🤖 Enhanced content with internal links loaded");
       }
 
       // Render post content
       function renderPostContent() {
-        if (!postData) return
+        if (!postData) return;
 
-        const content = window.enhancedContent || postData.body
-        const postContent = document.getElementById("postContent")
+        const content = window.enhancedContent || postData.body;
+        const postContent = document.getElementById("postContent");
 
-        if (!postContent) return
+        if (!postContent) return;
 
         // Show skeleton loading
-        showPostSkeleton(postContent)
+        showPostSkeleton(postContent);
 
         // Configure marked for markdown rendering
-        marked.setOptions({
-          highlight: function (code, lang) {
-            return `<pre><code class="language-${lang}">${code}</code></pre>`
-          },
-          breaks: true,
-          gfm: true,
-        })
+        if (window.marked) {
+          window.marked.setOptions({
+            highlight: function (code, lang) {
+              return `<pre><code class="language-${lang}">${code}</code></pre>`;
+            },
+            breaks: true,
+            gfm: true,
+          });
 
-        // Render content with minimal delay
-        setTimeout(() => {
-          const renderedHTML = marked.parse(content)
-          postContent.innerHTML = renderedHTML
-          hidePostSkeleton(postContent)
-
-          // Load enhancements after content is rendered
-          loadEnhancements()
-        }, 100)
+          // Render content with minimal delay
+          setTimeout(() => {
+            try {
+              if (window.marked) {
+                const renderedHTML = window.marked.parse(content);
+                postContent.innerHTML = renderedHTML;
+                hidePostSkeleton(postContent);
+                
+                console.log("✅ Post content rendered successfully");
+              } else {
+                console.error("Marked library not available");
+                // Fallback: plain text display
+                postContent.innerHTML = `<pre>${content}</pre>`;
+              }
+            } catch (error) {
+              console.error("Failed to render post content:", error);
+              // Fallback: plain text display
+              postContent.innerHTML = `<pre>${content}</pre>`;
+            }
+          }, 100);
+        } else {
+          console.error("Marked library not loaded");
+          // Fallback: plain text display
+          postContent.innerHTML = `<pre>${content}</pre>`;
+        }
       }
 
       // ========== SKELETON LOADING ==========
 
       function showPostSkeleton(container) {
         // Skeleton functionality disabled
-        console.log("🚫 Post skeleton disabled")
-        return
+        console.log("🚫 Post skeleton disabled");
+        return;
       }
 
       function hidePostSkeleton(container) {
         // Skeleton functionality disabled
-        console.log("🚫 Post skeleton hiding disabled")
-        return
+        console.log("🚫 Post skeleton hiding disabled");
+        return;
       }
 
       // ========== INITIALIZATION ==========
@@ -392,23 +435,27 @@ enhancedContent = post.body
       // Set default preferences
       if (typeof localStorage !== "undefined") {
         if (!localStorage.getItem("setting_aggressiveLoading")) {
-          localStorage.setItem("setting_aggressiveLoading", "true")
+          localStorage.setItem("setting_aggressiveLoading", "true");
         }
         if (!localStorage.getItem("threshold_syntaxHighlighting")) {
-          localStorage.setItem("threshold_syntaxHighlighting", "500")
+          localStorage.setItem("threshold_syntaxHighlighting", "500");
         }
         if (!localStorage.getItem("threshold_readingProgress")) {
-          localStorage.setItem("threshold_readingProgress", "300")
+          localStorage.setItem("threshold_readingProgress", "300");
         }
         if (!localStorage.getItem("threshold_errorHandling")) {
-          localStorage.setItem("threshold_errorHandling", "1000")
+          localStorage.setItem("threshold_errorHandling", "1000");
         }
       }
 
+      // Set up global share function
+      window.sharePost = sharePost;
+
       // Initialize when DOM is ready
       document.addEventListener("DOMContentLoaded", function () {
-        renderPostContent()
-      })
+        renderPostContent();
+        loadEnhancements();
+      });
     </script>
   </body>
 </html>

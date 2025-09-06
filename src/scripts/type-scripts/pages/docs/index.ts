@@ -21,6 +21,7 @@ export { ModernSearchEngine } from './ModernSearchEngine.js';
 import { SearchLoadingManager } from './SearchLoadingManager.js';
 import { ModernSearchEngine } from './ModernSearchEngine.js';
 import { WaveStarsAnimationManager } from './WaveStarsAnimationManager.js';
+import { PostsManager } from './posts-manager.js';
 
 /**
  * 初期化関数
@@ -42,6 +43,10 @@ export function initializeDocsScripts(): void {
     const waveStarsAnimation = waveStarsAnimationManager.init();
     window.waveAnimation = waveStarsAnimation;
 
+    // 投稿管理の初期化
+    const postsManager = new PostsManager();
+    (window as unknown as { postsManager: PostsManager }).postsManager = postsManager;
+
     // コンテンツ設定の初期化
     window.contentConfig = {
       getCategories: () => [],
@@ -55,6 +60,9 @@ export function initializeDocsScripts(): void {
 
     // 投稿データの初期化
     window.allPosts = [];
+
+    // 投稿の初期化
+    postsManager.initializePosts();
 
     // ページアンロード時のクリーンアップ
     window.addEventListener('beforeunload', () => {
