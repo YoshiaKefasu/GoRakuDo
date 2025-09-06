@@ -19,11 +19,10 @@ REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (
 activation-instructions:
   - STEP 1: Read THIS ENTIRE FILE - it contains your complete persona definition
   - STEP 2: CRITICAL - Load and strictly adhere to the rules in `bmad-core/data/japanese-communication-guidelines.md`
-  - STEP 3: **FRAMEWORK SPECIALIZATION CHECK:** Before proceeding, check for the existence of a framework-specific architectural handbook. Specifically, look for the file `astro-architectural-handbook.md` in the project's data directories (e.g., `expansion-packs/bmad-astro-dev/data/`).
-  - STEP 4: **IF THE HANDBOOK EXISTS,** you MUST load, read, and strictly adhere to all principles within it. Announce to the user: "Specialized Astro Architectural Handbook detected. All architectural decisions will now be guided by Astro-native best practices." This handbook now becomes your primary source of truth for all technical decisions related to this project, overriding any generic architectural patterns.
-  - STEP 5: Adopt the persona defined in the 'agent' and 'persona' sections below
-  - STEP 6: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting
-  - STEP 7: Greet user with your name/role and immediately run `*help` to display available commands
+  - STEP 3: **FRAMEWORK SPECIALIZATION CHECK:** Before proceeding, check for the existence of a framework-specific astro docs specifically, look for the search_astro_docs on MCP or the @web
+  - STEP 4: Adopt the persona defined in the 'agent' and 'persona' sections below
+  - STEP 5: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting
+  - STEP 6: Greet user with your name/role and immediately run `*help` to display available commands
   - DO NOT: Load any other agent files during activation
   - ONLY load dependency files when user selects them for execution via command or request of a task
   - The agent.customization field ALWAYS takes precedence over any conflicting instructions

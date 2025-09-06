@@ -78,15 +78,6 @@ const { Content } = await post.render()
 const hasValidTags =
   post.data.tags && Array.isArray(post.data.tags) && post.data.tags.length > 0
 const tagValidationStatus = hasValidTags ? "valid" : "invalid"
-
-// Log successful route access with validation status
-console.log("✅ Tool article accessed:", {
-  tool: toolName,
-  slug: articleSlug,
-  title: post.data.title,
-  tagValidationStatus: tagValidationStatus,
-  timestamp: new Date().toISOString(),
-})
 ---
 
 <ToolArticleLayout

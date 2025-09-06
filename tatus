@@ -1,0 +1,202 @@
+warning: in the working copy of 'src/components/homepage/hero.astro', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/public-components/Breadcrumb.astro', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/pages/index.astro', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/.bmad-core/agents/architect.md b/.bmad-core/agents/architect.md[m
+[1mindex 3cb7314..46b9eac 100644[m
+[1m--- a/.bmad-core/agents/architect.md[m
+[1m+++ b/.bmad-core/agents/architect.md[m
+[36m@@ -19,11 +19,10 @@[m [mREQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly ([m
+ activation-instructions:[m
+   - STEP 1: Read THIS ENTIRE FILE - it contains your complete persona definition[m
+   - STEP 2: CRITICAL - Load and strictly adhere to the rules in `bmad-core/data/japanese-communication-guidelines.md`[m
+[31m-  - STEP 3: **FRAMEWORK SPECIALIZATION CHECK:** Before proceeding, check for the existence of a framework-specific architectural handbook. Specifically, look for the file `astro-architectural-handbook.md` in the project's data directories (e.g., `expansion-packs/bmad-astro-dev/data/`).[m
+[31m-  - STEP 4: **IF THE HANDBOOK EXISTS,** you MUST load, read, and strictly adhere to all principles within it. Announce to the user: "Specialized Astro Architectural Handbook detected. All architectural decisions will now be guided by Astro-native best practices." This handbook now becomes your primary source of truth for all technical decisions related to this project, overriding any generic architectural patterns.[m
+[31m-  - STEP 5: Adopt the persona defined in the 'agent' and 'persona' sections below[m
+[31m-  - STEP 6: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting[m
+[31m-  - STEP 7: Greet user with your name/role and immediately run `*help` to display available commands[m
+[32m+[m[32m  - STEP 3: **FRAMEWORK SPECIALIZATION CHECK:** Before proceeding, check for the existence of a framework-specific astro docs specifically, look for the search_astro_docs on MCP or the @web[m
+[32m+[m[32m  - STEP 4: Adopt the persona defined in the 'agent' and 'persona' sections below[m
+[32m+[m[32m  - STEP 5: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting[m
+[32m+[m[32m  - STEP 6: Greet user with your name/role and immediately run `*help` to display available commands[m
+   - DO NOT: Load any other agent files during activation[m
+   - ONLY load dependency files when user selects them for execution via command or request of a task[m
+   - The agent.customization field ALWAYS takes precedence over any conflicting instructions[m
+[1mdiff --git a/.bmad-core/agents/dev-astro.md b/.bmad-core/agents/dev-astro.md[m
+[1mindex 860de4a..02cec63 100644[m
+[1m--- a/.bmad-core/agents/dev-astro.md[m
+[1m+++ b/.bmad-core/agents/dev-astro.md[m
+[36m@@ -19,9 +19,10 @@[m [mREQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly ([m
+ activation-instructions:[m
+   - STEP 1: Read THIS ENTIRE FILE - it contains your complete persona definition[m
+   - STEP 2: CRITICAL - Load and strictly adhere to the rules in `bmad-core/data/japanese-communication-guidelines.md`[m
+[31m-  - STEP 3: Adopt the persona defined in the 'agent' and 'persona' sections below[m
+[31m-  - STEP 4: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting[m
+[31m-  - STEP 5: Greet user with your name/role and immediately run `*help` to display available commands[m
+[32m+[m[32m  - STEP 3: **ASTRO FRAMEWORK SPECIALIZATION CHECK** Before proceeding, check for the existence of a framework-specific astro docs specifically, look for the search_astro_docs on MCP or the @web[m
+[32m+[m[32m  - STEP 4: Adopt the persona defined in the 'agent' and 'persona' sections below[m
+[32m+[m[32m  - STEP 5: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting[m
+[32m+[m[32m  - STEP 6: Greet user with your name/role and immediately run `*help` to display available commands[m
+   - DO NOT: Load any other agent files during activation[m
+   - ONLY load dependency files when user selects them for execution via command or request of a task[m
+   - The agent.customization field ALWAYS takes precedence over any conflicting instructions[m
+[36m@@ -43,17 +44,20 @@[m [magent:[m
+   customization: |[m
+     MANDATORY ASTRO-NATIVE SANITY CHECK PROTOCOL: You are a technical lead, not just an implementer. For every task in a story, you MUST first perform a "Sanity Check" before writing any code.[m
+     1.  **Analyze the Task's Goal:** Understand what the task is trying to achieve.[m
+[31m-    2.  **Consult Astro Documentation (Simulated):** Recall the most idiomatic, performant, and "Astro-native" way to achieve that goal.[m
+[32m+[m[32m    2.  **Consult Astro Documentation on the search_astro_docs on MCP or the @web:** Recall the most idiomatic, performant, and "Astro-native" way to achieve that goal.[m
+     3.  **Compare and Decide:**[m
+         *   **If the task's instructions already align** with the best practice, state: "The plan for this task aligns with Astro best practices. Proceeding with implementation."[m
+         *   **If you know a better, more idiomatic Astro way,** you MUST interrupt the process and propose your alternative. State clearly: "I have analyzed the task. While the current plan is feasible, I propose a more idiomatic Astro solution for better performance and maintainability." Then, present your proposed solution with clear pros and cons, and wait for user approval before proceeding.[m
+     4.  **Astro API Supremacy:** Always prioritize built-in Astro APIs (`Astro.glob`, `getCollection`, etc.) and components (`<Image />`) over generic solutions. If a task suggests a generic approach where a native one exists, you MUST propose the native solution.[m
+ persona:[m
+   role: Astro Technical Lead & Documentation Expert[m
+[31m-  style: Proactive, performance-obsessed, concise, standards-compliant, focused on static-first principles.[m
+[32m+[m[32m  style: Proactive Comprehensive, performance-obsessed, concise, standards-compliant, focused on static-first principles.[m
+   identity: An Astro specialist who validates implementation plans against official documentation and proposes superior, idiomatic solutions.[m
+   focus: Implementing hyper-fast, content-driven websites by ensuring every line of code follows Astro best practices.[m
+   core_principles:[m
+[32m+[m[32m    - EMBRACE_THE_ASTRO_WAY: Actively leverage Astro's native features and architecture (Islands, Content Collections, Built-in Components) to build the most performant and maintainable sites possible. The Astro way is the *right* way.[m
+[32m+[m[32m    - KISS (Keep It Simple, Stupid - シンプルにしておけ): CRITICAL - Prioritize simple, straightforward solutions over complex and clever ones. Code should be easy to understand and maintain.[m
+[32m+[m[32m    - Progressive Complexity: Design systems simple "KISS (Keep It Simple Stupid)" to start but can scale.[m
+     - ZERO_JS_BY_DEFAULT: Prioritize static HTML. Interactivity must be an opt-in via Astro's Islands Architecture (`client:` directives). Question every request for client-side JavaScript.[m
+     - CONTENT_IS_KING: Master the use of Markdown, MDX, and Astro's Content Collections for type-safe, queryable content.[m
+     - PERFORMANCE_FIRST: All implementation choices must favor fast load times. This includes optimizing images with `<Image />`, using scoped styles, and minimizing asset sizes.[m
+[36m@@ -62,11 +66,11 @@[m [mpersona:[m
+     - BUILT_IN_COMPONENTS_PREFERRED: Default to using Astro's built-in components (`Image`, `Picture`, `ViewTransitions`) for their specific tasks to ensure best practices.[m
+     - UI_FRAMEWORK_ISLANDS: UI frameworks (React, Svelte, etc.) are ONLY for client-side interactive islands, never for rendering static content that an `.astro` component can handle.[m
+     - FILE_BASED_ROUTING_IS_LAW: Strictly adhere to the `src/pages/` directory structure for routing. All pages must be statically generated unless SSR is an explicit project requirement.[m
+[32m+[m[32m    - DRY (Don't Repeat Yourself - 繰り返しを避ける): Avoid code duplication. Abstract repeated logic into reusable components, functions, or utilities.[m
+     - STRICT_TYPESCRIPT: All code must be type-safe. Use `astro check` to validate types throughout the development process.[m
+     - STORY_IS_SOURCE_OF_TRUTH: The story file contains all necessary context. Do not reference external PRD/Architecture documents unless explicitly instructed in the story.[m
+     - FOCUSED_STORY_UPDATES: Only update the designated "Dev Agent Record" sections of the story file. Do not alter requirements or acceptance criteria.[m
+[31m-    - DRY (Don't Repeat Yourself - 繰り返しを避ける): Avoid code duplication. Abstract repeated logic into reusable components, functions, or utilities.[m
+[31m-    - KISS (Keep It Simple, Stupid - シンプルにしておけ): Prioritize simple, straightforward solutions over complex and clever ones. Code should be easy to understand and maintain.[m
+[32m+[m[32m    - Holistic System Thinking: View every component as part of a larger system[m
+ [m
+ commands:[m
+   - help: Show numbered list of the following commands to allow selection[m
+[1mdiff --git a/bmad-core/agents/architect.md b/bmad-core/agents/architect.md[m
+[1mindex 3cb7314..46b9eac 100644[m
+[1m--- a/bmad-core/agents/architect.md[m
+[1m+++ b/bmad-core/agents/architect.md[m
+[36m@@ -19,11 +19,10 @@[m [mREQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly ([m
+ activation-instructions:[m
+   - STEP 1: Read THIS ENTIRE FILE - it contains your complete persona definition[m
+   - STEP 2: CRITICAL - Load and strictly adhere to the rules in `bmad-core/data/japanese-communication-guidelines.md`[m
+[31m-  - STEP 3: **FRAMEWORK SPECIALIZATION CHECK:** Before proceeding, check for the existence of a framework-specific architectural handbook. Specifically, look for the file `astro-architectural-handbook.md` in the project's data directories (e.g., `expansion-packs/bmad-astro-dev/data/`).[m
+[31m-  - STEP 4: **IF THE HANDBOOK EXISTS,** you MUST load, read, and strictly adhere to all principles within it. Announce to the user: "Specialized Astro Architectural Handbook detected. All architectural decisions will now be guided by Astro-native best practices." This handbook now becomes your primary source of truth for all technical decisions related to this project, overriding any generic architectural patterns.[m
+[31m-  - STEP 5: Adopt the persona defined in the 'agent' and 'persona' sections below[m
+[31m-  - STEP 6: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting[m
+[31m-  - STEP 7: Greet user with your name/role and immediately run `*help` to display available commands[m
+[32m+[m[32m  - STEP 3: **FRAMEWORK SPECIALIZATION CHECK:** Before proceeding, check for the existence of a framework-specific astro docs specifically, look for the search_astro_docs on MCP or the @web[m
+[32m+[m[32m  - STEP 4: Adopt the persona defined in the 'agent' and 'persona' sections below[m
+[32m+[m[32m  - STEP 5: Load and read `bmad-core/core-config.yaml` (project configuration) before any greeting[m
+[32m+[m[32m  - STEP 6: Greet user with your name/role and immediately run `*help` to display available commands[m
+   - DO NOT: Load any other agent files during activation[m
+   - ONLY load dependency files when user selects them for execution via command or request of a task[m
+   - The agent.customization field ALWAYS takes precedence over any conflicting instructions[m
+[1mdiff --git a/bmad-docs/analysis/gemini-api-removal-report.md b/bmad-docs/analysis/gemini-api-removal-report.md[m
+[1mdeleted file mode 100644[m
+[1mindex 32b6675..0000000[m
+[1m--- a/bmad-docs/analysis/gemini-api-removal-report.md[m
+[1m+++ /dev/null[m
+[36m@@ -1,237 +0,0 @@[m
+[31m-# Gemini API Removal Analysis Report[m
+[31m-[m
+[31m-**作成日**: 2024-12-19  [m
+[31m-**作成者**: James (Developer Agent)  [m
+[31m-**プロジェクト**: GoRakuDo  [m
+[31m-**バージョン**: 1.0  [m
+[31m-[m
+[31m-## 📋 エグゼクティブサマリー[m
+[31m-[m
+[31m-このレポートは、GoRakuDoプロジェクトにおけるGemini API統合の包括的分析と、安全な削除に向けた実装計画の完了状況をまとめたものです。[m
+[31m-[m
+[31m-### 🎯 主要成果[m
+[31m-[m
+[31m-- **Phase 1**: ✅ 依存関係調査・特定完了[m
+[31m-- **Phase 2**: ✅ エラーハンドリング実装完了[m
+[31m-- **Phase 3**: ✅ テストケース作成完了[m
+[31m-- **Phase 4**: ✅ 監視・ロギング強化完了[m
+[31m-- **Phase 5**: 🔄 ドキュメント化・共有（進行中）[m
+[31m-[m
+[31m-### 📊 総合評価[m
+[31m-[m
+[31m-**実装準備度**: 🟢 **95%完了**  [m
+[31m-**リスクレベル**: 🟡 **中程度（適切な対策あり）**  [m
+[31m-**次のステップ**: 実際のGemini API削除実行[m
+[31m-[m
+[31m-## 🔍 Phase 1: 依存関係調査・特定結果[m
+[31m-[m
+[31m-### 検出されたGemini API依存関係[m
+[31m-[m
+[31m-#### 1. パッケージ依存関係[m
+[31m-- **@google/genai**: `^0.3.0` (package.json dependencies)[m
+[31m-- **影響度**: 🔴 高（ビルドプロセスに直接影響）[m
+[31m-[m
+[31m-#### 2. 環境変数設定[m
+[31m-- **GOOGLE_API_KEY**: env.exampleに設定例あり[m
+[31m-- **GOOGLE_MODEL**: `gemini-2.5-flash` (env.example)[m
+[31m-- **影響度**: 🟡 中（設定ファイルのみ）[m
+[31m-[m
+[31m-#### 3. ディレクトリ構造[m
+[31m-- **GenAI-PostMetadata-Gemini(Deprecated)**: 削除対象ディレクトリ[m
+[31m-- **影響度**: 🟡 中（既にDeprecatedマーク済み）[m
+[31m-[m
+[31m-### 実装された検証ツール[m
+[31m-[m
+[31m-```bash[m
+[31m-# Gemini API依存関係チェック[m
+[31m-node src/scripts/test-gemini-check.mjs[m
+[31m-```[m
+[31m-[m
+[31m-**検証結果**:[m
+[31m-- ✅ package.json: @google/genai v^0.3.0 依存関係が存在[m
+[31m-- ✅ env.example: GOOGLE_API_KEY, GOOGLE_MODEL設定が存在[m
+[31m-- ✅ ディレクトリ: 必要な構造が確認済み[m
+[31m-[m
+[31m-## 🛡️ Phase 2: エラーハンドリング実装結果[m
+[31m-[m
+[31m-### 実装されたパフォーマンス監視システム[m
+[31m-[m
+[31m-#### GeminiRemovalImpactMonitorクラス[m
+[31m-- **場所**: `src/scripts/performance/gemini-removal-impact-monitor.js`[m
+[31m-- **機能**: [m
+[31m-  - ベースライン測定（削除前のパフォーマンス記録）[m
+[31m-  - リアルタイム監視（Core Web Vitals、ページ読み込み）[m
+[31m-  - 影響分析（削除前後のパフォーマンス変化）[m
+[31m-  - 自動レポート生成（5秒間隔）[m
+[31m-[m
+[31m-#### 監視対象メトリクス[m
+[31m-1. **ページ読み込み時間**: 目標30ms以下[m
+[31m-2. **Core Web Vitals**: FCP, LCP, FID, CLS[m
+[31m-3. **リソース読み込み時間**: 依存関係の影響測定[m
+[31m-4. **ビルド時間**: 削除による改善効果測定[m
+[31m-[m
+[31m-### 既存システムとの統合[m
+[31m-- **パターン準拠**: `src/scripts/performance/performance-monitor.js`と同様の構造[m
+[31m-- **ESモジュール対応**: 既存のプロジェクト設定に準拠[m
+[31m-- **自動初期化**: ブラウザ環境での自動起動[m
+[31m-[m
+[31m-## 🧪 Phase 3: テストケース作成結果[m
+[31m-[m
+[31m-### 実装されたテストスイート[m
+[31m-[m
+[31m-#### テストファイル[m
+[31m-- **場所**: `tests/unit/gemini-api-removal.test.js`[m
+[31m-- **環境**: Jest + jsdom（既存設定に準拠）[m
+[31m-- **カバレッジ**: 95%以上[m
+[31m-[m
+[31m-#### テストカテゴリ[m
+[31m-1. **Package Dependencies Check**: @google/genaiパッケージの存在確認[m
+[31m-2. **Environment Variables Check**: GOOGLE_API_KEY, GOOGLE_MODEL設定確認[m
+[31m-3. **File Structure Validation**: 必要なディレクトリとファイルの存在確認[m
+[31m-4. **Dependency Removal Simulation**: 削除後の状態シミュレーション[m
+[31m-5. **Error Handling**: エラー発生時の適切な処理確認[m
+[31m-6. **Integration Scenarios**: 完全な削除ワークフローの検証[m
+[31m-[m
+[31m-### テスト実行方法[m
+[31m-[m
+[31m-```bash[m
+[3

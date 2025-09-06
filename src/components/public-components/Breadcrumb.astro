@@ -36,9 +36,22 @@ export interface Props {
   theme?: "light" | "dark" | "auto"
   showIcons?: boolean
 
-  // Layout
+  // Typography customization
+  fontSize?: "xs" | "sm" | "base" | "lg" | "xl"
+  fontWeight?: "normal" | "medium" | "semibold" | "bold"
+
+  // Layout and spacing
   orientation?: "horizontal" | "vertical"
+  spacing?: "tight" | "normal" | "loose"
+  alignment?: "left" | "center" | "right"
   maxItems?: number
+
+  // Separator customization
+  separator?: "chevron" | "slash" | "arrow" | "dot"
+
+  // Interactive effects
+  hoverEffects?: boolean
+  focusVisible?: boolean
 
   // Accessibility
   ariaLabel?: string
@@ -62,9 +75,22 @@ const {
   theme = "auto",
   showIcons = false,
 
-  // Layout
+  // Typography customization
+  fontSize = "sm",
+  fontWeight = "medium",
+
+  // Layout and spacing
   orientation = "horizontal",
+  spacing = "normal",
+  alignment = "left",
   maxItems = 5,
+
+  // Separator customization
+  separator = "chevron",
+
+  // Interactive effects
+  hoverEffects = true,
+  focusVisible = true,
 
   // Accessibility
   ariaLabel = "Breadcrumb navigation",
@@ -192,9 +218,24 @@ try {
 // KISS Principle: Simple, focused styling
 
 const getSeparator = (): string => {
-  return `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-  </svg>`;
+  switch (separator) {
+    case "chevron":
+      return `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>`;
+    case "slash":
+      return `<span class="text-muted-foreground">/</span>`;
+    case "arrow":
+      return `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+      </svg>`;
+    case "dot":
+      return `<span class="text-muted-foreground">•</span>`;
+    default:
+      return `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>`;
+  }
 };
 
 // CSS Variables (simplified)
@@ -202,6 +243,13 @@ const cssVars = `
   --breadcrumb-variant: ${variant};
   --breadcrumb-theme: ${theme};
   --breadcrumb-orientation: ${orientation};
+  --breadcrumb-font-size: ${fontSize};
+  --breadcrumb-font-weight: ${fontWeight};
+  --breadcrumb-spacing: ${spacing};
+  --breadcrumb-alignment: ${alignment};
+  --breadcrumb-separator: ${separator};
+  --breadcrumb-hover-effects: ${hoverEffects ? 'enabled' : 'disabled'};
+  --breadcrumb-focus-visible: ${focusVisible ? 'enabled' : 'disabled'};
 `;
 
 // ========== SEO STRUCTURED DATA ==========

@@ -3,6 +3,7 @@
 
 **CRITICAL DOCUMENT:** This is a living document and the single source of truth for all Astro implementation patterns in this project. All agents, especially `dev-astro` and `architect`, MUST adhere to these guidelines. These rules override any generic best practices.
 
+**Mandatory:** Always Search for Astro documentation in search_astro_docs on MCP or @web.
 **Purpose:** To ensure consistency, performance, and maintainability across the entire Astro codebase.
 
 ---

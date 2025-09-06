@@ -112,9 +112,6 @@ let enhancedContent: string = post.body
 relatedContent = []
 internalLinks = []
 enhancedContent = post.body
-
-// Metadata processing removed
-console.log(`📝 Post "${post.slug}" processed without AI features`)
 ---
 
 <html lang="ja">
@@ -137,7 +134,7 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
       href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
       as="script"
     />
-    <script src="/core/post-script.js" is:inline></script>
+    <script is:inline src="/core/post-script.js"></script>
 
     <!-- Fonts with display=swap for better performance -->
     <link
