@@ -175,9 +175,6 @@
     line-height: 1.6; /* Preserved from legacy */
     letter-spacing: -0.01em; /* Slightly tighter for modern feel */
     flex-direction: column;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
 
     /* Critical theme colors - mapped from legacy hex to OKLCH */
     background-color: transparent; /* Transparent to allow canvas animation to show through */
@@ -863,9 +860,38 @@
     transition: background 0.3s ease;
   }
 
-  /* Legacy button base styles - preserved exactly */
+  /* --- Reusable Components & Transitions --- */
+  .primary-button,
+  .secondary-button,
   .cta-button,
-  .docs-button {
+  .docs-button,
+  .get-started-btn,
+  .nav-item,
+  .feature-card,
+  .discord-link {
+    transition:
+      transform var(--transition-speed) ease,
+      background-color var(--transition-speed) ease,
+      border-color var(--transition-speed) ease,
+      box-shadow var(--transition-speed) ease,
+      color var(--transition-speed) ease;
+  }
+  .primary-button:hover,
+  .secondary-button:hover,
+  .cta-button:hover,
+  .docs-button:hover,
+  .get-started-btn:hover,
+  .discord-link:hover {
+    transform: translateY(-3px);
+  }
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--clr-accent-glow-strong);
+    box-shadow: 0 10px 30px var(--clr-accent-glow-medium);
+  }
+
+  /* Legacy button base styles - preserved exactly */
+  .cta-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -889,11 +915,6 @@
     color: var(--color-text-primary);
   }
 
-  .docs-button {
-    background: transparent;
-    border: 2px solid rgba(228, 180, 59, 0.25);
-    color: var(--color-gold-dark);
-  }
 
   /* Loading states - preserved from legacy */
   .loading {

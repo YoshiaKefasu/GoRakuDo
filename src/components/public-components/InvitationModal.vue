@@ -265,46 +265,28 @@ function animateContent() {
 <style scoped>
 /* Import fonts to match discord.astro exactly */
 @import url("https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap");
+/* Import Tailwind CSS for this component */
+@import "tailwindcss";
+
 
 /* Modal overlay with responsive scrolling - FIXED for mobile overflow */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-  display: flex;
-  align-items: center; /* Default center for desktop */
-  justify-content: center;
-  padding: 20px;
-  z-index: 1000;
-  color: #333;
-  /* Enable smooth scrolling on mobile */
-  overflow-y: auto; /* Enable vertical scrolling */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
-  scroll-behavior: smooth; /* Modern browsers */
-}
 
-/* Main invitation container - responsive for mobile scrolling with wave pattern background and FIXED DESKTOP WIDTH */
+
+/* Main invitation container - migrated to Tailwind with responsive utilities */
 .invitation-container {
-  background-color: #fdfdf6;
+  @apply bg-[#fdfdf6] border border-[#e0dcd8] rounded-xl relative mx-auto min-h-fit;
+  @apply shadow-[0_20px_60px_rgba(139,93,255,0.2)] animate-[fadeIn_1s_ease-out];
+
+  /* Desktop width - using Tailwind responsive utilities */
+  @apply w-[600px] max-w-[600px] min-w-[600px] p-12;
+
+  /* Mobile responsive adjustments using Tailwind responsive prefixes */
+  @apply p-8 md:p-12; /* Smaller padding on mobile */
+  @apply w-screen max-w-screen min-w-screen md:w-[600px] md:max-w-[600px] md:min-w-[600px];
+  @apply rounded-none md:rounded-xl; /* Remove border radius on mobile */
+
+  /* Preserve complex wave background pattern - cannot be migrated to Tailwind */
   background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"%3E%3Cg fill="none" stroke="%23DCD9D5" stroke-width="1"%3E%3Cpath d="M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30S1000 75 1000 75"/%3E%3Cpath d="M-500 125c0 0 125-30 250-30S0 125 0 125s125 30 250 30s250-30 250-30s125-30 250-30S1000 125 1000 125"/%3E%3Cpath d="M-500 175c0 0 125-30 250-30S0 175 0 175s125 30 250 30s250-30 250-30s125-30 250-30S1000 175 1000 175"/%3E%3Cpath d="M-500 225c0 0 125-30 250-30S0 225 0 225s125 30 250 30s250-30 250-30s125-30 250-30S1000 225 1000 225"/%3E%3Cpath d="M-500 275c0 0 125-30 250-30S0 275 0 275s125 30 250 30s250-30 250-30s125-30 250-30S1000 275 1000 275"/%3E%3Cpath d="M-500 325c0 0 125-30 250-30S0 325 0 325s125 30 250 30s250-30 250-30s125-30 250-30S1000 325 1000 325"/%3E%3Cpath d="M-500 375c0 0 125-30 250-30S0 375 0 375s125 30 250 30s250-30 250-30s125-30 250-30S1000 375 1000 375"/%3E%3Cpath d="M-500 425c0 0 125-30 250-30S0 425 0 425s125 30 250 30s250-30 250-30s125-30 250-30S1000 425 1000 425"/%3E%3Cpath d="M-500 475c0 0 125-30 250-30S0 475 0 475s125 30 250 30s250-30 250-30s125-30 250-30S1000 475 1000 475"/%3E%3Cpath d="M-500 525c0 0 125-30 250-30S0 525 0 525s125 30 250 30s250-30 250-30s125-30 250-30S1000 525 1000 525"/%3E%3Cpath d="M-500 575c0 0 125-30 250-30S0 575 0 575s125 30 250 30s250-30 250-30s125-30 250-30S1000 575 1000 575"/%3E%3Cpath d="M-500 625c0 0 125-30 250-30S0 625 0 625s125 30 250 30s250-30 250-30s125-30 250-30S1000 625 1000 625"/%3E%3Cpath d="M-500 675c0 0 125-30 250-30S0 675 0 675s125 30 250 30s250-30 250-30s125-30 250-30S1000 675 1000 675"/%3E%3Cpath d="M-500 725c0 0 125-30 250-30S0 725 0 725s125 30 250 30s250-30 250-30s125-30 250-30S1000 725 1000 725"/%3E%3Cpath d="M-500 775c0 0 125-30 250-30S0 775 0 775s125 30 250 30s250-30 250-30s125-30 250-30S1000 775 1000 775"/%3E%3C/g%3E%3C/svg%3E');
-  border: 1px solid #e0dcd8;
-
-  /* FIXED DESKTOP WIDTH - No expansion beyond 600px */
-  max-width: 600px;
-  width: 600px; /* Fixed width for desktop */
-  min-width: 600px; /* Prevent shrinking */
-
-  padding: 50px;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(139, 93, 255, 0.2);
-  position: relative;
-  animation: fadeIn 1s ease-out;
-  margin: auto;
-  min-height: fit-content;
 }
 
 /* Fade-in animation matching discord.astro */
@@ -319,174 +301,118 @@ function animateContent() {
   }
 }
 
-/* Back button styling - responsive positioning */
+/* Back button styling - migrated to Tailwind with responsive utilities */
 .back-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #666;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  z-index: 10; /* Ensure it's above content */
+  @apply absolute top-5 left-5 bg-transparent border-none text-2xl text-gray-600 cursor-pointer;
+  @apply w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300;
+  @apply z-10 hover:bg-gray-100 hover:text-gray-800;
+
+  /* Mobile responsive adjustments using Tailwind responsive prefixes */
+  @apply sticky top-2.5 left-2.5 w-12 h-12 text-xl;
+  @apply md:absolute md:top-5 md:left-5 md:w-10 md:h-10 md:text-2xl;
 }
 
-.back-button:hover {
-  background: #f0f0f0;
-  color: #333;
-}
-
-/* Header section */
+/* Header section - migrated to Tailwind */
 .header {
-  text-align: center;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 25px;
-  margin-bottom: 30px;
+  @apply text-center border-b border-gray-200 pb-6 mb-8;
 }
 
-/* Japanese title - responsive typography */
+/* Japanese title - migrated to Tailwind with responsive utilities */
 .japanese-title {
+  @apply text-gray-800 leading-none;
   font-family: "Yuji Syuku", serif;
-  font-size: 4.5rem;
-  color: #2a2a2a;
-  ruby-position: over;
   font-weight: 400;
-  line-height: 1;
+  ruby-position: over;
+
+  /* Responsive font sizes using Tailwind */
+  @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
 }
 
 .japanese-title rt {
+  @apply text-xs md:text-sm font-semibold text-gray-600;
   font-family: "Inter", sans-serif;
-  font-size: 0.9rem;
-  color: #555;
-  font-weight: 600;
 }
 
-/* Content styling - responsive typography */
+/* Content styling - migrated to Tailwind with responsive utilities */
 .content {
-  color: #3c3c3c;
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 30px;
+  @apply text-gray-700 leading-relaxed mb-8;
   font-family: "Lora", serif;
+
+  /* Responsive font sizes using Tailwind */
+  @apply text-sm md:text-base lg:text-lg xl:text-xl;
 }
 
 .content p {
-  margin-bottom: 1.2em;
+  @apply mb-3 md:mb-4 lg:mb-5;
 }
 
 .content strong {
-  color: #333;
+  @apply text-gray-800 font-bold;
 }
 
-/* Member list styling */
+/* Member list styling - migrated to Tailwind */
 .member-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 25px 0;
+  @apply list-none pl-0 my-4 md:my-6;
 }
 
 .member-list li {
-  margin-bottom: 10px;
+  @apply mb-2 md:mb-2.5 lg:mb-3 text-sm md:text-base;
   font-family: "Inter", sans-serif;
 }
 
-/* Final pitch styling */
+/* Final pitch styling - migrated to Tailwind with responsive utilities */
 .final-pitch {
-  font-weight: 600;
-  text-align: center;
-  font-size: 1.15rem;
-  margin-top: 30px;
-  color: #333;
+  @apply font-semibold text-center mt-6 md:mt-8 text-gray-800;
+  @apply text-base md:text-lg lg:text-xl;
 }
 
-/* Discord link styling - exact replica */
+/* Discord link styling - migrated to Tailwind with responsive utilities */
 .discord-link {
-  display: block;
-  text-decoration: none;
-  color: #333;
-  background-color: #f8f9fa;
-  border: 1px solid #eaeaea;
-  margin-left: 2.5px !important;
-  margin-right: 2.5px !important;
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 20px;
-  margin-bottom: 40px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.discord-link:hover {
-  border-color: #8b5dff;
-  box-shadow: 0 5px 15px rgba(139, 93, 255, 0.2);
-  transform: scale(1.02);
+  @apply block no-underline text-gray-800 bg-gray-50 border border-gray-200;
+  @apply p-5 rounded-lg mt-5 mb-10 transition-all duration-300 cursor-pointer;
+  @apply hover:border-purple-500 hover:shadow-[0_5px_15px_rgba(139,93,255,0.2)] hover:scale-[1.02];
+  margin-left: 2.5px !important; /* Preserve exact margin */
+  margin-right: 2.5px !important; /* Preserve exact margin */
 }
 
 .discord-header {
+  @apply font-semibold text-xs md:text-sm text-gray-600 mb-2;
   font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 8px;
 }
 
 .discord-url {
+  @apply font-semibold text-base md:text-lg text-[var(--clr-accent)] break-words;
   font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #8b5dff;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
 }
 
 .arrow {
-  font-weight: bold;
-  transition: transform 0.2s ease;
-  display: inline-block;
+  @apply font-bold transition-transform duration-200 inline-block;
 }
 
 .discord-link:hover .arrow {
-  transform: translateX(5px);
+  @apply translate-x-1;
 }
 
-/* Signature section - responsive layout */
+/* Signature section - migrated to Tailwind with responsive utilities */
 .signature {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 20px;
+  @apply flex justify-between items-end mt-5;
 }
 
 .logo-stamp {
-  width: 80px;
-  height: 80px;
-  opacity: 0.85;
-  flex-shrink: 0;
+  @apply w-16 h-16 md:w-20 md:h-20 opacity-85 flex-shrink-0;
 }
 
 .signature-text {
-  text-align: right;
+  @apply text-right;
 }
 
 .signature-title {
-  text-align: right;
-  margin-bottom: -10px;
-  color: #333;
+  @apply text-right -mb-2.5 text-gray-800;
 }
 
 .signature-name {
+  @apply text-xl md:text-2xl text-gray-800 text-right;
   font-family: "Cedarville Cursive", cursive;
-  font-size: 1.9rem;
-  color: #333;
-  text-align: right;
 }
 
 /* Floating particles - ensure they don't interfere with scrolling */
@@ -929,6 +855,7 @@ function animateContent() {
   }
 
   .modal-overlay {
+    @apply fixed inset-0 flex items-center justify-center p-5 bg-gradient-to-br from-gray-900/80 to-gray-800/80 overflow-y-auto;
     align-items: center;
     justify-content: center;
     padding: 20px;
