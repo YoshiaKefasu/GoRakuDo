@@ -9,13 +9,13 @@ declare global {
   const onMounted: typeof import('vue')['onMounted'];
 
   interface Window {
-    clientLogger: {
+    clientLogger?: {
       log: (
         message: string,
         level?: 'info' | 'success' | 'warning' | 'error'
       ) => void;
-      startGroup: (title: string) => void;
-      endGroup: (title: string) => void;
+      startGroup?: (title: string) => void;
+      endGroup?: (title: string) => void;
     };
     searchLoadingManager?: {
       isLoading: boolean;

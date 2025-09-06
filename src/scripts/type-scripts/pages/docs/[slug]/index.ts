@@ -8,7 +8,7 @@ import type { PostData, PostUtilities } from './types.js';
 import { sharePost, addReadingProgress, loadEnhancements, initializeLocalStorageSettings } from './utilities.js';
 import { initializeContentRendering } from './content-renderer.js';
 import { initializeWaveAnimation } from './wave-animation.js';
-import { setupGlobalNavigationFunctions, setupScrollAnimations, handleNavbarScroll } from './navigation-utils.js';
+import { setupGlobalNavigationFunctions, setupScrollAnimations, handleNavbarScroll } from '../shared-navigation.js';
 
 /**
  * 投稿ユーティリティの実装

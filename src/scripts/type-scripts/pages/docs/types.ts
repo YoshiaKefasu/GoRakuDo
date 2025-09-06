@@ -1,7 +1,15 @@
 /**
  * TypeScript型定義 - docs.astro分離スクリプト
  * Astroネイティブ + Strict TypeScript + ES Modules
+ * DRY原則: 共通型定義をshared-types.tsからインポート
  */
+
+// 共通型定義のインポート
+export type { WaveConfig, LogLevel, ILogger, IAnimationManager } from './shared-types.js';
+
+// ============================================================================
+// docs専用の型定義
+// ============================================================================
 
 // 検索結果の型定義
 export interface SearchResult {
@@ -88,61 +96,10 @@ export interface FilterConfig {
   description?: string;
 }
 
-// グローバルウィンドウオブジェクトの拡張
-declare global {
-  interface Window {
-    clientLogger: {
-      log: (message: string, level?: 'info' | 'success' | 'warning' | 'error') => void;
-      startGroup: (title: string) => void;
-      endGroup: (title: string) => void;
-    };
-    searchLoadingManager?: ISearchLoadingManager;
-    searchEngine?: IModernSearchEngine;
-    waveAnimation?: { cleanup: () => void } | null;
-    contentConfig?: {
-      getCategories?: () => unknown[];
-      getTags?: () => unknown[];
-      categories?: Record<string, FilterConfig>;
-      tags?: Record<string, FilterConfig>;
-      filters?: Record<string, FilterConfig>;
-      mindMap?: Record<string, { customFilters?: FilterConfig[] }>;
-      search?: Record<string, unknown>;
-    } | {
-      getCategories: () => unknown[];
-      getTags: () => unknown[];
-      categories: Record<string, FilterConfig>;
-      tags: Record<string, FilterConfig>;
-      filters: Record<string, FilterConfig>;
-      mindMap: Record<string, { customFilters?: FilterConfig[] }>;
-      search: Record<string, unknown>;
-    };
-    allPosts?: SearchData[];
-    Fuse?: unknown;
-  }
-}
-
-// 波アニメーション関連の型定義
-export interface WaveConfig {
-  amplitude: number;
-  frequency: number;
-  speed: number;
-  offset: number;
-  color: string;
-  y: number;
-  yPos: number;
-}
-
-export interface WaveStarsAnimationManager {
-  cleanup: () => void;
-}
-
-export interface IWaveStarsAnimationManager {
-  init(): { cleanup: () => void } | null;
-  cleanup(): void;
-  logMessage(message: string, level?: 'info' | 'success' | 'warning' | 'error'): void;
-}
-
+// ============================================================================
 // インターフェース定義（実装クラス用）
+// ============================================================================
+
 export interface ISearchLoadingManager {
   searchInput: HTMLInputElement | null;
   filterButtons: NodeListOf<HTMLButtonElement>;
@@ -178,4 +135,11 @@ export interface IModernSearchEngine {
   getPerformanceReport(): PerformanceMetrics & { cacheSize: number; searchDataSize: number };
   search(query: string): Promise<unknown[]>;
   filter(filters: Record<string, unknown>): unknown[];
+}
+
+// 波アニメーション管理インターフェース
+export interface IWaveStarsAnimationManager {
+  init(): { cleanup: () => void } | null;
+  cleanup(): void;
+  logMessage(message: string, level?: 'info' | 'success' | 'warning' | 'error'): void;
 }

@@ -55,8 +55,8 @@ export class ModernSearchEngine implements IModernSearchEngine {
       this.logMessage(`Loaded ${this.searchData.length} posts for search`, "success");
 
       // ローディングマネージャーに準備完了を通知
-      if (window.searchLoadingManager) {
-        window.searchLoadingManager.setReadyState();
+      if (window.searchLoadingManager && typeof window.searchLoadingManager === 'object' && window.searchLoadingManager !== null && 'setReadyState' in window.searchLoadingManager) {
+        (window.searchLoadingManager as { setReadyState: () => void }).setReadyState();
       }
 
       return true;
@@ -64,8 +64,8 @@ export class ModernSearchEngine implements IModernSearchEngine {
       this.logMessage(`Failed to initialize search engine: ${error}`, "error");
 
       // エラー状態を設定
-      if (window.searchLoadingManager) {
-        window.searchLoadingManager.setErrorState("Sistem pencarian gagal dimuat");
+      if (window.searchLoadingManager && typeof window.searchLoadingManager === 'object' && window.searchLoadingManager !== null && 'setErrorState' in window.searchLoadingManager) {
+        (window.searchLoadingManager as { setErrorState: (message: string) => void }).setErrorState("Sistem pencarian gagal dimuat");
       }
 
       return false;
@@ -495,7 +495,9 @@ export class ModernSearchEngine implements IModernSearchEngine {
 
     // コンテンツ設定からフィルターを検索
     const filters = window.contentConfig?.filters || {};
-    const filter = Object.values(filters).find((f: FilterConfig) => f.name === filterType);
+    const filter = Object.values(filters).find((f: unknown): f is FilterConfig => 
+      typeof f === 'object' && f !== null && 'name' in f && (f as FilterConfig).name === filterType
+    );
 
     if (filter) {
       return filter;
@@ -504,7 +506,9 @@ export class ModernSearchEngine implements IModernSearchEngine {
     // マインドマップフィルターをチェック
     const mindMapConfig = window.contentConfig?.mindMap;
     if (mindMapConfig && 'customFilters' in mindMapConfig && Array.isArray(mindMapConfig.customFilters)) {
-      const mindMapFilter = mindMapConfig.customFilters.find((f: FilterConfig) => f.name === filterType);
+      const mindMapFilter = mindMapConfig.customFilters.find((f: unknown): f is FilterConfig => 
+        typeof f === 'object' && f !== null && 'name' in f && (f as FilterConfig).name === filterType
+      );
       if (mindMapFilter) {
         return mindMapFilter;
       }
@@ -518,7 +522,7 @@ export class ModernSearchEngine implements IModernSearchEngine {
    * DRY原則: フィルター適用の共通化
    */
   public applyContentFilter(filterConfig: FilterConfig): void {
-    const posts = window.allPosts || [];
+    const posts = (window.allPosts || []) as SearchData[];
     let filteredPosts: SearchData[] = [];
 
     switch (filterConfig.type) {

@@ -1,8 +1,15 @@
 /**
  * TypeScript型定義 - [slug].astro分離スクリプト
  * Astroネイティブ + Strict TypeScript + ES Modules
- * DRY・KISS原則に従った型定義
+ * DRY原則: 共通型定義をshared-types.tsからインポート
  */
+
+// 共通型定義のインポート
+export type { WaveConfig, LogLevel, ILogger, IAnimationManager } from '../shared-types.js';
+
+// ============================================================================
+// [slug]専用の型定義
+// ============================================================================
 
 // 投稿データの型定義
 export interface PostData {
@@ -57,27 +64,9 @@ export interface SkeletonConfig {
   container: HTMLElement | null;
 }
 
-// 波アニメーション関連の型定義
-export interface WaveConfig {
-  amplitude: number;
-  frequency: number;
-  speed: number;
-  offset: number;
-  color: string;
-  y: number;
-  yPos: number;
-}
-
-// グローバルウィンドウオブジェクトの拡張
-declare global {
-  interface Window {
-    enhancedContent?: string;
-    marked?: {
-      setOptions: (options: ContentRenderConfig) => void;
-      parse: (content: string) => string;
-    };
-  }
-}
+// ============================================================================
+// インターフェース定義（実装クラス用）
+// ============================================================================
 
 // ユーティリティ関数の型定義
 export interface PostUtilities {

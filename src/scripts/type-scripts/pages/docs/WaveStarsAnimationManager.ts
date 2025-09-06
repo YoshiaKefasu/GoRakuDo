@@ -11,8 +11,11 @@
 
 import type { 
   WaveConfig, 
-  IWaveStarsAnimationManager 
+  IWaveStarsAnimationManager,
+  LogLevel
 } from './types.js';
+import { getLogger } from './shared-logger.js';
+import { WaveConfigFactory, GradientFactory, WAVE_ANIMATION_CONFIG } from './shared-wave-config.js';
 
 export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
   private canvas: HTMLCanvasElement | null = null;
@@ -23,6 +26,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
   private handleResize: (() => void) | null = null;
   private starsContainer: HTMLElement | null = null;
   private stars: HTMLElement[] = [];
+  private logger = getLogger();
 
   constructor() {
     this.initializeWaveConfig();
@@ -30,38 +34,10 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
 
   /**
    * 波アニメーションの初期化
-   * KISS原則: 設定を明確に分離
+   * DRY原則: 共通設定ファクトリーを使用
    */
   private initializeWaveConfig(): void {
-    this.waves = [
-      {
-        amplitude: 35,
-        frequency: 0.008,
-        speed: 0.015,
-        offset: 0,
-        color: "rgba(139, 93, 255, 0.06)",
-        y: 0.75,
-        yPos: 0,
-      },
-      {
-        amplitude: 45,
-        frequency: 0.006,
-        speed: -0.012,
-        offset: Math.PI / 3,
-        color: "rgba(139, 93, 255, 0.04)",
-        y: 0.8,
-        yPos: 0,
-      },
-      {
-        amplitude: 30,
-        frequency: 0.01,
-        speed: 0.018,
-        offset: Math.PI / 2,
-        color: "rgba(139, 93, 255, 0.03)",
-        y: 0.85,
-        yPos: 0,
-      },
-    ];
+    this.waves = WaveConfigFactory.getDocsWaves();
   }
 
   /**
@@ -69,7 +45,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
    * DRY原則: 初期化処理の共通化
    */
   public init(): { cleanup: () => void } | null {
-    this.logMessage("Initializing docs page wave and stars animation...", "info");
+    this.logger.log("Initializing docs page wave and stars animation...", "info");
 
     // 波アニメーションの初期化
     const waveResult = this.initializeWaveAnimation();
@@ -80,10 +56,10 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
     // 星背景の初期化
     const starsResult = this.initializeStarsBackground();
     if (!starsResult) {
-      this.logMessage("Stars background initialization failed, continuing with wave animation only", "warning");
+      this.logger.log("Stars background initialization failed, continuing with wave animation only", "warning");
     }
 
-    this.logMessage("Docs page wave and stars animation initialized successfully", "success");
+    this.logger.log("Docs page wave and stars animation initialized successfully", "success");
     
     return {
       cleanup: () => this.cleanup()
@@ -97,13 +73,13 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
   private initializeWaveAnimation(): boolean {
     this.canvas = document.getElementById("waveCanvas") as HTMLCanvasElement;
     if (!this.canvas) {
-      this.logMessage("Wave canvas not found for docs page", "warning");
+      this.logger.log("Wave canvas not found for docs page", "warning");
       return false;
     }
 
     this.ctx = this.canvas.getContext("2d");
     if (!this.ctx) {
-      this.logMessage("Canvas context not available for docs page", "warning");
+      this.logger.log("Canvas context not available for docs page", "warning");
       return false;
     }
 
@@ -111,7 +87,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
     this.resizeCanvas();
     this.startAnimation();
 
-    this.logMessage("Wave animation initialized", "success");
+    this.logger.log("Wave animation initialized", "success");
     return true;
   }
 
@@ -122,7 +98,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
   private initializeStarsBackground(): boolean {
     this.starsContainer = document.getElementById("starsContainer");
     if (!this.starsContainer) {
-      this.logMessage("Stars container not found for docs page", "warning");
+      this.logger.log("Stars container not found for docs page", "warning");
       return false;
     }
 
@@ -142,7 +118,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
     // Add loaded class to trigger CSS animation
     this.starsContainer.classList.add("loaded");
 
-    this.logMessage("Stars background initialized", "success");
+    this.logger.log("Stars background initialized", "success");
     return true;
   }
 
@@ -159,7 +135,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
 
   /**
    * キャンバスのリサイズ
-   * KISS原則: リサイズ処理を明確に分離
+   * DRY原則: 共通ファクトリーを使用
    */
   private resizeCanvas(): void {
     if (!this.canvas) return;
@@ -170,9 +146,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
     this.canvas.height = height;
 
     // 波のY位置を新しい高さに基づいて更新
-    this.waves.forEach((wave) => {
-      wave.yPos = height * wave.y;
-    });
+    WaveConfigFactory.updateWavePositions(this.waves, height);
   }
 
   /**
@@ -191,7 +165,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
       // 波の描画
       this.drawWaves();
 
-      this.time += 0.5;
+      this.time += WAVE_ANIMATION_CONFIG.TIME_INCREMENT;
       this.animationId = requestAnimationFrame(animate);
     };
 
@@ -200,16 +174,12 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
 
   /**
    * グラデーション背景の描画
-   * KISS原則: 背景描画処理を明確に分離
+   * DRY原則: 共通ファクトリーを使用
    */
   private drawGradientBackground(): void {
     if (!this.ctx || !this.canvas) return;
 
-    const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-    gradient.addColorStop(0, "rgba(10, 10, 10, 1)");
-    gradient.addColorStop(0.6, "rgba(10, 10, 10, 0.98)");
-    gradient.addColorStop(1, "rgba(139, 93, 255, 0.015)");
-    
+    const gradient = GradientFactory.createDocsGradient(this.ctx, this.canvas.height);
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
@@ -225,7 +195,7 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
       this.ctx!.beginPath();
 
       // 波のパスを作成
-      for (let x = 0; x <= this.canvas!.width + 10; x += 2) {
+      for (let x = 0; x <= this.canvas!.width + 10; x += WAVE_ANIMATION_CONFIG.CANVAS_RESOLUTION) {
         const y = wave.yPos + 
           Math.sin(x * wave.frequency + this.time * wave.speed + wave.offset) * wave.amplitude;
 
@@ -279,16 +249,14 @@ export class WaveStarsAnimationManager implements IWaveStarsAnimationManager {
       this.starsContainer.classList.remove("loaded");
     }
 
-    this.logMessage("Wave and stars animation cleaned up", "info");
+    this.logger.log("Wave and stars animation cleaned up", "info");
   }
 
   /**
-   * ログメッセージの出力
-   * DRY原則: ログ処理の共通化
+   * ログメッセージの出力（インターフェース互換性のため）
+   * DRY原則: 共通ロガーを使用
    */
-  public logMessage(message: string, level: 'info' | 'success' | 'warning' | 'error' = 'info'): void {
-    if (window.clientLogger?.log) {
-      window.clientLogger.log(message, level);
-    }
+  public logMessage(message: string, level: LogLevel = 'info'): void {
+    this.logger.log(message, level);
   }
 }

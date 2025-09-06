@@ -1,21 +1,8 @@
 ---
-// TypeScript declarations for global objects in this file
-declare global {
-  interface Window {
-    clientLogger: {
-      log: (message: string, level?: "info" | "success" | "warning" | "error") => void
-      startGroup: (title: string) => void
-      endGroup: (title: string) => void
-    }
-    searchLoadingManager?: any
-    searchEngine?: any
-    contentConfig?: any
-    allPosts?: any[]
-    Fuse?: any
-  }
-}
+// TypeScript declarations moved to shared types
 
 import { getCollection } from "astro:content"
+import type { CollectionEntry } from "astro:content"
 import UnifiedSEO from "../components/UnifiedSEO.astro"
 import Breadcrumb from "../components/public-components/Breadcrumb.astro"
 import Navbar from "../components/public-components/Navbar.vue"
@@ -38,17 +25,11 @@ ConsoleLogger.setGlobalBuildMode(true)
 // Set critical errors only mode - only show critical errors
 ConsoleLogger.setGlobalCriticalErrorsOnly(true)
 
-// Get all blog posts with error handling
-let posts: any[] = []
-let error: string | null = null
+// Astro-native content loading with proper typing
+const posts: CollectionEntry<"docs">[] = await getCollection("docs")
+const error: string | null = null
 
-try {
-  posts = await getCollection("docs")
-  logger.log(`Posts loaded: ${posts.length}`, "success")
-} catch (err: any) {
-  logger.log(`Error loading posts: ${err.message}`, "error")
-  error = err.message
-}
+logger.log(`Posts loaded: ${posts.length}`, "success")
 
 // Sort posts by published date (newest first)
 const sortedPosts = posts.sort(
@@ -82,319 +63,14 @@ const beginnerContent = sortedPosts.filter(
 )
 // Beginner content found: ${beginnerContent.length}
 
-// Use the working content analysis system instead
-const toolContent = sortedPosts.filter((post) => {
-  // Check if post has category "tools" or contains tool-related keywords
-  const isTool =
-    post.data.category === "tools" ||
-    post.data.title.toLowerCase().includes("anki") ||
-    post.data.description.toLowerCase().includes("anki") ||
-    post.data.tags.some((tag) => tag.toLowerCase().includes("tool"))
-  return isTool
-})
-// Tool content found: ${toolContent.length}
+// Simplified content processing - moved to TypeScript modules
+const processedPosts = sortedPosts.map((post) => ({
+  ...post,
+  resolvedPath: resolvePath("docs", post.slug),
+  collectionMetadata: getCollectionInfo("docs"),
+}))
 
-// Example recommendations - simplified for now
-const recommendations = sortedPosts.slice(0, 3)
-
-// Fallback: If no recommendations, use all posts with AI metadata
-const finalRecommendations = recommendations
-
-// Generate semantic relationships (using all posts for relationships)
-const aiMetadataMap = new Map(
-  postsWithAI.map((post) => [
-    post.slug,
-    { contentType: "guide", learningStage: "alphabet" },
-  ])
-)
-
-// Dynamic content path resolution for all posts
-const postsWithDynamicPaths = sortedPosts.map((post) => {
-  const resolvedPath = { path: resolvePath("docs", post.slug) }
-  return {
-    ...post,
-    resolvedPath: resolvedPath.path,
-    collectionMetadata: getCollectionInfo("docs"),
-  }
-})
-// Semantic relationships removed - functionality no longer needed
-const postsWithRelationships = []
-const learningPathRecommendations = []
-
-// AI Metadata Generated Automatically
-
-// Individual Post Complexity Scores processed
-
-// Category counts and individual posts processed
-
-// Data attributes processed for post cards
-// Semantic Relationships Generated
-
-// Indonesian-focused article content processing for comprehensive search
-function processArticleContent(content: string) {
-  if (!content) return { 
-    cleanedText: "", 
-    sections: [] as Array<{
-      level: number;
-      title: string;
-      type: string;
-      position: number;
-      isIndonesian: boolean;
-    }>, 
-    codeBlocks: [] as Array<{
-      content: string;
-      type: string;
-      position: number;
-    }>, 
-    images: [] as Array<{
-      alt: string;
-      src: string;
-      type: string;
-      position: number;
-      priority: string;
-    }> 
-  }
-
-  // Extract different content types for specialized search
-  const codeBlocks: Array<{
-    content: string;
-    type: string;
-    position: number;
-  }> = []
-  const images: Array<{
-    alt: string;
-    src: string;
-    type: string;
-    position: number;
-    priority: string;
-  }> = []
-  const sections: Array<{
-    level: number;
-    title: string;
-    type: string;
-    position: number;
-    isIndonesian: boolean;
-  }> = []
-
-  // Extract code blocks (focus on text content, not code)
-  const codeBlockRegex = /```[\s\S]*?```/g
-  let codeMatch
-  while ((codeMatch = codeBlockRegex.exec(content)) !== null) {
-    codeBlocks.push({
-      content: codeMatch[0],
-      type: "code",
-      position: codeMatch.index,
-    })
-  }
-
-  // Extract images with Indonesian alt text (prioritize Indonesian content)
-  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g
-  let imageMatch
-  while ((imageMatch = imageRegex.exec(content)) !== null) {
-    const altText = imageMatch[1]
-    // Prioritize Indonesian alt text for search
-    if (
-      altText &&
-      (altText.includes("gambar") ||
-        altText.includes("foto") ||
-        altText.includes("ilustrasi"))
-    ) {
-      images.push({
-        alt: altText,
-        src: imageMatch[2],
-        type: "image",
-        position: imageMatch.index,
-        priority: "high", // Indonesian alt text gets higher priority
-      })
-    } else {
-      images.push({
-        alt: altText,
-        src: imageMatch[2],
-        type: "image",
-        position: imageMatch.index,
-        priority: "normal",
-      })
-    }
-  }
-
-  // Extract sections (headers) with Indonesian content focus
-  const sectionRegex = /^(#{1,6})\s+(.+)$/gm
-  let sectionMatch
-  while ((sectionMatch = sectionRegex.exec(content)) !== null) {
-    const title = sectionMatch[2]
-    sections.push({
-      level: sectionMatch[1].length,
-      title: title,
-      type: "section",
-      position: sectionMatch.index,
-      // Prioritize Indonesian section titles
-      isIndonesian: /[a-z]/.test(title) && !/[a-z]{3,}/.test(title), // Simple Indonesian detection
-    })
-  }
-
-  // Clean text for search (focus on text content and images, remove markdown)
-  const cleanedText = content
-    .replace(/---[\s\S]*?---/, "") // Remove frontmatter
-    .replace(/```[\s\S]*?```/g, " [kode] ") // Replace code blocks with [kode]
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, " [gambar: $1] ") // Replace images with [gambar: alt]
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1") // Remove links, keep text
-    .replace(/#{1,6}\s+/g, "") // Remove header markers
-    .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove bold formatting
-    .replace(/\*([^*]+)\*/g, "$1") // Remove italic formatting
-    .replace(/`([^`]+)`/g, "$1") // Remove inline code formatting
-    .replace(/\n+/g, " ") // Replace newlines with spaces
-    .replace(/\s+/g, " ") // Normalize spaces
-    .trim()
-
-  return {
-    cleanedText,
-    sections,
-    codeBlocks,
-    images,
-    hasCode: codeBlocks.length > 0,
-    hasImages: images.length > 0,
-    hasSections: sections.length > 0,
-    // Enhanced metadata for Indonesian content
-    indonesianContentRatio: calculateIndonesianContentRatio(cleanedText),
-    hasIndonesianImages: images.some((img) => img.priority === "high"),
-    hasIndonesianSections: sections.some((sec) => sec.isIndonesian),
-  }
-}
-
-// Calculate Indonesian content ratio for better search prioritization
-function calculateIndonesianContentRatio(text: string): number {
-  if (!text) return 0
-
-  const words = text.toLowerCase().split(/\s+/)
-  const indonesianWords = words.filter(
-    (word) =>
-      // Common Indonesian words and patterns
-      /^(yang|dan|atau|dengan|di|ke|dari|untuk|dalam|pada|oleh|karena|adalah|akan|sudah|belum|tidak|bukan|juga|saja|hanya|masih|pernah|selalu|kadang|sering|jarang|segera|nanti|kemarin|hari|ini|itu|sana|sini|mana|apa|siapa|kapan|bagaimana|mengapa|berapa|belajar|pembelajaran|bahasa|jepang|immersion|metodologi|filosofi|praktik|latihan|konten|anime|manga|grammar|vocabulary|kanji|hiragana|katakana)$/.test(
-        word
-      ) ||
-      // Indonesian word patterns
-      /^(mem|men|meng|meny|pe|per|ber|ter|se|ke|di|ke|dari|untuk|dalam|pada|oleh|karena|adalah|akan|sudah|belum|tidak|bukan|juga|saja|hanya|masih|pernah|selalu|kadang|sering|jarang|segera|nanti|kemarin|hari|ini|itu|sana|sini|mana|apa|siapa|kapan|bagaimana|mengapa|berapa)$/.test(
-        word
-      ) ||
-      // Japanese words
-      /^(hiragana|katakana|kanji|nihongo|japanese|anime|manga|srs|anki|immersion|grammar|vocabulary|reading|writing|listening|speaking)$/.test(
-        word
-      )
-  )
-
-  return indonesianWords.length / words.length
-}
-
-// Generate comprehensive search data at build time
-// Full article parsing with robust Indonesian-focused search capabilities
-const enhancedSearchData = sortedPosts.map((post) => {
-  // Extract FULL article content for comprehensive search (no character limit)
-  const fullContent = post.body || ""
-
-  // Process full article content for comprehensive search
-  const processedContent = processArticleContent(fullContent)
-
-  // Extract comprehensive metadata for Indonesian-focused search
-  const searchMetadata = {
-    // Core post data
-    title: post.data.title,
-    description: post.data.description,
-    tags: post.data.tags || [],
-    category: post.data.category,
-    difficulty: post.data.difficulty,
-    learningStage: post.data.learningStage,
-
-    // Full article content processing
-    fullContent: processedContent.cleanedText,
-    rawContent: fullContent, // Keep original for exact matching
-    contentPreview: processedContent.cleanedText.substring(0, 500),
-    contentLength: fullContent.length,
-    processedLength: processedContent.cleanedText.length,
-
-    // Comprehensive AI metadata
-    aiMetadata: post.data.aiMetadata || {},
-    contentType: post.data.aiMetadata?.contentType || post.data.category,
-    learningPath: post.data.aiMetadata?.learningPath || [],
-    aiRecommendations: post.data.aiMetadata?.recommendations || [],
-    contentComplexity: post.data.aiMetadata?.complexity || "medium",
-    semanticKeywords: post.data.aiMetadata?.semanticKeywords || [],
-    learningObjectives: post.data.aiMetadata?.learningObjectives || [],
-
-    // Enhanced searchable fields
-    keywords: [
-      ...(post.data.tags || []),
-      post.data.category,
-      post.data.difficulty,
-      post.data.learningStage,
-      post.data.aiMetadata?.contentType,
-      ...(post.data.aiMetadata?.keywords || []),
-      ...(post.data.aiMetadata?.semanticKeywords || []),
-      ...(post.data.aiMetadata?.learningObjectives || []),
-      post.data.aiMetadata?.complexity,
-    ].filter(Boolean),
-
-    // Enhanced searchable text with full article content
-    searchableText: [
-      post.data.title,
-      post.data.description,
-      processedContent.cleanedText,
-      ...(post.data.tags || []),
-      post.data.category,
-      post.data.difficulty,
-      post.data.learningStage,
-      post.data.aiMetadata?.contentType,
-      ...(post.data.aiMetadata?.keywords || []),
-      ...(post.data.aiMetadata?.semanticKeywords || []),
-      ...(post.data.aiMetadata?.learningObjectives || []),
-      post.data.aiMetadata?.complexity,
-      ...(post.data.aiMetadata?.learningPath || []),
-      // Add section titles for better search
-      ...processedContent.sections.map((section) => section.title),
-      // Add image alt texts for visual content search
-      ...processedContent.images.map((img) => img.alt),
-    ]
-      .join(" ")
-      .toLowerCase(),
-
-    // Content analysis metadata
-    isRecommended: post.data.aiMetadata?.isRecommended || false,
-    isBeginner:
-      post.data.difficulty === "beginner" || post.data.learningStage === "pemanasan",
-    isTool:
-      post.data.category === "tools" || post.data.title.toLowerCase().includes("anki"),
-    hasCodeBlocks: processedContent.hasCode,
-    hasImages: processedContent.hasImages,
-    hasSections: processedContent.hasSections,
-    wordCount: processedContent.cleanedText.split(/\s+/).filter((word) => word.length > 0)
-      .length,
-
-    // Processed content for advanced search
-    processedContent: {
-      sections: processedContent.sections,
-      codeBlocks: processedContent.codeBlocks,
-      images: processedContent.images,
-      hasCode: processedContent.hasCode,
-      hasImages: processedContent.hasImages,
-      hasSections: processedContent.hasSections,
-    },
-  }
-
-  return {
-    slug: post.slug,
-    url: post.resolvedPath || `/docs/${post.slug}`,
-    publishedDate: post.data.publishedDate,
-    readTime: post.data.readTime,
-    emoji: post.data.emoji,
-    ...searchMetadata,
-  }
-})
-
-logger.log(
-  `Enhanced search data generated for ${enhancedSearchData.length} posts`,
-  "success"
-)
-
-// Automated content extraction removed - using search.json.js endpoint instead
+// Content processing moved to TypeScript modules for better maintainability
 
 // Optimized AI processing removed - no longer needed
 // Trigger optimized AI processing during build
@@ -435,6 +111,7 @@ function formatNumber(num: number): string {
 }
 
 
+// Type-safe date formatting function
 function formatDate(dateString: string): string {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -442,7 +119,7 @@ function formatDate(dateString: string): string {
     day: "numeric",
   }
 
-  // Validate input
+  // Validate input with strict type checking
   if (!dateString || typeof dateString !== "string") {
     logger.log(`Invalid date string provided: ${dateString}`, "warning")
     return "Invalid Date"
@@ -456,7 +133,7 @@ function formatDate(dateString: string): string {
     }
 
     return date.toLocaleDateString("id-ID", options)
-  } catch (error) {
+  } catch (error: unknown) {
     logger.log(`Date formatting error: ${error}`, "error")
     return "Invalid Date"
   }
@@ -624,7 +301,7 @@ function formatDate(dateString: string): string {
             </div>
           </div>
 
-          <!-- Content State -->
+          <!-- Content State - Simplified -->
           <div id="contentState" class="posts-grid">
             {
               error ? (
@@ -632,79 +309,41 @@ function formatDate(dateString: string): string {
                   <h2>❌ Error Loading Posts</h2>
                   <p>{error}</p>
                   <div class="error-actions">
-                    <button onclick="window.location.reload()" class="docs-button">
-                      🔄 Coba Lagi
-                    </button>
-                    <button onclick="goHome()" class="docs-button secondary">
-                      🏠 Kembali ke Beranda
-                    </button>
+                    <button onclick="location.reload()" class="docs-button">🔄 Coba Lagi</button>
+                    <button onclick="window.location.href='/'" class="docs-button secondary">🏠 Kembali ke Beranda</button>
                   </div>
                 </div>
-              ) : currentPosts.length === 0 ? (
+              ) : processedPosts.length === 0 ? (
                 <div class="no-results">
                   <div class="no-results-icon">📚</div>
                   <h3>Belum Ada Dokumentasi</h3>
                   <p>Dokumentasi akan segera tersedia. Tetap pantau untuk pembaruan!</p>
                 </div>
               ) : (
-                currentPosts.map((post, index) => (
-                  <article
-                    class={`post-card post-card-${index % 4}`}
-                    data-post-slug={post.slug}
-                    data-learning-stage={
-                      post.data.aiMetadata?.contentAnalysis?.learningStage || ""
-                    }
-                    data-content-type={post.data.aiMetadata?.contentType || ""}
-                    data-is-recommended={
-                      finalRecommendations.some((rec) => rec.slug === post.slug)
-                        ? "true"
-                        : "false"
-                    }
-                    data-is-beginner={
-                      beginnerContent.some((beg) => beg.slug === post.slug)
-                        ? "true"
-                        : "false"
-                    }
-                    data-is-tool={
-                      toolContent.some((tool) => tool.slug === post.slug)
-                        ? "true"
-                        : "false"
-                    }>
-                    {/* Emoji Display */}
+                processedPosts.slice(0, 6).map((post, index) => (
+                  <article class={`post-card post-card-${index % 4}`} data-post-slug={post.slug}>
                     {post.data.emoji && <div class="post-emoji">{post.data.emoji}</div>}
                     <div class="post-card-container">
                       <div class="post-header">
                         <h2 class="post-title">
-                          <a href={post.resolvedPath || `/docs/${post.slug}`}>
-                            {post.data.title}
-                          </a>
+                          <a href={post.resolvedPath}>{post.data.title}</a>
                         </h2>
                         <div class="post-meta">
-                          <span class="post-date">
-                            {formatDate(post.data.publishedDate)}
-                          </span>
+                          <span class="post-date">{formatDate(post.data.publishedDate)}</span>
                         </div>
                       </div>
                       <p class="post-description">{post.data.description}</p>
-                      <div
-                        class="post-tags"
-                        data-all-tags={JSON.stringify(post.data.tags || [])}>
+                      <div class="post-tags" data-all-tags={JSON.stringify(post.data.tags || [])}>
                         {post.data.tags?.slice(0, 3).map((tag: string) => (
                           <span class="post-tag">{tag}</span>
                         ))}
                         {post.data.tags && post.data.tags.length > 3 && (
-                          <span
-                            class="post-tag-more"
-                            data-count={post.data.tags.length - 3}>
+                          <span class="post-tag-more" data-count={post.data.tags.length - 3}>
                             +{post.data.tags.length - 3}
                           </span>
                         )}
                       </div>
-                      <a
-                        href={post.resolvedPath || `/docs/${post.slug}`}
-                        class="read-more-btn">
-                        Baca Selengkapnya →
-                      </a>
+                      <a href={post.resolvedPath} class="read-more-btn">Baca Selengkapnya →</a>
                     </div>
                   </article>
                 ))
@@ -786,17 +425,24 @@ function formatDate(dateString: string): string {
       </div>
     </main>
 
-    <!-- TypeScript分離スクリプトのインポート -->
+    <!-- Astro-native client directives for selective hydration -->
     <script>
-      // Astroネイティブ + TypeScript分離スクリプト
       import { initializeDocsScripts } from '../scripts/type-scripts/pages/docs/index.js';
-      
-      // 初期化実行
+      import { initializeTagPopups, setupDocsNavigation } from '../scripts/type-scripts/pages/docs/docs-integration.js';
+
+      // Initialize only essential functionality
       initializeDocsScripts();
-      
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log("Loading Enhanced Search Engine...", "info")
-      }
+      setupDocsNavigation();
+    </script>
+
+    <!-- Tag popups - load only when needed -->
+    <script>
+      // Defer tag popups initialization to improve initial page load
+      setTimeout(() => {
+        import('../scripts/type-scripts/pages/docs/docs-integration.js').then(({ initializeTagPopups }) => {
+          initializeTagPopups();
+        });
+      }, 100);
     </script>
 
     <!-- Enhanced Search Engine Implementation - 削除済み（TypeScript分離済み） -->
@@ -805,165 +451,5 @@ function formatDate(dateString: string): string {
     <!-- 🌊 DOCS PAGE WAVE ANIMATION INITIALIZATION - 削除済み（TypeScript分離済み） -->
     <!-- WaveAnimationManagerクラスは src/scripts/type-scripts/pages/docs/WaveAnimationManager.ts に移動済み -->
 
-    <script>
-      // Stars background initialization - moved to WaveStarsAnimationManager.ts
-
-      // Navigation functions for docs page
-      ;(window as any).goHome = function () {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("Navigating to home...", "info")
-        }
-        window.location.href = "/"
-      }
-      ;(window as any).goToPosts = function () {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("Already on docs page...", "info")
-        }
-        window.location.reload()
-      }
-      ;(window as any).goToInvitation = function () {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("Navigating to Discord...", "info")
-        }
-        window.location.href = "/discord"
-      }
-
-      // GoRakuDo UI/UX 2025: Tag Popup Functionality
-      function initializeTagPopups() {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("Initializing minimalist tag popups...", "info")
-        }
-
-        const tagContainers = document.querySelectorAll(".post-tags")
-
-        tagContainers.forEach((container) => {
-          const moreButton = container.querySelector(".post-tag-more")
-          if (!moreButton) return
-
-          // Type-safe dataset access
-          const containerElement = container as HTMLElement
-          const allTags = JSON.parse(containerElement.dataset.allTags || "[]")
-          const hiddenTags = allTags.slice(3)
-
-          if (hiddenTags.length === 0) return
-
-          let popup: HTMLElement | null = null
-
-          // Create popup element
-          function createPopup(): void {
-            popup = document.createElement("div")
-            popup.className = "tag-popup"
-
-            const header = document.createElement("div")
-            header.className = "tag-popup-header"
-            header.textContent = "Tag Lain-nya:"
-
-            const content = document.createElement("div")
-            content.className = "tag-popup-content"
-
-            hiddenTags.forEach((tag: string) => {
-              const tagElement = document.createElement("span")
-              tagElement.className = "tag-popup-tag"
-              tagElement.textContent = tag
-              content.appendChild(tagElement)
-            })
-
-            popup.appendChild(header)
-            popup.appendChild(content)
-            container.appendChild(popup)
-          }
-
-          // Show popup with accessibility
-          function showPopup(): void {
-            if (!popup) createPopup()
-            if (popup) {
-              popup.classList.add("show")
-              popup.setAttribute("aria-hidden", "false")
-              moreButton?.setAttribute("aria-expanded", "true")
-            }
-          }
-
-          // Hide popup
-          function hidePopup(): void {
-            if (popup) {
-              popup.classList.remove("show")
-              popup.setAttribute("aria-hidden", "true")
-              moreButton?.setAttribute("aria-expanded", "false")
-            }
-          }
-
-          // Event listeners
-          moreButton?.addEventListener("mouseenter", showPopup)
-          moreButton?.addEventListener("mouseleave", hidePopup)
-
-          // Touch support for mobile
-          moreButton?.addEventListener("touchstart", (e) => {
-            e.preventDefault()
-            if (popup && popup.classList.contains("show")) {
-              hidePopup()
-            } else {
-              showPopup()
-            }
-          })
-
-          // Accessibility - keyboard support
-          moreButton?.addEventListener("keydown", (e) => {
-            const keyEvent = e as KeyboardEvent
-            if (keyEvent.key === "Enter" || keyEvent.key === " ") {
-              e.preventDefault()
-              if (popup && popup.classList.contains("show")) {
-                hidePopup()
-              } else {
-                showPopup()
-              }
-            }
-            if ((e as KeyboardEvent).key === "Escape") {
-              hidePopup()
-            }
-          })
-
-          // Set ARIA attributes
-          moreButton.setAttribute("role", "button")
-          moreButton.setAttribute("aria-expanded", "false")
-          moreButton.setAttribute("aria-haspopup", "true")
-          moreButton.setAttribute("tabindex", "0")
-          moreButton.setAttribute(
-            "aria-label",
-            `Tampilkan ${hiddenTags.length} tag lainnya`
-          )
-        })
-
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("Tag popups initialized", "success")
-        }
-      }
-
-      // Initialize everything when DOM is loaded
-      document.addEventListener("DOMContentLoaded", function () {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("GoRakuDo Docs Page Loading...", "info")
-        }
-
-        // Wave animation + stars background initialization - handled by WaveStarsAnimationManager.ts
-
-        // Initialize tag popups
-        try {
-          initializeTagPopups()
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log("Tag popups initialized for docs page", "success")
-          }
-        } catch (error) {
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Tag popups failed for docs page: ${error}`, "error")
-          }
-        }
-
-        // Cleanup on page unload - handled by TypeScript modules
-
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("Docs Page Loaded Successfully!", "success")
-        }
-      })
-    </script>
   </body>
 </html>
