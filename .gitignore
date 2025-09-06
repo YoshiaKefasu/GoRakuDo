@@ -2,9 +2,12 @@
 dist/
 # generated types
 .astro/
+.bmad-core/
 
 # dependencies
 node_modules/
+bmad-core/
+bmad-docs/
 
 # logs
 npm-debug.log*
