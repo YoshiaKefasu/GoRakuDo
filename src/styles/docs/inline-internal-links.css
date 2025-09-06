@@ -164,7 +164,7 @@
  * Provides elegant visual feedback on hover
  */
 .inline-link-contextual::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -1px;
   left: 0;
@@ -389,7 +389,7 @@
 
   /* Add URL after link text for print */
   .inline-internal-link::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
     font-size: 0.8em;
     color: var(--color-gray-600, #4b5563);
     font-weight: normal;
@@ -501,8 +501,7 @@
 /* ========== LOADING STATES ========== */
 
 /**
- * Loading and skeleton states
- * Provides feedback during dynamic content loading
+ * Loading states removed - skeleton functionality disabled
  */
 .inline-internal-link.loading {
   opacity: 0.6;

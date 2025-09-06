@@ -12,14 +12,25 @@
   "exclude": ["dist", "node_modules", "src/**/*.astro"],
   "compilerOptions": {
     "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "jsx": "preserve",
     "allowJs": true,
     "checkJs": false,
     "target": "ES2020",
     "module": "ES2020",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/types/*": ["src/types/*"]
+    },
+    "types": ["node"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "skipLibCheck": true
   }
 }

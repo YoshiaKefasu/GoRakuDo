@@ -6,5 +6,13 @@
   },
   "astro.language-server.enable": true,
   "astro.language-server.diagnostics.enable": true,
-  "astro.language-server.diagnostics.typescript.enable": false
+  "astro.language-server.diagnostics.typescript.enable": false,
+  "vetur.validation.template": false,
+  "vetur.validation.style": false,
+  "vetur.validation.script": false,
+  "vue.features.codeActions.enable": true,
+  "typescript.preferences.includeCompletionsWithInsertText": true,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "vetur.useWorkspaceDependencies": true,
+  "vetur.experimental.templateInterpolationService": true
 }

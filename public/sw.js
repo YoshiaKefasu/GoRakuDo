@@ -6,10 +6,10 @@ const STATIC_CACHE = 'gorakudo-static-v1';
 const STATIC_FILES = [
   '/',
   '/css/homepage-styles.css',
-  '/css/post-styles.css',
-  '/scripts/hompage-script.js',
-  '/scripts/post-script.js',
-  '/scripts/upgrade-browsermu.js',
+  // '/css/post-styles.css', // ファイルが存在しません
+  '/core/hompage-script.js',
+  // '/scripts/post-script.js', // TypeScript分離版に置き換えられました
+  '/core/upgrade-browsermu.js',
   '/favicon/favicon.ico',
   '/favicon/favicon.svg',
   '/favicon/apple-touch-icon.png',

@@ -8,7 +8,7 @@ import type {
   SearchResult,
   SearchOptions,
   SearchMetrics,
-} from "./types";
+} from './types';
 
 export class SimpleSearch {
   private posts: SearchPost[] = [];
@@ -31,10 +31,15 @@ export class SimpleSearch {
    */
   private initializeCache(): void {
     // Pre-process posts for faster searching
-    this.posts.forEach((post) => {
+    this.posts.forEach(post => {
       // Create searchable text for each post
       this.createSearchableText(post);
-      post.element = this.findPostElement(post.slug);
+
+      // Handle optional element property with exactOptionalPropertyTypes
+      const element = this.findPostElement(post.slug);
+      if (element !== undefined) {
+        (post as SearchPost & { element?: HTMLElement }).element = element;
+      }
     });
   }
 
@@ -43,7 +48,7 @@ export class SimpleSearch {
    * Optimized for fast text matching
    */
   private createSearchableText(post: SearchPost): string {
-    return `${post.title} ${post.description} ${post.tags.join(" ")}`.toLowerCase();
+    return `${post.title} ${post.description} ${post.tags.join(' ')}`.toLowerCase();
   }
 
   /**
@@ -88,16 +93,16 @@ export class SimpleSearch {
 
     const searchQuery = options.caseSensitive ? query : query.toLowerCase();
     const searchFields = options.searchFields || [
-      "title",
-      "description",
-      "tags",
+      'title',
+      'description',
+      'tags',
     ];
 
     // Fast filtering with optimized algorithm
-    const matchedPosts = this.posts.filter((post) => {
+    const matchedPosts = this.posts.filter(post => {
       // Search in title (highest priority)
       if (
-        searchFields.includes("title") &&
+        searchFields.includes('title') &&
         this.matchesField(post.title, searchQuery, options)
       ) {
         return true;
@@ -105,7 +110,7 @@ export class SimpleSearch {
 
       // Search in description
       if (
-        searchFields.includes("description") &&
+        searchFields.includes('description') &&
         this.matchesField(post.description, searchQuery, options)
       ) {
         return true;
@@ -113,8 +118,8 @@ export class SimpleSearch {
 
       // Search in tags
       if (
-        searchFields.includes("tags") &&
-        post.tags.some((tag) => this.matchesField(tag, searchQuery, options))
+        searchFields.includes('tags') &&
+        post.tags.some(tag => this.matchesField(tag, searchQuery, options))
       ) {
         return true;
       }
@@ -148,7 +153,7 @@ export class SimpleSearch {
   private matchesField(
     field: string,
     query: string,
-    options: SearchOptions,
+    options: SearchOptions
   ): boolean {
     const fieldText = options.caseSensitive ? field : field.toLowerCase();
 
@@ -180,7 +185,7 @@ export class SimpleSearch {
   filter(filters: SearchFilters): SearchResult {
     const startTime = performance.now();
 
-    const filteredPosts = this.posts.filter((post) => {
+    const filteredPosts = this.posts.filter(post => {
       // Filter by content type
       if (filters.contentType && post.contentType !== filters.contentType) {
         return false;
@@ -223,7 +228,7 @@ export class SimpleSearch {
   searchAndFilter(
     query: string,
     filters: SearchFilters,
-    options: SearchOptions = {},
+    options: SearchOptions = {}
   ): SearchResult {
     const startTime = performance.now();
 
@@ -234,8 +239,8 @@ export class SimpleSearch {
     const searchResult = this.search(query, options);
 
     // Combine results efficiently
-    const combinedPosts = searchResult.posts.filter((post) =>
-      filteredResult.posts.some((filteredPost) => filteredPost.id === post.id),
+    const combinedPosts = searchResult.posts.filter(post =>
+      filteredResult.posts.some(filteredPost => filteredPost.id === post.id)
     );
 
     const result: SearchResult = {
@@ -248,7 +253,7 @@ export class SimpleSearch {
     this.updateMetrics(
       searchResult.searchTime,
       filteredResult.searchTime,
-      result.posts.length,
+      result.posts.length
     );
     return result;
   }
@@ -257,24 +262,24 @@ export class SimpleSearch {
    * Get search suggestions based on current posts
    * Optimized for fast suggestion generation
    */
-  getSuggestions(query: string, maxSuggestions: number = 5): string[] {
+  getSuggestions(query: string, maxSuggestions = 5): string[] {
     if (!query.trim()) return [];
 
     const suggestions = new Set<string>();
     const queryLower = query.toLowerCase();
 
     // Extract suggestions from titles and tags
-    this.posts.forEach((post) => {
+    this.posts.forEach(post => {
       // Add matching words from title
       const titleWords = post.title.toLowerCase().split(/\s+/);
-      titleWords.forEach((word) => {
+      titleWords.forEach(word => {
         if (word.includes(queryLower) && word.length > 2) {
           suggestions.add(word);
         }
       });
 
       // Add matching tags
-      post.tags.forEach((tag) => {
+      post.tags.forEach(tag => {
         if (tag.toLowerCase().includes(queryLower)) {
           suggestions.add(tag);
         }
@@ -290,7 +295,7 @@ export class SimpleSearch {
   private updateMetrics(
     searchTime: number,
     filterTime: number,
-    resultCount: number,
+    resultCount: number
   ): void {
     this.performanceMetrics = {
       searchTime,

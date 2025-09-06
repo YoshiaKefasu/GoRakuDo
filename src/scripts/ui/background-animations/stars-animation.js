@@ -105,7 +105,7 @@ export class StarsAnimation {
     // ENHANCED: Page visibility and accessibility
     this.isPageVisible = true;
     this.reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      '(prefers-reduced-motion: reduce)'
     ).matches;
     this.setupPageVisibilityHandler();
     this.setupAccessibilityHandlers();
@@ -115,15 +115,15 @@ export class StarsAnimation {
   defaultConfig = {
     enabled: true,
     count: 8,
-    animationDuration: "3s",
+    animationDuration: '3s',
     opacity: 0.6,
-    containerClass: "stars",
-    starClass: "star",
-    containerId: "stars",
+    containerClass: 'stars',
+    starClass: 'star',
+    containerId: 'stars',
     // Container management options
     useExistingContainer: false,
     createContainer: true,
-    containerSelector: ".stars",
+    containerSelector: '.stars',
     // ENHANCED: Performance and accessibility options
     performance: {
       targetFPS: 60,
@@ -150,28 +150,28 @@ export class StarsAnimation {
   // ENHANCED: Comprehensive configuration validation
   validateAndMergeConfig(userConfig) {
     const validation = {
-      count: { min: 1, max: 20, default: 8, type: "number" },
+      count: { min: 1, max: 20, default: 8, type: 'number' },
       animationDuration: {
-        min: "1s",
-        max: "10s",
-        default: "3s",
-        type: "string",
+        min: '1s',
+        max: '10s',
+        default: '3s',
+        type: 'string',
       },
-      opacity: { min: 0.1, max: 1.0, default: 0.6, type: "number" },
+      opacity: { min: 0.1, max: 1.0, default: 0.6, type: 'number' },
       containerClass: {
         pattern: /^[a-zA-Z][a-zA-Z0-9-_]*$/,
-        default: "stars",
-        type: "string",
+        default: 'stars',
+        type: 'string',
       },
       starClass: {
         pattern: /^[a-zA-Z][a-zA-Z0-9-_]*$/,
-        default: "star",
-        type: "string",
+        default: 'star',
+        type: 'string',
       },
       containerId: {
         pattern: /^[a-zA-Z][a-zA-Z0-9-_]*$/,
-        default: "stars",
-        type: "string",
+        default: 'stars',
+        type: 'string',
       },
     };
 
@@ -187,7 +187,7 @@ export class StarsAnimation {
       // Type validation
       if (typeof value !== rules.type) {
         console.warn(
-          `Invalid type for ${key}, using default: ${rules.default}`,
+          `Invalid type for ${key}, using default: ${rules.default}`
         );
         validated[key] = rules.default;
         continue;
@@ -197,8 +197,8 @@ export class StarsAnimation {
       if (rules.min !== undefined && rules.max !== undefined) {
         // Special handling for CSS time values
         if (
-          rules.type === "string" &&
-          (key === "animationDuration" || key.includes("Duration"))
+          rules.type === 'string' &&
+          (key === 'animationDuration' || key.includes('Duration'))
         ) {
           const timeValue = parseFloat(value);
           const minValue = parseFloat(rules.min);
@@ -210,14 +210,14 @@ export class StarsAnimation {
             timeValue > maxValue
           ) {
             console.warn(
-              `${key} out of range [${rules.min}, ${rules.max}], using default: ${rules.default}`,
+              `${key} out of range [${rules.min}, ${rules.max}], using default: ${rules.default}`
             );
             validated[key] = rules.default;
             continue;
           }
         } else if (value < rules.min || value > rules.max) {
           console.warn(
-            `${key} out of range [${rules.min}, ${rules.max}], using default: ${rules.default}`,
+            `${key} out of range [${rules.min}, ${rules.max}], using default: ${rules.default}`
           );
           validated[key] = rules.default;
           continue;
@@ -240,17 +240,17 @@ export class StarsAnimation {
     });
   }
 
-  init(containerId = "stars") {
+  init(containerId = 'stars') {
     try {
       // ENHANCED: Animation conflict prevention - register stars animation
-      if (!this.registerAnimation("stars")) {
-        console.warn("⚠️ Stars animation blocked due to conflict or timing");
+      if (!this.registerAnimation('stars')) {
+        console.warn('⚠️ Stars animation blocked due to conflict or timing');
         return;
       }
 
       // ENHANCED: Performance monitoring start
       this.performanceMetrics.startTime = performance.now();
-      performance.mark("stars-animation-init-start");
+      performance.mark('stars-animation-init-start');
 
       // ENHANCED: Accessibility check before initialization
       if (
@@ -259,7 +259,7 @@ export class StarsAnimation {
         !this.config.accessibility.forceEnable // Allow override for testing
       ) {
         this.config.enabled = false;
-        this.unregisterAnimation("stars"); // Clean up registration
+        this.unregisterAnimation('stars'); // Clean up registration
         return;
       }
 
@@ -272,20 +272,20 @@ export class StarsAnimation {
       this.createStars();
 
       // ENHANCED: Performance monitoring end
-      performance.mark("stars-animation-init-end");
+      performance.mark('stars-animation-init-end');
       performance.measure(
-        "stars-animation-init",
-        "stars-animation-init-start",
-        "stars-animation-init-end",
+        'stars-animation-init',
+        'stars-animation-init-start',
+        'stars-animation-init-end'
       );
 
       this.isInitialized = true;
       console.log(
-        "✅ Stars animation initialized with performance optimizations",
+        '✅ Stars animation initialized with performance optimizations'
       );
     } catch (error) {
-      this.unregisterAnimation("stars"); // Clean up registration on error
-      this.handleError("initialization", error);
+      this.unregisterAnimation('stars'); // Clean up registration on error
+      this.handleError('initialization', error);
     }
   }
 
@@ -298,7 +298,7 @@ export class StarsAnimation {
       }
 
       // ENHANCED: Unregister animation from conflict prevention system
-      this.unregisterAnimation("stars");
+      this.unregisterAnimation('stars');
 
       // ENHANCED: Memory cleanup
       this.cleanupMemory();
@@ -308,9 +308,9 @@ export class StarsAnimation {
       this.cleanupContainer();
 
       this.isDestroyed = true;
-      console.log("✅ Stars animation destroyed and cleaned up");
+      console.log('✅ Stars animation destroyed and cleaned up');
     } catch (error) {
-      console.error("Error during stars animation destruction:", error);
+      console.error('Error during stars animation destruction:', error);
     }
   }
 
@@ -328,7 +328,7 @@ export class StarsAnimation {
 
       // Configuration updated successfully
     } catch (error) {
-      this.handleError("configuration update", error);
+      this.handleError('configuration update', error);
     }
   }
 
@@ -340,45 +340,45 @@ export class StarsAnimation {
     if (document.getElementById(styleId)) return;
 
     // ENHANCED: Feature detection for CSS animations
-    if (!CSS.supports("animation", "name 1s infinite")) {
-      console.warn("CSS animations not supported, using fallback");
+    if (!CSS.supports('animation', 'name 1s infinite')) {
+      console.warn('CSS animations not supported, using fallback');
       this.useFallbackAnimation();
       return;
     }
 
     try {
       // ENHANCED: Performance monitoring for CSS injection
-      performance.mark("stars-css-injection-start");
+      performance.mark('stars-css-injection-start');
 
-      this.dynamicStyles = document.createElement("style");
+      this.dynamicStyles = document.createElement('style');
       this.dynamicStyles.id = styleId;
       this.dynamicStyles.textContent = this.generateOptimizedCSS();
 
       document.head.appendChild(this.dynamicStyles);
 
       // ENHANCED: Performance monitoring end
-      performance.mark("stars-css-injection-end");
+      performance.mark('stars-css-injection-end');
       performance.measure(
-        "stars-css-injection",
-        "stars-css-injection-start",
-        "stars-css-injection-end",
+        'stars-css-injection',
+        'stars-css-injection-start',
+        'stars-css-injection-end'
       );
 
-      const measure = performance.getEntriesByName("stars-css-injection")[0];
+      const measure = performance.getEntriesByName('stars-css-injection')[0];
       this.performanceMetrics.cssInjectionTime = measure.duration;
 
       console.log(
-        `✅ CSS injected in ${this.performanceMetrics.cssInjectionTime.toFixed(2)}ms`,
+        `✅ CSS injected in ${this.performanceMetrics.cssInjectionTime.toFixed(2)}ms`
       );
     } catch (error) {
-      this.handleError("CSS injection", error);
+      this.handleError('CSS injection', error);
     }
   }
 
   // ENHANCED: Optimized CSS generation with CSS variables
   generateOptimizedCSS() {
-    console.log("🎨 Generating CSS for stars animation");
-    console.log("⚙️ Config:", {
+    console.log('🎨 Generating CSS for stars animation');
+    console.log('⚙️ Config:', {
       opacity: this.config.opacity,
       animationDuration: this.config.animationDuration,
       containerClass: this.config.containerClass,
@@ -403,16 +403,16 @@ export class StarsAnimation {
      *    - REASON: Helps identify if container is positioned correctly
      */
     const cssVars = {
-      "--stars-opacity": this.config.opacity,
-      "--stars-animation-duration": this.config.animationDuration,
-      "--stars-color": "var(--color-accent, #8b5dff)", // FIX: Added fallback color
-      "--stars-size": "3px", // FIX: Increased from 2px for better visibility
-      "--stars-scale": "1.2",
+      '--stars-opacity': this.config.opacity,
+      '--stars-animation-duration': this.config.animationDuration,
+      '--stars-color': 'var(--color-accent, #8b5dff)', // FIX: Added fallback color
+      '--stars-size': '3px', // FIX: Increased from 2px for better visibility
+      '--stars-scale': '1.2',
     };
 
     const cssVarsString = Object.entries(cssVars)
       .map(([key, value]) => `${key}: ${value};`)
-      .join("\n      ");
+      .join('\n      ');
 
     const css = `
              .${this.config.containerClass} {
@@ -435,7 +435,7 @@ export class StarsAnimation {
         border-radius: 50%;
         opacity: var(--stars-opacity);
         animation: twinkle var(--stars-animation-duration) infinite;
-        ${this.config.accessibility.highContrastSupport ? "filter: contrast(1.2);" : ""}
+        ${this.config.accessibility.highContrastSupport ? 'filter: contrast(1.2);' : ''}
       }
 
       ${
@@ -446,11 +446,11 @@ export class StarsAnimation {
           filter: contrast(1.5) brightness(1.2);
         }
       }`
-          : ""
+          : ''
       }
     `.trim();
 
-    console.log("✅ CSS generated:", css);
+    console.log('✅ CSS generated:', css);
     return css;
   }
 
@@ -465,7 +465,7 @@ export class StarsAnimation {
   cleanupMemory() {
     // Clear star elements
     if (this.stars.length > 0) {
-      this.stars.forEach((star) => {
+      this.stars.forEach(star => {
         if (star && star.parentNode) {
           star.parentNode.removeChild(star);
         }
@@ -474,8 +474,8 @@ export class StarsAnimation {
     }
 
     // Clear performance measurements
-    performance.clearMarks("stars-animation-*");
-    performance.clearMeasures("stars-animation-*");
+    performance.clearMarks('stars-animation-*');
+    performance.clearMeasures('stars-animation-*');
 
     // Reset performance metrics
     this.performanceMetrics = {
@@ -496,7 +496,7 @@ export class StarsAnimation {
       maxRetries: 3,
     };
 
-    console.log("🧹 Memory cleanup completed");
+    console.log('🧹 Memory cleanup completed');
   }
 
   // ENHANCED: Memory monitoring
@@ -517,11 +517,11 @@ export class StarsAnimation {
     if (memoryUsage > this.memoryMonitor.threshold) {
       this.memoryMonitor.warnings++;
       console.warn(
-        `⚠️ High memory usage: ${(memoryUsage / 1024 / 1024).toFixed(2)}MB`,
+        `⚠️ High memory usage: ${(memoryUsage / 1024 / 1024).toFixed(2)}MB`
       );
 
       if (this.memoryMonitor.warnings >= this.memoryMonitor.maxWarnings) {
-        console.warn("🔄 Reducing animation complexity due to memory pressure");
+        console.warn('🔄 Reducing animation complexity due to memory pressure');
         this.reduceAnimationComplexity();
         this.memoryMonitor.warnings = 0;
       }
@@ -544,7 +544,7 @@ export class StarsAnimation {
     // Reduce animation frequency
     if (this.config.performance.targetFPS > 30) {
       this.config.performance.targetFPS = 30;
-      console.log("🔄 Reducing target FPS to 30");
+      console.log('🔄 Reducing target FPS to 30');
     }
   }
 
@@ -577,7 +577,7 @@ export class StarsAnimation {
 
   clearAnimationConflicts() {
     this.animationConflicts.activeAnimations.clear();
-    console.log("🧹 Animation conflicts cleared");
+    console.log('🧹 Animation conflicts cleared');
   }
 
   // ENHANCED: Device-specific frame rate capping
@@ -602,14 +602,14 @@ export class StarsAnimation {
     this.config.animationDuration = `${4 / (targetFPS / 60)}s`; // Scale duration based on FPS
 
     console.log(
-      `🎯 Applied frame rate capping: ${targetFPS}fps for ${screenWidth}px screen`,
+      `🎯 Applied frame rate capping: ${targetFPS}fps for ${screenWidth}px screen`
     );
     return targetFPS;
   }
 
   // ENHANCED: Flexible container management with accessibility
   setupContainer(containerId) {
-    console.log("🔍 setupContainer() called with:", {
+    console.log('🔍 setupContainer() called with:', {
       containerId,
       useExistingContainer: this.config.useExistingContainer,
       createContainer: this.config.createContainer,
@@ -619,31 +619,31 @@ export class StarsAnimation {
     if (this.config.useExistingContainer) {
       // Use existing container
       console.log(
-        `🔍 Looking for existing container: ${this.config.containerSelector}`,
+        `🔍 Looking for existing container: ${this.config.containerSelector}`
       );
       this.container = document.querySelector(this.config.containerSelector);
 
       if (!this.container) {
         console.warn(
-          `⚠️ Existing container not found: ${this.config.containerSelector}`,
+          `⚠️ Existing container not found: ${this.config.containerSelector}`
         );
-        console.log("📄 Current DOM structure:");
+        console.log('📄 Current DOM structure:');
         console.log(
           "All elements with class 'stars':",
-          document.querySelectorAll(".stars"),
+          document.querySelectorAll('.stars')
         );
         console.log(
           "All elements with id 'stars':",
-          document.getElementById("stars"),
+          document.getElementById('stars')
         );
-        console.log("Document body:", document.body);
+        console.log('Document body:', document.body);
         this.createNewContainer(containerId);
       } else {
         console.log(`✅ Found existing container:`, this.container);
       }
     } else if (this.config.createContainer) {
       // Create new container
-      console.log("🔄 Creating new container");
+      console.log('🔄 Creating new container');
       this.createNewContainer(containerId);
     } else {
       // Use provided container ID
@@ -652,10 +652,10 @@ export class StarsAnimation {
 
       if (!this.container) {
         console.warn(`⚠️ Container not found: ${containerId}`);
-        console.log("📄 Current DOM structure:");
+        console.log('📄 Current DOM structure:');
         console.log(
           "All elements with id 'stars':",
-          document.getElementById("stars"),
+          document.getElementById('stars')
         );
         this.createNewContainer(containerId);
       } else {
@@ -672,12 +672,12 @@ export class StarsAnimation {
     if (!this.container) return;
 
     // Enhanced accessibility attributes
-    this.container.setAttribute("aria-hidden", "true");
-    this.container.setAttribute("role", "presentation");
-    this.container.setAttribute("data-animation-type", "decorative");
+    this.container.setAttribute('aria-hidden', 'true');
+    this.container.setAttribute('role', 'presentation');
+    this.container.setAttribute('data-animation-type', 'decorative');
     this.container.setAttribute(
-      "data-stars-count",
-      this.config.count.toString(),
+      'data-stars-count',
+      this.config.count.toString()
     );
 
     // Screen reader announcement for dynamic content
@@ -687,19 +687,19 @@ export class StarsAnimation {
 
     // High contrast support
     if (this.config.accessibility.highContrastSupport) {
-      this.container.setAttribute("data-high-contrast", "true");
+      this.container.setAttribute('data-high-contrast', 'true');
     }
   }
 
   // ENHANCED: Screen reader announcements
   setupScreenReaderAnnouncements() {
     // Create live region for announcements
-    const liveRegion = document.createElement("div");
-    liveRegion.setAttribute("aria-live", "polite");
-    liveRegion.setAttribute("aria-atomic", "true");
-    liveRegion.className = "sr-only";
+    const liveRegion = document.createElement('div');
+    liveRegion.setAttribute('aria-live', 'polite');
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.className = 'sr-only';
     liveRegion.style.cssText =
-      "position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;";
+      'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
 
     document.body.appendChild(liveRegion);
     this.liveRegion = liveRegion;
@@ -711,7 +711,7 @@ export class StarsAnimation {
       this.liveRegion.textContent = message;
       // Clear after announcement
       setTimeout(() => {
-        this.liveRegion.textContent = "";
+        this.liveRegion.textContent = '';
       }, 1000);
     }
   }
@@ -719,7 +719,7 @@ export class StarsAnimation {
   createNewContainer(containerId) {
     console.log(`🔄 Creating new container with ID: ${containerId}`);
 
-    this.container = document.createElement("div");
+    this.container = document.createElement('div');
     this.container.id = containerId;
     this.container.className = this.config.containerClass;
     this.container.style.cssText = `
@@ -732,21 +732,21 @@ export class StarsAnimation {
       z-index: 10;
     `;
 
-    console.log("📦 New container created:", this.container);
-    console.log("📍 Appending to document body");
+    console.log('📦 New container created:', this.container);
+    console.log('📍 Appending to document body');
 
     document.body.appendChild(this.container);
 
-    console.log("✅ Container appended to DOM");
+    console.log('✅ Container appended to DOM');
     console.log(
-      "🔍 Verifying container in DOM:",
-      document.getElementById(containerId),
+      '🔍 Verifying container in DOM:',
+      document.getElementById(containerId)
     );
   }
 
   // ENHANCED: Page visibility and accessibility handlers
   setupPageVisibilityHandler() {
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       this.isPageVisible = !document.hidden;
 
       // DISABLED: Keep stars running continuously
@@ -766,8 +766,8 @@ export class StarsAnimation {
   setupAccessibilityHandlers() {
     // DISABLED: Reduced motion pause functionality
     // Listen for reduced motion preference changes
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    motionQuery.addEventListener("change", (e) => {
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    motionQuery.addEventListener('change', e => {
       this.reducedMotion = e.matches;
 
       // DISABLED: Keep stars running regardless of motion preference
@@ -789,8 +789,8 @@ export class StarsAnimation {
     });
 
     // Listen for high contrast preference changes
-    const contrastQuery = window.matchMedia("(prefers-contrast: high)");
-    contrastQuery.addEventListener("change", (e) => {
+    const contrastQuery = window.matchMedia('(prefers-contrast: high)');
+    contrastQuery.addEventListener('change', e => {
       if (this.config.accessibility.highContrastSupport) {
         this.updateHighContrastMode(e.matches);
       }
@@ -805,31 +805,31 @@ export class StarsAnimation {
     }
 
     if (this.container) {
-      this.container.style.animationPlayState = "paused";
+      this.container.style.animationPlayState = 'paused';
     }
 
-    console.log("⏸️ Stars animation paused");
+    console.log('⏸️ Stars animation paused');
   }
 
   resumeAnimation() {
     if (this.isDestroyed || this.reducedMotion) return;
 
     if (this.container) {
-      this.container.style.animationPlayState = "running";
+      this.container.style.animationPlayState = 'running';
     }
 
     this.update();
-    console.log("▶️ Stars animation resumed");
+    console.log('▶️ Stars animation resumed');
   }
 
   // ENHANCED: High contrast mode update
   updateHighContrastMode(enabled) {
     if (this.container) {
-      this.container.setAttribute("data-high-contrast", enabled.toString());
+      this.container.setAttribute('data-high-contrast', enabled.toString());
     }
 
     if (enabled) {
-      console.log("🎨 High contrast mode enabled for stars animation");
+      console.log('🎨 High contrast mode enabled for stars animation');
     }
   }
 
@@ -842,7 +842,7 @@ export class StarsAnimation {
 
   // ENHANCED: Star creation with accessibility and performance
   createStar() {
-    const star = document.createElement("div");
+    const star = document.createElement('div');
     star.className = this.config.starClass;
 
     // Random positioning with better distribution
@@ -852,7 +852,7 @@ export class StarsAnimation {
     const floatDelay = Math.random() * 8; // Random float delay for natural movement
 
     // Random floating pattern for varied movement
-    const floatPatterns = ["float", "float-2", "float-3"];
+    const floatPatterns = ['float', 'float-2', 'float-3'];
     const randomFloatPattern =
       floatPatterns[Math.floor(Math.random() * floatPatterns.length)];
 
@@ -862,8 +862,8 @@ export class StarsAnimation {
     star.style.animationName = `twinkle, ${randomFloatPattern}`; // Random float pattern
 
     // ENHANCED: Accessibility attributes for individual stars
-    star.setAttribute("aria-hidden", "true");
-    star.setAttribute("role", "presentation");
+    star.setAttribute('aria-hidden', 'true');
+    star.setAttribute('role', 'presentation');
 
     // ENHANCED: Performance optimization - use transform instead of top/left
     star.style.transform = `translate(${left}vw, ${top}vh)`;
@@ -932,7 +932,7 @@ export class StarsAnimation {
 
     // Update container attribute
     if (this.container) {
-      this.container.setAttribute("data-stars-count", newCount.toString());
+      this.container.setAttribute('data-stars-count', newCount.toString());
     }
 
     // Announce to screen reader
@@ -953,16 +953,16 @@ export class StarsAnimation {
 
     if (retryCount < maxRetries) {
       console.log(
-        `🔄 Retrying stars animation (${retryCount + 1}/${maxRetries})...`,
+        `🔄 Retrying stars animation (${retryCount + 1}/${maxRetries})...`
       );
       setTimeout(
         () => {
           this.retryInitialization(context, retryCount + 1);
         },
-        1000 * (retryCount + 1),
+        1000 * (retryCount + 1)
       ); // Exponential backoff
     } else {
-      console.warn("🔄 Max retries reached, triggering fallback...");
+      console.warn('🔄 Max retries reached, triggering fallback...');
       this.triggerFallback();
     }
   }
@@ -973,7 +973,7 @@ export class StarsAnimation {
       this.destroy();
       this.init(this.config.containerId);
       this.errorState.hasError = false;
-      console.log("✅ Stars animation retry successful");
+      console.log('✅ Stars animation retry successful');
     } catch (error) {
       this.handleError(context, error, retryCount);
     }
@@ -981,7 +981,7 @@ export class StarsAnimation {
 
   // ENHANCED: Fallback mechanism
   triggerFallback() {
-    console.warn("🔄 Triggering stars animation fallback...");
+    console.warn('🔄 Triggering stars animation fallback...');
 
     // Disable animation but keep container
     this.config.enabled = false;
@@ -990,7 +990,7 @@ export class StarsAnimation {
     this.createStaticStars();
 
     // Announce to screen reader
-    this.announceToScreenReader("Stars animation fallback mode activated");
+    this.announceToScreenReader('Stars animation fallback mode activated');
   }
 
   // ENHANCED: Static stars fallback
@@ -998,7 +998,7 @@ export class StarsAnimation {
     if (!this.container) return;
 
     // Clear existing stars
-    this.stars.forEach((star) => {
+    this.stars.forEach(star => {
       if (star && star.parentNode) {
         star.parentNode.removeChild(star);
       }
@@ -1007,7 +1007,7 @@ export class StarsAnimation {
 
     // Create simple static stars
     for (let i = 0; i < Math.min(this.config.count, 4); i++) {
-      const star = document.createElement("div");
+      const star = document.createElement('div');
       star.className = this.config.starClass;
       star.style.cssText = `
         position: absolute;
@@ -1019,7 +1019,7 @@ export class StarsAnimation {
         top: ${Math.random() * 100}%;
         left: ${Math.random() * 100}%;
       `;
-      star.setAttribute("aria-hidden", "true");
+      star.setAttribute('aria-hidden', 'true');
 
       this.container.appendChild(star);
       this.stars.push(star);
@@ -1028,7 +1028,7 @@ export class StarsAnimation {
 
   // ENHANCED: Fallback animation for unsupported browsers
   useFallbackAnimation() {
-    console.log("🔄 Using fallback animation for unsupported browser");
+    console.log('🔄 Using fallback animation for unsupported browser');
 
     // Create simple opacity-based animation
     const fallbackCSS = `
@@ -1042,7 +1042,7 @@ export class StarsAnimation {
       }
     `;
 
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.textContent = fallbackCSS;
     document.head.appendChild(style);
     this.fallbackStyle = style;
@@ -1075,12 +1075,12 @@ export class StarsAnimation {
   }
 
   createStars() {
-    console.log("🔍 createStars() called");
-    console.log("📍 Container exists:", !!this.container);
-    console.log("⚙️ Config enabled:", this.config.enabled);
+    console.log('🔍 createStars() called');
+    console.log('📍 Container exists:', !!this.container);
+    console.log('⚙️ Config enabled:', this.config.enabled);
 
     if (!this.container || !this.config.enabled) {
-      console.warn("⚠️ Cannot create stars: container or config issue", {
+      console.warn('⚠️ Cannot create stars: container or config issue', {
         container: this.container,
         enabled: this.config.enabled,
       });
@@ -1089,7 +1089,7 @@ export class StarsAnimation {
 
     // Clear existing stars
     this.stars = [];
-    this.container.innerHTML = "";
+    this.container.innerHTML = '';
 
     console.log(`🔄 Creating ${this.config.count} stars...`);
 
@@ -1106,7 +1106,7 @@ export class StarsAnimation {
     this.update();
 
     console.log(
-      `✨ Stars animation initialized with ${this.config.count} stars`,
+      `✨ Stars animation initialized with ${this.config.count} stars`
     );
 
     // ENHANCED DEBUG LOGGING
@@ -1114,14 +1114,14 @@ export class StarsAnimation {
     console.log(`🌟 Stars array:`, this.stars);
     console.log(
       `🎨 Container computed style:`,
-      window.getComputedStyle(this.container),
+      window.getComputedStyle(this.container)
     );
 
     // Check if stars are actually visible
     if (this.stars.length > 0) {
       const firstStar = this.stars[0];
       const computedStyle = window.getComputedStyle(firstStar);
-      console.log("⭐ First star computed style:", {
+      console.log('⭐ First star computed style:', {
         display: computedStyle.display,
         visibility: computedStyle.visibility,
         opacity: computedStyle.opacity,
@@ -1146,42 +1146,3 @@ export function initStarsAnimation(config = {}) {
   return new StarsAnimation(config);
 }
 
-// ENHANCED: Performance monitoring integration
-export class StarsAnimationPerformanceMonitor {
-  constructor(animationInstance) {
-    this.animation = animationInstance;
-    this.metrics = {
-      initializationTime: 0,
-      memoryUsage: 0,
-      averageFPS: 0,
-      errorCount: 0,
-      retryCount: 0,
-    };
-  }
-
-  startMonitoring() {
-    this.animation.performanceMetrics.startTime = performance.now();
-    console.log("📊 Stars animation performance monitoring started");
-  }
-
-  endMonitoring() {
-    const endTime = performance.now();
-    this.metrics.initializationTime =
-      endTime - this.animation.performanceMetrics.startTime;
-    this.metrics.memoryUsage = this.animation.performanceMetrics.memoryUsage;
-    this.metrics.averageFPS = this.animation.performanceMetrics.averageFPS;
-    this.metrics.errorCount = this.animation.errorState.retryCount;
-
-    this.report();
-  }
-
-  report() {
-    console.log("📊 Stars Animation Performance Report:", {
-      initializationTime: `${this.metrics.initializationTime.toFixed(2)}ms`,
-      memoryUsage: `${(this.metrics.memoryUsage / 1024 / 1024).toFixed(2)}MB`,
-      averageFPS: `${this.metrics.averageFPS.toFixed(1)}fps`,
-      errorCount: this.metrics.errorCount,
-      retryCount: this.metrics.retryCount,
-    });
-  }
-}

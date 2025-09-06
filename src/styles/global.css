@@ -6,7 +6,7 @@
  * Following Google 2025 Engineering/UI-UX standards
  */
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* ========== GLOBAL ANIMATIONS - PRESERVED FROM LEGACY ========== */
 /* 
@@ -164,10 +164,14 @@
   body {
     /* REASONING: Preserving legacy font-family and base styles for compatibility */
     font-family:
+      'Noto Sans JP',
+      'Hiragino Sans',
+      'Yu Gothic',
+      'Meiryo',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
-      "Segoe UI",
+      'Segoe UI',
       Roboto,
       sans-serif;
     font-size: 1rem; /* 16px base - matches legacy */
@@ -256,7 +260,7 @@
     cursor: pointer !important;
     /* Logo size: REM for accessibility while maintaining brand recognition */
     text-decoration: none !important;
-    font-family: "Yuji Syuku", serif;
+    font-family: 'Yuji Syuku', serif;
     /* Enhanced WCAG-compliant logo color using OKLCH */
     color: oklch(
       98% 0.002 270
@@ -291,6 +295,17 @@
     /* Additional glow filter for extra effect */
     filter: drop-shadow(0 0 8px oklch(65% 0.18 280 / 0.3)) !important;
   }
+}
+
+/* ========== FONT AND EMOJI UTILITIES ========== */
+/* Enhanced font support for Japanese and emoji */
+.emoji {
+  font-family: 'Noto Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  font-variant-emoji: emoji;
+}
+
+.japanese {
+  font-family: 'Yuji Syuku', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
 }
 
 /* ========== ACCESSIBILITY UTILITIES ========== */
@@ -432,7 +447,7 @@
   padding: 1rem;
   overflow-x: auto;
   margin: 1rem 0;
-  font-family: "Fira Code", "Courier New", monospace;
+  font-family: 'Fira Code', 'Courier New', monospace;
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -442,7 +457,7 @@
   padding: 0.125rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: "Fira Code", "Courier New", monospace;
+  font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--color-secondary);
 }
 
@@ -828,7 +843,7 @@
 
   /* Font family for legacy compatibility */
   --font-family-base:
-    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Localhost optimization flag - preserved from legacy */
   --localhost-optimization: true;
@@ -958,7 +973,7 @@
   }
 
   /* Base typography hierarchy */
-  :where(:not([class*="text-"])) {
+  :where(:not([class*='text-'])) {
     h1 {
       font-size: var(--font-size-3xl);
       font-weight: var(--font-weight-bold);
@@ -1546,7 +1561,7 @@ ul li {
 
 ul li::before {
   /* REASONING: Custom bullet "〆" with primary purple color */
-  content: "〆";
+  content: '〆';
   position: absolute;
   left: 0;
   top: 0;
@@ -1592,7 +1607,7 @@ ul ul {
 
 ul ul li::before {
   /* REASONING: Nested custom bullet with smaller size */
-  content: "〆";
+  content: '〆';
   position: absolute;
   left: 0;
   top: 0;
@@ -1690,7 +1705,7 @@ ol ol {
 
 /* ===== TOOLS PAGE WAVE ANIMATIONS ===== */
 .tools-hero::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;

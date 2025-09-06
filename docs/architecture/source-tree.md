@@ -85,7 +85,6 @@ pages/
 ├── 404.astro              # 404 error page (9.3KB, 347 lines)
 ├── mind-map.astro          # Mind map page (13KB, 532 lines)
 ├── discord.astro           # Discord page (11KB, 424 lines)
-├── settings.astro          # Settings page (7.0KB, 245 lines)
 └── sitemap.xml.ts          # Sitemap generator (1.3KB, 55 lines)
 ```
 
@@ -98,7 +97,7 @@ utils/
 ├── search/                 # Search utilities
 ├── performance/            # Performance monitoring
 ├── security/               # Security utilities
-├── error-handling/         # Error handling
+├── error-handling/         # Error handling (removed)
 ├── content-structure/      # Content structure utilities
 ├── index.ts                # Main utils export (1.3KB, 50 lines)
 ├── content-path-resolver.ts # Path resolution (8.0KB, 316 lines)

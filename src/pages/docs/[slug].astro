@@ -1,26 +1,18 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
-import Head from "../../components/public-components/HeadSEO.astro"
+import { readFileSync, statSync } from "fs"
+import { join } from "path"
+import UnifiedSEO from "../../components/UnifiedSEO.astro"
 import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
 import Navbar from "../../components/public-components/Navbar.vue"
-import { AIRecommendations } from "../../components/docs/ai-recommendations"
+// AI Recommendations removed - functionality no longer needed
+// AI content utilities removed - functionality no longer needed
+// Content analysis utilities removed - functionality no longer needed
+// AI metadata utilities removed - functionality no longer needed
 import {
-  getRelatedContent,
-  getContentWithSimpleAIMetadata,
-  loadAndEnhanceRecommendations,
-  convertPostsToPostInfo,
-  processPostWithOptimization,
-} from "../../utils/ai-content"
-import { generateInternalLinks, analyzeContent } from "../../utils/ai-content"
-import {
-  loadMetadata,
-  getSEOFromMetadata,
-  getRecommendationsFromMetadata,
-} from "../../utils/metadata-loader"
-import {
-  resolveContentPath,
-  getCollectionMetadata,
-} from "../../utils/content-path-resolver"
+  resolvePath,
+  getCollectionInfo,
+} from "../../utils/collections"
 
 // Import post[slug]-specific styles with Tailwind v4 optimization
 import "../../styles/docs/[slug].css"
@@ -44,17 +36,43 @@ if (!post) {
 }
 
 // Dynamic content path resolution for SEO
-const resolvedPath = resolveContentPath(post)
-const collectionMetadata = getCollectionMetadata("docs") // Default to docs for backward compatibility
+const resolvedPath = { path: resolvePath("docs", post.slug) }
+const collectionMetadata = getCollectionInfo("docs")
 
-// SEO data with proper optional prop handling
+// ファイルシステムから自動的に作成日・更新日を取得
+function getFileDates(slug: string) {
+  try {
+    const filePath = join(process.cwd(), 'src/content/docs', `${slug}.md`)
+    const stats = statSync(filePath)
+    
+    return {
+      createdDate: stats.birthtime.toISOString(),
+      modifiedDate: stats.mtime.toISOString()
+    }
+  } catch (error) {
+    console.warn(`⚠️ Could not get file dates for ${slug}:`, error)
+    return {
+      createdDate: new Date().toISOString(),
+      modifiedDate: new Date().toISOString()
+    }
+  }
+}
+
+// ファイルの作成日・更新日を自動取得
+const fileDates = getFileDates(post.slug)
+
+// Dynamic SEO data based on document content (フロントマター完全対応 + 自動日付)
 const seoData = {
-  title: post.data.title,
-  description: String(post.data.description),
-  canonicalUrl: `https://gorakudo.org${resolvedPath.path}`,
-  pageType: "article" as const,
-  authorName: String(post.data.author),
-  publishedDate: String(post.data.publishedDate),
+  title: post.data.title || `Documentation - ${post.slug}`,
+  description: post.data.description || `Learn about ${post.slug} in GoRakuDo documentation`,
+  keywords: post.data.tags || ["documentation", post.slug, "guide"], // ✅ tagsフィールドを使用
+  articleType: "guide",
+  learningStage: post.data.difficulty || "intermediate", // ✅ difficultyフィールドを使用
+  searchIntent: "informational",
+  // フロントマターの日付があれば使用、なければファイルシステムの日付を使用
+  publishedDate: post.data.publishedDate || fileDates.createdDate,
+  modifiedDate: post.data.modifiedDate || fileDates.modifiedDate,
+  isDraft: post.data.isDraft || false
 }
 
 // Helper function to format date
@@ -90,40 +108,34 @@ let relatedContent: any = null
 let internalLinks: any = null
 let enhancedContent: string = post.body
 
-try {
-  // Use optimized post processor that checks for existing metadata
-  const result = await processPostWithOptimization(post)
-
-  relatedContent = result.relatedContent
-  internalLinks = result.internalLinks
-  enhancedContent = result.enhancedContent
-
-  if (result.usedExistingMetadata) {
-    console.log(
-      `⏭️  Used existing metadata for "${post.slug}" (${result.processingTime}ms)`
-    )
-  } else {
-    console.log(
-      `🤖 Generated new recommendations for "${post.slug}" (${result.processingTime}ms)`
-    )
-  }
-} catch (error) {
-  console.warn(`⚠️ Failed to process post "${post.slug}":`, error)
-}
+// Post processing removed - functionality no longer needed
+relatedContent = []
+internalLinks = []
+enhancedContent = post.body
 ---
 
-<!doctype html>
-<html lang="id">
+<html lang="ja">
   <head>
-    <Head {...seoData} aiPageType="post" enableAIOptimizations={true} />
+    <!-- UnifiedSEO - シンプルなAstroネイティブ実装 -->
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType="article"
+      author={post.data.author || "GoRakuDo Team"}
+      publishedDate={seoData.publishedDate}
+      modifiedDate={seoData.modifiedDate}
+      noindex={seoData.isDraft}
+    />
 
     <!-- Preload critical resources for better performance -->
     <link
       rel="preload"
       href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
       as="script"
+      crossorigin="anonymous"
     />
-    <script src="/core/post-script.js" is:inline></script>
+    <!-- post-script.jsはTypeScript分離版に置き換えられました -->
 
     <!-- Fonts with display=swap for better performance -->
     <link
@@ -132,7 +144,7 @@ try {
     />
 
     <!-- Core: Always load marked for markdown rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" crossorigin="anonymous"></script>
   </head>
 
   <body>
@@ -229,62 +241,62 @@ try {
           </div>
         </footer>
 
-        {/* AI-Powered Content Recommendations Section */}
-        {
-          relatedContent && (
-            <section
-              class="ai-recommendations-section"
-              aria-label="Rekomendasi konten terkait">
-              <AIRecommendations
-                relatedContent={relatedContent}
-                maxRecommendations={3}
-                showHeader={true}
-                className=""
-                showFallback={true}
-              />
-            </section>
-          )
-        }
+        {/* AI-Powered Content Recommendations Section - REMOVED */}
+        {/* AI Recommendations functionality removed - no longer needed */}
       </div>
     </main>
 
-    <!-- Scripts Section - Organized and Optimized -->
-    <script is:inline src="/core/post-script.js"></script>
-    <script src="/scripts/ui/post-skeleton-loader.js" is:inline></script>
+    <!-- Scripts Section - TypeScript分離版 -->
+    <!-- post-script.jsは不要になりました -->
 
-    <!-- Main Application Script -->
+    <!-- Main Application Script - TypeScript分離版 -->
     <script define:vars={{ postData, enhancedContent }}>
+      // TypeScript分離スクリプトの機能を直接実装
+      // （define:vars内ではimport文が使用できないため）
+      
       // ========== GLOBAL VARIABLES ==========
-      let enhancedContentLoaded = false
+      let enhancedContentLoaded = false;
 
       // ========== UTILITY FUNCTIONS ==========
 
       // Share functionality with dynamic path support
-      function sharePost() {
+      async function sharePost() {
         const shareUrl = postData?.resolvedPath
           ? `${window.location.origin}${postData.resolvedPath}`
-          : window.location.href
+          : window.location.href;
 
-        if (navigator.share) {
-          navigator.share({
-            title: postData?.title || "GoRakuDo Post",
-            text: postData?.description || "Check out this post from GoRakuDo",
-            url: shareUrl,
-          })
-        } else {
-          // Fallback: copy to clipboard
-          navigator.clipboard.writeText(shareUrl).then(() => {
-            alert("Link berhasil disalin ke clipboard!")
-          })
+        const shareData = {
+          title: postData?.title || "GoRakuDo Post",
+          description: postData?.description || "Check out this post from GoRakuDo",
+          url: shareUrl,
+        };
+
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+          } else {
+            // Fallback: copy to clipboard
+            await navigator.clipboard.writeText(shareUrl);
+            alert("Link berhasil disalin ke clipboard!");
+          }
+        } catch (error) {
+          console.error('Share failed:', error);
+          // Fallback to clipboard
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            alert("Link berhasil disalin ke clipboard!");
+          } catch (clipboardError) {
+            console.error('Clipboard fallback failed:', clipboardError);
+          }
         }
       }
 
       // Reading progress indicator
       function addReadingProgress() {
-        const progressBar = document.createElement("div")
-        progressBar.className = "reading-progress"
-        progressBar.setAttribute("role", "progressbar")
-        progressBar.setAttribute("aria-label", "Reading progress")
+        const progressBar = document.createElement("div");
+        progressBar.className = "reading-progress";
+        progressBar.setAttribute("role", "progressbar");
+        progressBar.setAttribute("aria-label", "Reading progress");
         progressBar.style.cssText = `
           position: fixed;
           top: 0;
@@ -294,45 +306,55 @@ try {
           background: linear-gradient(90deg, #8b5dff, #7b4def);
           z-index: 1000;
           transition: width 0.1s ease;
-        `
-        document.body.appendChild(progressBar)
+        `;
+        
+        document.body.appendChild(progressBar);
 
-        window.addEventListener("scroll", () => {
-          const scrollTop = window.pageYOffset
-          const docHeight = document.body.scrollHeight - window.innerHeight
-          const scrollPercent = (scrollTop / docHeight) * 100
-          progressBar.style.width = scrollPercent + "%"
-          progressBar.setAttribute("aria-valuenow", Math.round(scrollPercent))
-        })
+        const handleScroll = () => {
+          const scrollTop = window.pageYOffset;
+          const docHeight = document.body.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          progressBar.style.width = scrollPercent + "%";
+          progressBar.setAttribute("aria-valuenow", Math.round(scrollPercent).toString());
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return {
+          cleanup: () => {
+            progressBar.remove();
+            window.removeEventListener("scroll", handleScroll);
+          }
+        };
       }
 
       // Enhanced loading with performance optimizations
       async function loadEnhancements() {
         try {
-          console.log("⚡ Loading enhancements...")
+          console.log("⚡ Loading enhancements...");
 
           // Add reading progress
-          addReadingProgress()
+          addReadingProgress();
 
           // Set up error handling
           window.addEventListener("error", function (e) {
-            console.error("Content load error:", e.error)
-          })
+            console.error("Content load error:", e.error);
+          });
 
           window.addEventListener("unhandledrejection", function (e) {
-            console.error("Unhandled promise rejection:", e.reason)
-          })
+            console.error("Unhandled promise rejection:", e.reason);
+          });
 
           // Performance optimizations
           if ("requestIdleCallback" in window) {
             requestIdleCallback(() => {
-              console.log("⚡ Idle time optimizations applied")
-            })
+              console.log("⚡ Idle time optimizations applied");
+            });
           }
 
-          console.log("✅ Enhancements loaded successfully")
+          console.log("✅ Enhancements loaded successfully");
         } catch (error) {
-          console.error("Failed to load enhancements:", error)
+          console.error("Failed to load enhancements:", error);
         }
       }
 
@@ -340,90 +362,72 @@ try {
 
       // Initialize enhanced content
       if (enhancedContent) {
-        window.enhancedContent = enhancedContent
-        enhancedContentLoaded = true
-        console.log("🤖 Enhanced content with internal links loaded")
+        window.enhancedContent = enhancedContent;
+        enhancedContentLoaded = true;
+        console.log("🤖 Enhanced content with internal links loaded");
       }
 
       // Render post content
       function renderPostContent() {
-        if (!postData) return
+        if (!postData) return;
 
-        const content = window.enhancedContent || postData.body
-        const postContent = document.getElementById("postContent")
+        const content = window.enhancedContent || postData.body;
+        const postContent = document.getElementById("postContent");
 
-        if (!postContent) return
+        if (!postContent) return;
 
         // Show skeleton loading
-        showPostSkeleton(postContent)
+        showPostSkeleton(postContent);
 
         // Configure marked for markdown rendering
-        marked.setOptions({
-          highlight: function (code, lang) {
-            return `<pre><code class="language-${lang}">${code}</code></pre>`
-          },
-          breaks: true,
-          gfm: true,
-        })
+        if (window.marked) {
+          window.marked.setOptions({
+            highlight: function (code, lang) {
+              return `<pre><code class="language-${lang}">${code}</code></pre>`;
+            },
+            breaks: true,
+            gfm: true,
+          });
 
-        // Render content with minimal delay
-        setTimeout(() => {
-          const renderedHTML = marked.parse(content)
-          postContent.innerHTML = renderedHTML
-          hidePostSkeleton(postContent)
-
-          // Load enhancements after content is rendered
-          loadEnhancements()
-        }, 100)
+          // Render content with minimal delay
+          setTimeout(() => {
+            try {
+              if (window.marked) {
+                const renderedHTML = window.marked.parse(content);
+                postContent.innerHTML = renderedHTML;
+                hidePostSkeleton(postContent);
+                
+                console.log("✅ Post content rendered successfully");
+              } else {
+                console.error("Marked library not available");
+                // Fallback: plain text display
+                postContent.innerHTML = `<pre>${content}</pre>`;
+              }
+            } catch (error) {
+              console.error("Failed to render post content:", error);
+              // Fallback: plain text display
+              postContent.innerHTML = `<pre>${content}</pre>`;
+            }
+          }, 100);
+        } else {
+          console.error("Marked library not loaded");
+          // Fallback: plain text display
+          postContent.innerHTML = `<pre>${content}</pre>`;
+        }
       }
 
       // ========== SKELETON LOADING ==========
 
       function showPostSkeleton(container) {
-        if (!container) return
-
-        container.innerHTML = `
-          <div class="post-content skeleton-content">
-            <div class="skeleton-content-header">
-              <div class="skeleton-content-title"></div>
-              <div class="skeleton-content-meta">
-                <div class="skeleton-content-author"></div>
-                <div class="skeleton-content-date"></div>
-                <div class="skeleton-content-read-time"></div>
-              </div>
-            </div>
-            <div class="skeleton-content-body">
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph short"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph"></div>
-              <div class="skeleton-paragraph short"></div>
-            </div>
-            <div class="skeleton-content-tags">
-              <div class="skeleton-content-tag"></div>
-              <div class="skeleton-content-tag"></div>
-              <div class="skeleton-content-tag"></div>
-            </div>
-          </div>
-        `
-        container.classList.add("skeleton-loading")
-        console.log("✅ Post skeleton shown")
+        // Skeleton functionality disabled
+        console.log("🚫 Post skeleton disabled");
+        return;
       }
 
       function hidePostSkeleton(container) {
-        if (!container) return
-
-        container.classList.remove("skeleton-loading")
-        container.classList.add("skeleton-fade-in")
-
-        setTimeout(() => {
-          container.classList.remove("skeleton-fade-in")
-        }, 500)
-
-        console.log("✅ Post skeleton hidden")
+        // Skeleton functionality disabled
+        console.log("🚫 Post skeleton hiding disabled");
+        return;
       }
 
       // ========== INITIALIZATION ==========
@@ -431,23 +435,27 @@ try {
       // Set default preferences
       if (typeof localStorage !== "undefined") {
         if (!localStorage.getItem("setting_aggressiveLoading")) {
-          localStorage.setItem("setting_aggressiveLoading", "true")
+          localStorage.setItem("setting_aggressiveLoading", "true");
         }
         if (!localStorage.getItem("threshold_syntaxHighlighting")) {
-          localStorage.setItem("threshold_syntaxHighlighting", "500")
+          localStorage.setItem("threshold_syntaxHighlighting", "500");
         }
         if (!localStorage.getItem("threshold_readingProgress")) {
-          localStorage.setItem("threshold_readingProgress", "300")
+          localStorage.setItem("threshold_readingProgress", "300");
         }
         if (!localStorage.getItem("threshold_errorHandling")) {
-          localStorage.setItem("threshold_errorHandling", "1000")
+          localStorage.setItem("threshold_errorHandling", "1000");
         }
       }
 
+      // Set up global share function
+      window.sharePost = sharePost;
+
       // Initialize when DOM is ready
       document.addEventListener("DOMContentLoaded", function () {
-        renderPostContent()
-      })
+        renderPostContent();
+        loadEnhancements();
+      });
     </script>
   </body>
 </html>

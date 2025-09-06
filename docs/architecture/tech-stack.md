@@ -2,599 +2,614 @@
 
 ## Overview
 
-This document outlines the actual technology stack used in the GoRakuDo project, including frameworks, libraries, tools, and deployment infrastructure. All technologies listed are actively used in the codebase.
+This document provides a comprehensive overview of the technology stack used in the GoRakuDo project, a modern Japanese language learning platform built with Astro and Vue.js.
 
 ## Table of Contents
 
 1. [Core Framework](#core-framework)
 2. [Frontend Technologies](#frontend-technologies)
 3. [Styling & UI](#styling--ui)
-4. [AI & Automation](#ai--automation)
-5. [Search Implementation](#search-implementation)
-6. [Performance & Optimization](#performance--optimization)
-7. [Content Processing Pipeline](#content-processing-pipeline)
-8. [Security Measures](#security-measures)
-9. [Development Toolchain](#development-toolchain)
-10. [Deployment & Hosting](#deployment--hosting)
-11. [External Services](#external-services)
-12. [Version Control](#version-control)
+4. [Content Management](#content-management)
+5. [Development Tools](#development-tools)
+6. [Testing Framework](#testing-framework)
+7. [Build & Deployment](#build--deployment)
+8. [Performance & Optimization](#performance--optimization)
+9. [Browser Support](#browser-support)
+10. [Architecture Decisions](#architecture-decisions)
+
+---
 
 ## Core Framework
 
-### Astro.js
-- **Version**: 5.13.0
-- **Purpose**: Static Site Generator (SSG)
-- **Configuration**: `astro.config.mjs`
+### Astro 5.13.0
+- **Purpose**: Static site generator and web framework
+- **Why Astro**: Zero-JavaScript by default, optimal performance, component islands architecture
 - **Key Features**:
-  - Zero JavaScript by default
-  - Component Islands architecture
-  - Built-in performance optimizations
-  - Multiple framework support
+  - Static site generation with optional SSR
+  - Component islands for selective hydration
+  - Built-in image optimization
+  - Content Collections for type-safe content management
+  - File-based routing
 
+#### 実際の使用例
+```astro
+---
+// src/pages/docs.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = await getCollection('docs');
+---
+
+<BaseLayout title="ドキュメント">
+  <main>
+    {posts.map(post => (
+      <article>
+        <h2>{post.data.title}</h2>
+        <p>{post.data.description}</p>
+      </article>
+    ))}
+  </main>
+</BaseLayout>
+```
+
+#### 設定例 (astro.config.mjs)
 ```javascript
-// astro.config.mjs
 export default defineConfig({
   site: "https://gorakudo.org",
-  output: "static", // Static site generation
-  integrations: [vue()],
-  // Performance optimizations
-  build: {
-    assets: "_astro",
-  }
+  output: "static",
+  integrations: [
+    vue({
+      include: ["**/*.vue"],
+      experimentalReactivityTransform: false,
+    }),
+  ],
+  vite: {
+    plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            "vue-core": ["vue"],
+            "vue-runtime": ["vue/dist/runtime-dom.esm-bundler.js"],
+          },
+        },
+      },
+    },
+  },
 });
 ```
 
-### Vue.js Integration
-- **Version**: 3.5.18
-- **Integration**: @astrojs/vue 5.1.0
-- **Usage**: Interactive components and client-side functionality
-- **Features**:
-  - Composition API
-  - TypeScript support
-  - Reactive data binding
+### Vue.js 3.5.18
+- **Purpose**: Interactive UI components
+- **Integration**: Via `@astrojs/vue` integration
+- **Usage**: Limited to interactive components requiring client-side state
+- **Hydration Strategy**: `client:visible` and `client:idle` for performance optimization
+
+---
 
 ## Frontend Technologies
 
-### TypeScript
-- **Version**: 5.9.2
-- **Configuration**: `tsconfig.json`
+### TypeScript 5.9.2
+- **Configuration**: Strict mode enabled
 - **Features**:
-  - Strict type checking
-  - ES2020 target
-  - Module resolution: node
-  - JSX preservation
+  - Strict null checks
+  - No implicit any
+  - Strict function types
+  - No implicit returns
+  - Strict property initialization
+- **Target**: ES2020
+- **Module System**: ES Modules (ESM) mandatory
 
+#### TypeScript設定例 (tsconfig.json)
 ```json
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "target": "ES2020",
     "module": "ES2020",
-    "moduleResolution": "node"
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/types/*": ["src/types/*"]
+    },
+    "types": ["node"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }
 ```
 
-### JavaScript (ES2020+)
-- **Features**:
-  - Modern ES modules
-  - Async/await
-  - Optional chaining
-  - Nullish coalescing
+#### 実際の型定義例
+```typescript
+// src/types/global.d.ts
+declare global {
+  interface Window {
+    clientLogger: {
+      log: (message: string, level?: 'info' | 'success' | 'warning' | 'error') => void;
+      startGroup: (title: string) => void;
+      endGroup: (title: string) => void;
+    };
+    searchEngine?: {
+      search: (query: string) => Promise<unknown[]>;
+      filter: (filters: Record<string, unknown>) => unknown[];
+    };
+  }
+}
+
+// src/utils/search/types.ts
+export interface SearchPost {
+  id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  slug: string;
+  contentType: 'guide' | 'tool' | 'methodology' | 'practice';
+  learningStage: 'beginner' | 'intermediate' | 'advanced';
+  isRecommended: boolean;
+}
+
+export interface SearchResult {
+  posts: SearchPost[];
+  filteredCount: number;
+  totalCount: number;
+}
+```
+
+### JavaScript Standards
+- **ES Modules**: All JavaScript files use `import`/`export`
+- **No CommonJS**: `require`/`module.exports` prohibited
+- **Modern Syntax**: ES2020+ features enabled
+
+---
 
 ## Styling & UI
 
-### Tailwind CSS
-- **Version**: 4.1.12
-- **Configuration**: `tailwind.config.mjs`
+### Tailwind CSS 4.1.12
+- **Integration**: Via `@tailwindcss/vite` plugin
+- **Configuration**: Custom theme with GoRakuDo brand colors
 - **Features**:
-  - JIT (Just-In-Time) compilation
-  - Custom color palette
+  - Utility-first CSS framework
+  - Custom color palette (purple/gold theme)
   - Responsive design utilities
-  - Custom animations
-
-```javascript
-// tailwind.config.mjs
-export default {
-  mode: "jit",
-  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          500: "#8B5DFF", // Main purple
-          600: "#7B4DEF",
-        },
-        secondary: {
-          500: "#E4B43B", // Main gold
-        }
-      }
-    }
-  }
-};
-```
+  - Custom animations and keyframes
+  - Purging enabled for production builds
 
 ### Custom CSS
-- **Location**: `src/styles/`
+- **Global Styles**: `src/styles/global.css`
+- **Component Styles**: Scoped styles in Astro components
+- **CSS Variables**: Custom properties for theming
+- **Color System**:
+  - Primary: Purple (#8B5DFF)
+  - Secondary: Gold (#E4B43B)
+  - Background: Dark (#0A0A0A)
+  - Text: White/light gray
+
+---
+
+## Content Management
+
+### Astro Content Collections
+- **Collections**:
+  - `docs`: Main documentation content
+  - `templates`: Content creation templates
+  - `tool-articles`: Tool documentation
+- **Schema**: Zod-based validation
 - **Features**:
-  - Global styles
-  - Component-specific styles
-  - CSS custom properties
-  - Responsive design
+  - Type-safe content access
+  - Automatic path resolution
+  - Content filtering and search
 
-### Custom Icon System
-- **Implementation**: SVG icons embedded directly in components
-- **Usage**: Navigation, buttons, and interactive elements
-- **Features**:
-  - Optimized SVG graphics
-  - Custom icon designs for GoRakuDo branding
-  - Inline SVG for better performance
+### Content Structure
+- **Format**: Markdown with frontmatter
+- **Metadata**: Rich metadata system with AI-generated content analysis
+- **Organization**: Category and tag-based classification
+- **Search**: Full-text search with Fuse.js integration
 
-## AI & Automation
+---
 
-### Google Generative AI Integration
-- **Package**: @google/genai 0.3.0
-- **Usage**: AI-powered content generation and analysis
-- **Features**:
-  - Content metadata generation
-  - SEO optimization
-  - Content recommendations
-  - Semantic analysis
+## Development Tools
 
-### GenAI Post Metadata System
-- **Location**: `GenAI-PostMetadata-Gemini/`
-- **Purpose**: Centralized AI metadata generation system
-- **Components**:
-  - **Core API**: `core/gemini-api-new.ts` - Main GenAI API wrapper
-  - **Metadata Generation**: `metadata/auto-ai-metadata-fixed.ts` - Enhanced metadata generation
-  - **Content Recommendations**: `metadata/api-recommendations.ts` - AI-powered content suggestions
-  - **Rate Limiting**: `core/rate-limiter.ts` - API quota management
-  - **Environment Setup**: `core/node-env-setup.ts` - Configuration management
-
-### AI CLI Tools
-- **Main CLI**: `ai-cli.js` - Command-line interface for AI operations
-- **Metadata CLI**: `geminiseo-metadata-cli.js` - Automated metadata generation
-- **Silent CLI**: `geminiseo-metadata-cli-silent.js` - Non-interactive metadata generation
-- **Windows Support**: `geminiseo-metadata-cli.bat` - Windows batch file
-
-### AI Agent Bundles
-- **Location**: `web-bundles/`
-- **Purpose**: Pre-configured AI agent configurations
-- **Structure**:
-  - **Agents**: `agents/` - Individual AI agent configurations
-  - **Teams**: `teams/` - Team-based AI configurations
-  - **Expansion Packs**: `expansion-packs/` - Extended AI capabilities
-
-### AI Content Analysis
-- **Location**: `src/utils/ai-content/`
-- **Features**:
-  - Content analysis and internal linking
-  - Semantic relationship detection
-  - Word-to-link conversion
-  - Inline internal linking
-  - AI metadata validation
-
-## Search Implementation
-
-### Fuse.js Fuzzy Search
-- **Version**: 7.1.0
-- **Usage**: Client-side fuzzy search functionality
-- **Features**:
-  - Fuzzy matching for typo tolerance
-  - Real-time search results
-  - Configurable search thresholds
-  - Indonesian language support
-
-### Search Infrastructure
-- **Search API**: `src/pages/search.json.js` - JSON endpoint for search data
-- **Search Utilities**: `src/utils/search/` - Search-related utilities
-- **Search Scripts**: `src/scripts/search/` - Client-side search functionality
-
-### Search Data Generation
-- **Location**: `src/utils/content/search-data-generator.ts`
-- **Purpose**: Generate searchable content from markdown files
-- **Features**:
-  - Automatic content indexing
-  - Keyword extraction
-  - Topic categorization
-  - Search result ranking
-
-### Search Performance Optimization
-- **Implementation**: Client-side search with pre-generated data
-- **Benefits**:
-  - Instant search results
-  - No server requests for search
-  - Offline search capability
-  - Reduced server load
-
-## Build Tools & Development
-
-### Vite
-- **Version**: Bundled with Astro
-- **Features**:
-  - Fast hot module replacement
-  - Optimized builds
-  - Plugin system
-  - Development server
-
-### PostCSS
-- **Version**: 8.5.6
-- **Usage**: CSS processing and optimization
+### ESLint 9.34.0
+- **Configuration**: Custom configuration with multiple plugins
 - **Plugins**:
-  - Autoprefixer
-  - Tailwind CSS
+  - `@typescript-eslint/eslint-plugin`
+  - `eslint-plugin-astro`
+  - `eslint-plugin-vue`
+  - `eslint-plugin-prettier`
+- **Rules**: Strict TypeScript enforcement, ES Modules only
 
-### Autoprefixer
-- **Version**: 10.4.21
-- **Purpose**: Automatic vendor prefixing
-- **Configuration**: Automatic based on browser targets
+### Prettier 3.6.2
+- **Configuration**: Consistent code formatting
+- **Settings**:
+  - 2 spaces indentation
+  - Single quotes
+  - Semicolons required
+  - Trailing commas (ES5)
 
-## Content Processing Pipeline
+### Astro Check 0.9.4
+- **Purpose**: Type checking for Astro files
+- **Integration**: Part of build process
+- **Features**: TypeScript validation for Astro components
 
-### Markdown Processing
-- **Library**: marked 16.2.0
-- **Usage**: Markdown to HTML conversion
+---
+
+## Testing Framework
+
+### Vitest 3.2.4
+- **Environment**: jsdom for browser simulation
+- **Coverage**: V8 coverage reporting
+- **Configuration**: Integrated with Vite
+- **Setup**: Custom test setup files
+
+### Testing Library
+- **Jest DOM**: Custom matchers for DOM testing
+- **Types**: TypeScript definitions for Jest
+
+---
+
+## Build & Deployment
+
+### Vite (via Astro)
+- **Build Tool**: Modern build system
 - **Features**:
-  - Frontmatter support
-  - Astro.glob() for content collection
-  - Metadata extraction
-  - Custom markdown extensions
+  - Fast HMR (Hot Module Replacement)
+  - Optimized bundling
+  - Code splitting
+  - Asset optimization
 
-### Content Collections
-- **Location**: `src/content/`
-- **Configuration**: `src/content/config.ts` and `src/content/content-config.ts`
-- **Features**:
-  - Type-safe content with TypeScript
-  - Automatic schema validation
-  - SEO metadata generation
-  - Content structure management
+### Build Process
+```bash
+npm run build  # Lint + Build + Type Check
+npm run dev    # Development server
+npm run preview # Preview production build
+```
 
-### Content Analysis & Enhancement
-- **Location**: `src/utils/content/`
-- **Components**:
-  - **Enhanced Content Extractor**: `enhanced-content-extractor.ts` - Advanced content processing
-  - **Auto Content Extractor**: `auto-content-extractor.ts` - Automated content analysis
-  - **Search Data Generator**: `search-data-generator.ts` - Search index generation
-  - **Content Structure**: `content-structure/` - Content organization utilities
+#### 実際のビルドスクリプト (package.json)
+```json
+{
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run lint && astro build && astro check",
+    "build:quality": "npm run quality && astro build",
+    "preview": "astro preview",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts,.tsx,.js,.jsx,.astro",
+    "lint:fix": "eslint src --ext .ts,.tsx,.js,.jsx,.astro --fix",
+    "format": "prettier --write src/**/*.{ts,tsx,js,jsx,json,css,md}",
+    "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,json,css,md}",
+    "quality": "npm run lint && npm run format:check && npm run type-check"
+  }
+}
+```
 
-### AI-Powered Content Processing
-- **Location**: `src/utils/ai-content/`
-- **Features**:
-  - **Content Analysis**: `content-analysis.ts` - AI-powered content analysis
-  - **Semantic Relationships**: `semantic-relationships.ts` - Content relationship detection
-  - **Word-to-Link Conversion**: `word-to-link-converter.ts` - Automatic internal linking
-  - **Inline Internal Linking**: `inline-internal-linking.ts` - Smart content linking
-  - **Optimized Post Processor**: `optimized-post-processor.ts` - Enhanced content processing
+#### ビルド出力例
+```
+20:23:21 [build] 17 page(s) built in 6.66s
+20:23:21 [build] Complete!
 
-### Content Metadata Generation
-- **AI Metadata**: `src/utils/ai-content/auto-ai-metadata-fixed.ts`
-- **Metadata Validation**: `src/utils/ai-content/ai-metadata-validator.ts`
-- **Metadata Loading**: `src/utils/metadata-loader.ts`
-- **Features**:
-  - Automatic SEO description generation
-  - Keyword extraction and optimization
-  - Content recommendations
-  - Metadata validation and quality assurance
+Building client (vite) 
+20:23:21 [vite] ✓ 31 modules transformed.
+20:23:21 [vite] dist/assets/docs-C6tHllgP.css    21.47 kB │ gzip:  4.47 kB
+20:23:21 [vite] dist/assets/Navbar-ClubC9cv.js  4.60 kB │ gzip:  2.03 kB
+20:23:21 [vite] dist/assets/runtime-dom.esm-bundler-DKLfQnj8.js 74.69 kB │ gzip: 29.67 kB
+```
+
+### Output
+- **Static Site**: Generated in `dist/` directory
+- **Optimization**: Minified CSS/JS, optimized images
+- **Deployment**: GitHub Pages compatible
+
+---
 
 ## Performance & Optimization
 
 ### Image Optimization
-- **Service**: Sharp (via Astro)
-- **Features**:
-  - Multiple formats (WebP, AVIF)
-  - Responsive images
-  - Blur placeholders
-  - Quality optimization (85%)
+- **Astro Image Component**: Automatic optimization
+- **Formats**: WebP, AVIF generation
+- **Responsive**: Multiple sizes for different screens
+- **Lazy Loading**: Built-in lazy loading support
 
+### Bundle Optimization
+- **Code Splitting**: Manual chunk configuration
+- **Tree Shaking**: Dead code elimination
+- **Minification**: esbuild for fast minification
+- **Caching**: Optimized cache headers
+
+### Service Worker
+- **Caching Strategy**: Cache-first for static assets
+- **Network Strategy**: Network-first for HTML pages
+- **Versioning**: Cache versioning for updates
+
+#### サービスワーカー実装例 (public/sw.js)
 ```javascript
-// astro.config.mjs
-image: {
-  service: {
-    entrypoint: "astro/assets/services/sharp",
-  },
-  formats: ["webp", "avif"],
-  sizes: [640, 768, 1024, 1280, 1920],
-  quality: 85,
-  placeholder: "blur",
-}
+const CACHE_NAME = 'gorakudo-v1';
+const STATIC_CACHE = 'gorakudo-static-v1';
+
+const STATIC_FILES = [
+  '/',
+  '/css/homepage-styles.css',
+  '/favicon/favicon.ico',
+  '/favicon/favicon.svg',
+];
+
+// Install event - cache static files
+self.addEventListener('install', (event) => {
+  console.log('🔧 Service Worker installing...');
+  event.waitUntil(
+    caches.open(STATIC_CACHE)
+      .then((cache) => {
+        console.log('📦 Caching static files');
+        return cache.addAll(STATIC_FILES);
+      })
+      .then(() => {
+        console.log('✅ Service Worker installed successfully');
+        return self.skipWaiting();
+      })
+  );
+});
+
+// Fetch event - serve from cache, fallback to network
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  if (request.method !== 'GET' || url.origin !== location.origin) {
+    return;
+  }
+
+  if (request.destination === 'document') {
+    // HTML pages - network first, cache fallback
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME)
+              .then((cache) => cache.put(request, responseClone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+  } else {
+    // Static assets - cache first, network fallback
+    event.respondWith(
+      caches.match(request)
+        .then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          return fetch(request)
+            .then((response) => {
+              if (response.status === 200) {
+                const responseClone = response.clone();
+                caches.open(STATIC_CACHE)
+                  .then((cache) => cache.put(request, responseClone));
+              }
+              return response;
+            });
+        })
+    );
+  }
+});
 ```
 
-### Bundle Optimization (GoRakuDo Specific)
-- **Strategy**: Manual chunk splitting with performance focus
-- **Implementation**: Custom Vite configuration in `astro.config.mjs`
-- **Chunk Organization**:
-  - **Vue Core**: `vue-core` - Critical Vue framework
-  - **Vue Runtime**: `vue-runtime` - Vue runtime optimization
-  - **Performance**: `performance` - Performance monitoring tools
-  - **AI Content**: `ai-content` - AI utilities (load on demand)
-  - **Scripts**: `scripts-performance`, `scripts-ui`, `scripts-core` - Organized by function
-  - **Components**: `slideshow`, `settings`, `discord` - Page-specific components
+---
 
-### Performance Monitoring Tools
-- **Location**: `src/utils/performance/`
-- **Components**:
-  - **Performance Monitor**: `performance-monitor.js` - Core Web Vitals tracking
-  - **Localhost Optimizer**: `localhost-optimizer.ts` - Development performance optimization
-  - **AI Prefetch Optimizer**: `ai-prefetch-optimizer.ts` - AI-optimized resource hints
-  - **Progressive Enhancement**: `progressive-enhancement.ts` - Progressive enhancement system
+## Browser Support
 
-### Performance Metrics Tracking
-```javascript
-// Real performance monitoring from GoRakuDo
-console.log("🎯 LCP:", lcp.toFixed(2), "ms");
-console.log("⚡ FID:", fid.toFixed(2), "ms");
-console.log("📐 CLS:", clsValue.toFixed(4));
-console.log("🌐 TTFB:", ttfb.toFixed(2), "ms");
-console.log("🎨 FCP:", fcp.toFixed(2), "ms");
+### Target Browsers
+- **Modern Browsers**: ES2020+ support
+- **Mobile**: Responsive design
+- **Accessibility**: WCAG compliance
+
+### Progressive Enhancement
+- **Core Functionality**: Works without JavaScript
+- **Enhanced Features**: JavaScript for interactivity
+- **Fallbacks**: Graceful degradation
+
+---
+
+## Architecture Decisions
+
+### Why Astro?
+1. **Performance**: Zero JavaScript by default
+2. **Flexibility**: Use any UI framework when needed
+3. **Developer Experience**: Great TypeScript support
+4. **SEO**: Static generation for optimal SEO
+
+### Why Vue.js?
+1. **Selective Use**: Only for interactive components
+2. **Performance**: Minimal JavaScript footprint
+3. **Developer Experience**: Excellent TypeScript integration
+4. **Ecosystem**: Rich component ecosystem
+
+### Why Tailwind CSS?
+1. **Utility-First**: Rapid development
+2. **Consistency**: Design system enforcement
+3. **Performance**: Purging unused styles
+4. **Customization**: Easy theme customization
+
+### Why TypeScript Strict Mode?
+1. **Type Safety**: Catch errors at compile time
+2. **Developer Experience**: Better IDE support
+3. **Maintainability**: Self-documenting code
+4. **Refactoring**: Safe code changes
+
+---
+
+## File Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── public-components/  # Public-facing components
+│   ├── search/         # Search functionality
+│   └── homepage/       # Homepage components
+├── pages/              # Astro pages and routes
+├── layouts/            # Page layouts
+├── content/            # Content collections
+├── utils/              # Utility functions
+├── scripts/            # Client-side scripts
+├── styles/             # Global styles
+├── types/              # TypeScript definitions
+└── data/               # Static data
 ```
 
-### Caching Strategy
-- **Library**: node-cache 5.1.2
-- **Usage**: Server-side caching for performance optimization
-- **Features**:
-  - In-memory caching
-  - TTL (Time To Live) support
-  - Performance optimization
-  - Reduced API calls
+---
 
-## Deployment & Hosting
+## Configuration Files
 
-### GitHub Pages
-- **URL**: https://gorakudo.org
-- **Features**:
-  - Static site hosting
-  - Custom domain support
-  - HTTPS by default
-  - Global CDN
+### Core Configuration
+- `astro.config.mjs`: Astro framework configuration
+- `tailwind.config.mjs`: Tailwind CSS configuration
+- `tsconfig.json`: TypeScript configuration
+- `eslint.config.js`: ESLint configuration
+- `vitest.config.ts`: Testing configuration
 
-### Build Process
+### Package Management
+- `package.json`: Dependencies and scripts
+- `package-lock.json`: Exact dependency versions
+
+---
+
+## Development Workflow
+
+### Local Development
 ```bash
-npm run build  # Creates optimized static files
-npm run preview # Local preview of build
-```
-
-### Static Site Generation
-- **Output**: `dist/` directory
-- **Features**:
-  - Pre-rendered HTML
-  - Optimized assets
-  - SEO-friendly URLs
-  - Fast loading times
-
-## Development Tools
-
-### Node.js
-- **Version**: 22.0+ (recommended)
-- **Usage**: Development environment
-- **Features**:
-  - ES modules support
-  - Package management
-  - Development server
-
-### Package Manager
-- **Primary**: npm
-- **Alternative**: pnpm, yarn
-- **Lock file**: `package-lock.json`
-
-### Development Scripts
-```json
-{
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  }
-}
-```
-
-## Security Measures
-
-### XSS Prevention
-- **Library**: DOMPurify 3.2.6
-- **Usage**: HTML sanitization and XSS prevention
-- **Features**:
-  - HTML sanitization
-  - Content filtering
-  - Security hardening
-  - Safe content rendering
-
-### Security Utilities
-- **Location**: `src/utils/security/`
-- **Purpose**: Security-related utilities and validation
-- **Features**:
-  - Input validation
-  - Content sanitization
-  - Security best practices implementation
-
-### Environment Security
-- **Configuration**: `env.example` and environment variable management
-- **Features**:
-  - API key protection
-  - Environment-specific configurations
-  - Secure credential management
-
-## Development Toolchain
-
-### Code Formatting
-- **Prettier**: 3.6.2
-- **Plugin**: prettier-plugin-tailwindcss 0.6.14
-- **Configuration**: Automatic code formatting with Tailwind CSS class sorting
-
-### TypeScript Configuration
-- **Version**: 5.9.2
-- **Configuration**: `tsconfig.json`
-- **Features**:
-  - Strict type checking
-  - ES2020 target
-  - Module resolution: node
-  - JSX preservation
-
-### Development Scripts
-```json
-{
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build", 
-    "preview": "astro preview",
-    "astro": "astro"
-  }
-}
+npm run dev          # Start development server
+npm run type-check   # TypeScript validation
+npm run lint         # Code linting
+npm run format       # Code formatting
 ```
 
 ### Quality Assurance
-- **Location**: `qa/`
-- **Structure**:
-  - **Gates**: `qa/gates/` - Quality gates and checks
-  - **Reports**: `qa/reports/` - QA reports and metrics
+```bash
+npm run quality      # Lint + Format + Type Check
+npm run test         # Run tests
+npm run test:coverage # Run tests with coverage
+```
 
-## External Services
+#### 品質チェック実行例
+```bash
+$ npm run quality
+> gorakudo-astro@0.0.1 quality
+> npm run lint && npm run format:check && npm run type-check
 
-### Google Generative AI
-- **Package**: @google/genai 0.3.0
-- **Usage**: AI-powered content generation and analysis
-- **Features**:
-  - Content analysis
-  - Metadata generation for SEO optimization
-  - Semantic content processing
-  - AI-powered recommendations
+> gorakudo-astro@0.0.1 lint
+> eslint src --ext .ts,.tsx,.js,.jsx,.astro
 
-### Environment Management
-- **Library**: dotenv 17.2.1
-- **Usage**: Environment variable management
-- **Features**:
-  - Environment-specific configurations
-  - Secure credential management
-  - Development/production environment separation
+> gorakudo-astro@0.0.1 format:check
+> prettier --check src/**/*.{ts,tsx,js,jsx,json,css,md}
 
-## Version Control
+> gorakudo-astro@0.0.1 type-check
+> tsc --noEmit
 
-### Git
-- **Repository**: GitHub
-- **Branching**: Main branch workflow
-- **Features**:
-  - Version control
-  - Collaboration
-  - Issue tracking
-  - Pull requests
+✅ All quality checks passed!
+```
 
-### GitHub Actions (Planned)
-- **Purpose**: CI/CD pipeline
-- **Features**:
-  - Automated builds
-  - Deployment to GitHub Pages
-  - Quality checks
-  - Performance monitoring
+### Production Build
+```bash
+npm run build        # Full production build
+npm run preview      # Preview production build
+```
 
-## Development Environment
+#### 本番ビルド実行例
+```bash
+$ npm run build
+> gorakudo-astro@0.0.1 build
+> npm run lint && astro build && astro check
 
-### Editor Support
-- **Recommended**: VS Code
-- **Extensions**:
-  - Astro extension
-  - Vue Language Features
-  - Tailwind CSS IntelliSense
-  - TypeScript support
+20:23:15 [build] output: "static"
+20:23:15 [build] mode: "static"
+20:23:15 [build] directory: D:\Libraries\Documents\GitHub\GoRakuDo\dist\
+20:23:15 [build] ✓ Completed in 512ms.
+20:23:21 [build] 17 page(s) built in 6.66s
+20:23:21 [build] Complete!
+```
 
-### Browser Support
-- **Target**: Modern browsers
-- **Features**:
-  - ES2020 support
-  - CSS Grid/Flexbox
-  - Web APIs
-  - Progressive enhancement
+---
 
-## Performance Targets
+## Dependencies Summary
 
-### Core Web Vitals
-- **LCP**: < 2s
-- **FID**: < 75ms
-- **CLS**: < 0.1
+### Production Dependencies
+- `astro`: ^5.13.0 (Core framework)
+- `@astrojs/vue`: ^5.1.0 (Vue integration)
+- `@astrojs/check`: ^0.9.4 (Type checking)
+- `@tailwindcss/vite`: ^4.1.12 (Tailwind integration)
+- `tailwindcss`: ^4.1.12 (CSS framework)
+- `vue`: ^3.5.18 (UI framework)
+- `typescript`: ^5.9.2 (Type system)
+- `dotenv`: ^17.2.1 (Environment variables)
 
-### Bundle Size
-- **Target**: < 100KB initial bundle
-- **Strategy**: Code splitting and lazy loading
+### Development Dependencies
+- `eslint`: ^9.34.0 (Linting)
+- `prettier`: ^3.6.2 (Formatting)
+- `vitest`: ^3.2.4 (Testing)
+- `@typescript-eslint/*`: ^8.42.0 (TypeScript linting)
+- `eslint-plugin-*`: Various plugins
+- `@testing-library/jest-dom`: ^6.8.0 (Testing utilities)
 
-### Loading Speed
-- **Target**: < 3s on 3G
-- **Strategy**: Static generation and optimization
+---
+
+## Performance Metrics
+
+### Build Performance
+- **Build Time**: ~6.66s for 17 pages
+- **Bundle Size**: Optimized chunks (largest: 74.69kB)
+- **Asset Optimization**: Automatic image optimization
+
+### Runtime Performance
+- **Core Web Vitals**: Optimized for LCP, FID, CLS
+- **JavaScript**: Minimal runtime JavaScript
+- **Caching**: Service worker caching strategy
+
+---
 
 ## Security Considerations
 
-### Content Security Policy
-- **Implementation**: CSP headers
-- **Features**:
-  - XSS prevention
-  - Resource restrictions
-  - Secure defaults
+### Content Security
+- **Input Validation**: Zod schema validation
+- **XSS Prevention**: Astro's built-in protection
+- **HTTPS**: Enforced in production
 
-### HTTPS
-- **Enforcement**: Always HTTPS
-- **Features**:
-  - Secure connections
-  - Mixed content prevention
-  - SEO benefits
+### Dependencies
+- **Regular Updates**: Dependencies kept current
+- **Vulnerability Scanning**: npm audit integration
+- **Minimal Attack Surface**: Few external dependencies
 
-## Monitoring & Analytics
-
-### Performance Monitoring
-- **Implementation**: Custom performance tracking
-- **Metrics**:
-  - Page load times
-  - User interactions
-  - Error rates
-
-### Error Reporting
-- **Service**: Discord integration
-- **Features**:
-  - Real-time error alerts
-  - Stack trace analysis
-  - User context
-
-## Key Technical Decisions
-
-### Why This Stack?
-1. **Astro.js**: Chosen for static site generation and performance optimization
-2. **Vue.js**: Selected for interactive components and reactive data binding
-3. **Tailwind CSS**: Adopted for rapid UI development and consistent design system
-4. **AI Integration**: Implemented for automated content enhancement and SEO optimization
-5. **Client-side Search**: Chosen for instant search results and offline capability
-
-### Performance Focus
-- **Static Generation**: Pre-rendered HTML for fast loading
-- **Code Splitting**: Manual chunk optimization for optimal loading
-- **Image Optimization**: Multiple formats and responsive images
-- **Caching Strategy**: In-memory caching for performance
-
-### AI-First Approach
-- **Content Enhancement**: AI-powered metadata generation
-- **Search Optimization**: Semantic content analysis
-- **Automation**: CLI tools for content processing
-- **Quality Assurance**: AI-powered content validation
+---
 
 ## Future Considerations
 
-### Planned Upgrades
-- **Astro**: Latest stable versions
-- **Vue**: Vue 3.x ecosystem
-- **Tailwind**: v4.x features
-- **TypeScript**: Latest features
+### Potential Upgrades
+- **Astro**: Keep updated with latest versions
+- **Vue**: Monitor Vue 3 ecosystem updates
+- **Tailwind**: Consider Tailwind CSS v4 migration
+- **TypeScript**: Stay current with TypeScript releases
 
-### Potential Additions
-- **Testing**: Vitest, Playwright
-- **CMS**: Headless CMS integration
-- **Analytics**: Privacy-focused analytics
-- **PWA**: Progressive Web App features
+### Scalability
+- **Content**: Content Collections scale well
+- **Performance**: Static generation handles traffic
+- **Maintenance**: Clear architecture for team growth
+
+---
 
 ## Conclusion
 
-The GoRakuDo tech stack represents a modern, AI-enhanced approach to web development. The combination of Astro.js for static generation, Vue.js for interactivity, Tailwind CSS for styling, and comprehensive AI integration creates a powerful foundation for content-driven websites with excellent performance and user experience.
+The GoRakuDo technology stack represents a modern, performance-focused approach to web development. By leveraging Astro's static generation capabilities, Vue.js for selective interactivity, and TypeScript for type safety, the project achieves excellent performance while maintaining developer productivity.
 
-### Key Strengths:
-- **Performance**: Optimized for Core Web Vitals and fast loading
-- **AI Integration**: Automated content enhancement and SEO optimization
-- **Developer Experience**: Modern toolchain with TypeScript and comprehensive tooling
-- **Scalability**: Modular architecture with clear separation of concerns
-- **Security**: XSS prevention and secure content handling
+The stack is designed for:
+- **Performance**: Fast loading and optimal Core Web Vitals
+- **Maintainability**: Clear architecture and strict typing
+- **Scalability**: Static generation handles growth
+- **Developer Experience**: Modern tools and workflows
 
-For questions about the tech stack or suggestions for improvements, please open an issue or discuss with the development team.
+For questions about the technology stack or suggestions for improvements, please open an issue or discuss with the development team.

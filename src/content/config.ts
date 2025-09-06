@@ -1,37 +1,35 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection, z } from 'astro:content';
 
 // Simplified Content Schema for Indonesian Immersion Learning
 // AI metadata handled by separate files (e.g., anki-guide-metadata.json)
 const docsCollection = defineCollection({
-  type: "content",
+  type: 'content',
   schema: z.object({
     // Core Content Metadata
     title: z.string(),
     description: z.string(),
     publishedDate: z.string(),
-    author: z.string().default("Tim GoRakuDo"),
+    author: z.string().default('Tim GoRakuDo'),
 
     // Sticky Note Design Support
     emoji: z.string().optional(), // Optional emoji for sticky note design
 
     // Basic Content Classification
     difficulty: z
-      .enum(["beginner", "intermediate", "advanced"])
-      .default("beginner"),
-    category: z.string().default("general"),
+      .enum(['beginner', 'intermediate', 'advanced'])
+      .default('beginner'),
+    category: z.string().default('general'),
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
-
-
 
     // Simplified Content Type Classification
     contentType: z
       .enum([
-        "metodologi", // Learning methodology and theory
-        "tutorial", // Step-by-step guides and tutorials
-        "resource", // Tools, references, and materials
+        'metodologi', // Learning methodology and theory
+        'tutorial', // Step-by-step guides and tutorials
+        'resource', // Tools, references, and materials
       ])
-      .default("tutorial"),
+      .default('tutorial'),
 
     // Read Time Estimation
     readTime: z.number().optional(), // Estimated reading time in minutes
@@ -41,32 +39,32 @@ const docsCollection = defineCollection({
 // Template Collection for Content Creation Management
 // Purpose: Store reusable templates for content creation workflow
 const templatesCollection = defineCollection({
-  type: "content",
+  type: 'content',
   schema: z.object({
     // Template Metadata
     templateName: z.string(),
-    templateType: z.enum(["post", "guide", "tutorial", "review", "case-study"]),
+    templateType: z.enum(['post', 'guide', 'tutorial', 'review', 'case-study']),
     description: z.string(),
-    version: z.string().default("1.0.0"),
+    version: z.string().default('1.0.0'),
     lastUpdated: z.string(),
 
     // Template Configuration
     isActive: z.boolean().default(true),
-    category: z.string().default("general"),
+    category: z.string().default('general'),
 
     // Template Structure
     requiredFields: z.array(z.string()).default([]),
     optionalFields: z.array(z.string()).default([]),
 
     // Usage Instructions
-    instructions: z.string().default(""),
+    instructions: z.string().default(''),
     examples: z.array(z.string()).default([]),
 
     // Template Content (the actual template)
     templateContent: z.string(),
 
     // Metadata for template management
-    author: z.string().default("Tim GoRakuDo"),
+    author: z.string().default('Tim GoRakuDo'),
     tags: z.array(z.string()).default([]),
   }),
 });
@@ -74,36 +72,36 @@ const templatesCollection = defineCollection({
 // Tool Articles Collection for Tool Documentation Content
 // Updated to match existing tool content structure from Epic 2.0
 const toolArticlesCollection = defineCollection({
-  type: "content",
+  type: 'content',
   schema: z.object({
     title: z.string(),
     description: z.string(),
     publishedDate: z.string(), // Changed from z.date() to z.string() to match existing content
     updatedDate: z.string().optional(), // Changed from z.date() to z.string()
-    author: z.string().default("Tim GoRakuDo"),
+    author: z.string().default('Tim GoRakuDo'),
 
     // Tool-Specific Metadata
     toolName: z.string(),
     toolVersion: z.string().optional(),
     toolWebsite: z.string().url().optional(),
     toolCategory: z.enum([
-      "flashcard",
-      "reading",
-      "listening",
-      "writing",
-      "suite",
-      "video",
-      "browser-extension",
-      "mobile-app",
-      "desktop-app",
+      'flashcard',
+      'reading',
+      'listening',
+      'writing',
+      'suite',
+      'video',
+      'browser-extension',
+      'mobile-app',
+      'desktop-app',
     ]),
 
     // Difficulty and Setup Information
     difficulty: z
-      .enum(["beginner", "intermediate", "advanced"])
-      .default("beginner"),
+      .enum(['beginner', 'intermediate', 'advanced'])
+      .default('beginner'),
     setupTime: z.string().optional(),
-    cost: z.enum(["free", "freemium", "paid", "subscription"]).default("free"),
+    cost: z.enum(['free', 'freemium', 'paid', 'subscription']).default('free'),
 
     // Visual Elements
     emoji: z.string().optional(),
@@ -113,12 +111,10 @@ const toolArticlesCollection = defineCollection({
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
 
-
-
     // Content Type
     contentType: z
-      .enum(["tool-guide", "setup-tutorial", "usage-guide", "review"])
-      .default("tool-guide"),
+      .enum(['tool-guide', 'setup-tutorial', 'usage-guide', 'review'])
+      .default('tool-guide'),
 
     // Read Time Estimation
     readTime: z.number().optional(),
@@ -137,5 +133,5 @@ const toolArticlesCollection = defineCollection({
 export const collections = {
   docs: docsCollection,
   templates: templatesCollection,
-  "tool-articles": toolArticlesCollection,
+  'tool-articles': toolArticlesCollection,
 };

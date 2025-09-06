@@ -7,8 +7,8 @@ export interface SearchPost {
   description: string;
   tags: string[];
   slug: string;
-  contentType: "guide" | "tool" | "methodology" | "practice";
-  learningStage: "beginner" | "intermediate" | "advanced";
+  contentType: 'guide' | 'tool' | 'methodology' | 'practice';
+  learningStage: 'beginner' | 'intermediate' | 'advanced';
   isRecommended?: boolean;
   element?: HTMLElement; // For DOM manipulation
 }
@@ -30,7 +30,7 @@ export interface SearchOptions {
   caseSensitive?: boolean;
   fuzzyMatch?: boolean;
   maxResults?: number;
-  searchFields?: ("title" | "description" | "tags")[];
+  searchFields?: ('title' | 'description' | 'tags')[];
 }
 
 // Performance tracking interface

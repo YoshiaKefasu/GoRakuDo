@@ -3,9 +3,9 @@
 // Supports different content types with AI-ready features and mind map integration
 
 import {
-  resolveContentPath,
-  getCollectionMetadata,
-} from "../../utils/content-path-resolver"
+  resolvePath,
+  getCollectionInfo,
+} from "../../utils/collections"
 
 export interface Props {
   title: string
@@ -49,8 +49,8 @@ const {
 } = Astro.props
 
 // Dynamic content path resolution
-const resolvedPath = resolveContentPath({ slug } as any)
-const collectionMetadata = getCollectionMetadata("blog") // Default to blog for backward compatibility
+const resolvedPath = { path: resolvePath("docs", slug) }
+const collectionMetadata = getCollectionInfo("docs")
 
 // Format date
 const formattedDate = new Date(publishedDate).toLocaleDateString("id-ID", {

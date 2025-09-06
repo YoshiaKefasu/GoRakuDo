@@ -52,26 +52,15 @@ export default defineConfig({
             "vue-runtime": ["vue/dist/runtime-dom.esm-bundler.js"],
             // Non-critical Vue components (load after)
             "vue-components": ["@astrojs/vue"],
-            // Performance monitoring (load after page load)
-            performance: ["./src/utils/performance/performance-monitor.js"],
+            // Performance monitoring removed
             // Scripts (migrated from public/scripts/)
-            "scripts-performance": [
-              "./src/scripts/performance/performance-monitor.js",
-            ],
             "scripts-ui": [
               "./src/scripts/ui/docs-pagination.js",
-              // "./src/scripts/ui/docs-search.js", // Removed - search handled inline in docs.astro
-              // FIX #131: 404 error for docs-search.js - Unused file reference
-              // ROOT CAUSE: File referenced but not actually loaded
-              // SOLUTION: Removed reference, search handled inline
-              // STATUS: ✅ RESOLVED
             ],
             // AI content utilities (load on demand)
             "ai-content": ["./src/utils/ai-content/content-analysis.js"],
             // Semantic relationships (load on demand)
             semantic: ["./src/utils/ai-content/semantic-relationships.js"],
-            // Settings page optimization (load on demand)
-            settings: ["./src/pages/settings.astro"],
             // Discord error reporter (load on demand)
             discord: ["./src/utils/error-handling/discord-error-reporter.js"],
             // Image slideshow (load on demand)
@@ -90,28 +79,19 @@ export default defineConfig({
     css: {
       devSourcemap: false, // Disable sourcemaps in production
     },
+    // Enhanced resolve configuration for Vue
+    resolve: {
+      alias: {
+        '@': './src'
+      }
+    },
     // Performance optimizations
     optimizeDeps: {
       include: ["vue"], // Pre-bundle Vue for faster loading
       exclude: [], // Don't exclude anything for localhost
     },
     // Simplified chunking for development stability
-    build: {
-      chunkSizeWarningLimit: 500, // Increased for development stability
-      rollupOptions: {
-        output: {
-          // Simplified chunking to prevent dev toolbar conflicts
-          manualChunks: (id) => {
-            // Basic Vue chunking
-            if (id.includes("vue")) {
-              return "vue";
-            }
-            // Default chunking
-            return "vendor";
-          },
-        },
-      },
-    },
+    // build configuration moved to main build section above
     // Development server configuration for stability
     server: {
       // Enable error overlay for better debugging
@@ -136,6 +116,12 @@ export default defineConfig({
       include: ["**/*.vue"],
       // Disable experimental features to prevent conflicts
       experimentalReactivityTransform: false,
+      // Enable global imports for composition API
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('ion-')
+        }
+      }
     }),
     // Enable View Transitions API for smooth page transitions
     {

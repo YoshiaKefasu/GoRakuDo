@@ -10,6 +10,8 @@ import { readdir } from "fs/promises";
 import { join } from "path";
 import ArticleCard from "../../../components/content/ArticleCard.astro";
 import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro";
+import Breadcrumb from "../../../components/public-components/Breadcrumb.astro";
+import type { ToolName } from "../../../utils/content/breadcrumb-utils";
 
 // ========== PERFORMANCE MONITORING ==========
 // Subtask 8.1: Build time measurement for index page generation
@@ -110,100 +112,25 @@ const toolArticles = articles.filter(article => {
 
 // Subtask 5.2: Handle case where no articles are found
 const hasArticles = toolArticles.length > 0;
-
-// ========== ENHANCED PERFORMANCE MONITORING WITH CACHING ==========
-const performanceMetrics = {
-  startTime: startTime,
-  collectionLoadTime: 0,
-  articleProcessingTime: 0,
-  cachingMetrics: {
-    cacheHits: 0,
-    cacheMisses: 0,
-    cacheEfficiency: 0,
-    cacheSize: 0
-  },
-  totalArticles: articles.length,
-  filteredArticles: toolArticles.length
-};
-
-// Initialize cache for performance monitoring
-const tagFilterCache = new Map<string, CollectionEntry<"tool-articles">[]>();
-
-// Measure collection loading time
-const collectionStartTime = performance.now();
-try {
-  // Articles already loaded above, measure the time it took
-  performanceMetrics.collectionLoadTime = collectionStartTime - startTime;
-} catch (error) {
-  console.error("🚨 Collection loading failed:", error);
-}
-
-// Measure article processing time with caching
-const processingStartTime = performance.now();
-const cacheKey = `${tool}_${articles.length}_${articles.map(a => a.id).join(',')}`;
-
-let cachedToolArticles: CollectionEntry<"tool-articles">[];
-if (tagFilterCache.has(cacheKey)) {
-  // Cache hit
-  cachedToolArticles = tagFilterCache.get(cacheKey)!;
-  performanceMetrics.cachingMetrics.cacheHits++;
-  console.log("🚀 Cache hit for tool:", tool);
-} else {
-  // Cache miss - use already filtered articles
-  cachedToolArticles = toolArticles;
-
-  // Cache the result
-  tagFilterCache.set(cacheKey, toolArticles);
-  performanceMetrics.cachingMetrics.cacheMisses++;
-  console.log("💾 Cache miss for tool:", tool, "- cached result");
-}
-
-performanceMetrics.articleProcessingTime = performance.now() - processingStartTime;
-
-// Calculate caching efficiency
-performanceMetrics.cachingMetrics.cacheEfficiency =
-  (performanceMetrics.cachingMetrics.cacheHits /
-   (performanceMetrics.cachingMetrics.cacheHits + performanceMetrics.cachingMetrics.cacheMisses)) * 100;
-performanceMetrics.cachingMetrics.cacheSize = tagFilterCache.size;
-
-// Log comprehensive performance metrics
-const totalTime = performance.now() - startTime;
-console.log("🎯 Enhanced Performance Metrics:", {
-  totalBuildTime: `${totalTime.toFixed(2)}ms`,
-  collectionLoadTime: `${performanceMetrics.collectionLoadTime.toFixed(2)}ms`,
-  articleProcessingTime: `${performanceMetrics.articleProcessingTime.toFixed(2)}ms`,
-  totalArticles: performanceMetrics.totalArticles,
-  filteredArticles: performanceMetrics.filteredArticles,
-  efficiency: `${((performanceMetrics.filteredArticles / performanceMetrics.totalArticles) * 100).toFixed(1)}%`,
-  caching: {
-    hits: performanceMetrics.cachingMetrics.cacheHits,
-    misses: performanceMetrics.cachingMetrics.cacheMisses,
-    efficiency: `${performanceMetrics.cachingMetrics.cacheEfficiency.toFixed(1)}%`,
-    cacheSize: performanceMetrics.cachingMetrics.cacheSize
-  }
-});
-
-// Enhanced performance validation with caching metrics
-if (totalTime > 2000) {
-  console.warn("⚠️ Performance: Build time exceeds 2 second target");
-}
-if (performanceMetrics.articleProcessingTime > articles.length) {
-  console.warn("⚠️ Performance: Article processing time exceeds 1ms per article target");
-}
-if (performanceMetrics.cachingMetrics.cacheEfficiency < 50) {
-  console.warn("⚠️ Caching: Cache efficiency below 50% - consider cache optimization");
-}
-if (performanceMetrics.cachingMetrics.cacheSize > 100) {
-  console.warn("⚠️ Caching: Cache size exceeds 100 entries - consider cache cleanup");
-}
 ---
 
 <ToolArticleLayout
   title={`${tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo`}
   description={`All articles and guides for ${tool} tool`}
   lang="id"
-  showBreadcrumb={true}
+  showBreadcrumb={false}
   currentPath={validatedCurrentPath}>
+  <!-- Enhanced Breadcrumb Navigation -->
+  <Breadcrumb 
+    toolConfig={{
+      toolName: tool as ToolName,
+      showHome: true
+    }}
+    variant="compact"
+    showIcons={true}
+    ariaLabel={`${tool.charAt(0).toUpperCase() + tool.slice(1)} tool navigation breadcrumb`}
+  />
+
   <!-- Page Header -->
   <header class="tool-index-header">
     <h1 class="tool-index-title">{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>

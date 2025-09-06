@@ -272,7 +272,7 @@ The `utils/` folder is organized into logical subfolders for better maintainabil
 utils/
 ├── ai-content/             # AI-powered content analysis and metadata
 ├── performance/            # Performance optimization and monitoring
-├── error-handling/         # Error handling and reporting
+├── error-handling/         # Error handling and reporting (removed)
 ├── content/                # Content management utilities
 ├── search/                 # Search functionality
 ├── security/               # Security utilities
@@ -283,8 +283,8 @@ utils/
 
 ### File Naming Conventions
 - **Components**: PascalCase (e.g., `Navbar.astro`, `ImageSlideshow.vue`)
-- **Pages**: kebab-case (e.g., `tools.astro`, `settings.astro`)
-- **Utilities**: camelCase (e.g., `performance-monitor.js`, `content-analysis.ts`)
+- **Pages**: kebab-case (e.g., `tools.astro`)
+- **Utilities**: camelCase (e.g., `content-analysis.ts`)
 - **Types**: camelCase with `.ts` extension (e.g., `types.ts`)
 
 ## Naming Conventions
@@ -667,27 +667,22 @@ Error handling is like having a backup plan. When something goes wrong, instead 
 
 ### GoRakuDo Error Handling Patterns
 
-#### Discord Error Reporting
+#### Error Reporting (Removed)
 ```typescript
-// ✅ Good - Discord-based error reporting
-import { discordErrorReporter } from '@/utils/error-handling';
-
+// ❌ Removed - Error handling system has been removed
+// Use standard try-catch blocks for error handling
 try {
   // Some risky operation
   riskyOperation();
 } catch (error) {
-  // Send error to Discord for monitoring
-  discordErrorReporter.reportError(error, {
-    context: 'User action',
-    userId: user.id,
-    timestamp: new Date()
-  });
+  // Standard error handling
+  console.error('Operation failed:', error);
 }
 ```
 
-#### Progressive Error Handling
+#### Standard Error Handling
 ```typescript
-// ✅ Good - Progressive error handling (like having multiple backup plans)
+// ✅ Good - Standard error handling with fallback
 function handleUserAction() {
   try {
     // Try the main approach
@@ -698,6 +693,7 @@ function handleUserAction() {
       return fallbackApproach();
     } catch (fallbackError) {
       // If everything fails, show a user-friendly message
+      console.error('Operation failed:', fallbackError);
       return showUserFriendlyError();
     }
   }
@@ -742,9 +738,10 @@ Comments are like notes you leave for yourself or other developers. They explain
 
 #### Bug Fix Comments
 ```typescript
-// FIX #131: 404 error for docs-search.js - Unused file reference
-// ROOT CAUSE: File referenced but not actually loaded
-// SOLUTION: Removed reference, search handled inline
+// Example bug fix comment format
+// FIX #XXX: Description of the issue
+// ROOT CAUSE: Technical explanation
+// SOLUTION: How it was resolved
 // STATUS: ✅ RESOLVED
 
 // CRITICAL FIX: Enhanced positioning that respects sentence boundaries

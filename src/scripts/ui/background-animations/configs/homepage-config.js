@@ -33,15 +33,15 @@ export default {
   stars: {
     enabled: true,
     count: 8, // Balanced star count
-    animationDuration: "4s", // Slightly longer for smoother movement
+    animationDuration: '4s', // Slightly longer for smoother movement
     opacity: 0.6, // Balanced visibility
-    containerClass: "stars",
-    starClass: "star",
-    containerId: "stars",
+    containerClass: 'stars',
+    starClass: 'star',
+    containerId: 'stars',
     // Container management options
     useExistingContainer: true,
     createContainer: false,
-    containerSelector: ".stars",
+    containerSelector: '.stars',
     // Performance and accessibility options
     performance: {
       targetFPS: 60,

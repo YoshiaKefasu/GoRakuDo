@@ -1,25 +1,31 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import HeadSEO from "../components/public-components/HeadSEO.astro";
+import UnifiedSEO from "../components/UnifiedSEO.astro";
+
+// SEO data - Astroネイティブアプローチ（設定ファイル不要）
+const seoData = {
+  title: "Komunitas Pembelajaran Bahasa Jepang - Discord GoRakuDo",
+  description: "Bergabung dengan komunitas pembelajaran bahasa Jepang terbesar Indonesia. Berbagi pengalaman, dapatkan bantuan, dan pelajari bahasa Jepang bersama-sama",
+  keywords: ["komunitas", "discord", "bahasa", "jepang", "belajar", "pembelajaran", "bersama", "pengalaman", "bantuan", "learning"],
+  pageType: "website" as const
+};
 ---
 
-<!doctype html>
 <html lang="id">
   <head>
-    <HeadSEO
-      title="Undangan Discord GoRakuDo"
-      description="Bergabung dengan komunitas immersion bahasa Jepang terbesar Indonesia di Discord"
-      pageType="website"
+    <!-- UnifiedSEO - Astroネイティブアプローチ（設定ファイル不要） -->
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType={seoData.pageType}
       lang="id"
-      aiPageType="discord"
-      enableAIOptimizations={true}
+      gtag={import.meta.env.PUBLIC_GA_ID}
     />
-    <!-- Favicon script removed - file not found -->
     <link
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
       rel="stylesheet"
     />
-    <ViewTransitions />
     <style>
       * {
         margin: 0;

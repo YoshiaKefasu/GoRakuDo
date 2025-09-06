@@ -1,21 +1,18 @@
 ---
-// 404 Error Page with Automatic Redirects
-import HeadSEO from "../components/public-components/HeadSEO.astro"
+// SEO data - Astroネイティブアプローチ（設定ファイル不要）
+import UnifiedSEO from "../components/UnifiedSEO.astro"
 
-// SEO data for 404 page
 const seoData = {
-  title: "Halaman Tidak Ditemukan - GoRakuDo",
-  description:
-    "Halaman yang Anda cari tidak ditemukan. Kembali ke beranda atau cari dokumentasi yang tersedia.",
-  canonicalUrl: "https://gorakudo.org/404",
-  pageType: "website" as const,
-  authorName: "Tim GoRakuDo",
+  title: "404 Error - Halaman Tidak Ditemukan | GoRakuDo",
+  description: "Maaf, halaman yang Anda cari tidak ditemukan. Kembali ke GoRakuDo untuk sumber daya pembelajaran bahasa Jepang efektif dan dukungan komunitas",
+  keywords: ["404", "error", "halaman", "tidak", "ditemukan", "bahasa", "jepang", "belajar", "pembelajaran", "learning"],
+  pageType: "website" as const
 }
 
 // Redirect mapping for old URLs with dynamic path support
-import { getCollectionMetadata } from "../utils/content-path-resolver"
+import { getCollectionInfo } from "../utils/collections"
 
-const collectionMetadata = getCollectionMetadata("blog")
+const collectionMetadata = getCollectionInfo("docs")
 const defaultPath = collectionMetadata.basePath
 
 const redirectMap = {
@@ -41,11 +38,19 @@ if (redirectTarget) {
 }
 ---
 
-<!doctype html>
-<html lang="id">
+<html lang="ja">
   <head>
-    <HeadSEO {...seoData} />
-    <link rel="stylesheet" href="/css/post-styles.css" />
+    <!-- UnifiedSEO - Astroネイティブアプローチ（設定ファイル不要） -->
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType={seoData.pageType}
+      lang="id"
+      gtag={import.meta.env.PUBLIC_GA_ID}
+      noindex={true}
+    />
+    <link rel="stylesheet" href="/css/homepage-styles.css" />
     <style>
       /* 404 Page Specific Styles */
       .error-container {
