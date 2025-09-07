@@ -1,6 +1,8 @@
 ---
 import UnifiedSEO from "../components/UnifiedSEO.astro";
+import Navbar from "../components/public-components/Navbar.vue";
 import "../styles/global.css";
+
 // デフォルトOG画像のパス（publicフォルダ内のファイル）
 const defaultOgImage = "/img/FullDC Logo.webp";
 
@@ -47,7 +49,8 @@ const { title, description, ogImage, pageType, publishedDate, lang, keywords, se
     <!-- スタイルシートの<link>タグは不要です。上のimport文がその役割を果たします。 -->
   </head>
   <body>
-    <!-- 共通のページ構造（NavbarやFooterなど）をここに記述 -->
+    <!-- Navigation - 共通コンポーネント -->
+    <Navbar client:visible />
 
     <!-- この<slot />に、各ページのユニークなコンテンツが挿入されます -->
     <slot />
