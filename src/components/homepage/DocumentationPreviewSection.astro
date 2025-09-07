@@ -1,0 +1,52 @@
+---
+interface Props {
+    title?: string;
+    description?: string;
+    buttonText?: string;
+}
+
+const {
+    title = 'Panduan & Dokumentasi',
+    description = 'Akses panduan lengkap, metodologi immersion, dan sumber daya pembelajaran yang telah terbukti efektif.',
+    buttonText = 'Lihat Dokumentasi'
+} = Astro.props;
+---
+
+<section
+  class='docs-preview-section loading'
+  aria-labelledby='docs-title'
+  transition:name='docs-section'
+  data-lazy
+>
+  <div class='docs-container'>
+    <h2 class='docs-title' id='docs-title' transition:name='docs-title'>
+      {title}
+    </h2>
+    <p class='docs-description'>
+      {description}
+    </p>
+    <div class='docs-cta'>
+      <button
+        class='docs-button'
+        onclick='goToPosts()'
+        aria-label='Lihat semua dokumentasi dan panduan'
+        transition:name='docs-button'
+      >
+        {buttonText}
+        <svg
+          width='20'
+          height='20'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='2'
+          stroke-linecap='round'
+          stroke-linejoin='round'
+          aria-hidden='true'
+        >
+          <path d='M5 12h14M12 5l7 7-7 7'></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
