@@ -13,6 +13,7 @@ import "../styles/global.css"
 import "../styles/homepage/ImageSlideshow.css"
 import "../styles/homepage/index.css"
 import "../styles/homepage/homepage.css"
+import FeaturesSection from "../components/homepage/FeaturesSection.astro"
 
 // 型安全なSEOデータ定義（Astroネイティブ）
 interface SEOData {
@@ -88,64 +89,7 @@ const seoData: SEOData = {
       <MissionSection />
 
       <!-- Features Section -->
-      <section
-        class="features-section loading"
-        aria-labelledby="features-title"
-        transition:name="features-section"
-        data-lazy>
-        <div class="features-container">
-          <h2 class="features-title" id="features-title" transition:name="features-title">
-            Pendekatan Immersion
-          </h2>
-          <div class="features-grid" role="list">
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-1">
-              <div class="feature-icon" aria-hidden="true">⚡</div>
-              <h3>Adaptive Learning</h3>
-              <p>
-                Rekomendasi yang didukung oleh Metodologi SLA (Ilmu Pembelajaran Bahasa
-                ke-2) terbaru yang sesuai cara otak dirancang untuk memperoleh
-                bahasa—melalui paparan bermakna, bukan sekedar hafalan.
-              </p>
-            </article>
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-2">
-              <div class="feature-icon" aria-hidden="true">👥</div>
-              <h3>Belajar Bersama Komunitas</h3>
-              <p>
-                Bergabunglah dengan sesama pembelajar dan penutur asli dalam lingkungan
-                komunitas yang mendukung.
-              </p>
-            </article>
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-3">
-              <div class="feature-icon" aria-hidden="true">📚</div>
-              <h3>Peta Jalan Terstruktur</h3>
-              <p>
-                Tahapan yang jelas dan dapat dicapai dari kana dasar hingga media
-                kompleks. Setiap langkah dibangun secara alami dari yang sebelumnya.
-              </p>
-            </article>
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-4">
-              <div class="feature-icon" aria-hidden="true">🧠</div>
-              <h3>Berpikir dalam Jepang</h3>
-              <p>
-                Melampaui terjemahan. Kembangkan kemampuan untuk memahami dan merasakan
-                bahasa Jepang secara instan, seperti penutur asli.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
+      <FeaturesSection />
 
       <!-- Documentation Preview Section -->
       <section
