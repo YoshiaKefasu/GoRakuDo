@@ -141,6 +141,44 @@
   }
 }
 
+:root {
+  /* Colors */
+  --clr-background: #0a0a0a;
+  --clr-text-primary: #ffffff;
+  --clr-text-secondary: #cccccc;
+  --clr-text-muted: #aaaaaa;
+  --clr-accent: #8b5dff;
+  --clr-accent-dark: #7b4def;
+  --clr-accent-glow-faint: rgba(139, 93, 255, 0.05);
+  --clr-accent-glow-medium: rgba(139, 93, 255, 0.1);
+  --clr-accent-glow-strong: rgba(139, 93, 255, 0.2);
+  --clr-accent-shadow: rgba(139, 93, 255, 0.4);
+  --clr-gold-light: #ffefb8;
+  --clr-gold-dark: #e4b43b;
+
+  /* Modal "Paper" Theme */
+  --clr-paper-bg: #f7f4f1;
+  --clr-paper-text-primary: #3c3c3c;
+  --clr-paper-text-secondary: #555;
+  --clr-paper-border: #e0dcd8;
+  --clr-paper-lines: #dcd9d5;
+
+  /* Typography */
+  --font-primary: "Inter", sans-serif;
+  --font-serif: "Lora", serif;
+  --font-jp: "Yuji Syuku", serif;
+  --font-cursive: "Cedarville Cursive", cursive;
+
+  /* Spacing & Borders */
+  --section-padding-y: clamp(80px, 10vw, 120px);
+  --border-radius-pill: 35px;
+  --border-radius-card: 20px;
+  --border-radius-btn-small: 25px;
+
+  /* Animation */
+  --transition-speed: 0.3s;
+}
+
 /* ========== CRITICAL CSS LAYER - LOADS FIRST FOR PERFORMANCE ========== */
 @layer critical {
   /* 
