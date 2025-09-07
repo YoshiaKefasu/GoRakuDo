@@ -2,6 +2,8 @@ import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
 import tailwindcss from "@tailwindcss/vite";
 
+import mcp from "astro-mcp";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://gorakudo.org",
@@ -110,34 +112,31 @@ export default defineConfig({
     },
   },
 
-  integrations: [
-    vue({
-      // Enhanced Vue configuration for better performance
-      include: ["**/*.vue"],
-      // Disable experimental features to prevent conflicts
-      experimentalReactivityTransform: false,
-      // Enable global imports for composition API
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('ion-')
-        }
+  integrations: [vue({
+    // Enhanced Vue configuration for better performance
+    include: ["**/*.vue"],
+    // Disable experimental features to prevent conflicts
+    experimentalReactivityTransform: false,
+    // Enable global imports for composition API
+    template: {
+      compilerOptions: {
+        isCustomElement: (tag) => tag.startsWith('ion-')
       }
-    }),
-    // Enable View Transitions API for smooth page transitions
-    {
-      name: "view-transitions",
-      hooks: {
-        "astro:config:setup": ({ updateConfig }) => {
-          updateConfig({
-            vite: {
-              plugins: [tailwindcss()],
-            },
-            experimental: {
-              viewTransitions: true,
-            },
-          });
-        },
+    }
+  }), // Enable View Transitions API for smooth page transitions
+  {
+    name: "view-transitions",
+    hooks: {
+      "astro:config:setup": ({ updateConfig }) => {
+        updateConfig({
+          vite: {
+            plugins: [tailwindcss()],
+          },
+          experimental: {
+            viewTransitions: true,
+          },
+        });
       },
     },
-  ],
+  }, mcp()],
 });
