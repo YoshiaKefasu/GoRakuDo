@@ -11,6 +11,7 @@ import InvitationModal from "../components/public-components/InvitationModal.vue
 import "../styles/global.css"
 import "../styles/homepage/ImageSlideshow.css"
 import "../styles/homepage/index.css"
+import "../styles/homepage/homepage.css"
 
 // 型安全なSEOデータ定義（Astroネイティブ）
 interface SEOData {
@@ -51,7 +52,6 @@ const seoData: SEOData = {
     />
 
     <!-- パフォーマンス最適化: 重要なリソースのプリロード -->
-    <link rel="preload" href="/css/homepage-styles.css" as="style" />
     <link rel="preload" href="/core/hompage-script.js" as="script" />
     
     <!-- 非重要リソースのプリフェッチ -->
@@ -60,7 +60,6 @@ const seoData: SEOData = {
   </head>
   <body>
     <!-- Stylesheet -->
-    <link fetchpriority="auto" rel="stylesheet" href="/css/homepage-styles.css" />
     <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
     <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
 

@@ -3,6 +3,7 @@
  * Complete migration from 927-line legacy system to modern Tailwind v4.1 structure
  * Preserves ALL existing functionality while upgrading to OKLCH colors and modern patterns
  * Optimized for GitHub Pages deployment with Astro + Vue + Tailwind v4
+ * Following Google 2025 Engineering/UI-UX standards
  */
 
 @import 'tailwindcss';
@@ -178,9 +179,6 @@
     line-height: 1.6; /* Preserved from legacy */
     letter-spacing: -0.01em; /* Slightly tighter for modern feel */
     flex-direction: column;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
 
     /* Critical theme colors - mapped from legacy hex to OKLCH */
     background-color: transparent; /* Transparent to allow canvas animation to show through */
@@ -877,9 +875,38 @@
     transition: background 0.3s ease;
   }
 
-  /* Legacy button base styles - preserved exactly */
+  /* --- Reusable Components & Transitions --- */
+  .primary-button,
+  .secondary-button,
   .cta-button,
-  .docs-button {
+  .docs-button,
+  .get-started-btn,
+  .nav-item,
+  .feature-card,
+  .discord-link {
+    transition:
+      transform var(--transition-speed) ease,
+      background-color var(--transition-speed) ease,
+      border-color var(--transition-speed) ease,
+      box-shadow var(--transition-speed) ease,
+      color var(--transition-speed) ease;
+  }
+  .primary-button:hover,
+  .secondary-button:hover,
+  .cta-button:hover,
+  .docs-button:hover,
+  .get-started-btn:hover,
+  .discord-link:hover {
+    transform: translateY(-3px);
+  }
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--clr-accent-glow-strong);
+    box-shadow: 0 10px 30px var(--clr-accent-glow-medium);
+  }
+
+  /* Legacy button base styles - preserved exactly */
+  .cta-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -903,11 +930,6 @@
     color: var(--color-text-primary);
   }
 
-  .docs-button {
-    background: transparent;
-    border: 2px solid rgba(228, 180, 59, 0.25);
-    color: var(--color-gold-dark);
-  }
 
   /* Loading states - preserved from legacy */
   .loading {
@@ -1516,6 +1538,7 @@
 
 /* ========== LIST STYLING - GLOBAL CONSISTENCY ========== */
 /* 
+ * REASONING: Implementing Google Material Design 3 list standards for site-wide consistency
  * CHANGE: Adding comprehensive list styling that works across all pages and components
  * BENEFIT: Improved readability, accessibility, and visual consistency across the entire site
  */
@@ -1767,6 +1790,7 @@ ol ol {
  * ✅ Enhanced performance and accessibility
  * ✅ 100% backward compatibility
  * ✅ Future-ready extensibility
+ * ✅ Google-standard list styling for consistency
  * ✅ Buttery smooth wave and floating animations
  * 
  * Total migration: Legacy (927 lines) → Modern (650+ lines optimized)

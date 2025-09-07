@@ -18,6 +18,9 @@ RULES FOR MODIFICATION:
 
 ================================================================================
 */
+
+@import 'tailwindcss';
+
 :root {
   /* Colors */
   --clr-background: #0a0a0a;
@@ -56,11 +59,6 @@ RULES FOR MODIFICATION:
   --transition-speed: 0.3s;
 }
 
-/* --- 2. Base & Reset Styles --- */
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: var(--font-primary);
   background: var(--clr-background);
@@ -73,6 +71,16 @@ body {
 body.modal-open {
   overflow: hidden;
 }
+
+/* Mobile First Approach */
+@apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
+
+/* Typography Scaling */
+@apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
+
+/* Grid Responsive */
+@apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+
 
 /*
 ================================================================================
@@ -113,35 +121,6 @@ RULES FOR MODIFICATION:
 }
 */
 
-/* --- Reusable Components & Transitions --- */
-.primary-button,
-.secondary-button,
-.cta-button,
-.docs-button,
-.get-started-btn,
-.nav-item,
-.feature-card,
-.discord-link {
-  transition:
-    transform var(--transition-speed) ease,
-    background-color var(--transition-speed) ease,
-    border-color var(--transition-speed) ease,
-    box-shadow var(--transition-speed) ease,
-    color var(--transition-speed) ease;
-}
-.primary-button:hover,
-.secondary-button:hover,
-.cta-button:hover,
-.docs-button:hover,
-.get-started-btn:hover,
-.discord-link:hover {
-  transform: translateY(-3px);
-}
-.feature-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--clr-accent-glow-strong);
-  box-shadow: 0 10px 30px var(--clr-accent-glow-medium);
-}
 
 /* --- Background Elements --- */
 
@@ -172,61 +151,49 @@ RULES FOR MODIFICATION:
   color: var(--clr-text-primary); /* Fallback */
 }
 
+/* ===== SECTION LAYOUTS ===== */
 .mission-section,
 .features-section,
 .docs-preview-section {
-  padding-block: var(--section-padding-y);
-  padding-inline: 40px;
+  /* padding-block: var(--section-padding-y); */
+  @apply px-10 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
 }
-
 .mission-container,
 .features-container,
 .docs-container {
-  max-width: 900px;
-  margin-inline: auto;
-  text-align: center;
+  @apply max-w-4xl mx-auto text-center;
 }
 .features-container {
-  max-width: 1100px;
+  @apply max-w-6xl;
 }
 .mission-title,
 .features-title,
 .docs-title {
-  font-size: clamp(36px, 4vw, 48px);
-  font-weight: 600;
-  margin-bottom: 60px;
+  @apply text-4xl sm:text-5xl lg:text-6xl font-semibold mb-16;
 }
 .features-title {
-  margin-bottom: 80px;
+  @apply mb-20;
 }
 .docs-title {
-  margin-bottom: 30px;
+  @apply mb-8;
 }
 .mission-text {
-  text-align: left;
-  margin-bottom: 60px;
+  @apply text-left md:text-justify mb-16;
 }
 .mission-text p {
-  font-size: 18px;
   color: var(--clr-text-secondary);
-  line-height: 1.8;
-  margin-bottom: 28px;
+  @apply sm:text-lg leading-relaxed mb-6;
 }
 .mission-cta,
 .docs-cta {
-  text-align: center;
+  @apply text-center;
 }
+
+/* ===== BUTTONS ===== */
 .cta-button,
 .docs-button {
-  border: none;
-  padding: 18px 40px;
   border-radius: var(--border-radius-pill);
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
+  @apply inline-flex items-center justify-center gap-3 px-6 py-4 min-h-[44px] border-none text-lg font-semibold cursor-pointer transition-all duration-300;
 }
 .cta-button {
   background: linear-gradient(
@@ -257,32 +224,27 @@ RULES FOR MODIFICATION:
   max-width: 600px;
   margin-inline: auto;
 }
+
+/* ===== GRID & CARDS ===== */
 .features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
+  @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10;
 }
 .feature-card {
   background: var(--clr-accent-glow-faint);
   border: 1px solid var(--clr-accent-glow-medium);
   border-radius: var(--border-radius-card);
-  padding: 40px 30px;
-  text-align: center;
+  @apply p-8 text-center;
 }
 .feature-icon {
-  font-size: 48px;
-  margin-bottom: 24px;
+  @apply text-5xl md:text-6xl mb-6;
 }
 .feature-card h3 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 16px;
+  @apply text-xl md:text-2xl font-semibold mb-4 ;
   color: var(--clr-text-primary);
 }
 .feature-card p {
   color: var(--clr-text-muted);
-  line-height: 1.7;
-  font-size: 16px;
+  @apply text-gray-400 leading-relaxed text-sm md:text-base;
 }
 
 /*
@@ -380,17 +342,19 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
   margin-bottom: 1.2em;
 }
 .modal-list {
+  /* REASONING: Update to follow Google Material Design 3 standards for consistency */
   list-style: none;
   padding: 0;
-  margin: 1rem 0 1rem 1rem;
+  margin: 1rem 0 1rem 1rem; /* Google standard 16px left margin */
   position: relative;
 }
 
 .modal-list li {
+  /* REASONING: Google standard line height and spacing for optimal readability */
   position: relative;
   padding-left: 1.5rem; /* Space for custom bullet */
   margin-bottom: 0.5rem; /* Consistent spacing between list items */
-  line-height: 1.6;
+  line-height: 1.6; /* Google Material Design standard line height */
   font-family: var(--font-primary);
   color: var(--clr-paper-text-primary);
   font-size: 1rem; /* 16px base font size */
@@ -409,7 +373,7 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
   transform: translateY(-50%); /* Center vertically */
 }
 
-/* REASONING: Ensure member-list follows same  */
+/* REASONING: Ensure member-list follows same Google standards */
 .member-list {
   list-style: none;
   padding: 0;
@@ -530,63 +494,72 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
 
 @media (max-width: 768px) {
   .hero-buttons {
-    flex-direction: column;
-    align-items: stretch;
-    max-width: 350px;
-    margin-inline: auto;
+    @apply flex-col items-stretch max-w-sm mx-auto;
   }
+  
   .primary-button,
   .secondary-button {
-    justify-content: center;
+    @apply justify-center;
   }
+  
   .mission-section,
   .features-section,
   .docs-preview-section {
-    padding-inline: 20px;
+    @apply px-4;
   }
+  
   .modal-overlay {
-    align-items: flex-start;
+    @apply items-start;
   }
+  
   .modal-content {
-    padding: 30px 25px;
+    @apply p-8;
   }
+  
   .modal-japanese-title {
-    font-size: 3.5rem;
+    @apply text-4xl;
   }
 }
 
 @media (max-width: 480px) {
   .primary-button,
   .secondary-button {
-    font-size: 14px;
-    padding: 12px 24px;
+    @apply text-sm px-6 py-3;
   }
+  
   .cta-button,
   .docs-button {
-    font-size: 16px;
-    padding: 14px 28px;
+    @apply text-base px-6 py-4;
   }
+  
   .modal-content {
-    padding: 25px 20px;
-    max-height: 95%;
+    @apply p-6 max-h-[90%];
   }
+  
   .modal-japanese-title {
-    font-size: 3rem;
+    @apply text-3xl;
   }
+  
   .modal-body {
-    font-size: 1rem;
+    @apply text-base;
   }
+  
   .signature-name {
-    font-size: 1.6rem;
+    @apply text-xl;
   }
+  
   .modal-signature {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    text-align: center;
+    @apply flex-col items-center gap-5 text-center;
   }
+  
   .signature-text {
-    text-align: center;
+    @apply text-center;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-content {
+    @apply mx-4 my-8 max-h-[90vh] overflow-y-auto;
   }
 }
 
