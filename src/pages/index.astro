@@ -5,6 +5,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 // Vueコンポーネントをインポート
 import Navbar from "../components/public-components/Navbar.vue"
 import Hero from "../components/homepage/hero.astro"
+import MissionSection from "../components/homepage/MissionSection.astro"
 import InvitationModal from "../components/public-components/InvitationModal.vue"
 
 // CSSをインポート
@@ -84,65 +85,7 @@ const seoData: SEOData = {
       />
 
       <!-- Mission Section -->
-      <section
-        id="mission"
-        class="mission-section smooth-edge-bottom loading"
-        aria-labelledby="mission-title"
-        transition:name="mission-section"
-        data-lazy>
-        <div class="mission-container">
-          <h2 class="mission-title" id="mission-title" transition:name="mission-title">
-            Misi Kami
-          </h2>
-          <div class="mission-content">
-            <div class="mission-text">
-              <p>
-                🌊✨ <b>Misi kami adalah memberi jalur yang menyenangkan</b>, dan <i
-                  >terbukti secara ilmiah</i
-                > oleh 🎓 Prof. Stephen Krashen bagi siapa pun yang mulai dari <b>nol</b> untuk
-                menguasai bahasa Jepang secara alami 🌱 dan berkelanjutan.
-              </p>
-              <p>
-                Kami yakin belajar bahasa itu bukan sekadar menghafal aturan 📖 atau
-                kosakata, tapi membentuk kemampuan berpikir, 🤔 memahami, dan
-                berkomunikasi seperti penutur asli. Dengan immersion, kamu langsung terjun
-                dalam bahasa Jepang sejak hari pertama—mendengar, membaca, dan ⚡ langsung
-                memahaminya di konteks aslinya.
-              </p>
-              <p>
-                🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu "hidup" dalam bahasa Jepang,
-                bukan sekadar mempelajarinya. Kami ingin kamu mencapai titik di mana bahasa
-                Jepang tidak lagi diterjemahkan di kepala, tetapi ⚡ dipahami secara instan
-                seperti bahasa ibu. Dengan immersion, kamu tidak hanya mempelajari aturan,
-                tetapi membangun hubungan yang mendalam dengan 🎎 budaya, pola pikir, dan ekspresi
-                unik orang Jepang. Ini adalah perjalanan menuju <i>Nativeness</i> 💫, bukan
-                sekadar <i>Fluency</i>—dan kami akan menemani setiap langkahmu 👣.
-              </p>
-            </div>
-          </div>
-          <div class="mission-cta">
-            <button
-              class="cta-button"
-              onclick="openInvitationModal()"
-              aria-label="Bergabung dengan komunitas GoRakuDo"
-              transition:name="cta-button">
-              Gabung Komunitas Kami
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
+      <MissionSection />
 
       <!-- Features Section -->
       <section
