@@ -1,20 +1,17 @@
 ---
-import UnifiedSEO from "../components/UnifiedSEO.astro"
 import BaseLayout from "../layouts/BaseLayout.astro"
 
-// Vueコンポーネントをインポート
-import Navbar from "../components/public-components/Navbar.vue"
+// Homepage specific components
 import Hero from "../components/homepage/hero.astro"
 import MissionSection from "../components/homepage/MissionSection.astro"
 import InvitationModal from "../components/public-components/InvitationModal.vue"
+import FeaturesSection from "../components/homepage/FeaturesSection.astro"
+import DocumentationPreviewSection from "../components/homepage/DocumentationPreviewSection.astro"
 
 // CSSをインポート
-import "../styles/global.css"
 import "../styles/homepage/ImageSlideshow.css"
 import "../styles/homepage/index.css"
 import "../styles/homepage/homepage.css"
-import FeaturesSection from "../components/homepage/FeaturesSection.astro"
-import DocumentationPreviewSection from "../components/homepage/DocumentationPreviewSection.astro"
 
 // 型安全なSEOデータ定義（Astroネイティブ）
 interface SEOData {
@@ -38,206 +35,187 @@ const seoData: SEOData = {
 }
 ---
 
-<!doctype html>
-<html lang="id">
-  <head>
-    <!-- Basic HTML head elements -->
-    <!-- UnifiedSEO - 最適化されたAstroネイティブ実装 -->
-    <UnifiedSEO
-      title={seoData.title}
-      description={seoData.description}
-      keywords={seoData.keywords}
-      pageType={seoData.pageType}
-      image={seoData.image}
-      author={seoData.author}
-      lang={seoData.lang}
-      gtag={import.meta.env.PUBLIC_GA_ID}
+<BaseLayout
+  title={seoData.title}
+  description={seoData.description}
+  keywords={seoData.keywords}
+  pageType={seoData.pageType}
+  image={seoData.image}
+  author={seoData.author}
+  lang={seoData.lang}
+  gtag={import.meta.env.PUBLIC_GA_ID}
+>
+  <!-- Homepage specific background elements -->
+  <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
+  <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+
+  <!-- Stars Background (Hidden from screen readers) - Stars will be created dynamically by the module -->
+  <div class="stars" aria-hidden="true"></div>
+
+  <!-- Main Content -->
+  <main
+    class="main-content"
+    role="main"
+    style="background: transparent !important;"
+    transition:name="main-content">
+    <!-- Hero Section -->
+    <Hero
+      missionId="mission"
+      invitationModalId="invitationModal"
+      titleLine1="Belajar Secara Alami,"
+      titleLine2="Kuasai Layaknya Penutur Asli."
     />
 
-    <!-- パフォーマンス最適化: 重要なリソースのプリロード -->
-    <link rel="preload" href="/core/hompage-script.js" as="script" />
-    
-    <!-- 非重要リソースのプリフェッチ -->
-    <link fetchpriority="low" rel="prefetch" href="/docs" />
-    <link fetchpriority="low" rel="prefetch" href="/discord" />
-  </head>
-  <body>
-    <!-- Stylesheet -->
-    <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
-    <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+    <!-- Mission Section -->
+    <MissionSection />
 
-    <!-- Stars Background (Hidden from screen readers) - Stars will be created dynamically by the module -->
-    <div class="stars" aria-hidden="true"></div>
+    <!-- Features Section -->
+    <FeaturesSection />
 
-    <!-- Navigation -->
-    <Navbar client:visible />
+    <!-- Documentation Preview Section -->
+    <DocumentationPreviewSection />
+  </main>
 
-    <!-- Main Content -->
-    <main
-      class="main-content"
-      role="main"
-      style="background: transparent !important;"
-      transition:name="main-content">
-      <!-- Hero Section -->
-      <Hero
-        missionId="mission"
-        invitationModalId="invitationModal"
-        titleLine1="Belajar Secara Alami,"
-        titleLine2="Kuasai Layaknya Penutur Asli."
-      />
+  <!-- Invitation Modal - Load only when needed -->
+  <InvitationModal client:idle />
 
-      <!-- Mission Section -->
-      <MissionSection />
+  <script fetchpriority="auto" is:inline src="/core/hompage-script.js"></script>
 
-      <!-- Features Section -->
-      <FeaturesSection />
+  <!-- Animation Modules Integration -->
+  <script>
+    // Dynamic import for animation modules with comprehensive error handling
+    Promise.all([import("../scripts/ui/background-animations/stars-animation.js")])
+      .then(([starsModule]) => {
+        console.log("🎬 Stars animation module loaded successfully")
 
-      <!-- Documentation Preview Section -->
-      <DocumentationPreviewSection />
-    </main>
-
-    <!-- Invitation Modal - Load only when needed -->
-    <InvitationModal client:idle />
-
-    <script fetchpriority="auto" is:inline src="/core/hompage-script.js"
-    ></script>
-
-    <!-- Animation Modules Integration -->
-    <script>
-      // Dynamic import for animation modules with comprehensive error handling
-      Promise.all([import("../scripts/ui/background-animations/stars-animation.js")])
-        .then(([starsModule]) => {
-          console.log("🎬 Stars animation module loaded successfully")
-
-          // Initialize stars animation only
-          const starsAnimation = starsModule.initStarsAnimation({
-            enabled: true,
-            count: 8,
-            animationDuration: "4s",
-            opacity: 0.6,
-            containerClass: "stars",
-            starClass: "star",
-            containerId: "stars",
-            useExistingContainer: true,
-            createContainer: false,
-            containerSelector: ".stars",
-            accessibility: {
-              respectReducedMotion: false,
-              announceChanges: false,
-              screenReaderFriendly: true,
-              highContrastSupport: true,
-              forceEnable: true,
-            },
-          })
-
-          // Start animations when page loads
-          window.addEventListener("load", () => {
-            try {
-              // Initialize stars animation with existing container
-              starsAnimation.init("stars")
-              console.log("✨ Stars animation initialized successfully")
-
-              // Debug: Check if stars were created
-              setTimeout(() => {
-                const stars = document.querySelectorAll(".star")
-                console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
-                if (stars.length > 0) {
-                  console.log("✅ Stars are visible in DOM")
-                } else {
-                  console.log("⚠️ No stars found in DOM - checking container")
-                  const container = document.querySelector(".stars")
-                  console.log("Container:", container)
-                }
-              }, 500)
-
-              // Add loaded class to prevent popup effect
-              setTimeout(() => {
-                const starsContainer = document.querySelector(".stars")
-                if (starsContainer) {
-                  starsContainer.classList.add("loaded")
-                }
-              }, 100)
-
-              // Trigger hero animation after animations are ready
-              setTimeout(() => {
-                const heroContent = document.querySelector("#hero-content")
-                if (heroContent) {
-                  heroContent.classList.remove(
-                    "opacity-0",
-                    "translate-y-16",
-                    "scale-80",
-                    "blur-md"
-                  )
-                  console.log("✨ Hero content revealed smoothly")
-                }
-              }, 200) // Coordinate with hero component timing
-            } catch (error) {
-              console.error("❌ Animation initialization error:", error)
-            }
-          })
+        // Initialize stars animation only
+        const starsAnimation = starsModule.initStarsAnimation({
+          enabled: true,
+          count: 8,
+          animationDuration: "4s",
+          opacity: 0.6,
+          containerClass: "stars",
+          starClass: "star",
+          containerId: "stars",
+          useExistingContainer: true,
+          createContainer: false,
+          containerSelector: ".stars",
+          accessibility: {
+            respectReducedMotion: false,
+            announceChanges: false,
+            screenReaderFriendly: true,
+            highContrastSupport: true,
+            forceEnable: true,
+          },
         })
-        .catch((error) => {
-          console.log("⚠️ Animation modules failed to load:", error.message)
-          // Fallback: continue with existing inline animations
-          console.log("🔄 Falling back to existing inline animations")
-        })
-    </script>
 
-    <!-- Performance monitoring removed -->
-    <script>
-      // Intersection Observer for lazy loading optimization
-      const lazyElements = document.querySelectorAll("[data-lazy]")
-      const lazyObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("loaded")
-            lazyObserver.unobserve(entry.target)
+        // Start animations when page loads
+        window.addEventListener("load", () => {
+          try {
+            // Initialize stars animation with existing container
+            starsAnimation.init("stars")
+            console.log("✨ Stars animation initialized successfully")
+
+            // Debug: Check if stars were created
+            setTimeout(() => {
+              const stars = document.querySelectorAll(".star")
+              console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
+              if (stars.length > 0) {
+                console.log("✅ Stars are visible in DOM")
+              } else {
+                console.log("⚠️ No stars found in DOM - checking container")
+                const container = document.querySelector(".stars")
+                console.log("Container:", container)
+              }
+            }, 500)
+
+            // Add loaded class to prevent popup effect
+            setTimeout(() => {
+              const starsContainer = document.querySelector(".stars")
+              if (starsContainer) {
+                starsContainer.classList.add("loaded")
+              }
+            }, 100)
+
+            // Trigger hero animation after animations are ready
+            setTimeout(() => {
+              const heroContent = document.querySelector("#hero-content")
+              if (heroContent) {
+                heroContent.classList.remove(
+                  "opacity-0",
+                  "translate-y-16",
+                  "scale-80",
+                  "blur-md"
+                )
+                console.log("✨ Hero content revealed smoothly")
+              }
+            }, 200) // Coordinate with hero component timing
+          } catch (error) {
+            console.error("❌ Animation initialization error:", error)
           }
         })
       })
+      .catch((error) => {
+        console.log("⚠️ Animation modules failed to load:", error.message)
+        // Fallback: continue with existing inline animations
+        console.log("🔄 Falling back to existing inline animations")
+      })
+  </script>
 
-      lazyElements.forEach((el) => lazyObserver.observe(el))
+  <!-- Performance monitoring removed -->
+  <script>
+    // Intersection Observer for lazy loading optimization
+    const lazyElements = document.querySelectorAll("[data-lazy]")
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("loaded")
+          lazyObserver.unobserve(entry.target)
+        }
+      })
+    })
 
-      // Service Worker registration for caching (if available)
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          // Opt-in only: enable by setting localStorage.setItem('enable-sw','true')
-          const enableSW = localStorage.getItem("enable-sw") === "true"
+    lazyElements.forEach((el) => lazyObserver.observe(el))
 
-          if (enableSW) {
-            navigator.serviceWorker
-              .register("/sw.js")
-              .then((registration) => {
-                console.log("🔧 Service Worker registered:", registration.scope)
+    // Service Worker registration for caching (if available)
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        // Opt-in only: enable by setting localStorage.setItem('enable-sw','true')
+        const enableSW = localStorage.getItem("enable-sw") === "true"
 
-                // Check for updates
-                registration.addEventListener("updatefound", () => {
-                  const installing = registration.installing
-                  if (!installing) return
-                  installing.addEventListener("statechange", () => {
-                    if (
-                      installing.state === "installed" &&
-                      navigator.serviceWorker.controller
-                    ) {
-                      console.log("🔄 New Service Worker available")
-                    }
-                  })
+        if (enableSW) {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("🔧 Service Worker registered:", registration.scope)
+
+              // Check for updates
+              registration.addEventListener("updatefound", () => {
+                const installing = registration.installing
+                if (!installing) return
+                installing.addEventListener("statechange", () => {
+                  if (
+                    installing.state === "installed" &&
+                    navigator.serviceWorker.controller
+                  ) {
+                    console.log("🔄 New Service Worker available")
+                  }
                 })
               })
-              .catch((error) => {
-                console.log(
-                  "⚠️ Service Worker registration failed:",
-                  error?.message || error
-                )
-              })
-          } else {
-            // Disabled by default to avoid GH Pages cache/stale-content issues
-            console.log(
-              "🔧 Service Worker disabled (enable via localStorage 'enable-sw' = 'true')"
-            )
-          }
-        })
-      }
-    </script>
-  </body>
-</html>
+            })
+            .catch((error) => {
+              console.log(
+                "⚠️ Service Worker registration failed:",
+                error?.message || error
+              )
+            })
+        } else {
+          // Disabled by default to avoid GH Pages cache/stale-content issues
+          console.log(
+            "🔧 Service Worker disabled (enable via localStorage 'enable-sw' = 'true')"
+          )
+        }
+      })
+    }
+  </script>
+</BaseLayout>
