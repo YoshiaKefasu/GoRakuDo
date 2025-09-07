@@ -1,19 +1,10 @@
 ---
-// TypeScript declarations for global objects in this file
-declare global {
-  interface Window {
-    clientLogger: {
-      log: (message: string, level?: "info" | "success" | "warning" | "error") => void
-      startGroup: (title: string) => void
-      endGroup: (title: string) => void
-    }
-    searchLoadingManager?: any
-    searchEngine?: any
-    contentConfig?: any
-    allPosts?: any[]
-    Fuse?: any
-  }
-}
+// 分離されたモジュールをインポート（相対パス基本 + @/*エイリアスフォールバック）
+// 相対パスを基本とし、必要に応じて@/*エイリアスを使用
+import type { SearchDataItem, ContentConfig } from '../scripts/type-scripts/docs/index/global';
+import { SearchLoadingManager } from '../scripts/type-scripts/docs/index/search/search-loading-manager';
+import { ModernSearchEngine } from '../scripts/type-scripts/docs/index/search/modern-search-engine';
+// フォールバック例: import { SomeUtil } from '@/utils/some-util';
 
 import { getCollection } from "astro:content"
 import UnifiedSEO from "../components/UnifiedSEO.astro"
@@ -891,25 +882,37 @@ function formatDate(dateString: string): string {
         }
       }
 
-      // Initialize loading manager
-      const searchLoadingManager = new SearchLoadingManager()
+      // 分離されたモジュールを使用（動的インポート）
+      async function initializeSearchSystem() {
+        try {
+          // 動的インポートでモジュールを読み込み
+          const { SearchLoadingManager } = await import('../scripts/type-scripts/docs/index/search/search-loading-manager');
+          const { ModernSearchEngine } = await import('../scripts/type-scripts/docs/index/search/modern-search-engine');
+          
+          const searchLoadingManager = new SearchLoadingManager();
+          const searchEngine = new ModernSearchEngine();
 
-      // Import the externalized search engine with loading state management
-      // Temporarily disabled for build stability
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(
-          "Docs Search Engine module loading disabled for build stability",
-          "success"
-        )
+          // グローバルに公開
+          window.searchEngine = searchEngine;
+          window.searchLoadingManager = searchLoadingManager;
+          window.allPosts = []; // 検索データは動的に読み込まれる
+          
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Search system initialized successfully", "success");
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Failed to initialize search system: ${error}`, "error");
+          }
+        }
       }
-      searchLoadingManager.setReadyState()
-
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log("Loading Enhanced Search Engine...", "info")
-      }
+      
+      // 検索システムを初期化
+      initializeSearchSystem();
     </script>
 
-    <!-- Enhanced Search Engine Implementation -->
+    <!-- Enhanced Search Engine Implementation - MOVED TO SEPARATE MODULES -->
+    <!-- 
     <script>
       // Enhanced Search Engine for Docs Page
       //  Fuse.js Integration with search.json.js
@@ -1641,6 +1644,7 @@ function formatDate(dateString: string): string {
         )
       }
     </script>
+    -->
 
     <script>
       // 🌊 DOCS PAGE WAVE ANIMATION INITIALIZATION
