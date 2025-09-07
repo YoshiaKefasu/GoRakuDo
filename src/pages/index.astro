@@ -14,6 +14,7 @@ import "../styles/homepage/ImageSlideshow.css"
 import "../styles/homepage/index.css"
 import "../styles/homepage/homepage.css"
 import FeaturesSection from "../components/homepage/FeaturesSection.astro"
+import DocumentationPreviewSection from "../components/homepage/DocumentationPreviewSection.astro"
 
 // 型安全なSEOデータ定義（Astroネイティブ）
 interface SEOData {
@@ -92,42 +93,7 @@ const seoData: SEOData = {
       <FeaturesSection />
 
       <!-- Documentation Preview Section -->
-      <section
-        class="docs-preview-section loading"
-        aria-labelledby="docs-title"
-        transition:name="docs-section"
-        data-lazy>
-        <div class="docs-container">
-          <h2 class="docs-title" id="docs-title" transition:name="docs-title">
-            Panduan & Dokumentasi
-          </h2>
-          <p class="docs-description">
-            Akses panduan lengkap, metodologi immersion, dan sumber daya pembelajaran yang
-            telah terbukti efektif.
-          </p>
-          <div class="docs-cta">
-            <button
-              class="docs-button"
-              onclick="goToPosts()"
-              aria-label="Lihat semua dokumentasi dan panduan"
-              transition:name="docs-button">
-              Lihat Dokumentasi
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
+      <DocumentationPreviewSection />
     </main>
 
     <!-- Invitation Modal - Load only when needed -->
