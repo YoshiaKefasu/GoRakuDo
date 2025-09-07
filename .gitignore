@@ -2,13 +2,9 @@
 dist/
 # generated types
 .astro/
-.bmad-core/
 
 # dependencies
 node_modules/
-bmad-core/
-bmad-docs/
-
 # logs
 npm-debug.log*
 yarn-debug.log*
@@ -21,8 +17,14 @@ pnpm-debug.log*
 .env.development
 .env.production
 .env.*.local
+
 .corsor
 .cursor/
+.bmad-core/
+
+bmad-core/
+bmad-docs/
+
 # SECURITY: Also ignore env.example if it contains real API keys
 # env.example
 

@@ -619,7 +619,6 @@
   margin-bottom: 1rem; /* REM for responsive margin */
   color: var(--color-post-content);
   font-size: 1rem; /* REM for responsive typography */
-  /* ENHANCED: Google Team readability standards */
   line-height: 1.75; /* Improved line height for better readability */
   text-rendering: optimizeLegibility; /* Enhanced text rendering */
   font-feature-settings:
@@ -642,7 +641,6 @@
   margin-top: 0.5rem; /* REM for responsive margin */
   margin-bottom: 0.5rem; /* REM for responsive margin */
   position: relative;
-  /* ENHANCED: Google Team readability standards */
   line-height: 1.6; /* Improved line height for list items */
   color: var(--color-post-content); /* Ensure consistent color */
 }
@@ -841,9 +839,8 @@
   );
 }
 
-/* ========== GOOGLE-STANDARD LIST STYLING - ENHANCED ACCESSIBILITY & CONSISTENCY ========== */
+/* ========== LIST STYLING - ENHANCED ACCESSIBILITY & CONSISTENCY ========== */
 /* 
- * REASONING: Implementing Google Material Design 3 list standards for consistent rendering
  * CHANGE: Adding comprehensive list styling that works across all browsers and devices
  * BENEFIT: Improved readability, accessibility, and visual consistency
  */
@@ -1138,7 +1135,7 @@
 }
 
 /* ========== HIGH CONTRAST MODE SUPPORT ========== */
-/* REASONING: Google Team accessibility standards require high contrast mode support */
+/* REASONING:  accessibility standards require high contrast mode support */
 @media (prefers-contrast: high) {
   .post-content {
     /* ENHANCED: High contrast mode for better accessibility */
@@ -1197,7 +1194,7 @@
 }
 
 /* ========== REDUCED MOTION SUPPORT ========== */
-/* REASONING: Google Team accessibility standards require reduced motion support */
+/* REASONING:  accessibility standards require reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .post-page,
   .post-container,

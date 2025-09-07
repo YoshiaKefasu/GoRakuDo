@@ -1,4 +1,4 @@
-// Google Engineering Team 2025: Search Data JSON Endpoint
+// Search Data JSON Endpoint
 // Provides comprehensive search data for client-side Fuse.js search
 import { getCollection } from 'astro:content';
 import {

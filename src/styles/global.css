@@ -3,7 +3,6 @@
  * Complete migration from 927-line legacy system to modern Tailwind v4.1 structure
  * Preserves ALL existing functionality while upgrading to OKLCH colors and modern patterns
  * Optimized for GitHub Pages deployment with Astro + Vue + Tailwind v4
- * Following Google 2025 Engineering/UI-UX standards
  */
 
 @import 'tailwindcss';
@@ -1517,7 +1516,6 @@
 
 /* ========== LIST STYLING - GLOBAL CONSISTENCY ========== */
 /* 
- * REASONING: Implementing Google Material Design 3 list standards for site-wide consistency
  * CHANGE: Adding comprehensive list styling that works across all pages and components
  * BENEFIT: Improved readability, accessibility, and visual consistency across the entire site
  */
@@ -1769,7 +1767,6 @@ ol ol {
  * ✅ Enhanced performance and accessibility
  * ✅ 100% backward compatibility
  * ✅ Future-ready extensibility
- * ✅ Google-standard list styling for consistency
  * ✅ Buttery smooth wave and floating animations
  * 
  * Total migration: Legacy (927 lines) → Modern (650+ lines optimized)

@@ -1,6 +1,5 @@
 /**
  * Content Security Policy Configuration
- * Google Engineering Team 2025 Standards
  *
  * Purpose: Implement comprehensive security headers and CSP policies
  * Benefits: Enhanced security, XSS protection, resource integrity

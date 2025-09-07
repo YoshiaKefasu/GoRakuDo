@@ -380,19 +380,17 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
   margin-bottom: 1.2em;
 }
 .modal-list {
-  /* REASONING: Update to follow Google Material Design 3 standards for consistency */
   list-style: none;
   padding: 0;
-  margin: 1rem 0 1rem 1rem; /* Google standard 16px left margin */
+  margin: 1rem 0 1rem 1rem;
   position: relative;
 }
 
 .modal-list li {
-  /* REASONING: Google standard line height and spacing for optimal readability */
   position: relative;
   padding-left: 1.5rem; /* Space for custom bullet */
   margin-bottom: 0.5rem; /* Consistent spacing between list items */
-  line-height: 1.6; /* Google Material Design standard line height */
+  line-height: 1.6;
   font-family: var(--font-primary);
   color: var(--clr-paper-text-primary);
   font-size: 1rem; /* 16px base font size */
@@ -411,7 +409,7 @@ Do not move `max-height` or `overflow-y` to the `.modal-overlay`. Doing so will 
   transform: translateY(-50%); /* Center vertically */
 }
 
-/* REASONING: Ensure member-list follows same Google standards */
+/* REASONING: Ensure member-list follows same  */
 .member-list {
   list-style: none;
   padding: 0;

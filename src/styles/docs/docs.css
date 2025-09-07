@@ -1,4 +1,4 @@
-/* Google UI/UX Team 2025: Docs Page Styles - Tailwind v4 Conversion */
+/*  Docs Page Styles - Tailwind v4 Conversion */
 /* Converted from post-styles.css with accessibility-first approach */
 @import '../global.css';
 /* --- Background Elements --- */
@@ -506,7 +506,7 @@
   @apply rounded-xl border border-purple-500/20 bg-purple-500/10 px-3 py-1 text-xs text-purple-400;
 }
 
-/* Google UI/UX 2025: Minimalist Tag Design with Hover Popup */
+/* Minimalist Tag Design with Hover Popup */
 .post-tags {
   @apply relative;
 }
@@ -685,7 +685,7 @@
   }
 }
 
-/* Google UI/UX Team 2025: Comprehensive Sticky Note Design */
+/*  Comprehensive Sticky Note Design */
 /* Transform post cards into inspirational sticky note aesthetic with Tailwind v4 */
 
 .post-card {

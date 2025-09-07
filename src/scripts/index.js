@@ -1,5 +1,4 @@
 // Scripts Index - Easy imports for all categorized scripts
-// Google Engineering Team 2025 Approach
 
 // UI Scripts
 export { default as DocsPagination } from './ui/docs-pagination.js';
