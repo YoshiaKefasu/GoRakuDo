@@ -30,6 +30,7 @@
     "vue": "^3.5.18"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "@testing-library/jest-dom": "^6.8.0",
     "@types/dompurify": "^3.0.5",
     "@types/jest": "^30.0.0",

@@ -1,14 +1,11 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
-import { readFileSync, statSync } from "fs"
+import { statSync } from "fs"
 import { join } from "path"
 import UnifiedSEO from "../../components/UnifiedSEO.astro"
 import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
 import Navbar from "../../components/public-components/Navbar.vue"
-// AI Recommendations removed - functionality no longer needed
-// AI content utilities removed - functionality no longer needed
-// Content analysis utilities removed - functionality no longer needed
-// AI metadata utilities removed - functionality no longer needed
+import PostLayout from "../../components/content/PostLayout.astro"
 import {
   resolvePath,
   getCollectionInfo,
@@ -73,16 +70,6 @@ const seoData = {
   publishedDate: post.data.publishedDate || fileDates.createdDate,
   modifiedDate: post.data.modifiedDate || fileDates.modifiedDate,
   isDraft: post.data.isDraft || false
-}
-
-// Helper function to format date
-function formatDate(dateString: string): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }
-  return new Date(dateString).toLocaleDateString("id-ID", options)
 }
 
 // Prepare post data for script section with dynamic path resolution
@@ -167,96 +154,20 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
       <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
     </div>
 
-    <!-- Main Content -->
-    <main class="post-page w-full max-w-full flex flex-col" role="main">
-      <div class="post-container">
-        <!-- Breadcrumb Navigation -->
-        <Breadcrumb post={post} />
-
-        <!-- Article Header -->
-        <header class="post-header">
-          <h1 class="post-title">{post.data.title}</h1>
-
-          <div class="post-meta" aria-label="Post metadata">
-            <time class="post-date" datetime={post.data.publishedDate}>
-              {formatDate(post.data.publishedDate)}
-            </time>
-            <span class="post-author">by {post.data.author}</span>
-          </div>
-
-          <div class="post-tags">
-            <span
-              class={`difficulty-badge difficulty-${post.data.difficulty}`}
-              aria-label={`Difficulty level: ${post.data.difficulty}`}>
-              {post.data.difficulty}
-            </span>
-            
-          </div>
-        </header>
-
-        <!-- Article Content -->
-        <article class="post-content" id="postContent" aria-label="Post content">
-          <!-- Content will be rendered here -->
-        </article>
-
-        <!-- Post Actions -->
-        <footer class="post-actions">
-          <div class="action-buttons">
-            <a
-              href={collectionMetadata.basePath}
-              class="back-to-docs"
-              aria-label={`Kembali ke ${collectionMetadata.displayName}`}>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true">
-                <path d="M19 12H5M12 19l-7-7 7-7"></path>
-              </svg>
-              Kembali ke {collectionMetadata.displayName}
-            </a>
-            <div class="share-buttons">
-              <button class="share-btn" onclick="sharePost()" aria-label="Bagikan post ini">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true">
-                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                  <polyline points="16,6 12,2 8,6"></polyline>
-                  <line x1="12" y1="2" x2="12" y2="15"></line>
-                </svg>
-                Bagikan
-              </button>
-            </div>
-          </div>
-        </footer>
-
-        {/* AI-Powered Content Recommendations Section - REMOVED */}
-        {/* AI Recommendations functionality removed - no longer needed */}
-      </div>
-    </main>
+    <!-- Use the new PostLayout component -->
+    <PostLayout {post} {collectionMetadata}>
+      <Breadcrumb 
+        post={post} 
+        slot="breadcrumb" 
+      />
+      <!-- Article content will be rendered here by the layout -->
+    </PostLayout>
 
     <!-- Scripts Section - Organized and Optimized -->
     <script is:inline src="/core/post-script.js"></script>
 
     <!-- Main Application Script -->
     <script define:vars={{ postData, enhancedContent }}>
-      // ========== GLOBAL VARIABLES ==========
-      let enhancedContentLoaded = false
-
-      // ========== UTILITY FUNCTIONS ==========
-
       // Share functionality with dynamic path support
       function sharePost() {
         const shareUrl = postData?.resolvedPath
@@ -304,45 +215,6 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
         })
       }
 
-      // Enhanced loading with performance optimizations
-      async function loadEnhancements() {
-        try {
-          console.log("⚡ Loading enhancements...")
-
-          // Add reading progress
-          addReadingProgress()
-
-          // Set up error handling
-          window.addEventListener("error", function (e) {
-            console.error("Content load error:", e.error)
-          })
-
-          window.addEventListener("unhandledrejection", function (e) {
-            console.error("Unhandled promise rejection:", e.reason)
-          })
-
-          // Performance optimizations
-          if ("requestIdleCallback" in window) {
-            requestIdleCallback(() => {
-              console.log("⚡ Idle time optimizations applied")
-            })
-          }
-
-          console.log("✅ Enhancements loaded successfully")
-        } catch (error) {
-          console.error("Failed to load enhancements:", error)
-        }
-      }
-
-      // ========== CONTENT RENDERING ==========
-
-      // Initialize enhanced content
-      if (enhancedContent) {
-        window.enhancedContent = enhancedContent
-        enhancedContentLoaded = true
-        console.log("🤖 Enhanced content with internal links loaded")
-      }
-
       // Render post content
       function renderPostContent() {
         if (!postData) return
@@ -351,9 +223,6 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
         const postContent = document.getElementById("postContent")
 
         if (!postContent) return
-
-        // Show skeleton loading
-        showPostSkeleton(postContent)
 
         // Configure marked for markdown rendering
         marked.setOptions({
@@ -364,52 +233,15 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
           gfm: true,
         })
 
-        // Render content with minimal delay
-        setTimeout(() => {
-          const renderedHTML = marked.parse(content)
-          postContent.innerHTML = renderedHTML
-          hidePostSkeleton(postContent)
-
-          // Load enhancements after content is rendered
-          loadEnhancements()
-        }, 100)
-      }
-
-      // ========== SKELETON LOADING ==========
-
-      function showPostSkeleton(container) {
-        // Skeleton functionality disabled
-        console.log("🚫 Post skeleton disabled")
-        return
-      }
-
-      function hidePostSkeleton(container) {
-        // Skeleton functionality disabled
-        console.log("🚫 Post skeleton hiding disabled")
-        return
-      }
-
-      // ========== INITIALIZATION ==========
-
-      // Set default preferences
-      if (typeof localStorage !== "undefined") {
-        if (!localStorage.getItem("setting_aggressiveLoading")) {
-          localStorage.setItem("setting_aggressiveLoading", "true")
-        }
-        if (!localStorage.getItem("threshold_syntaxHighlighting")) {
-          localStorage.setItem("threshold_syntaxHighlighting", "500")
-        }
-        if (!localStorage.getItem("threshold_readingProgress")) {
-          localStorage.setItem("threshold_readingProgress", "300")
-        }
-        if (!localStorage.getItem("threshold_errorHandling")) {
-          localStorage.setItem("threshold_errorHandling", "1000")
-        }
+        // Render content
+        const renderedHTML = marked.parse(content)
+        postContent.innerHTML = renderedHTML
       }
 
       // Initialize when DOM is ready
       document.addEventListener("DOMContentLoaded", function () {
         renderPostContent()
+        addReadingProgress()
       })
     </script>
   </body>
