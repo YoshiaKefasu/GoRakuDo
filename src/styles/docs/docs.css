@@ -1052,7 +1052,7 @@
   }
 
   .posts-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
   }
 
@@ -1207,15 +1207,6 @@
   }
 }
 
-/* Ultra-wide screen support - Adaptive */
-@media (min-width: 1920px) {
-  .post-card {
-    width: min(30rem, 75vw);
-    min-height: min(20rem, calc(75vw * 0.65)); /* Adaptive minimum height */
-    max-height: min(26rem, calc(75vw * 0.85)); /* Adaptive maximum height */
-  }
-}
-
 /* Container constraints - Relaxed for natural layout */
 .posts-container {
   @apply mx-auto max-w-6xl px-10;
@@ -1228,7 +1219,7 @@
 /* Grid layout */
 .posts-grid {
   @apply mt-8 grid justify-items-center gap-8;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
 @media (max-width: 1024px) {
@@ -1249,14 +1240,6 @@
   .posts-grid {
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     gap: clamp(0.875rem, 2vw, 1.5rem);
-  }
-}
-
-/* Ultra-wide screen grid optimization */
-@media (min-width: 1920px) {
-  .posts-grid {
-    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
-    gap: clamp(2rem, 5vw, 3rem);
   }
 }
 
