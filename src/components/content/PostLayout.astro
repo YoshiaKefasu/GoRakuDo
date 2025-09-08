@@ -1,0 +1,95 @@
+---
+interface Props {
+  post: import("astro:content").CollectionEntry<"docs">;
+  collectionMetadata: {
+    displayName: string;
+    icon: string;
+    basePath: string;
+  };
+}
+const { post, collectionMetadata } = Astro.props;
+---
+
+<!-- Main Content -->
+<main class="post-page w-full max-w-full flex flex-col" role="main">
+  <div class="post-container">
+    <!-- Breadcrumb Navigation -->
+    <slot name="breadcrumb" />
+
+    <!-- Article Header -->
+    <header class="post-header">
+      <h1 class="post-title">{post.data.title}</h1>
+
+      <div class="post-meta" aria-label="Post metadata">
+        <time class="post-date" datetime={post.data.publishedDate}>
+          {new Date(post.data.publishedDate).toLocaleDateString("id-ID", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </time>
+        <span class="post-author">by {post.data.author}</span>
+      </div>
+
+      <div class="post-tags">
+        <span
+          class={`difficulty-badge difficulty-${post.data.difficulty}`}
+          aria-label={`Difficulty level: ${post.data.difficulty}`}>
+          {post.data.difficulty}
+        </span>
+      </div>
+    </header>
+
+    <!-- Article Content -->
+    <article class="prose prose-invert max-w-none post-content" id="postContent" aria-label="Post content">
+      <slot />
+    </article>
+
+    <!-- Post Actions -->
+    <footer class="post-actions">
+      <div class="action-buttons">
+        <a
+          href={collectionMetadata.basePath}
+          class="back-to-docs"
+          aria-label={`Kembali ke ${collectionMetadata.displayName}`}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true">
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+          Kembali ke {collectionMetadata.displayName}
+        </a>
+        <div class="share-buttons">
+          <button class="share-btn" onclick="sharePost()" aria-label="Bagikan post ini">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16,6 12,2 8,6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            Bagikan
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+</main>
+
+<style>
+  /* These styles are kept minimal as most styling is handled by Tailwind and the CSS file */
+</style>
