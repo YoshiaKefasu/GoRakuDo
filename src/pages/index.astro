@@ -21,7 +21,7 @@ interface SEOData {
   pageType: 'website' | 'article';
   image?: string;
   author?: string;
-  lang?: string; // 言語設定を追加（各ページで自由に変更可能）
+  lang?: "id" | "ja"; // 言語設定を追加（BaseLayoutのPropsと一致）
 }
 
 const seoData: SEOData = {
@@ -40,10 +40,7 @@ const seoData: SEOData = {
   description={seoData.description}
   keywords={seoData.keywords}
   pageType={seoData.pageType}
-  image={seoData.image}
-  author={seoData.author}
   lang={seoData.lang}
-  gtag={import.meta.env.PUBLIC_GA_ID}
 >
   <!-- Homepage specific background elements -->
   <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
