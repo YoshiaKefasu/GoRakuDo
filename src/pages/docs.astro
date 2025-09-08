@@ -7,15 +7,11 @@ export interface Props {
 
 const { 
   currentPage = 1, 
-  postsPerPage = 6 
+  postsPerPage = 12 
 } = Astro.props;
 
 // Import separated modules (relative paths preferred)
-import type { SearchDataItem, ContentConfig } from '../scripts/type-scripts/docs/index/global';
-import { SearchLoadingManager } from '../scripts/type-scripts/docs/index/search/search-loading-manager';
-import { ModernSearchEngine } from '../scripts/type-scripts/docs/index/search/modern-search-engine';
-import { ContentProcessor } from '../scripts/type-scripts/docs/index/content/content-processor';
-import { SearchDataGenerator } from '../scripts/type-scripts/docs/index/search/search-data-generator';
+// Note: ContentProcessor and SearchDataGenerator are imported dynamically in client-side scripts
 
 import { getCollection } from "astro:content"
 import UnifiedSEO from "../components/UnifiedSEO.astro"
@@ -24,7 +20,7 @@ import Navbar from "../components/public-components/Navbar.vue"
 import "../styles/docs/docs.css"
 import { resolvePath, getCollectionInfo } from "../utils/collections"
 // AI content utilities removed - functionality no longer needed
-import { CONTENT_CONFIG, ContentConfigUtils } from "../content/content-config"
+import { ContentConfigUtils } from "../content/content-config"
 
 import { logger, ConsoleLogger } from "../utils/logging/console-logger"
 
@@ -55,37 +51,32 @@ const sortedPosts = posts.sort(
 )
 
 // Pagination configuration
-const POSTS_PER_PAGE = 6 // Show 6 posts per page
 const totalPosts = sortedPosts.length
-const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
 
 // Current page from Props (defined above)
 
 // Calculate pagination info
 const startIndex = 0
-const endIndex = Math.min(POSTS_PER_PAGE, totalPosts)
+const endIndex = Math.min(postsPerPage, totalPosts)
 const currentPosts = sortedPosts.slice(startIndex, endIndex)
 
 // Clean pagination logging
-logger.logPaginationInfo(totalPosts, POSTS_PER_PAGE, currentPage)
+logger.logPaginationInfo(totalPosts, postsPerPage, currentPage)
 
-// AI metadata generation removed - functionality no longer needed
-
+// Basic content filtering for server-side rendering
 const beginnerContent = sortedPosts.filter(
   (post) => post.data.learningStage === "pemanasan" || post.data.difficulty === "beginner"
 )
 
-// Content analysis simplified - basic filtering only
 const toolContent = sortedPosts.filter((post) => {
   const isTool =
     post.data.category === "tools" ||
     post.data.title.toLowerCase().includes("anki") ||
     post.data.description.toLowerCase().includes("anki") ||
-    post.data.tags.some((tag) => tag.toLowerCase().includes("tool"))
+    post.data.tags.some((tag: string) => tag.toLowerCase().includes("tool"))
   return isTool
 })
 
-// Basic recommendations - simplified
 const finalRecommendations = sortedPosts.slice(0, 3)
 
 // Dynamic content path resolution for all posts
@@ -97,7 +88,6 @@ const postsWithDynamicPaths = sortedPosts.map((post) => {
     collectionMetadata: getCollectionInfo("docs"),
   }
 })
-// AI metadata and semantic relationships removed - functionality no longer needed
 
 // Simplified content processing (Phase 2 - basic text cleaning only)
 function processArticleContent(content: string) {
@@ -291,7 +281,7 @@ function formatDate(dateString: string): string {
     <!-- Main Content -->
     <main class="main-content">
       <div class="posts-page">
-        <div class="posts-container" id="postsContainer">
+        <div class="posts-container" id="postsContainer" data-current-page={currentPage} data-posts-per-page={postsPerPage}>
           <div class="posts-header">
             <h1>Dokumentasi & Panduan</h1>
             <p>
@@ -965,7 +955,12 @@ function formatDate(dateString: string): string {
             const { ContentProcessor } = await import('../scripts/type-scripts/docs/index/content/content-processor');
             const { SearchDataGenerator } = await import('../scripts/type-scripts/docs/index/search/search-data-generator');
             
-            const contentProcessor = new ContentProcessor(1, 6);
+            // Get pagination settings from data attributes
+            const container = document.getElementById('postsContainer');
+            const currentPage = parseInt(container?.dataset.currentPage || '1');
+            const postsPerPage = parseInt(container?.dataset.postsPerPage || '6');
+            
+            const contentProcessor = new ContentProcessor(currentPage, postsPerPage);
             const searchDataGenerator = new SearchDataGenerator();
 
             window.contentProcessor = contentProcessor;
