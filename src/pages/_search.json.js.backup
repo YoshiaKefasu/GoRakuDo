@@ -54,11 +54,16 @@ export async function GET() {
         difficulty: post.data.difficulty,
         learningStage: post.data.learningStage,
 
-        // AI metadata（完全削除 - 空オブジェクトで統一）
-        aiMetadata: {},
-        contentType: post.data.category || 'general',
+        // AI metadata
+        aiMetadata: post.data.aiMetadata || {},
+        contentType: post.data.aiMetadata?.contentType || post.data.category,
+        learningPath: post.data.aiMetadata?.learningPath || [],
+        aiRecommendations: post.data.aiMetadata?.recommendations || [],
+        contentComplexity: post.data.aiMetadata?.complexity || 'medium',
+        semanticKeywords: post.data.aiMetadata?.semanticKeywords || [],
+        learningObjectives: post.data.aiMetadata?.learningObjectives || [],
 
-        // Searchable text (simplified - AI fields removed)
+        // Searchable text (comprehensive)
         searchableText: [
           post.data.title,
           post.data.description,
@@ -67,7 +72,12 @@ export async function GET() {
           post.data.category,
           post.data.difficulty,
           post.data.learningStage,
-          // AI関連フィールドを完全削除
+          post.data.aiMetadata?.contentType,
+          ...(post.data.aiMetadata?.keywords || []),
+          ...(post.data.aiMetadata?.semanticKeywords || []),
+          ...(post.data.aiMetadata?.learningObjectives || []),
+          post.data.aiMetadata?.complexity,
+          ...(post.data.aiMetadata?.learningPath || []),
         ]
           .filter(Boolean)
           .join(' '),
@@ -77,8 +87,8 @@ export async function GET() {
           .length,
         contentLength: cleanedContent.length,
 
-        // Feature flags (simplified - AI recommendations removed)
-        isRecommended: false,  // AI推奨機能を無効化
+        // Feature flags for specialized searches
+        isRecommended: post.data.aiMetadata?.isRecommended || false,
         isBeginner:
           post.data.difficulty === 'beginner' ||
           post.data.learningStage === 'pemanasan',
