@@ -14,6 +14,8 @@ declare global {
     contentConfig?: ContentConfig;
     allPosts?: SearchDataItem[];
     Fuse?: unknown; // npmパッケージのFuse.js
+    contentProcessor?: ContentProcessor; // ContentProcessor instance
+    searchDataGenerator?: SearchDataGenerator; // SearchDataGenerator instance
   }
 }
 
@@ -37,9 +39,9 @@ export interface SearchDataItem {
   difficulty: string;
   learningStage: string;
 
-  // AI metadata (57-64行) - 実際の構造に基づく（簡素化）
-  aiMetadata: Record<string, unknown>; // 実際はオブジェクト全体
-  contentType: string; // post.data.aiMetadata?.contentType || post.data.category
+  // AI metadata（完全削除 - 空オブジェクトで統一）
+  aiMetadata: Record<string, unknown>; // 空オブジェクトで統一
+  contentType: string; // post.data.category || 'general'
 
   // Searchable text (66-83行)
   searchableText: string;
@@ -85,7 +87,7 @@ export interface TagConfig {
   description?: string;
 }
 
-// MindMap機能は無効化されました
+// MindMap機能は完全削除されました
 
 export interface SearchConfig {
   defaultThreshold: number;
@@ -150,6 +152,23 @@ export interface FilterConfig {
   displayName: string;
   description?: string;
   icon?: string;
+}
+
+// ContentProcessor and SearchDataGenerator interfaces
+export interface ContentProcessor {
+  changePage(page: number): void;
+  getTotalPages(): number;
+  getCurrentPage(): number;
+  isReady(): boolean;
+  updateDisplay(): void;
+  updatePaginationUI(): void;
+  updateContentDisplay(): void;
+}
+
+export interface SearchDataGenerator {
+  getSearchData(): SearchDataItem[];
+  getPostSearchData(slug: string): SearchDataItem | undefined;
+  refreshSearchData(): Promise<void>;
 }
 
 export {};

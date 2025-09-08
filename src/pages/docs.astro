@@ -1,9 +1,22 @@
 ---
+// ページネーション設定（Astro propsで制御可能）
+export interface Props {
+  currentPage?: number;
+  postsPerPage?: number;
+}
+
+const { 
+  currentPage = 1, 
+  postsPerPage = 6 
+} = Astro.props;
+
 // 分離されたモジュールをインポート（相対パス基本 + @/*エイリアスフォールバック）
 // 相対パスを基本とし、必要に応じて@/*エイリアスを使用
 import type { SearchDataItem, ContentConfig } from '../scripts/type-scripts/docs/index/global';
 import { SearchLoadingManager } from '../scripts/type-scripts/docs/index/search/search-loading-manager';
 import { ModernSearchEngine } from '../scripts/type-scripts/docs/index/search/modern-search-engine';
+import { ContentProcessor } from '../scripts/type-scripts/docs/index/content/content-processor';
+import { SearchDataGenerator } from '../scripts/type-scripts/docs/index/search/search-data-generator';
 // フォールバック例: import { SomeUtil } from '@/utils/some-util';
 
 import { getCollection } from "astro:content"
@@ -55,8 +68,8 @@ const POSTS_PER_PAGE = 6 // Show 6 posts per page
 const totalPosts = sortedPosts.length
 const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE)
 
-// Get current page from URL or default to 1
-const currentPage = 1 // For static generation, we'll handle pagination client-side
+// Get current page from Props (already defined above)
+// const currentPage = 1 // Removed - using Props value instead
 
 // Calculate pagination info
 const startIndex = 0
@@ -707,49 +720,9 @@ function formatDate(dateString: string): string {
           </div>
 
           <!-- Pagination Controls -->
-          {
-            totalPages > 1 && (
-              <div class="pagination-container" id="paginationContainer">
-                <div class="pagination-info">
-                  <span class="pagination-stats">
-                    Menampilkan {startIndex + 1}-{endIndex} dari {totalPosts} dokumentasi
-                  </span>
-                </div>
-                <div class="pagination-controls">
-                  <button
-                    class="pagination-btn prev-btn"
-                    disabled={currentPage === 1}
-                    data-page={currentPage - 1}>
-                    ← Sebelumnya
-                  </button>
-                  <div class="pagination-numbers">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (pageNum) => (
-                        <button
-                          class={`pagination-number ${pageNum === currentPage ? "active" : ""}`}
-                          data-page={pageNum}>
-                          {pageNum}
-                        </button>
-                      )
-                    )}
-                  </div>
-                  <button
-                    class="pagination-btn next-btn"
-                    disabled={currentPage === totalPages}
-                    data-page={currentPage + 1}>
-                    Selanjutnya →
-                  </button>
-                </div>
-                <div class="pagination-toggle">
-                  <label class="pagination-mode-toggle">
-                    <input type="checkbox" id="infiniteScrollToggle" />
-                    <span class="toggle-slider" />
-                    <span class="toggle-label">Infinite Scroll</span>
-                  </label>
-                </div>
-              </div>
-            )
-          }
+          <div id="paginationControls" class="pagination-container">
+            <!-- ページネーションコントロールが動的に生成される -->
+          </div>
           <!-- Call to Action -->
           <div class="features-cta">
             <div class="cta-content">
@@ -1227,6 +1200,43 @@ function formatDate(dateString: string): string {
             window.clientLogger.log(`Tag popups failed for docs page: ${error}`, "error")
           }
         }
+
+        // Initialize simplified content system
+        (async () => {
+          try {
+            // 動的インポートを使用してクラスを取得
+            const { ContentProcessor } = await import('../scripts/type-scripts/docs/index/content/content-processor');
+            const { SearchDataGenerator } = await import('../scripts/type-scripts/docs/index/search/search-data-generator');
+            
+            // 簡素化されたモジュールの初期化（デフォルト値を使用）
+            const contentProcessor = new ContentProcessor(1, 6);
+            const searchDataGenerator = new SearchDataGenerator();
+
+            // グローバルに公開
+            window.contentProcessor = contentProcessor;
+            window.searchDataGenerator = searchDataGenerator;
+
+            // 初期化完了を待つ
+            let attempts = 0;
+            while (!contentProcessor.isReady() && attempts < 50) {
+              await new Promise(resolve => setTimeout(resolve, 100));
+              attempts++;
+            }
+            
+            // 初期コンテンツ表示とページネーションUIの初期化
+            if (window.contentProcessor && window.contentProcessor.isReady()) {
+              window.contentProcessor.updateDisplay();
+            }
+
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log('Simplified content system initialized', 'success');
+            }
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Content system initialization error: ${error}`, 'error');
+            }
+          }
+        })();
 
         // Cleanup on page unload
         window.addEventListener("beforeunload", function () {

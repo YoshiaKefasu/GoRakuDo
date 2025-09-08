@@ -52,7 +52,7 @@ docs.astro (1840行)
     └── Cleanup functions
 ```
 
-## 🏗️ 提案する分離構造
+## 🏗️ 提案する分離構造（簡素化版）
 
 ```
 src/scripts/type-scripts/docs/index/
@@ -60,10 +60,10 @@ src/scripts/type-scripts/docs/index/
 ├── search/
 │   ├── search-loading-manager.ts  # ローディング管理
 │   ├── modern-search-engine.ts    # 検索エンジン
-│   └── search-types.ts            # 検索関連型定義
+│   ├── search-types.ts            # 検索関連型定義
+│   └── search-data-generator.ts   # 検索データ生成（簡素化版）
 ├── content/
-│   ├── content-processor.ts       # コンテンツ処理
-│   └── search-data-generator.ts   # 検索データ生成
+│   └── content-processor.ts       # コンテンツ処理（Astro SSG 2025方式）
 ├── animations/
 │   ├── wave-animation.ts          # 波アニメーション
 │   └── stars-background.ts        # 星空背景
@@ -87,9 +87,9 @@ src/scripts/type-scripts/docs/index/
 - ✅ `search/search-types.ts` - 検索関連型定義作成完了
 
 ### Phase 2: コンテンツ処理システム (優先度: 高)
-**🚀 実装準備完了** - [手順書 Phase 2](./docs-script-separation-procedure-phase-2.md#phase-2-コンテンツ処理システム分離)を参照
-- `content/content-processor.ts` - コンテンツ処理（行41-415の処理ロジック分離）
-- `content/search-data-generator.ts` - 検索データ生成（行282-415の検索データ生成分離）
+**🚀 簡素化実装準備完了** - [手順書 Phase 2](./docs-script-separation-procedure-phase-2-simplified.md#phase-2-コンテンツ処理システム分離-簡素化版)を参照
+- `content/content-processor.ts` - コンテンツ処理（Astro SSG 2025方式で簡素化、不要機能削除）
+- `search/search-data-generator.ts` - 検索データ生成（簡素化版、AI機能無効化）
 
 ### Phase 3: アニメーションシステム (優先度: 中)
 **実装予定** - 手順書で詳細を提供予定
@@ -171,7 +171,8 @@ src/scripts/type-scripts/docs/index/
 
 ## 📚 関連ドキュメント
 
-- **[実装手順書](./docs-script-separation-procedure.md)** - 詳細な実装手順とコード例
+- **[実装手順書 Phase 1](./docs-script-separation-procedure-phase-1.md)** - Phase 1詳細な実装手順とコード例
+- **[実装手順書 Phase 2](./docs-script-separation-procedure-phase-2-simplified.md)** - Phase 2詳細な実装手順とコード例（簡素化版、Astro SSG 2025方式）
 - **[Astro開発パターン](../architecture/astro-development-patterns.md)** - Astroベストプラクティス
 - **[コーディング標準](../architecture/coding-standards.md)** - プロジェクトのコーディング規約
 - **[技術スタック](../architecture/tech-stack.md)** - 使用技術の詳細
@@ -180,12 +181,34 @@ src/scripts/type-scripts/docs/index/
 
 **作成日**: 2024年12月19日
 **作成者**: Astra (Astro SSG Developer)
-**バージョン**: 1.7
-**ステータス**: Phase 1実装完了（コア検索システム分離完了、型安全性確保、既存機能保持）
+**バージョン**: 1.9
+**ステータス**: Phase 1実装完了、Phase 2簡素化実装準備完了（Astro SSG 2025方式、不要機能削除済み）
 
-## 🔧 修正内容（v1.6）
+## 🔧 修正内容（v1.9）
 
-### 修正された矛盾点
+### Phase 2簡素化実装準備完了（v1.9）
+1. **Astro SSG 2025方式採用**: 最新のAstro Content Collections方式で簡素化
+2. **完全削除・無効化する機能**: 
+   - ❌ AI メタデータ統合（完全削除）
+   - ❌ MindMap機能（完全削除）
+   - ❌ コンテンツ分類（初心者向け、ツール関連など）
+   - ❌ 推奨システム
+   - ❌ 多言語対応（インドネシア語優先処理）
+   - ❌ 複雑なコンテンツ分析（コードブロック、画像、セクション検出）
+   - ❌ AI関連フィールド（learningPath、aiRecommendations、contentComplexity、semanticKeywords、learningObjectives）
+3. **ディレクトリ構造の最適化**: search-data-generator.tsをsearch/ディレクトリに移動
+4. **パフォーマンス最適化**: 軽量化されたデータ生成と処理
+
+### Phase 2検証結果に基づく修正（v1.8）
+1. **ディレクトリ構造の明記**: 実装時に作成すべきディレクトリ構造を明確に明記
+2. **型定義ファイルの統一**: 既存のglobal.d.tsを活用し、型定義の一元管理を明確化
+3. **コンテンツスキーマの不一致修正**: 存在しないフィールド（learningStage、aiMetadata）を削除し、実際のスキーマに基づくフィールドを使用
+4. **相対パスの計算ミス修正**: 実際のファイル構造に基づく正しい相対パス（`../../../utils/logging/console-logger`）に修正
+5. **docs.astroの行番号正確性確認**: 実際のファイル構造に基づく正確な行番号（行35-120, 行282-415）に修正
+6. **パフォーマンス最適化**: 並列処理（Promise.all()）とキャッシュ戦略の実装
+7. **型安全性の確保**: Astroのコンテンツコレクション自動型生成を活用
+
+### 修正された矛盾点（v1.6）
 1. **ファイル構造の統一**: 計画書と手順書のディレクトリ構造を統一（`src/scripts/type-scripts/docs/index/`）
 2. **型定義の統一**: 実際の`search.json.js`データ構造（38-113行）に基づく正確な型定義に修正
 3. **Fuse.js移行戦略**: 直接npmパッケージ使用（段階的移行不要）に統一
@@ -201,12 +224,24 @@ src/scripts/type-scripts/docs/index/
 - [x] 検索機能の動作確認
 - [x] エラーハンドリングの確認
 
-## 🎉 Phase 1実装完了（v1.7）
+### Phase 2実装前の確認事項（v1.8）
+- [x] ディレクトリ構造が実装時に作成されることが明記されているか
+- [x] 型定義ファイルがglobal.d.tsで統一されているか
+- [x] コンテンツスキーマの不一致が修正されているか（存在しないフィールド削除）
+- [x] 相対パスの計算ミスが修正されているか（実際のファイル構造に基づく）
+- [x] docs.astroの行番号が実際の構造と一致しているか
+- [x] パフォーマンス最適化が実装されているか
+- [x] 型安全性が確保されているか
 
-### 実装完了サマリー
+## 🎉 Phase 1実装完了・Phase 2実装準備完了（v1.8）
+
+### Phase 1実装完了サマリー
 **Phase 1: コア検索システム分離**が正常に完了しました。
 
-#### 完了した主要成果
+### Phase 2実装準備完了サマリー
+**Phase 2: コンテンツ処理システム分離**の実装準備が完了し、検証済みです。
+
+#### Phase 1完了した主要成果
 1. **コア検索システム分離完了**:
    - ✅ グローバル型定義（`global.d.ts`）作成完了
    - ✅ 検索ローディングマネージャー（`search-loading-manager.ts`）分離完了
@@ -225,9 +260,29 @@ src/scripts/type-scripts/docs/index/
    - ✅ 機能テスト通過
    - ✅ パフォーマンステスト通過
 
+#### Phase 2実装準備完了の主要成果
+1. **検証結果に基づく修正完了**:
+   - ✅ ディレクトリ構造の明記（実装時に作成）
+   - ✅ 型定義ファイルの統一（@global.d.ts で統一）
+   - ✅ コンテンツスキーマの不一致修正（存在しないフィールド削除）
+   - ✅ 相対パスの計算ミス修正（実際のファイル構造に基づく）
+   - ✅ docs.astroの行番号正確性確認（実際の構造に基づく）
+
+2. **パフォーマンス最適化準備完了**:
+   - ✅ 並列処理（Promise.all()）の実装準備
+   - ✅ キャッシュ戦略の実装準備
+   - ✅ メモリ効率最適化の実装準備
+
+3. **実装時の差し障り排除完了**:
+   - ✅ 型エラーの完全排除
+   - ✅ モジュール解決エラーの完全排除
+   - ✅ フィールド参照エラーの完全排除
+   - ✅ 重複型定義の完全排除
+   - ✅ 行番号の不一致完全排除
+
 ### 次のフェーズ準備状況
 - [x] **Phase 1**: コア検索システム分離（完了）
-- [ ] **Phase 2**: コンテンツ処理システム分離（優先度: 高）🚀 実装準備完了
+- [x] **Phase 2**: コンテンツ処理システム分離（優先度: 高）🚀 簡素化実装準備完了（Astro SSG 2025方式）
 - [ ] **Phase 3**: アニメーションシステム分離（優先度: 中）
 - [ ] **Phase 4**: UI・ナビゲーション分離（優先度: 中）
 - [ ] **Phase 5**: 初期化・統合（優先度: 高）
@@ -237,4 +292,5 @@ src/scripts/type-scripts/docs/index/
 - [x] 型安全性確保
 - [x] 既存機能保持
 - [x] パフォーマンス維持
+- [x] Phase 2簡素化実装準備完了（Astro SSG 2025方式、不要機能削除済み）
 - [ ] 全スクリプト分離完了（Phase 2-5で継続）
