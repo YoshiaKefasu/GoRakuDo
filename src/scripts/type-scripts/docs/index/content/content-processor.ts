@@ -56,8 +56,16 @@ export class ContentProcessor {
         const dateB = new Date(b.pubDate || '').getTime() || 0;
         return dateB - dateA;
       });
+
+      // デバッグ情報
+      console.log(`ContentProcessor: Loaded ${this.sortedPosts.length} posts`);
+      if (this.sortedPosts.length > 0) {
+        console.log('First post:', this.sortedPosts[0]);
+      }
     } catch (error) {
       console.error('Error loading content data:', error);
+      // エラー時は空配列を設定
+      this.sortedPosts = [];
       throw error;
     }
   }
@@ -102,13 +110,17 @@ export class ContentProcessor {
   public updateContentDisplay(): void {
     const contentContainer = document.querySelector('#postsContainer') || document.querySelector('.posts-container');
     if (!contentContainer) {
+      console.error('ContentProcessor: Content container not found');
       return;
     }
 
     // データが読み込まれていない場合は何もしない
     if (!this.sortedPosts || this.sortedPosts.length === 0) {
+      console.warn('ContentProcessor: No posts data available');
       return;
     }
+
+    console.log(`ContentProcessor: Updating display for page ${this.currentPage}, ${this.sortedPosts.length} total posts`);
 
     // 現在のページの投稿を取得
     const startIndex = (this.currentPage - 1) * this.postsPerPage;
@@ -132,6 +144,22 @@ export class ContentProcessor {
         contentContainer.appendChild(card);
       }
 
+      // 日付フォーマット関数
+      const formatDate = (dateString: string): string => {
+        if (!dateString) return '';
+        try {
+          const date = new Date(dateString);
+          if (isNaN(date.getTime())) return '';
+          return date.toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
+        } catch {
+          return '';
+        }
+      };
+
       // カードの内容を更新
       card.innerHTML = `
         ${post.emoji ? `<div class="post-emoji">${post.emoji}</div>` : ''}
@@ -139,14 +167,14 @@ export class ContentProcessor {
           <div class="post-header">
             <h2 class="post-title">
               <a href="/docs/${post.slug}">
-                ${post.title}
+                ${post.title || 'Untitled'}
               </a>
             </h2>
             <div class="post-meta">
-              <span class="post-date">${post.pubDate}</span>
+              <span class="post-date">${formatDate(post.pubDate || '')}</span>
             </div>
           </div>
-          <p class="post-description">${post.description}</p>
+          <p class="post-description">${post.description || ''}</p>
           <div class="post-tags" data-all-tags='${JSON.stringify(post.tags || [])}'>
             ${(post.tags || []).slice(0, 3).map(tag => `<span class="post-tag">${tag}</span>`).join('')}
             ${(post.tags || []).length > 3 ? `<span class="post-tag-more" data-count="${(post.tags || []).length - 3}">+${(post.tags || []).length - 3}</span>` : ''}
