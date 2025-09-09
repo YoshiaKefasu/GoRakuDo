@@ -31,16 +31,45 @@ export class ContentProcessor {
   }
 
   /**
-   * サーバーサイドデータを直接設定（0スクリップ最適化）
+   * 0-Script最適化完成: サーバーサイドデータを直接設定
+   * fetch処理を完全に排除し、即座にデータを利用可能にする
+   * 既存のsetServerData()メソッドを強化
    */
   public setServerData(serverData: SearchDataItem[], totalCount: number): void {
-    this.sortedPosts = serverData;
-    this.isInitialized = true;
+    const startTime = performance.now();
     
-    // 0スクリップでUIを即座に更新
-    this.updateDisplay();
-    
-    console.log(`ContentProcessor: Server data set (0-skip optimized) - ${serverData.length} posts, total: ${totalCount}`);
+    try {
+      // データの検証
+      if (!Array.isArray(serverData)) {
+        throw new Error('Invalid data format: expected array');
+      }
+      
+      if (typeof totalCount !== 'number' || totalCount < 0) {
+        throw new Error('Invalid total count: expected positive number');
+      }
+      
+      // データの設定
+      this.sortedPosts = serverData;
+      this.isInitialized = true;
+      
+      // 0スクリップでUIを即座に更新
+      this.updateDisplay();
+      
+      // パフォーマンス測定
+      const endTime = performance.now();
+      const processingTime = endTime - startTime;
+      
+      // Critical Errorのみログ出力
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(`ContentProcessor: Server data set (0-script optimized) - ${serverData.length} posts, total: ${totalCount}, processing time: ${processingTime.toFixed(2)}ms`, 'info');
+      }
+    } catch (error) {
+      // Critical Errorのみログ出力
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(`Critical: Server data setting failed: ${error}`, 'error');
+      }
+      throw error;
+    }
   }
 
   // loadAndProcessData()メソッドは0スクリップ最適化により削除

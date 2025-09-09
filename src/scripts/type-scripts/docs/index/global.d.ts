@@ -13,7 +13,7 @@ declare global {
     searchEngine?: ModernSearchEngine;
     contentConfig?: ContentConfig;
     allPosts?: SearchDataItem[];
-    Fuse?: unknown; // npmパッケージのFuse.js
+    Fuse?: import('fuse.js').default; // npmパッケージ版（型安全性向上）
     contentProcessor?: ContentProcessor; // ContentProcessor instance
     searchDataGenerator?: SearchDataGenerator; // SearchDataGenerator instance
     // Animation and UI functions
@@ -126,12 +126,26 @@ export interface FuseSearchResult<T> {
   item: T;
   score?: number;
   matches?: FuseMatch[];
+  refIndex?: number; // 追加: 参照インデックス
 }
 
 export interface FuseMatch {
   indices: [number, number][];
   key: string;
   value: string;
+}
+
+export interface FuseOptions {
+  keys: Array<string | { name: string; weight?: number }>;
+  threshold?: number;
+  minMatchCharLength?: number;
+  shouldSort?: boolean;
+  findAllMatches?: boolean;
+  useExtendedSearch?: boolean;
+  ignoreLocation?: boolean;
+  distance?: number;
+  includeScore?: boolean;
+  includeMatches?: boolean;
 }
 
 export interface SearchResult {

@@ -20,16 +20,11 @@ export async function GET() {
       // Extract full markdown content for comprehensive search
       const fullContent = post.body || '';
 
-      // Clean markdown content for search indexing
+      // AstroネイティブMarkdown処理済みコンテンツの最適化
+      // post.bodyは既にHTML形式で提供されているため、HTMLタグを除去してテキスト抽出
       const cleanedContent = fullContent
-        .replace(/---[\s\S]*?---/, '') // Remove frontmatter
-        .replace(/```[\s\S]*?```/g, ' ') // Remove code blocks
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, ' $1 ') // Replace images with alt text
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1') // Remove links, keep text
-        .replace(/#{1,6}\s+/g, '') // Remove header markers
-        .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold formatting
-        .replace(/\*([^*]+)\*/g, '$1') // Remove italic formatting
-        .replace(/`([^`]+)`/g, '$1') // Remove inline code formatting
+        .replace(/<[^>]*>/g, ' ') // Remove HTML tags
+        .replace(/&[^;]+;/g, ' ') // Remove HTML entities
         .replace(/\n+/g, ' ') // Replace newlines with spaces
         .replace(/\s+/g, ' ') // Normalize spaces
         .trim();

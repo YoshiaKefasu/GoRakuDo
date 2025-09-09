@@ -16,7 +16,7 @@ import type {
  * Fixed: "Krashen" search issue by using unified search system
  */
 export class ModernSearchEngine {
-  private fuse: import('fuse.js').default<SearchDataItem> | null = null; // npmパッケージのFuse.js
+  private fuse: import('fuse.js').default<SearchDataItem> | null = null; // npmパッケージのFuse.js（型安全性向上）
   public searchData: SearchDataItem[] = [];
   public searchCache = new Map<string, SearchResult>();
   public maxCacheSize = 100;
@@ -133,39 +133,38 @@ export class ModernSearchEngine {
 
   private async initializeFuse(): Promise<void> {
     try {
-      // npmパッケージのFuse.jsを使用
+      // npmパッケージから動的インポート（型安全性確保）
       const { default: Fuse } = await import('fuse.js');
-        
-        // search.json.jsの実際のデータ構造に合わせた設定（AI機能無効化）
-        const fuseOptions = {
-          keys: [
-            { name: 'title', weight: 0.7 },
-            { name: 'description', weight: 0.3 },
-            { name: 'content', weight: 0.2 },
-            { name: 'tags', weight: 0.1 },
-            { name: 'searchableText', weight: 0.15 },
-            { name: 'category', weight: 0.05 },
-            { name: 'difficulty', weight: 0.05 },
-            { name: 'learningStage', weight: 0.05 },
-          ],
-          includeScore: true,
-          threshold: 0.4, // 0 is perfect match, 1 is all results
-          minMatchCharLength: 2,
-          shouldSort: true,
-          findAllMatches: true,
-          useExtendedSearch: false,
-          ignoreLocation: true,
-          distance: 100,
-        };
-
-        this.fuse = new Fuse(this.searchData, fuseOptions);
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log('Fuse.js initialized with search data (npm package)', 'success');
-        }
+      
+      // 最適化されたFuse.js設定
+      const fuseOptions: import('fuse.js').IFuseOptions<SearchDataItem> = {
+        keys: [
+          { name: 'title', weight: 0.7 },
+          { name: 'description', weight: 0.3 },
+          { name: 'content', weight: 0.2 },
+          { name: 'tags', weight: 0.1 },
+          { name: 'searchableText', weight: 0.15 },
+          { name: 'category', weight: 0.05 },
+          { name: 'difficulty', weight: 0.05 },
+          { name: 'learningStage', weight: 0.05 },
+        ],
+        includeScore: true,
+        includeMatches: true,
+        threshold: 0.4,
+        minMatchCharLength: 2,
+        shouldSort: true,
+        findAllMatches: true,
+        useExtendedSearch: false,
+        ignoreLocation: true,
+        distance: 100,
+      };
+      
+      // 型安全性を確保したFuse.jsインスタンス作成
+      this.fuse = new Fuse(this.searchData, fuseOptions);
     } catch (error) {
+      // Critical Errorのみログ出力
       if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(`Error initializing Fuse.js: ${error}`, 'error');
-        window.clientLogger.log('Falling back to simple search', 'warning');
+        window.clientLogger.log(`Critical: Fuse.js initialization failed: ${error}`, 'error');
       }
       this.fuse = null;
     }
