@@ -89,7 +89,7 @@ const postsWithDynamicPaths = sortedPosts.map((post) => {
   }
 })
 
-// Simplified content processing for 0-skip optimization
+// AstroネイティブMarkdown処理最適化 - サーバーサイドで既にHTML変換済み
 function processArticleContent(content: string) {
   if (!content) return { 
     cleanedText: "",
@@ -98,29 +98,24 @@ function processArticleContent(content: string) {
     hasSections: false
   }
 
-  // Basic text cleaning for search
+  // HTML形式のコンテンツからテキストを抽出（Astroネイティブ処理済み）
   const cleanedText = content
-    .replace(/---[\s\S]*?---/, "") // Remove frontmatter
-    .replace(/```[\s\S]*?```/g, " ") // Remove code blocks
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, " ") // Remove images
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1") // Remove links, keep text
-    .replace(/#{1,6}\s+/g, "") // Remove header markers
-    .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove bold formatting
-    .replace(/\*([^*]+)\*/g, "$1") // Remove italic formatting
-    .replace(/`([^`]+)`/g, "$1") // Remove inline code formatting
+    .replace(/<[^>]*>/g, " ") // Remove HTML tags
+    .replace(/&[^;]+;/g, " ") // Remove HTML entities
     .replace(/\n+/g, " ") // Replace newlines with spaces
     .replace(/\s+/g, " ") // Normalize spaces
     .trim()
 
   return {
     cleanedText,
-    hasCode: /```/.test(content),
+    hasCode: /<pre|<code/.test(content), // HTML形式のコードブロック検出
     hasImages: /!\[.*?\]\(.*?\)/.test(content),
     hasSections: /^#{1,6}\s+/.test(content)
   }
 }
 
-// Generate SearchDataItem format for 0-skip optimization
+// 0-Script最適化: サーバーサイドで全データを生成
+// 従来のfetch処理を完全に排除し、ビルド時に全データを処理
 const searchDataItems = sortedPosts.map((post) => {
   const fullContent = post.body || ""
   const processedContent = processArticleContent(fullContent)
@@ -139,7 +134,7 @@ const searchDataItems = sortedPosts.map((post) => {
     emoji: post.data.emoji,
     url: post.resolvedPath || `/docs/${post.slug}`,
 
-    // Basic content processing
+    // 0-Script最適化: サーバーサイドで処理済み
     content: processedContent.cleanedText,
     fullContent: fullContent,
     contentLength: fullContent.length,
@@ -149,7 +144,7 @@ const searchDataItems = sortedPosts.map((post) => {
     aiMetadata: {},
     contentType: post.data.category || 'general',
 
-    // Simplified searchable text
+    // 検索用テキストの最適化
     searchableText: [
       post.data.title,
       post.data.description,
@@ -160,7 +155,7 @@ const searchDataItems = sortedPosts.map((post) => {
       post.data.learningStage,
     ].join(" ").toLowerCase(),
 
-    // Basic feature flags
+    // フィーチャーフラグ
     isRecommended: false,
     isBeginner: post.data.difficulty === "beginner" || post.data.learningStage === "pemanasan",
     isTool: post.data.category === "tools" || post.data.title.toLowerCase().includes("anki"),
@@ -168,6 +163,35 @@ const searchDataItems = sortedPosts.map((post) => {
     hasImages: processedContent.hasImages,
   }
 })
+
+// パフォーマンス最適化のためのデータ処理（Astroネイティブ実装）
+// useMemoの代わりにサーバーサイドでの事前計算を実行
+const optimizedSearchData = searchDataItems.map(item => ({
+  ...item,
+  // 検索パフォーマンス向上のためのインデックス（サーバーサイドで事前計算）
+  searchIndex: item.searchableText.split(' ').filter(word => word.length > 2),
+  // 重み付けスコアの事前計算（サーバーサイドで事前計算）
+  relevanceScore: calculateRelevanceScore(item)
+}))
+
+// 関連性スコアの計算
+function calculateRelevanceScore(item: any): number {
+  let score = 0
+  
+  // タイトルの重み
+  if (item.title) score += 10
+  
+  // 説明の重み
+  if (item.description) score += 5
+  
+  // タグの重み
+  score += item.tags.length * 2
+  
+  // コンテンツ長の重み
+  score += Math.min(item.contentLength / 1000, 10)
+  
+  return score
+}
 
 // AI processing removed - using simplified content system instead
 
@@ -241,8 +265,12 @@ function formatDate(dateString: string): string {
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0/dist/fuse.min.js"></script>
+    <!-- Fuse.js CDN読み込み削除 - npmパッケージとして動的インポート -->
+    <!-- 削除理由: 
+         1. 外部リソース依存の排除
+         2. 型安全性の向上
+         3. バンドル最適化の実現
+         4. エラーハンドリングの改善 -->
 
     <!-- Global Client Logger -->
     <script>
@@ -276,7 +304,26 @@ function formatDate(dateString: string): string {
     <!-- Main Content -->
     <main class="main-content">
       <div class="posts-page">
-        <div class="posts-container" id="postsContainer" data-current-page={currentPage} data-posts-per-page={postsPerPage} data-total-posts={totalPosts} data-search-data={JSON.stringify(searchDataItems)}>
+        <div class="posts-container" 
+             id="postsContainer" 
+             data-current-page={currentPage} 
+             data-posts-per-page={postsPerPage} 
+             data-total-posts={totalPosts} 
+             data-search-data={JSON.stringify(optimizedSearchData)}
+             data-fuse-config={JSON.stringify({
+               keys: [
+                 { name: 'title', weight: 0.7 },
+                 { name: 'description', weight: 0.3 },
+                 { name: 'content', weight: 0.2 },
+                 { name: 'tags', weight: 0.1 },
+                 { name: 'searchableText', weight: 0.15 }
+               ],
+               threshold: 0.4,
+               minMatchCharLength: 2,
+               includeScore: true,
+               includeMatches: true
+             })}
+>
           <div class="posts-header">
             <h1>Dokumentasi & Panduan</h1>
             <p>
@@ -505,26 +552,36 @@ function formatDate(dateString: string): string {
     </main>
 
     <script>
-      // 統合された初期化処理を使用
+      // 0-Script最適化: 統合された初期化処理を使用
       document.addEventListener("DOMContentLoaded", async function () {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("GoRakuDo Docs Page Loading...", "info");
-        }
+        const startTime = performance.now();
 
-        // 検索システム初期化（統合版）
         try {
-          const { SearchLoadingManager } = await import('../scripts/type-scripts/docs/index/search/search-loading-manager');
-          const searchLoadingManager = new SearchLoadingManager();
-          await searchLoadingManager.initializeSearchSystem();
+          // 0-Script最適化: サーバーサイドデータを直接取得
+          const container = document.getElementById('postsContainer');
+          if (!container) {
+            throw new Error('Posts container not found');
+          }
 
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log('Search system initialized successfully', 'success');
+          // データ属性の検証と取得
+          const currentPage = parseInt(container.dataset.currentPage || '1');
+          const postsPerPage = parseInt(container.dataset.postsPerPage || '12');
+          const totalPosts = parseInt(container.dataset.totalPosts || '0');
+          const searchData = container.dataset.searchData ? JSON.parse(container.dataset.searchData) : [];
+          const fuseConfig = container.dataset.fuseConfig ? JSON.parse(container.dataset.fuseConfig) : {};
+
+          // 検索システム初期化（npmパッケージ版最適化）
+          try {
+            const { SearchLoadingManager } = await import('../scripts/type-scripts/docs/index/search/search-loading-manager');
+            const searchLoadingManager = new SearchLoadingManager();
+            await searchLoadingManager.initializeSearchSystem();
+          } catch (error) {
+            // Critical Errorのみログ出力
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Critical: Search system optimization failed: ${error}`, "error");
+            }
+            // 検索システムの最適化失敗は致命的ではないため、処理を続行
           }
-        } catch (error) {
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Search system initialization failed: ${error}`, "error");
-          }
-        }
 
         // アニメーション初期化（既存）
         try {
@@ -571,43 +628,64 @@ function formatDate(dateString: string): string {
           }
         }
 
-        // コンテンツシステム初期化（0スクリップ最適化）
-        try {
-          const { ContentProcessor } = await import('../scripts/type-scripts/docs/index/content/content-processor');
-          const { SearchDataGenerator } = await import('../scripts/type-scripts/docs/index/search/search-data-generator');
-          
-          // サーバーサイドデータを直接取得（0スクリップ）
-          const container = document.getElementById('postsContainer');
-          const currentPage = parseInt(container?.dataset.currentPage || '1');
-          const postsPerPage = parseInt(container?.dataset.postsPerPage || '12');
-          const totalPosts = parseInt(container?.dataset.totalPosts || '0');
-          const searchDataItems = container?.dataset.searchData ? JSON.parse(container.dataset.searchData) : [];
-          
-          // サーバーサイドデータを直接使用（fetch不要）
-          const contentProcessor = new ContentProcessor(currentPage, postsPerPage);
-          const searchDataGenerator = new SearchDataGenerator();
+          // コンテンツシステム初期化（0-Script最適化完成）
+          try {
+            const { ContentProcessor } = await import('../scripts/type-scripts/docs/index/content/content-processor');
+            
+            // 0-Script最適化完成: サーバーサイドデータを直接設定
+            const contentProcessor = new ContentProcessor(currentPage, postsPerPage);
+            contentProcessor.setServerData(searchData, totalPosts);
 
-          // サーバーサイドデータを直接設定（0スクリップ）
-          if (searchDataItems.length > 0) {
-            contentProcessor.setServerData(searchDataItems, totalPosts);
+            window.contentProcessor = contentProcessor;
+          } catch (error) {
+            // Critical Errorのみログ出力
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Critical: Content system optimization failed: ${error}`, "error");
+            }
+            // コンテンツシステムの最適化失敗は致命的なため、エラーを再スロー
+            throw error;
           }
 
-          window.contentProcessor = contentProcessor;
-          window.searchDataGenerator = searchDataGenerator;
+          // 初期化完了
 
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log("Content system initialized successfully (0-skip optimized)", "success");
-          }
         } catch (error) {
+          // Critical Errorのみログ出力
           if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Content system initialization failed: ${error}`, "error");
+            window.clientLogger.log(`Critical: Docs Page Loading Failed: ${error}`, "error");
           }
+          
+          // エラー時のフォールバック処理
+          handleInitializationError(error);
         }
 
         if (window.clientLogger && window.clientLogger.log) {
           window.clientLogger.log("Docs Page Loaded Successfully!", "success");
         }
       });
+
+
+      // エラー時のフォールバック処理
+      function handleInitializationError(error: Error) {
+        try {
+          // エラーページへのリダイレクト
+          const errorMessage = encodeURIComponent(error.message);
+          window.location.href = `/error?type=initialization&message=${errorMessage}`;
+        } catch (redirectError) {
+          // リダイレクトも失敗した場合の最終フォールバック
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Critical: Failed to redirect to error page: ${redirectError}`, 'error');
+          }
+          document.body.innerHTML = `
+            <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+              <h1>エラーが発生しました</h1>
+              <p>ページの読み込み中にエラーが発生しました。しばらく時間をおいてから再度お試しください。</p>
+              <button onclick="window.location.reload()" style="padding: 10px 20px; margin-top: 20px;">
+                ページを再読み込み
+              </button>
+            </div>
+          `;
+        }
+      }
     </script>
 
     <script>

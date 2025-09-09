@@ -132,11 +132,6 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
     />
 
     <!-- Preload critical resources for better performance -->
-    <link
-      rel="preload"
-      href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
-      as="script"
-    />
     <script src="/core/post-script.js" is:inline></script>
 
     <!-- Fonts with display=swap for better performance -->
@@ -145,8 +140,7 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
       rel="stylesheet"
     />
 
-    <!-- Core: Always load marked for markdown rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- marked.js CDN読み込み削除 - AstroネイティブMarkdown処理を活用 -->
   </head>
 
   <body>
@@ -356,19 +350,11 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
         // Show skeleton loading
         showPostSkeleton(postContent)
 
-        // Configure marked for markdown rendering
-        marked.setOptions({
-          highlight: function (code, lang) {
-            return `<pre><code class="language-${lang}">${code}</code></pre>`
-          },
-          breaks: true,
-          gfm: true,
-        })
-
-        // Render content with minimal delay
+        // AstroネイティブMarkdown処理 - サーバーサイドで既にHTML変換済み
+        // marked.jsのクライアントサイド処理は不要
         setTimeout(() => {
-          const renderedHTML = marked.parse(content)
-          postContent.innerHTML = renderedHTML
+          // コンテンツは既にHTML形式で提供されているため、直接設定
+          postContent.innerHTML = content
           hidePostSkeleton(postContent)
 
           // Load enhancements after content is rendered
