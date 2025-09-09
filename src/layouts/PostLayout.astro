@@ -11,30 +11,30 @@ const { post, collectionMetadata } = Astro.props;
 ---
 
 <!-- Main Content -->
-<main class="post-page w-full max-w-full flex flex-col" role="main">
-  <div class="post-container">
+<main class="content-page w-full max-w-full flex flex-col" role="main">
+  <div class="content-container">
     <!-- Breadcrumb Navigation -->
     <slot name="breadcrumb" />
 
     <!-- Article Header -->
-    <header class="post-header mt-8">
-      <h1 class="post-title">{post.data.title}</h1>
+    <header class="content-header mt-8">
+      <h1 class="content-title">{post.data.title}</h1>
 
       {(post.data.publishedDate || post.data.author) && (
-        <div class="post-meta" aria-label="Post metadata">
-        <time class="post-date" datetime={post.data.publishedDate}>
+        <div class="content-meta" aria-label="Post metadata">
+        <time class="content-date" datetime={post.data.publishedDate}>
           {new Date(post.data.publishedDate).toLocaleDateString("id-ID", {
             year: "numeric",
             month: "long",
             day: "numeric",
           })}
         </time>
-        <span class="post-author">by {post.data.author}</span>
+        <span class="content-author">by {post.data.author}</span>
       </div>
       )}
 
       {post.data.difficulty && (
-        <div class="post-tags">
+        <div class="content-tags">
           <span
             class={`difficulty-badge difficulty-${post.data.difficulty}`}
             aria-label={`Difficulty level: ${post.data.difficulty}`}>
@@ -46,12 +46,12 @@ const { post, collectionMetadata } = Astro.props;
     </header>
 
     <!-- Article Content -->
-    <article class="prose prose-invert max-w-none post-content" id="postContent" aria-label="Post content">
+    <article class="prose prose-invert max-w-none content-main" id="contentMain" aria-label="Post content">
       <slot />
     </article>
 
     <!-- Post Actions -->
-    <footer class="post-actions">
+    <footer class="content-actions">
       <div class="action-buttons">
         <a
           href={collectionMetadata.basePath}

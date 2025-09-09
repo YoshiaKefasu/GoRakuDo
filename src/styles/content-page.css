@@ -1,37 +1,38 @@
-/* POST PAGE STYLES - Optimized version */
+/* CONTENT PAGE STYLES - Generalized version */
 /* Custom styles that cannot be handled by Tailwind Typography */
+/* Replaces [slug].css with more generalized content page styling */
 
-@import '../global.css';
-@import './word-internal-links.css';
+@import './global.css';
+@import './docs/word-internal-links.css';
 
 /* ========== TAILWIND V4 THEME INTEGRATION ========== */
 @theme {
-  /* Article-specific design tokens */
-  --color-post-background: rgba(15, 15, 25, 0.95);
-  --color-post-title: rgba(255, 255, 255, 0.95);
-  --color-post-content: rgba(255, 255, 255, 0.85);
-  --color-post-meta: rgba(255, 255, 255, 0.7);
-  --color-post-border: rgba(139, 93, 255, 0.15);
-  --color-post-accent: var(--color-accent-purple);
+  /* Content page design tokens */
+  --color-content-background: rgba(15, 15, 25, 0.95);
+  --color-content-title: rgba(255, 255, 255, 0.95);
+  --color-content-text: rgba(255, 255, 255, 0.85);
+  --color-content-meta: rgba(255, 255, 255, 0.7);
+  --color-content-border: rgba(139, 93, 255, 0.15);
+  --color-content-accent: var(--color-accent-purple);
 
   /* Shadows */
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-card-hover: 0 8px 30px rgba(139, 93, 255, 0.2);
 
   /* Z-index system */
-  --z-post-background: 0;
-  --z-post-content: 1;
-  --z-post-progress: 50;
-  --z-post-modal: 100;
+  --z-content-background: 0;
+  --z-content-main: 1;
+  --z-content-progress: 50;
+  --z-content-modal: 100;
 }
 
-/* ========== POST PAGE LAYOUT ========== */
+/* ========== CONTENT PAGE LAYOUT ========== */
 
-.post-page {
+.content-page {
   min-height: 100vh;
   width: 100%;
   position: relative;
-  z-index: var(--z-post-content);
+  z-index: var(--z-content-main);
   background: rgba(15, 15, 25, 0.5);
   background-size: 30px 30px;
   padding: 5rem 0 2rem;
@@ -40,7 +41,7 @@
   margin: 0;
 }
 
-.post-container {
+.content-container {
   max-width: 64rem;
   margin: 0 auto;
   padding: 2rem 0.5rem 0;
@@ -58,7 +59,7 @@
   box-shadow: none !important;
 }
 
-.post-container .modern-breadcrumb-nav {
+.content-container .modern-breadcrumb-nav {
   width: 100% !important;
   max-width: 100%;
   margin: 0;
@@ -66,14 +67,14 @@
   overflow: hidden;
 }
 
-.post-container .breadcrumb-container {
+.content-container .breadcrumb-container {
   width: 100%;
   max-width: 100%;
   overflow: hidden;
   position: relative;
 }
 
-.post-container .breadcrumb-list {
+.content-container .breadcrumb-list {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
@@ -82,27 +83,29 @@
   margin: 0;
 }
 
-.post-container .breadcrumb-item {
+.content-container .breadcrumb-item {
   flex-shrink: 0;
   max-width: fit-content;
   gap: 0.25rem;
   align-items: center;
 }
 
-.post-container .breadcrumb-icon {
+.content-container .breadcrumb-icon {
   flex-shrink: 0;
   font-size: 1rem;
   line-height: 1;
 }
 
-.post-container .breadcrumb-separator {
+.content-container .breadcrumb-separator {
   flex-shrink: 0;
   margin: 0 0.25rem;
 }
 
 /* ========== BUTTONS ========== */
-/* Shared styles for back-to-docs and share buttons */
+/* Shared styles for navigation and share buttons */
+.back-to-content,
 .back-to-docs,
+.back-to-tools,
 .share-btn {
   display: inline-flex;
   align-items: center;
@@ -123,7 +126,9 @@
   white-space: nowrap;
 }
 
+.back-to-content:hover,
 .back-to-docs:hover,
+.back-to-tools:hover,
 .share-btn:hover {
   color: var(--color-accent-purple-dark);
   background: rgba(139, 93, 255, 0.15);
@@ -132,20 +137,22 @@
   box-shadow: 0 4px 12px rgba(139, 93, 255, 0.2);
 }
 
+.back-to-content:focus-visible,
 .back-to-docs:focus-visible,
+.back-to-tools:focus-visible,
 .share-btn:focus-visible {
   outline: 2px solid #8b5dff;
   outline-offset: 2px;
   box-shadow: 0 0 0 2px rgba(139, 93, 255, 0.3);
 }
 
-/* ========== POST HEADER ========== */
-.post-header {
+/* ========== CONTENT HEADER ========== */
+.content-header {
   text-align: center;
   margin: 2rem 0.5rem;
   padding: 1.5rem;
   border-radius: 1rem;
-  border: 1px solid var(--color-post-border);
+  border: 1px solid var(--color-content-border);
   background: rgba(30, 30, 40, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
@@ -157,7 +164,7 @@
   align-items: center;
 }
 
-.post-header h1 {
+.content-header h1 {
   font-size: 1.875rem;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -165,7 +172,42 @@
   line-height: 1.3;
 }
 
-/* Post Meta */
+/* Content Meta */
+.content-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-content-meta);
+  flex-wrap: wrap;
+}
+
+.content-date,
+.content-author,
+.content-read-time {
+  color: var(--color-content-meta);
+}
+
+/* Legacy support for existing selectors */
+.post-header {
+  text-align: center;
+  margin: 2rem 0.5rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-content-border);
+  background: rgba(30, 30, 40, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: var(--shadow-card);
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .post-meta {
   display: flex;
   align-items: center;
@@ -173,19 +215,29 @@
   gap: 1.25rem;
   margin-bottom: 0.75rem;
   font-size: 0.875rem;
-  color: var(--color-post-meta);
+  color: var(--color-content-meta);
   flex-wrap: wrap;
 }
 
-.post-date,
-.post-author,
+.post-date {
+  color: var(--color-content-meta);
+}
+
+.post-author {
+  color: var(--color-content-meta);
+}
+
 .post-read-time {
-  color: var(--color-post-meta);
+  color: var(--color-content-meta);
+}
+
+.post-title {
+  color: inherit;
 }
 
 /* ========== DIFFICULTY BADGE ========== */
 /* This is a custom component that cannot be handled by Tailwind Typography */
-.post-tags {
+.content-tags {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -220,11 +272,19 @@
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* ========== POST CONTENT ========== */
+/* Legacy support */
+.post-tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* ========== CONTENT MAIN ========== */
 /* Only keep custom styles that cannot be handled by Tailwind Typography */
-.post-content {
+.content-main {
   padding: 1.5rem 1rem;
-  color: var(--color-post-content);
+  color: var(--color-content-text);
   max-width: none;
   background: transparent;
   border-radius: 0.5rem;
@@ -234,17 +294,21 @@
 }
 
 /* Custom styles that can't be handled by prose */
-.post-content :where(h1, h2, h3, h4, h5) {
+.content-main :where(h1, h2, h3, h4, h5) {
   scroll-margin-top: 2rem;
 }
 
-/* Custom heading style for h2 */
-.post-content h2 {
-  position: relative;
+.content-main h1 {
   padding-bottom: 0.5rem;
 }
 
-.post-content h2::before {
+/* Custom heading style for h2 */
+.content-main h2 {
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.content-main h2::before {
   content: '';
   position: absolute;
   left: -1rem;
@@ -260,13 +324,13 @@
   transform: translateY(-50%);
 }
 
-.post-content ul li {
+.content-main ul li {
   position: relative;
   padding-left: 1.5rem; /* space for the custom marker */
   list-style: none; /* remove default bullet */
 }
 
-.post-content ul li::before {
+.content-main ul li::before {
   content: '〆';
   color: var(--color-primary);
   font-weight: 900;
@@ -275,8 +339,20 @@
   top: 0.2rem; /* fine-tune vertical alignment */
 }
 
-/* ========== POST ACTIONS ========== */
-.post-actions {
+/* Legacy support for existing post-content selector */
+.post-content {
+  padding: 1.5rem 1rem;
+  color: var(--color-content-text);
+  max-width: none;
+  background: transparent;
+  border-radius: 0.5rem;
+  width: 100%;
+  position: relative;
+  display: block;
+}
+
+/* ========== CONTENT ACTIONS ========== */
+.content-actions {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -285,7 +361,7 @@
   padding: 1.5rem;
   margin: 2rem 0;
   border-radius: 1rem;
-  border: 1px solid var(--color-post-border);
+  border: 1px solid var(--color-content-border);
   background: rgba(30, 30, 40, 0.2);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -293,7 +369,7 @@
 }
 
 @media (min-width: 320px) {
-  .post-actions {
+  .content-actions {
     flex-direction: row;
   }
 }
@@ -312,6 +388,29 @@
   align-items: center;
 }
 
+/* Legacy support */
+.post-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 1rem;
+  border: 1px solid var(--color-content-border);
+  background: rgba(30, 30, 40, 0.2);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 320px) {
+  .post-actions {
+    flex-direction: row;
+  }
+}
+
 /* ========== READING PROGRESS ========== */
 .reading-progress {
   position: fixed;
@@ -319,7 +418,7 @@
   left: 0;
   width: 0;
   height: 3px;
-  z-index: var(--z-post-progress);
+  z-index: var(--z-content-progress);
   transition: width 0.1s ease;
   background: linear-gradient(
     90deg,
@@ -330,7 +429,9 @@
 
 /* ========== ACCESSIBILITY ========== */
 @media (prefers-reduced-motion: reduce) {
+  .back-to-content,
   .back-to-docs,
+  .back-to-tools,
   .share-btn,
   .reading-progress,
   .internal-link,
@@ -342,24 +443,34 @@
 
 /* ========== HIGH CONTRAST MODE ========== */
 @media (prefers-contrast: high) {
+  .content-header,
+  .content-actions,
   .post-header,
   .post-actions {
     border: 2px solid #6b7280;
   }
 
+  .back-to-content,
   .back-to-docs,
+  .back-to-tools,
   .share-btn {
     border: 2px solid var(--color-primary);
   }
 
+  .content-main :where(h1, h2, h3, h4, h5),
   .post-content :where(h1, h2, h3, h4, h5) {
     color: rgba(255, 255, 255, 1);
   }
 
+  .content-main :where(p, li, blockquote),
   .post-content :where(p, li, blockquote) {
     color: rgba(255, 255, 255, 1);
   }
 
+  .content-meta,
+  .content-date,
+  .content-author,
+  .content-read-time,
   .post-meta,
   .post-date,
   .post-author,
