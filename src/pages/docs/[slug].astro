@@ -5,7 +5,7 @@ import { join } from "path"
 import UnifiedSEO from "../../components/UnifiedSEO.astro"
 import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
 import Navbar from "../../components/public-components/Navbar.vue"
-import PostLayout from "../../components/content/PostLayout.astro"
+import PostLayout from "../../layouts/PostLayout.astro"
 import {
   resolvePath,
   getCollectionInfo,
@@ -31,6 +31,9 @@ const { post } = Astro.props as { post: CollectionEntry<"docs"> }
 if (!post) {
   return Astro.redirect("/docs?error=post-not-found")
 }
+
+// Render the post content
+const { Content } = await post.render()
 
 // Dynamic content path resolution for SEO
 const resolvedPath = { path: resolvePath("docs", post.slug) }
@@ -72,36 +75,12 @@ const seoData = {
   isDraft: post.data.isDraft || false
 }
 
-// Prepare post data for script section with dynamic path resolution
+// Prepare minimal data for client-side scripts
 const postData = {
   title: post.data.title,
   description: post.data.description,
-  publishedDate: post.data.publishedDate,
-  author: post.data.author,
-  readTime: post.data.readTime,
-  difficulty: post.data.difficulty,
-  body: post.body,
-  slug: post.slug,
   resolvedPath: resolvedPath.path,
-  collectionMetadata: {
-    displayName: collectionMetadata.displayName,
-    icon: collectionMetadata.icon,
-    basePath: collectionMetadata.basePath,
-  },
 }
-
-// Generate optimized recommendations for this post (checks for existing metadata first)
-let relatedContent: any = null
-let internalLinks: any = null
-let enhancedContent: string = post.body
-
-// Post processing removed - functionality no longer needed
-relatedContent = []
-internalLinks = []
-enhancedContent = post.body
-
-// Metadata processing removed
-console.log(`📝 Post "${post.slug}" processed without AI features`)
 ---
 
 <html lang="ja">
@@ -119,11 +98,6 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
     />
 
     <!-- Preload critical resources for better performance -->
-    <link
-      rel="preload"
-      href="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
-      as="script"
-    />
     <script src="/core/post-script.js" is:inline></script>
 
     <!-- Fonts with display=swap for better performance -->
@@ -131,9 +105,6 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Core: Always load marked for markdown rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
 
   <body>
@@ -160,14 +131,15 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
         post={post} 
         slot="breadcrumb" 
       />
-      <!-- Article content will be rendered here by the layout -->
+      <!-- Render the markdown content in the default slot -->
+      <Content />
     </PostLayout>
 
     <!-- Scripts Section - Organized and Optimized -->
     <script is:inline src="/core/post-script.js"></script>
 
     <!-- Main Application Script -->
-    <script define:vars={{ postData, enhancedContent }}>
+    <script define:vars={{ postData }}>
       // Share functionality with dynamic path support
       function sharePost() {
         const shareUrl = postData?.resolvedPath
@@ -218,34 +190,12 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
         })
       }
 
-      // Render post content
-      function renderPostContent() {
-        if (!postData) return
-
-        const content = window.enhancedContent || postData.body
-        const postContent = document.getElementById("postContent")
-
-        if (!postContent) return
-
-        // Configure marked for markdown rendering
-        marked.setOptions({
-          highlight: function (code, lang) {
-            return `<pre><code class="language-${lang}">${code}</code></pre>`
-          },
-          breaks: true,
-          gfm: true,
-        })
-
-        // Render content
-        const renderedHTML = marked.parse(content)
-        postContent.innerHTML = renderedHTML
-      }
-
       // Initialize when DOM is ready
       document.addEventListener("DOMContentLoaded", function () {
-        renderPostContent()
         addReadingProgress()
       })
     </script>
+
+
   </body>
 </html>

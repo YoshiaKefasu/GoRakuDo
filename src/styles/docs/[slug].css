@@ -13,11 +13,11 @@
   --color-post-meta: rgba(255, 255, 255, 0.7);
   --color-post-border: rgba(139, 93, 255, 0.15);
   --color-post-accent: var(--color-accent-purple);
-  
+
   /* Shadows */
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-card-hover: 0 8px 30px rgba(139, 93, 255, 0.2);
-  
+
   /* Z-index system */
   --z-post-background: 0;
   --z-post-content: 1;
@@ -32,7 +32,7 @@
   width: 100%;
   position: relative;
   z-index: var(--z-post-content);
-  background: rgba(15, 15, 25, 0.5); 
+  background: rgba(15, 15, 25, 0.5);
   background-size: 30px 30px;
   padding: 5rem 0 2rem;
   backdrop-filter: blur(1px);
@@ -47,7 +47,6 @@
   width: 100%;
   box-sizing: border-box;
 }
-
 
 /* ========== BREADCRUMB ========== */
 /* These styles are needed for the breadcrumb component */
@@ -153,9 +152,9 @@
   box-shadow: var(--shadow-card);
   min-height: 240px;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: center;
-  align-items: center;   
+  align-items: center;
 }
 
 .post-header h1 {
@@ -249,29 +248,32 @@
   content: '';
   position: absolute;
   left: -1rem;
-  top: 42%; 
+  top: 42%;
   width: 4px;
   height: 1.25rem;
   border-radius: 2px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
   transform: translateY(-50%);
 }
 
 .post-content ul li {
   position: relative;
   padding-left: 1.5rem; /* space for the custom marker */
-  list-style: none;     /* remove default bullet */
+  list-style: none; /* remove default bullet */
 }
 
 .post-content ul li::before {
-  content: "〆";
+  content: '〆';
   color: var(--color-primary);
   font-weight: 900;
   position: absolute;
-  left: 0;              /* align inside padding area */
-  top: 0.2rem;          /* fine-tune vertical alignment */
+  left: 0; /* align inside padding area */
+  top: 0.2rem; /* fine-tune vertical alignment */
 }
-
 
 /* ========== POST ACTIONS ========== */
 .post-actions {
@@ -319,13 +321,17 @@
   height: 3px;
   z-index: var(--z-post-progress);
   transition: width 0.1s ease;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
 }
 
 /* ========== ACCESSIBILITY ========== */
 @media (prefers-reduced-motion: reduce) {
-  .back-to-docs, 
-  .share-btn, 
+  .back-to-docs,
+  .share-btn,
   .reading-progress,
   .internal-link,
   .internal-link::before {
@@ -336,24 +342,24 @@
 
 /* ========== HIGH CONTRAST MODE ========== */
 @media (prefers-contrast: high) {
-  .post-header, 
+  .post-header,
   .post-actions {
     border: 2px solid #6b7280;
   }
-  
-  .back-to-docs, 
+
+  .back-to-docs,
   .share-btn {
     border: 2px solid var(--color-primary);
   }
-  
+
   .post-content :where(h1, h2, h3, h4, h5) {
     color: rgba(255, 255, 255, 1);
   }
-  
+
   .post-content :where(p, li, blockquote) {
     color: rgba(255, 255, 255, 1);
   }
-  
+
   .post-meta,
   .post-date,
   .post-author,
@@ -364,4 +370,18 @@
 
 body {
   background: #1e1e28;
+}
+
+code {
+  background: none !important;
+  padding: 0 !important;
+}
+
+pre {
+  background: none !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid rgba(139, 93, 255, 0.15) !important;
+  box-shadow: var(--shadow-card) !important;
 }

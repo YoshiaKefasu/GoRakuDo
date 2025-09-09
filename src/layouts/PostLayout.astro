@@ -1,5 +1,5 @@
 ---
-interface Props {
+export interface Props {
   post: import("astro:content").CollectionEntry<"docs">;
   collectionMetadata: {
     displayName: string;
@@ -20,7 +20,8 @@ const { post, collectionMetadata } = Astro.props;
     <header class="post-header mt-8">
       <h1 class="post-title">{post.data.title}</h1>
 
-      <div class="post-meta" aria-label="Post metadata">
+      {(post.data.publishedDate || post.data.author) && (
+        <div class="post-meta" aria-label="Post metadata">
         <time class="post-date" datetime={post.data.publishedDate}>
           {new Date(post.data.publishedDate).toLocaleDateString("id-ID", {
             year: "numeric",
@@ -30,14 +31,18 @@ const { post, collectionMetadata } = Astro.props;
         </time>
         <span class="post-author">by {post.data.author}</span>
       </div>
+      )}
 
-      <div class="post-tags">
-        <span
-          class={`difficulty-badge difficulty-${post.data.difficulty}`}
-          aria-label={`Difficulty level: ${post.data.difficulty}`}>
-          {post.data.difficulty}
-        </span>
-      </div>
+      {post.data.difficulty && (
+        <div class="post-tags">
+          <span
+            class={`difficulty-badge difficulty-${post.data.difficulty}`}
+            aria-label={`Difficulty level: ${post.data.difficulty}`}>
+            {post.data.difficulty}
+          </span>
+        </div>
+      )}
+
     </header>
 
     <!-- Article Content -->
@@ -66,6 +71,7 @@ const { post, collectionMetadata } = Astro.props;
           </svg>
           Kembali ke {collectionMetadata.displayName}
         </a>
+        
         <div class="share-buttons">
           <button class="share-btn" onclick="sharePost()" aria-label="Bagikan post ini">
             <svg
@@ -87,6 +93,9 @@ const { post, collectionMetadata } = Astro.props;
         </div>
       </div>
     </footer>
+
+    <!-- Optional additional footer content -->
+    <slot name="footer" />
   </div>
 </main>
 
