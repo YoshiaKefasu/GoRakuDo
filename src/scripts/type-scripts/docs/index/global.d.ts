@@ -16,6 +16,11 @@ declare global {
     Fuse?: unknown; // npmパッケージのFuse.js
     contentProcessor?: ContentProcessor; // ContentProcessor instance
     searchDataGenerator?: SearchDataGenerator; // SearchDataGenerator instance
+    // Animation and UI functions
+    initializeDocsWaveAnimation?: () => (() => void) | undefined;
+    initializeStars?: () => void;
+    initializeTagPopups?: () => void;
+    waveAnimation?: { cleanup: () => void } | null;
   }
 }
 

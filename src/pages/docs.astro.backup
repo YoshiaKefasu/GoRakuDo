@@ -89,7 +89,7 @@ const postsWithDynamicPaths = sortedPosts.map((post) => {
   }
 })
 
-// Simplified content processing for 0-skip optimization
+// Simplified content processing (Phase 2 - basic text cleaning only)
 function processArticleContent(content: string) {
   if (!content) return { 
     cleanedText: "",
@@ -98,7 +98,7 @@ function processArticleContent(content: string) {
     hasSections: false
   }
 
-  // Basic text cleaning for search
+  // Basic text cleaning for search (simplified)
   const cleanedText = content
     .replace(/---[\s\S]*?---/, "") // Remove frontmatter
     .replace(/```[\s\S]*?```/g, " ") // Remove code blocks
@@ -120,8 +120,8 @@ function processArticleContent(content: string) {
   }
 }
 
-// Generate SearchDataItem format for 0-skip optimization
-const searchDataItems = sortedPosts.map((post) => {
+// Generate simplified search data (AI metadata removed)
+const simplifiedSearchData = sortedPosts.map((post) => {
   const fullContent = post.body || ""
   const processedContent = processArticleContent(fullContent)
 
@@ -149,7 +149,7 @@ const searchDataItems = sortedPosts.map((post) => {
     aiMetadata: {},
     contentType: post.data.category || 'general',
 
-    // Simplified searchable text
+    // Simplified searchable text (AI fields removed)
     searchableText: [
       post.data.title,
       post.data.description,
@@ -160,7 +160,7 @@ const searchDataItems = sortedPosts.map((post) => {
       post.data.learningStage,
     ].join(" ").toLowerCase(),
 
-    // Basic feature flags
+    // Basic feature flags (AI recommendations removed)
     isRecommended: false,
     isBeginner: post.data.difficulty === "beginner" || post.data.learningStage === "pemanasan",
     isTool: post.data.category === "tools" || post.data.title.toLowerCase().includes("anki"),
@@ -168,6 +168,11 @@ const searchDataItems = sortedPosts.map((post) => {
     hasImages: processedContent.hasImages,
   }
 })
+
+logger.log(
+  `Simplified search data generated for ${simplifiedSearchData.length} posts`,
+  "success"
+)
 
 // AI processing removed - using simplified content system instead
 
@@ -276,7 +281,7 @@ function formatDate(dateString: string): string {
     <!-- Main Content -->
     <main class="main-content">
       <div class="posts-page">
-        <div class="posts-container" id="postsContainer" data-current-page={currentPage} data-posts-per-page={postsPerPage} data-total-posts={totalPosts} data-search-data={JSON.stringify(searchDataItems)}>
+        <div class="posts-container" id="postsContainer" data-current-page={currentPage} data-posts-per-page={postsPerPage}>
           <div class="posts-header">
             <h1>Dokumentasi & Panduan</h1>
             <p>
@@ -393,7 +398,7 @@ function formatDate(dateString: string): string {
                     <button onclick="window.location.reload()" class="docs-button">
                       🔄 Coba Lagi
                     </button>
-                    <button onclick="window.location.href = '/'" class="docs-button secondary">
+                    <button onclick="goHome()" class="docs-button secondary">
                       🏠 Kembali ke Beranda
                     </button>
                   </div>
@@ -505,118 +510,40 @@ function formatDate(dateString: string): string {
     </main>
 
     <script>
-      // 統合された初期化処理を使用
-      document.addEventListener("DOMContentLoaded", async function () {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("GoRakuDo Docs Page Loading...", "info");
-        }
-
-        // 検索システム初期化（統合版）
+      // Search Engine Loading State Management - MOVED TO SEPARATE MODULES
+      async function initializeSearchSystem() {
         try {
           const { SearchLoadingManager } = await import('../scripts/type-scripts/docs/index/search/search-loading-manager');
+          const { ModernSearchEngine } = await import('../scripts/type-scripts/docs/index/search/modern-search-engine');
+          
           const searchLoadingManager = new SearchLoadingManager();
-          await searchLoadingManager.initializeSearchSystem();
+          const searchEngine = new ModernSearchEngine();
 
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log('Search system initialized successfully', 'success');
-          }
-        } catch (error) {
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Search system initialization failed: ${error}`, "error");
-          }
-        }
-
-        // アニメーション初期化（既存）
-        try {
-          if (window.initializeDocsWaveAnimation) {
-            const cleanupWave = window.initializeDocsWaveAnimation();
-            if (cleanupWave) {
-              window.waveAnimation = { cleanup: cleanupWave };
-              if (window.clientLogger && window.clientLogger.log) {
-                window.clientLogger.log("Wave animation initialized for docs page", "success");
-              }
-            }
-          }
-        } catch (error) {
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Wave animation failed for docs page: ${error}`, "error");
-          }
-        }
-
-        // 星空背景初期化（既存）
-        try {
-          if (window.initializeStars) {
-            window.initializeStars();
-            if (window.clientLogger && window.clientLogger.log) {
-              window.clientLogger.log("Stars background initialized for docs page", "success");
-            }
-          }
-        } catch (error) {
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Stars background failed for docs page: ${error}`, "error");
-          }
-        }
-
-        // タグポップアップ初期化（既存）
-        try {
-          if (window.initializeTagPopups) {
-            window.initializeTagPopups();
-            if (window.clientLogger && window.clientLogger.log) {
-              window.clientLogger.log("Tag popups initialized for docs page", "success");
-            }
-          }
-        } catch (error) {
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Tag popups failed for docs page: ${error}`, "error");
-          }
-        }
-
-        // コンテンツシステム初期化（0スクリップ最適化）
-        try {
-          const { ContentProcessor } = await import('../scripts/type-scripts/docs/index/content/content-processor');
-          const { SearchDataGenerator } = await import('../scripts/type-scripts/docs/index/search/search-data-generator');
+          window.searchEngine = searchEngine;
+          window.searchLoadingManager = searchLoadingManager;
+          window.allPosts = [];
           
-          // サーバーサイドデータを直接取得（0スクリップ）
-          const container = document.getElementById('postsContainer');
-          const currentPage = parseInt(container?.dataset.currentPage || '1');
-          const postsPerPage = parseInt(container?.dataset.postsPerPage || '12');
-          const totalPosts = parseInt(container?.dataset.totalPosts || '0');
-          const searchDataItems = container?.dataset.searchData ? JSON.parse(container.dataset.searchData) : [];
-          
-          // サーバーサイドデータを直接使用（fetch不要）
-          const contentProcessor = new ContentProcessor(currentPage, postsPerPage);
-          const searchDataGenerator = new SearchDataGenerator();
-
-          // サーバーサイドデータを直接設定（0スクリップ）
-          if (searchDataItems.length > 0) {
-            contentProcessor.setServerData(searchDataItems, totalPosts);
-          }
-
-          window.contentProcessor = contentProcessor;
-          window.searchDataGenerator = searchDataGenerator;
-
           if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log("Content system initialized successfully (0-skip optimized)", "success");
+            window.clientLogger.log("Search system initialized successfully", "success");
           }
         } catch (error) {
           if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(`Content system initialization failed: ${error}`, "error");
+            window.clientLogger.log(`Failed to initialize search system: ${error}`, "error");
           }
         }
-
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log("Docs Page Loaded Successfully!", "success");
-        }
-      });
+      }
+      
+      initializeSearchSystem();
     </script>
 
     <script>
       // Wave animation initialization for docs page
 
+      let waveAnimation: { cleanup: () => void } | null = null
       let starsContainer: HTMLElement | null = null
 
       // Initialize wave animation for docs page
-      window.initializeDocsWaveAnimation = function initializeDocsWaveAnimation(): (() => void) | undefined {
+      function initializeDocsWaveAnimation(): (() => void) | undefined {
         if (window.clientLogger && window.clientLogger.log) {
           window.clientLogger.log("Initializing docs page wave animation...", "info")
         }
@@ -772,17 +699,37 @@ function formatDate(dateString: string): string {
         }
       }
 
-      // Wave animation initialization moved to integrated initialization
+      // Initialize wave animation when DOM is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        try {
+          waveAnimation = {
+            cleanup: initializeDocsWaveAnimation() || (() => {}),
+          }
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Docs page wave animation initialized successfully",
+              "success"
+            )
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Error initializing docs page wave animation: ${error}`,
+              "error"
+            )
+          }
+        }
+      })
 
       // Cleanup on page unload
       window.addEventListener("beforeunload", function () {
-        if (window.waveAnimation) {
-          window.waveAnimation.cleanup()
+        if (waveAnimation) {
+          waveAnimation.cleanup()
         }
       })
 
       // Initialize stars background
-      window.initializeStars = function initializeStars() {
+      function initializeStars() {
         if (window.clientLogger && window.clientLogger.log) {
           window.clientLogger.log(
             "Initializing stars background for docs page...",
@@ -815,9 +762,28 @@ function formatDate(dateString: string): string {
         }
       }
 
+      // Navigation functions for docs page
+      ;(window as any).goHome = function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Navigating to home...", "info")
+        }
+        window.location.href = "/"
+      }
+      ;(window as any).goToPosts = function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Already on docs page...", "info")
+        }
+        window.location.reload()
+      }
+      ;(window as any).goToInvitation = function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Navigating to Discord...", "info")
+        }
+        window.location.href = "/discord"
+      }
 
       // Tag Popup Functionality
-      window.initializeTagPopups = function initializeTagPopups() {
+      function initializeTagPopups() {
         if (window.clientLogger && window.clientLogger.log) {
           window.clientLogger.log("Initializing minimalist tag popups...", "info")
         }
@@ -926,7 +892,112 @@ function formatDate(dateString: string): string {
         }
       }
 
-      // All initialization moved to integrated initialization above
+      // Initialize everything when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("GoRakuDo Docs Page Loading...", "info")
+        }
+
+        // Initialize wave animation
+        try {
+          const cleanupWave = initializeDocsWaveAnimation()
+          if (cleanupWave) {
+            waveAnimation = { cleanup: cleanupWave }
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(
+                "Wave animation initialized for docs page",
+                "success"
+              )
+            }
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Wave animation failed for docs page: ${error}`,
+              "error"
+            )
+          }
+        }
+
+        // Initialize stars
+        try {
+          initializeStars()
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              "Stars background initialized for docs page",
+              "success"
+            )
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(
+              `Stars background failed for docs page: ${error}`,
+              "error"
+            )
+          }
+        }
+
+        // Initialize tag popups
+        try {
+          initializeTagPopups()
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Tag popups initialized for docs page", "success")
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Tag popups failed for docs page: ${error}`, "error")
+          }
+        }
+
+        // Initialize simplified content system
+        (async () => {
+          try {
+            const { ContentProcessor } = await import('../scripts/type-scripts/docs/index/content/content-processor');
+            const { SearchDataGenerator } = await import('../scripts/type-scripts/docs/index/search/search-data-generator');
+            
+            // Get pagination settings from data attributes
+            const container = document.getElementById('postsContainer');
+            const currentPage = parseInt(container?.dataset.currentPage || '1');
+            const postsPerPage = parseInt(container?.dataset.postsPerPage || '6');
+            
+            const contentProcessor = new ContentProcessor(currentPage, postsPerPage);
+            const searchDataGenerator = new SearchDataGenerator();
+
+            window.contentProcessor = contentProcessor;
+            window.searchDataGenerator = searchDataGenerator;
+
+            // Wait for initialization to complete
+            let attempts = 0;
+            while (!contentProcessor.isReady() && attempts < 50) {
+              await new Promise(resolve => setTimeout(resolve, 100));
+              attempts++;
+            }
+            
+            if (window.contentProcessor && window.contentProcessor.isReady()) {
+              window.contentProcessor.updateDisplay();
+            }
+
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log('Simplified content system initialized', 'success');
+            }
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Content system initialization error: ${error}`, 'error');
+            }
+          }
+        })();
+
+        // Cleanup on page unload
+        window.addEventListener("beforeunload", function () {
+          if (waveAnimation && waveAnimation.cleanup) {
+            waveAnimation.cleanup()
+          }
+        })
+
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Docs Page Loaded Successfully!", "success")
+        }
+      })
     </script>
   </body>
 </html>

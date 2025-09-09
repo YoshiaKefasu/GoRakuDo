@@ -94,4 +94,51 @@ export class SearchLoadingManager implements ISearchLoadingManager {
       `;
     }
   }
+
+  /**
+   * 統合: 検索システム初期化機能
+   * 元のdocs.astro行514-536のinitializeSearchSystem()を統合
+   * 
+   * 統合の詳細:
+   * 1. 動的インポートによるモジュール読み込み
+   * 2. グローバル変数への適切な設定
+   * 3. エラーハンドリングの実装
+   * 4. ログ出力の統一
+   * 
+   * @returns Promise<void> 初期化の完了を表すPromise
+   */
+  async initializeSearchSystem(): Promise<void> {
+    try {
+      // 初期化開始のログ出力
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log("Initializing search system...", "info");
+      }
+
+      // 動的インポートによるモジュール読み込み
+      // 循環依存を避けるため、相対パスでインポート（自己参照を避ける）
+      const { ModernSearchEngine } = await import('./modern-search-engine');
+      
+      // グローバル変数に設定
+      // 型安全性を確保するため、適切な型キャストを実行
+      window.searchLoadingManager = this; // 現在のインスタンスを使用
+      window.searchEngine = new ModernSearchEngine();
+      window.allPosts = [];
+
+      // 初期化成功のログ出力
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log("Search system initialized successfully", "success");
+      }
+    } catch (error) {
+      // エラーログの出力
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(`Failed to initialize search system: ${error}`, "error");
+      }
+      
+      // エラー状態の設定
+      this.setErrorState('Sistem pencarian gagal dimuat');
+      
+      // エラーを再スローして上位で処理可能にする
+      throw error;
+    }
+  }
 }
