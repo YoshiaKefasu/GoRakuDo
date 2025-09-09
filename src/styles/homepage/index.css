@@ -1,7 +1,70 @@
 /* Import Tailwind CSS v4 */
 @import 'tailwindcss';
 
-/* ========== HOMEPAGE VIEW TRANSITIONS API STYLES ========== */
+/*
+================================================================================
+--- GLOBAL HOMEPAGE BODY & ACCESSIBILITY STYLES ---
+================================================================================
+*/
+
+body {
+  font-family: var(--font-primary);
+  background: var(--clr-background);
+  color: var(--clr-text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+  padding: 0 !important;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Mobile First Approach */
+@apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
+
+/* Typography Scaling */
+@apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
+
+/* Grid Responsive */
+@apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+
+/* Accessibility - Focus indicators for keyboard navigation */
+:focus-visible {
+  outline: 3px solid var(--clr-accent);
+  outline-offset: 4px;
+  border-radius: var(--border-radius-card);
+}
+
+.modal-content :focus-visible {
+  outline-color: var(--clr-accent-dark);
+}
+
+/*
+================================================================================
+--- GRADIENT TEXT EFFECTS - CRITICAL STYLING ---
+================================================================================
+*/
+
+.white-gradient-text {
+  display: block;
+  background: linear-gradient(
+    135deg,
+    var(--clr-text-primary) 0%,
+    var(--clr-text-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--clr-text-primary); /* Fallback */
+}
+
+/*
+================================================================================
+--- VIEW TRANSITIONS API SUPPORT ---
+================================================================================
+*/
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -33,7 +96,696 @@
   }
 }
 
-/* View Transitions API support for homepage */
+/* Buttery smooth floating animations with varied patterns */
+@keyframes buttery-wave-float {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translateY(-3px) scale(1.01);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-6px) scale(1.02);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-3px) scale(1.01);
+    opacity: 0.9;
+  }
+}
+
+/* Homepage-specific star twinkle animation */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    opacity: 0.6;
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.3);
+    filter: brightness(1.5);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+
+/* Homepage floating animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-8px) translateX(4px);
+  }
+  50% {
+    transform: translateY(-4px) translateX(-6px);
+  }
+  75% {
+    transform: translateY(-12px) translateX(2px);
+  }
+}
+
+@keyframes float-2 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-6px) translateX(-3px);
+  }
+  66% {
+    transform: translateY(-10px) translateX(5px);
+  }
+}
+
+@keyframes float-3 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-8px) translateX(-2px);
+  }
+}
+
+/*
+================================================================================
+--- HERO COMPONENT STYLES (hero.astro) ---
+================================================================================
+*/
+
+/* Hero-specific transitions */
+::view-transition-old(hero-content),
+::view-transition-new(hero-content) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(hero-title),
+::view-transition-new(hero-title) {
+  animation-duration: 0.35s;
+  animation-timing-function: ease-out;
+}
+
+::view-transition-old(hero-buttons),
+::view-transition-new(hero-buttons) {
+  animation-duration: 0.3s;
+  animation-delay: 0.1s;
+}
+
+/*
+================================================================================
+--- SLIDESHOW COMPONENT STYLES (Slideshow/ImageSlideshow.astro) ---
+================================================================================
+*/
+
+/* Slideshow section transitions */
+::view-transition-old(slideshow-section),
+::view-transition-new(slideshow-section) {
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
+}
+
+/*
+================================================================================
+--- MISSION SECTION COMPONENT STYLES (MissionSection.astro) ---
+================================================================================
+*/
+
+.mission-section,
+.mission-container {
+  @apply px-10 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
+}
+
+.mission-container {
+  @apply mx-auto text-center;
+}
+
+.mission-title {
+  @apply text-4xl sm:text-5xl lg:text-6xl font-semibold mb-16;
+}
+
+.mission-text {
+  @apply text-justify mb-16;
+}
+
+.mission-text p {
+  color: var(--clr-text-secondary);
+  @apply sm:text-lg leading-relaxed mb-6;
+}
+
+.mission-cta {
+  @apply text-center;
+}
+
+/* Mission section transitions */
+::view-transition-old(mission-section),
+::view-transition-new(mission-section) {
+  animation-duration: 0.35s;
+  animation-timing-function: ease-out;
+}
+
+::view-transition-old(mission-title),
+::view-transition-new(mission-title) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}
+
+/*
+================================================================================
+--- FEATURES SECTION COMPONENT STYLES (FeaturesSection.astro & FeatureCard.astro) ---
+================================================================================
+*/
+
+.features-section {
+  @apply px-10 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
+}
+
+.features-container {
+  @apply max-w-6xl mx-auto text-center;
+}
+
+.features-title {
+  @apply text-4xl sm:text-5xl lg:text-6xl font-semibold mb-20;
+}
+
+.features-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10;
+}
+
+.feature-card {
+  background: var(--clr-accent-glow-faint);
+  border: 1px solid var(--clr-accent-glow-medium);
+  border-radius: var(--border-radius-card);
+  @apply p-8 text-center;
+}
+
+.feature-icon {
+  @apply text-5xl md:text-6xl mb-6;
+}
+
+.feature-card h3 {
+  @apply text-xl md:text-2xl font-semibold mb-4;
+  color: var(--clr-text-primary);
+}
+
+.feature-card p {
+  color: var(--clr-text-muted);
+  @apply text-gray-400 leading-relaxed text-sm md:text-base;
+}
+
+/* Features section transitions */
+::view-transition-old(features-section),
+::view-transition-new(features-section) {
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
+}
+
+::view-transition-old(features-title),
+::view-transition-new(features-title) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}
+
+/* Feature cards staggered animation */
+::view-transition-old(feature-card-1),
+::view-transition-new(feature-card-1) {
+  animation-duration: 0.3s;
+  animation-delay: 0s;
+}
+
+::view-transition-old(feature-card-2),
+::view-transition-new(feature-card-2) {
+  animation-duration: 0.3s;
+  animation-delay: 0.05s;
+}
+
+::view-transition-old(feature-card-3),
+::view-transition-new(feature-card-3) {
+  animation-duration: 0.3s;
+  animation-delay: 0.1s;
+}
+
+::view-transition-old(feature-card-4),
+::view-transition-new(feature-card-4) {
+  animation-duration: 0.3s;
+  animation-delay: 0.15s;
+}
+
+/*
+================================================================================
+--- DOCUMENTATION PREVIEW SECTION COMPONENT STYLES (DocumentationPreviewSection.astro) ---
+================================================================================
+*/
+
+.docs-preview-section {
+  @apply px-10 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
+}
+
+.docs-container {
+  @apply max-w-4xl mx-auto text-center;
+}
+
+.docs-title {
+  @apply text-4xl sm:text-5xl lg:text-6xl font-semibold mb-8;
+}
+
+.docs-description {
+  font-size: 18px;
+  color: var(--clr-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 50px;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+.docs-cta {
+  @apply text-center;
+}
+
+/* Docs section transitions */
+::view-transition-old(docs-section),
+::view-transition-new(docs-section) {
+  animation-duration: 0.35s;
+  animation-timing-function: ease-out;
+}
+
+::view-transition-old(docs-title),
+::view-transition-new(docs-title) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}
+
+::view-transition-old(docs-button),
+::view-transition-new(docs-button) {
+  animation-duration: 0.25s;
+  animation-timing-function: ease-out;
+}
+
+/*
+================================================================================
+--- DOCUMENTATION PREVIEW SECTION COMPONENT STYLES (DocumentationPreviewSection.astro) ---
+================================================================================
+*/
+
+/*
+================================================================================
+--- HOMEPAGE BUTTONS & CTA STYLES ---
+================================================================================
+*/
+
+.cta-button,
+.docs-button {
+  border-radius: var(--border-radius-pill);
+  @apply inline-flex items-center justify-center gap-3 px-6 py-4 min-h-[44px] border-none text-lg font-semibold cursor-pointer transition-all duration-300;
+}
+
+.cta-button {
+  background: linear-gradient(
+    135deg,
+    var(--clr-accent) 0%,
+    var(--clr-accent-dark) 100%
+  );
+  color: var(--clr-text-primary);
+}
+
+.cta-button:hover {
+  box-shadow: 0 15px 40px var(--clr-accent-shadow);
+}
+
+.docs-button {
+  background: transparent;
+  color: var(--clr-text-primary);
+  border: 2px solid var(--clr-accent-glow-strong);
+}
+
+.docs-button:hover {
+  background: var(--clr-accent-glow-medium);
+  border-color: var(--clr-accent);
+  box-shadow: 0 10px 30px var(--clr-accent-glow-strong);
+}
+
+/* Button transitions */
+::view-transition-old(cta-button),
+::view-transition-new(cta-button) {
+  animation-duration: 0.25s;
+  animation-timing-function: ease-out;
+}
+
+/*
+================================================================================
+--- MODAL COMPONENT STYLES ---
+================================================================================
+*/
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: var(--clr-paper-bg);
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"%3E%3Cg fill="none" stroke="%23DCD9D5" stroke-width="1"%3E%3Cpath d="M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30S1000 75 1000 75"/%3E%3Cpath d="M-500 125c0 0 125-30 250-30S0 125 0 125s125 30 250 30s250-30 250-30s125-30 250-30S1000 125 1000 125"/%3E%3Cpath d="M-500 175c0 0 125-30 250-30S0 175 0 175s125 30 250 30s250-30 250-30s125-30 250-30S1000 175 1000 175"/%3E%3Cpath d="M-500 225c0 0 125-30 250-30S0 225 0 225s125 30 250 30s250-30 250-30s125-30 250-30S1000 225 1000 225"/%3E%3Cpath d="M-500 275c0 0 125-30 250-30S0 275 0 275s125 30 250 30s250-30 250-30s125-30 250-30S1000 275 1000 275"/%3E%3Cpath d="M-500 325c0 0 125-30 250-30S0 325 0 325s125 30 250 30s250-30 250-30s125-30 250-30S1000 325 1000 325"/%3E%3Cpath d="M-500 375c0 0 125-30 250-30S0 375 0 375s125 30 250 30s250-30 250-30s125-30 250-30S1000 375 1000 375"/%3E%3Cpath d="M-500 425c0 0 125-30 250-30S0 425 0 425s125 30 250 30s250-30 250-30s125-30 250-30S1000 425 1000 425"/%3E%3Cpath d="M-500 475c0 0 125-30 250-30S0 475 0 475s125 30 250 30s250-30 250-30s125-30 250-30S1000 475 1000 475"/%3E%3Cpath d="M-500 525c0 0 125-30 250-30S0 525 0 525s125 30 250 30s250-30 250-30s125-30 250-30S1000 525 1000 525"/%3E%3Cpath d="M-500 575c0 0 125-30 250-30S0 575 0 575s125 30 250 30s250-30 250-30s125-30 250-30S1000 575 1000 575"/%3E%3Cpath d="M-500 625c0 0 125-30 250-30S0 625 0 625s125 30 250 30s250-30 250-30s125-30 250-30S1000 625 1000 625"/%3E%3Cpath d="M-500 675c0 0 125-30 250-30S0 675 0 675s125 30 250 30s250-30 250-30s125-30 250-30S1000 675 1000 675"/%3E%3Cpath d="M-500 725c0 0 125-30 250-30S0 725 0 725s125 30 250 30s250-30 250-30s125-30 250-30S1000 725 1000 725"/%3E%3Cpath d="M-500 775c0 0 125-30 250-30S0 775 0 775s125 30 250 30s250-30 250-30s125-30 250-30S1000 775 1000 775"/%3E%3C/g%3E%3C/svg%3E');
+  border-radius: var(--border-radius-card);
+  max-width: 600px;
+  width: 100%;
+  max-height: 95vh;
+  overflow-y: auto;
+  padding: 45px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--clr-paper-border);
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all var(--transition-speed) ease;
+}
+
+.modal-close:hover {
+  background: #eae6e2;
+  color: #333;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--clr-paper-border);
+}
+
+.modal-japanese-title {
+  font-family: var(--font-jp);
+  font-size: 4.5rem;
+  color: #333;
+  ruby-position: over;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.modal-japanese-title rt {
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.modal-body {
+  font-family: var(--font-serif);
+  color: var(--clr-paper-text-primary);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.modal-body p {
+  margin-bottom: 1.2em;
+}
+
+.modal-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1rem 1rem;
+  position: relative;
+}
+
+.modal-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  font-family: var(--font-primary);
+  color: var(--clr-paper-text-primary);
+  font-size: 1rem;
+}
+
+.modal-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  width: 0.375rem;
+  height: 0.375rem;
+  background-color: var(--clr-accent);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.member-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1rem 1rem;
+  position: relative;
+}
+
+.member-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  font-family: var(--font-primary);
+  color: var(--clr-paper-text-primary);
+  font-size: 1rem;
+}
+
+.member-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  width: 0.375rem;
+  height: 0.375rem;
+  background-color: var(--clr-accent);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.modal-final-pitch {
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 30px;
+}
+
+.discord-link {
+  display: block;
+  text-decoration: none;
+  background-color: #f8f9fa;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 30px 0;
+}
+
+.discord-link:hover {
+  border-color: var(--clr-accent);
+  box-shadow: 0 5px 15px var(--clr-accent-glow-strong);
+}
+
+.discord-header {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.discord-url {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--clr-accent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.arrow {
+  transition: transform var(--transition-speed) ease;
+}
+
+.discord-link:hover .arrow {
+  transform: translateX(5px);
+}
+
+.modal-signature {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 1px solid var(--clr-paper-border);
+}
+
+.logo-stamp {
+  width: 80px;
+  height: 80px;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+.signature-text {
+  text-align: right;
+}
+
+.signature-title {
+  font-size: 14px;
+  color: var(--clr-paper-text-secondary);
+  margin-bottom: 0;
+}
+
+.signature-name {
+  font-family: var(--font-cursive);
+  font-size: 1.9rem;
+  color: #333;
+  margin: 0;
+}
+
+/*
+================================================================================
+--- SECTION BACKGROUND EFFECTS (FEATHERED BACKGROUNDS) ---
+================================================================================
+*/
+
+.main-content > section {
+  position: relative;
+  background: transparent !important;
+  z-index: 20;
+}
+
+.main-content > section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 25%,
+    black 75%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 25%,
+    black 75%,
+    transparent 100%
+  );
+}
+
+.mission-section::before {
+  max-width: 100% !important;
+  padding: 0 !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.08) 0%,
+      rgba(10, 10, 10, 0.3) 30%,
+      rgba(10, 10, 10, 0.6) 70%,
+      rgba(10, 10, 10, 0.7) 100%
+    ),
+    radial-gradient(
+      ellipse at 50% 80%,
+      rgba(139, 93, 255, 0.03) 0%,
+      transparent 50%
+    );
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: buttery-wave-float 10s ease-in-out infinite;
+}
+
+.features-section::before {
+  max-width: 100% !important;
+  padding: 0 !important;
+  background:
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(139, 93, 255, 0.12) 0%,
+      rgba(139, 93, 255, 0.08) 25%,
+      rgba(139, 93, 255, 0.04) 50%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at 30% 90%,
+      rgba(139, 93, 255, 0.06) 0%,
+      rgba(139, 93, 255, 0.03) 40%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 70% 95%,
+      rgba(139, 93, 255, 0.04) 0%,
+      rgba(139, 93, 255, 0.02) 30%,
+      transparent 50%
+    );
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: buttery-wave-float 8s ease-in-out infinite;
+}
+
+.docs-preview-section::before {
+  max-width: 100% !important;
+  padding: 0 !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.7) 0%,
+      rgba(10, 10, 10, 0.5) 30%,
+      rgba(10, 10, 10, 0.2) 70%,
+      rgba(10, 10, 10, 0.1) 100%
+    ),
+    radial-gradient(
+      ellipse at 50% 20%,
+      rgba(139, 93, 255, 0.04) 0%,
+      transparent 50%
+    );
+  transition:
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: buttery-wave-float 12s ease-in-out infinite;
+}
+
+/*
+================================================================================
+--- VIEW TRANSITIONS API SUPPORT ---
+================================================================================
+*/
+
 @supports (view-transition-name: none) {
   /* Smooth transitions for main content */
   ::view-transition-old(main-content),
@@ -48,112 +800,109 @@
     animation-duration: 0.4s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
+}
 
-  /* Button transitions */
-  ::view-transition-old(cta-button),
-  ::view-transition-new(cta-button) {
-    animation-duration: 0.25s;
-    animation-timing-function: ease-out;
-  }
+/*
+================================================================================
+--- RESPONSIVE DESIGN & MEDIA QUERIES ---
+================================================================================
+*/
 
-  /* Feature cards staggered animation */
-  ::view-transition-old(feature-card-1),
-  ::view-transition-new(feature-card-1) {
-    animation-duration: 0.3s;
-    animation-delay: 0s;
-  }
-
-  ::view-transition-old(feature-card-2),
-  ::view-transition-new(feature-card-2) {
-    animation-duration: 0.3s;
-    animation-delay: 0.05s;
-  }
-
-  ::view-transition-old(feature-card-3),
-  ::view-transition-new(feature-card-3) {
-    animation-duration: 0.3s;
-    animation-delay: 0.1s;
-  }
-
-  ::view-transition-old(feature-card-4),
-  ::view-transition-new(feature-card-4) {
-    animation-duration: 0.3s;
-    animation-delay: 0.15s;
-  }
-
-  /* Hero-specific transitions */
-  ::view-transition-old(hero-content),
-  ::view-transition-new(hero-content) {
-    animation-duration: 0.4s;
-    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  ::view-transition-old(hero-title),
-  ::view-transition-new(hero-title) {
-    animation-duration: 0.35s;
-    animation-timing-function: ease-out;
-  }
-
-  ::view-transition-old(hero-buttons),
-  ::view-transition-new(hero-buttons) {
-    animation-duration: 0.3s;
-    animation-delay: 0.1s;
-  }
-
-  /* Slideshow section transitions */
-  ::view-transition-old(slideshow-section),
-  ::view-transition-new(slideshow-section) {
-    animation-duration: 0.4s;
-    animation-timing-function: ease-in-out;
-  }
-
-  /* Mission section transitions */
-  ::view-transition-old(mission-section),
-  ::view-transition-new(mission-section) {
-    animation-duration: 0.35s;
-    animation-timing-function: ease-out;
-  }
-
-  ::view-transition-old(mission-title),
-  ::view-transition-new(mission-title) {
-    animation-duration: 0.3s;
-    animation-timing-function: ease-out;
-  }
-
-  /* Features section transitions */
-  ::view-transition-old(features-section),
-  ::view-transition-new(features-section) {
-    animation-duration: 0.4s;
-    animation-timing-function: ease-in-out;
-  }
-
-  ::view-transition-old(features-title),
-  ::view-transition-new(features-title) {
-    animation-duration: 0.3s;
-    animation-timing-function: ease-out;
-  }
-
-  /* Docs section transitions */
-  ::view-transition-old(docs-section),
-  ::view-transition-new(docs-section) {
-    animation-duration: 0.35s;
-    animation-timing-function: ease-out;
-  }
-
-  ::view-transition-old(docs-title),
-  ::view-transition-new(docs-title) {
-    animation-duration: 0.3s;
-    animation-timing-function: ease-out;
-  }
-
-  ::view-transition-old(docs-button),
-  ::view-transition-new(docs-button) {
-    animation-duration: 0.25s;
-    animation-timing-function: ease-out;
+/* Desktop modal scroll override */
+@media (min-width: 1024px) {
+  .modal-content {
+    max-height: none;
+    overflow-y: visible;
   }
 }
 
-/* Fallback animations for browsers without View Transitions API */
+/* Tablet styles */
+@media (max-width: 768px) {
+  .hero-buttons {
+    @apply flex-col items-stretch max-w-sm mx-auto;
+  }
+
+  .primary-button,
+  .secondary-button {
+    @apply justify-center;
+  }
+
+  .mission-section,
+  .features-section,
+  .docs-preview-section {
+    @apply px-4;
+  }
+
+  .modal-overlay {
+    @apply items-start;
+  }
+
+  .modal-content {
+    @apply p-8;
+  }
+
+  .modal-japanese-title {
+    @apply text-4xl;
+  }
+}
+
+.mission-section,
+.features-section,
+.docs-preview-section,
+.tools-hero,
+.tools-section {
+  @apply [@media(max-width:768px)]:px-[20px];
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .primary-button,
+  .secondary-button {
+    @apply text-sm px-6 py-3;
+  }
+
+  .cta-button,
+  .docs-button {
+    @apply text-base px-6 py-4;
+  }
+
+  .modal-content {
+    @apply p-6 max-h-[90%];
+  }
+
+  .modal-japanese-title {
+    @apply text-3xl;
+  }
+
+  .modal-body {
+    @apply text-base;
+  }
+
+  .signature-name {
+    @apply text-xl;
+  }
+
+  .modal-signature {
+    @apply flex-col items-center gap-5 text-center;
+  }
+
+  .signature-text {
+    @apply text-center;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-content {
+    @apply mx-4 my-8 max-h-[90vh] overflow-y-auto;
+  }
+}
+
+/*
+================================================================================
+--- FALLBACK ANIMATIONS FOR NON-VIEW TRANSITIONS BROWSERS ---
+================================================================================
+*/
+
 @supports not (view-transition-name: none) {
   .main-content {
     animation: fade-in 0.3s ease-in-out;
