@@ -18,13 +18,9 @@ export class ContentProcessor {
   }
 
   private async init(): Promise<void> {
-    try {
-      // データの読み込み、ソート、ページネーションを一括処理
-      await this.loadAndProcessData();
-      this.isInitialized = true;
-    } catch (error) {
-      console.error('Content Processor initialization failed:', error);
-    }
+    // 0スクリップ最適化により、fetch処理は不要
+    // サーバーサイドデータはsetServerData()で直接設定される
+    this.isInitialized = false; // サーバーサイドデータ待機状態
   }
 
   /**
@@ -35,40 +31,20 @@ export class ContentProcessor {
   }
 
   /**
-   * データの読み込み、ソート、ページネーションを一括処理
+   * サーバーサイドデータを直接設定（0スクリップ最適化）
    */
-  private async loadAndProcessData(): Promise<void> {
-    try {
-      // search.jsonからデータを取得
-      const response = await fetch('/search.json');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const rawData = await response.json();
-      if (!Array.isArray(rawData)) {
-        throw new Error('Invalid data format: expected array');
-      }
-
-      // データのソート（公開日順、新しい順）
-      this.sortedPosts = (rawData as SearchDataItem[]).sort((a, b) => {
-        const dateA = new Date(a.pubDate || '').getTime() || 0;
-        const dateB = new Date(b.pubDate || '').getTime() || 0;
-        return dateB - dateA;
-      });
-
-      // デバッグ情報
-      console.log(`ContentProcessor: Loaded ${this.sortedPosts.length} posts`);
-      if (this.sortedPosts.length > 0) {
-        console.log('First post:', this.sortedPosts[0]);
-      }
-    } catch (error) {
-      console.error('Error loading content data:', error);
-      // エラー時は空配列を設定
-      this.sortedPosts = [];
-      throw error;
-    }
+  public setServerData(serverData: SearchDataItem[], totalCount: number): void {
+    this.sortedPosts = serverData;
+    this.isInitialized = true;
+    
+    // 0スクリップでUIを即座に更新
+    this.updateDisplay();
+    
+    console.log(`ContentProcessor: Server data set (0-skip optimized) - ${serverData.length} posts, total: ${totalCount}`);
   }
+
+  // loadAndProcessData()メソッドは0スクリップ最適化により削除
+  // サーバーサイドデータはsetServerData()で直接設定される
 
   /**
    * ページ変更
