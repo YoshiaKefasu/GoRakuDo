@@ -110,24 +110,6 @@ class PostWaveAnimation {
   }
 }
 
-// Share post functionality
-function sharePost() {
-  if (navigator.share) {
-    navigator.share({
-      title: document.title,
-      url: window.location.href,
-    });
-  } else {
-    // Fallback: copy URL to clipboard
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      alert("URL copied to clipboard!");
-    });
-  }
-}
-
-// Global functions for HTML onclick handlers
-window.sharePost = sharePost;
-
 // Initialize functionality
 document.addEventListener("DOMContentLoaded", function () {
   console.log("📚 GoRakuDo Post Loading...");

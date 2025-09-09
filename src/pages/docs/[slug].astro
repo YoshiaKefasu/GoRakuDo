@@ -188,6 +188,9 @@ console.log(`📝 Post "${post.slug}" processed without AI features`)
         }
       }
 
+      // Make sharePost globally accessible for onclick handlers
+      window.sharePost = sharePost;
+
       // Reading progress indicator
       function addReadingProgress() {
         const progressBar = document.createElement("div")

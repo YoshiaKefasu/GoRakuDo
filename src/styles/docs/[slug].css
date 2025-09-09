@@ -26,12 +26,13 @@
 }
 
 /* ========== POST PAGE LAYOUT ========== */
+
 .post-page {
   min-height: 100vh;
   width: 100%;
   position: relative;
-  z-index: 10;
-  background: rgba(15, 15, 25, 0.7); 
+  z-index: var(--z-post-content);
+  background: rgba(15, 15, 25, 0.5); 
   background-size: 30px 30px;
   padding: 5rem 0 2rem;
   backdrop-filter: blur(1px);
@@ -142,7 +143,7 @@
 /* ========== POST HEADER ========== */
 .post-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin: 2rem 0.5rem;
   padding: 1.5rem;
   border-radius: 1rem;
   border: 1px solid var(--color-post-border);
@@ -359,4 +360,8 @@
   .post-read-time {
     color: rgba(255, 255, 255, 0.95);
   }
+}
+
+body {
+  background: #1e1e28;
 }
