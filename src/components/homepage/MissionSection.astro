@@ -22,11 +22,11 @@ const {
   aria-labelledby="mission-title"
   transition:name="mission-section"
   data-lazy>
-  <div class="mission-container">
+  <div class="mission-container flex flex-col items-center justify-center">
     <h2 class="mission-title" id="mission-title" transition:name="mission-title">
       {title}
     </h2>
-    <div class="mission-content">
+    <div class="mission-content max-w-5xl">
       <div class="mission-text">
         {paragraphs.map((paragraph) => (
           <p set:html={paragraph} />

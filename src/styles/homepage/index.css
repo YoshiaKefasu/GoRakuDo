@@ -228,7 +228,7 @@ body.modal-open {
 
 .mission-section,
 .mission-container {
-  @apply px-10 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
+  @apply px-2.5 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
 }
 
 .mission-container {
