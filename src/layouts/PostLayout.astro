@@ -6,8 +6,10 @@ export interface Props {
     icon: string;
     basePath: string;
   };
+
+  postActions?: boolean;
 }
-const { post, collectionMetadata } = Astro.props;
+const { post, collectionMetadata, postActions = true } = Astro.props;
 ---
 
 <!-- Main Content -->
@@ -51,7 +53,8 @@ const { post, collectionMetadata } = Astro.props;
     </article>
 
     <!-- Post Actions -->
-    <footer class="content-actions">
+    {postActions && (
+      <footer class="content-actions">
       <div class="action-buttons">
         <a
           href={collectionMetadata.basePath}
@@ -92,7 +95,8 @@ const { post, collectionMetadata } = Astro.props;
           </button>
         </div>
       </div>
-    </footer>
+      </footer>
+    )}
 
     <!-- Optional additional footer content -->
     <slot name="footer" />
