@@ -31,8 +31,15 @@ const docsCollection = defineCollection({
       ])
       .default('tutorial'),
 
-    // Read Time Estimation
-    readTime: z.number().optional(), // Estimated reading time in minutes
+
+    // Content Layer Optimization Fields
+    status: z.enum(['published', 'draft', 'archived']).default('published'),
+    learningStage: z.enum(['pemanasan', 'intermediate', 'advanced']).optional(),
+    
+    // Search and Performance Optimization
+    searchKeywords: z.array(z.string()).optional(),
+    contentLength: z.number().optional(),
+    isRecommended: z.boolean().default(false),
   }),
 });
 
@@ -116,8 +123,6 @@ const toolArticlesCollection = defineCollection({
       .enum(['tool-guide', 'setup-tutorial', 'usage-guide', 'review'])
       .default('tool-guide'),
 
-    // Read Time Estimation
-    readTime: z.number().optional(),
 
     // Tool Features
     features: z.array(z.string()).default([]),

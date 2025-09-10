@@ -1,33 +1,23 @@
-// npmパッケージのFuse.jsを使用（簡素化戦略）
+// 0-Script最適化対応のFuse.js検索エンジン
 import type { 
   SearchDataItem, 
   SearchResult, 
-  SearchPerformanceMetrics,
   FilterConfig,
   CategoryConfig,
   TagConfig,
   ContentConfig
 } from '../global';
-// SearchLoadingManager is used via window.searchLoadingManager
 
 /**
  * Enhanced Search Engine for Docs Page
- * Fuse.js Integration with search.json.js
- * Fixed: "Krashen" search issue by using unified search system
+ * 0-Script最適化対応: サーバーサイドデータ優先使用
+ * Fuse.js Integration with fallback to simple search
  */
 export class ModernSearchEngine {
   private fuse: import('fuse.js').default<SearchDataItem> | null = null; // npmパッケージのFuse.js（型安全性向上）
   public searchData: SearchDataItem[] = [];
-  public searchCache = new Map<string, SearchResult>();
-  public maxCacheSize = 100;
-  public performanceMetrics: SearchPerformanceMetrics = {
-    searchCount: 0,
-    cacheHits: 0,
-    avgSearchTime: 0,
-    totalSearchTime: 0,
-    cacheSize: 0,
-    searchDataSize: 0
-  };
+  private searchCache = new Map<string, SearchResult>();
+  private maxCacheSize = 50; // サイズ削減
 
   constructor() {
     // Defer initialization to ensure clientLogger is available
@@ -40,325 +30,116 @@ export class ModernSearchEngine {
 
   async initialize(): Promise<boolean> {
     try {
-      // Safety check for clientLogger
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(
-          'Initializing Modern Search Engine with Fuse.js...',
-          'info'
-        );
-      }
-
-      // Load search data from search.json.js endpoint
-      await this.loadSearchData();
-
-      // Initialize Fuse.js with search data
-      await this.initializeFuse();
-
-      // Set up event listeners
-      this.setupEventListeners();
-
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log('Modern search engine ready!', 'success');
-        window.clientLogger.log(
-          `Loaded ${this.searchData.length} posts for search`,
-          'success'
-        );
-      }
-
-      // Notify loading manager that search is ready
+      // 簡素化: サーバーサイドデータを直接使用
+      this.searchData = window.searchData || await this.loadSearchData();
+      
+      // Fuse.jsの簡素化された初期化
+      const { default: Fuse } = await import('fuse.js');
+      this.fuse = new Fuse(this.searchData, this.getFuseOptions());
+      
+      // イベントリスナーの簡素化
+      this.setupSimpleEventListeners();
+      
+      // ローディング状態の更新
       if (window.searchLoadingManager) {
         window.searchLoadingManager.setReadyState();
       }
-
+      
       return true;
     } catch (error) {
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(
-          `Failed to initialize search engine: ${error}`,
-          'error'
-        );
-      }
-
-      // Set error state
+      console.error('Search initialization failed:', error);
       if (window.searchLoadingManager) {
-        window.searchLoadingManager.setErrorState('Sistem pencarian gagal dimuat');
+        window.searchLoadingManager.setErrorState('Search temporarily unavailable');
       }
-
       return false;
     }
   }
 
-  private async loadSearchData(): Promise<void> {
+  private async loadSearchData(): Promise<SearchDataItem[]> {
     try {
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log('Loading search data from /search.json...', 'info');
-      }
-
-      // Fetch search data from the JSON endpoint
       const response = await fetch('/search.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      this.searchData = await response.json();
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(
-          `Loaded ${this.searchData.length} posts from search.json`,
-          'success'
-        );
-      }
-
-      // Debug: Check if "Keyword" content is in the search data
-      const krashenPosts = this.searchData.filter(
-        (post) =>
-          post.content?.toLowerCase().includes('krashen') ||
-          post.title?.toLowerCase().includes('krashen') ||
-          post.description?.toLowerCase().includes('krashen') ||
-          post.searchableText?.toLowerCase().includes('krashen')
-      );
-
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(
-          `Found ${krashenPosts.length} posts containing "Krashen": ${krashenPosts.map((p) => p.title).join(', ')}`,
-          'info'
-        );
-      }
+      return await response.json();
     } catch (error) {
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(`Error loading search data: ${error}`, 'error');
-      }
+      console.error('Error loading search data:', error);
       throw error;
     }
   }
 
-  private async initializeFuse(): Promise<void> {
-    try {
-      // npmパッケージから動的インポート（型安全性確保）
-      const { default: Fuse } = await import('fuse.js');
-      
-      // 最適化されたFuse.js設定
-      const fuseOptions: import('fuse.js').IFuseOptions<SearchDataItem> = {
-        keys: [
-          { name: 'title', weight: 0.7 },
-          { name: 'description', weight: 0.3 },
-          { name: 'content', weight: 0.2 },
-          { name: 'tags', weight: 0.1 },
-          { name: 'searchableText', weight: 0.15 },
-          { name: 'category', weight: 0.05 },
-          { name: 'difficulty', weight: 0.05 },
-          { name: 'learningStage', weight: 0.05 },
-        ],
-        includeScore: true,
-        includeMatches: true,
-        threshold: 0.4,
-        minMatchCharLength: 2,
-        shouldSort: true,
-        findAllMatches: true,
-        useExtendedSearch: false,
-        ignoreLocation: true,
-        distance: 100,
-      };
-      
-      // 型安全性を確保したFuse.jsインスタンス作成
-      this.fuse = new Fuse(this.searchData, fuseOptions);
-    } catch (error) {
-      // Critical Errorのみログ出力
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(`Critical: Fuse.js initialization failed: ${error}`, 'error');
-      }
-      this.fuse = null;
-    }
+  // 簡素化されたFuse.js設定
+  private getFuseOptions() {
+    return {
+      keys: [
+        { name: 'title', weight: 0.7 },
+        { name: 'description', weight: 0.3 },
+        { name: 'tags', weight: 0.1 },
+        { name: 'searchableText', weight: 0.15 }
+      ],
+      threshold: 0.4,
+      includeScore: true
+    };
   }
 
-  private setupEventListeners(): void {
-    // Search input event listener
-    const searchInput: HTMLInputElement | null = document.getElementById('searchInput') as HTMLInputElement;
+  // 簡素化されたイベントリスナー設定
+  private setupSimpleEventListeners(): void {
+    // 検索入力のイベントリスナー
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
     if (searchInput) {
-      searchInput.addEventListener('input', (e: Event) => {
-        const query: string = (e.target as HTMLInputElement).value;
-        this.performSearch(query);
-      });
-
-      searchInput.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.key === 'Enter') {
-          const query: string = (e.target as HTMLInputElement).value;
-          this.performSearch(query);
-        }
+      searchInput.addEventListener('input', (e) => {
+        this.performSearch((e.target as HTMLInputElement).value);
       });
     }
 
-    // Filter buttons event listeners
-    const filterButtons: NodeListOf<Element> = document.querySelectorAll('.filter-button');
-    filterButtons.forEach((button: Element) => {
-      button.addEventListener('click', (e: Event) => {
-        const filterType: string | null = (e.target as HTMLElement).getAttribute('data-filter');
+    // フィルタボタンのイベントリスナー
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const filterType = (e.target as HTMLElement).getAttribute('data-filter');
         this.handleFilter(filterType);
       });
     });
 
-    // Clear search button - Use event delegation for dynamically created buttons
-    document.addEventListener('click', (e: Event) => {
-      const target: HTMLElement | null = e.target as HTMLElement;
-      if (target && target.closest('[data-action="clear-search"]')) {
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log('Clear search button clicked', 'info');
-        }
+    // クリア検索ボタンのイベント委譲
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target?.closest('[data-action="clear-search"]')) {
         this.clearSearch();
       }
     });
   }
 
   async performSearch(query: string): Promise<void> {
-    const startTime: number = performance.now();
-
     if (!query || query.trim().length < 2) {
       this.displayAllPosts();
       return;
     }
 
-    try {
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(`Searching for: "${query}"`, 'info');
-      }
-
-      // Check cache first
-      const cacheKey: string = query.toLowerCase();
-      if (this.searchCache.has(cacheKey)) {
-        this.performanceMetrics.cacheHits++;
-        const cachedResults: SearchResult | undefined = this.searchCache.get(cacheKey);
-        if (cachedResults) {
-          this.displaySearchResults(cachedResults);
-        }
-        return;
-      }
-
-      let results: SearchDataItem[] = [];
-      let searchStrategy: 'fuzzy' | 'simple' = 'simple';
-
-      // Perform search with Fuse.js if available, otherwise use simple search
-      if (this.fuse) {
-        try {
-          const fuseResults = this.fuse.search(query);
-          results = fuseResults.slice(0, 20).map((result: { item: SearchDataItem; score?: number }) => ({
-            ...result.item,
-            score: result.score || 0,
-            relevancePercentage: Math.round((1 - (result.score || 0)) * 100),
-          }));
-          searchStrategy = 'fuzzy';
-        } catch (fuseError) {
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(
-              `Fuse.js search failed, falling back to simple search: ${fuseError}`,
-              'warning'
-            );
-          }
-          results = this.simpleSearch(query);
-        }
-      } else {
-        results = this.simpleSearch(query);
-      }
-
-      const searchResult: SearchResult = {
-        results: results,
-        total: results.length,
-        query: query,
-        searchStrategy: searchStrategy,
-      };
-
-      // Cache the result
-      this.cacheResult(cacheKey, searchResult);
-
-      // Update performance metrics
-      const searchTime: number = performance.now() - startTime;
-      this.performanceMetrics.searchCount++;
-      this.performanceMetrics.totalSearchTime += searchTime;
-      this.performanceMetrics.avgSearchTime =
-        this.performanceMetrics.totalSearchTime /
-        this.performanceMetrics.searchCount;
-
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(
-          `Search completed in ${searchTime.toFixed(2)}ms`,
-          'success'
-        );
-        window.clientLogger.log(
-          `Found ${results.length} results for "${query}" using ${searchStrategy} search`,
-          'success'
-        );
-      }
-
-      // Display results
-      this.displaySearchResults(searchResult);
-    } catch (error) {
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(`Search error: ${error}`, 'error');
-      }
-      this.displayError('Terjadi kesalahan dalam pencarian');
+    // 簡素化されたキャッシュチェック
+    const cacheKey = query.toLowerCase();
+    const cached = this.getCachedResult(cacheKey);
+    if (cached) {
+      this.displaySearchResults(cached);
+      return;
     }
+
+    // Fuse.js検索の簡素化（スコア計算付き）
+    const results = this.fuse ? this.fuse.search(query).slice(0, 20) : [];
+    const searchResult = {
+      results: results.map(r => ({
+        ...r.item,
+        relevancePercentage: this.calculateRelevancePercentage(r.score || 0)
+      })),
+      total: results.length,
+      query: query,
+      searchStrategy: 'fuzzy' as const
+    };
+
+    // 簡素化されたキャッシュ保存
+    this.setCachedResult(cacheKey, searchResult);
+    this.displaySearchResults(searchResult);
   }
 
-  // Simple search fallback when Fuse.js is not available
-  private simpleSearch(query: string): SearchDataItem[] {
-    const searchQuery: string = query.toLowerCase();
-    const results: SearchDataItem[] = [];
-
-    this.searchData.forEach((post: SearchDataItem) => {
-      let score = 0;
-      let relevancePercentage = 0;
-
-      // Search in title (highest priority)
-      if (post.title?.toLowerCase().includes(searchQuery)) {
-        score += 100;
-      }
-
-      // Search in description
-      if (post.description?.toLowerCase().includes(searchQuery)) {
-        score += 50;
-      }
-
-      // Search in content
-      if (post.content?.toLowerCase().includes(searchQuery)) {
-        score += 25;
-      }
-
-      // Search in tags
-      if (
-        post.tags?.some((tag: string) => tag.toLowerCase().includes(searchQuery))
-      ) {
-        score += 30;
-      }
-
-      // Search in searchableText
-      if (post.searchableText?.toLowerCase().includes(searchQuery)) {
-        score += 15;
-      }
-
-      // AI metadata fields are disabled
-
-      // Search in category and learning stage
-      if (post.category?.toLowerCase().includes(searchQuery)) {
-        score += 25;
-      }
-
-      if (post.learningStage?.toLowerCase().includes(searchQuery)) {
-        score += 25;
-      }
-
-      if (score > 0) {
-        relevancePercentage = Math.min(score, 100);
-        results.push({
-          ...post,
-          score: 1 - relevancePercentage / 100,
-          relevancePercentage: relevancePercentage,
-        });
-      }
-    });
-
-    // Sort by relevance and return top 20
-    return results
-      .sort((a: SearchDataItem, b: SearchDataItem) => (b.relevancePercentage || 0) - (a.relevancePercentage || 0))
-      .slice(0, 20);
-  }
 
   private displaySearchResults(searchResult: SearchResult): void {
     const searchResults: HTMLElement | null = document.getElementById('searchResults');
@@ -472,6 +253,9 @@ export class ModernSearchEngine {
           ${resultsHTML}
         </div>
       `;
+
+      // 検索結果のタグポップアップ初期化
+      this.initializeTagPopupsForResults();
     }
   }
 
@@ -488,55 +272,30 @@ export class ModernSearchEngine {
   }
 
   clearSearch(): void {
-    if (window.clientLogger && window.clientLogger.log) {
-      window.clientLogger.log('Clearing search...', 'info');
-    }
-
-    // Clear search input
-    const searchInput: HTMLInputElement | null = document.getElementById('searchInput') as HTMLInputElement;
+    // 検索入力のクリア
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
     if (searchInput) {
       searchInput.value = '';
-      // Trigger input event to ensure search is cleared
       searchInput.dispatchEvent(new Event('input'));
     }
 
-    // Show all posts
+    // 全投稿の表示
     this.displayAllPosts();
-
-    // Provide user feedback
-    if (window.clientLogger && window.clientLogger.log) {
-      window.clientLogger.log('Search cleared successfully', 'success');
-    }
   }
 
   handleFilter(filterType: string | null): void {
-    if (window.clientLogger && window.clientLogger.log) {
-      window.clientLogger.log(`Filter applied: ${filterType}`, 'info');
-    }
-
-    // Update active filter button
-    const filterButtons: NodeListOf<Element> = document.querySelectorAll('.filter-button');
-    filterButtons.forEach((btn: Element) => btn.classList.remove('active'));
-
-    const activeButton: Element | null = document.querySelector(`[data-filter="${filterType}"]`);
+    // アクティブフィルタボタンの更新
+    document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+    const activeButton = document.querySelector(`[data-filter="${filterType}"]`);
     if (activeButton) {
       activeButton.classList.add('active');
     }
 
-    // Get filter configuration from content config
+    // フィルタ設定の取得と適用
     const filterConfig = this.getFilterConfig(filterType);
-    if (!filterConfig) {
-      if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(
-          `No filter configuration found for: ${filterType}`,
-          'warning'
-        );
-      }
-      return;
+    if (filterConfig) {
+      this.applyContentFilter(filterConfig);
     }
-
-    // Apply filter based on configuration
-    this.applyContentFilter(filterConfig);
   }
 
   private getFilterConfig(filterType: string | null): FilterConfig | null {
@@ -549,12 +308,7 @@ export class ModernSearchEngine {
     const filters: Record<string, FilterConfig> = windowWithConfig.contentConfig?.filters || {};
     const filter: FilterConfig | undefined = Object.values(filters).find((f: FilterConfig) => f.name === filterType);
 
-    if (filter) {
-      return filter;
-    }
-
-    // MindMap機能は無効化されました
-    return null;
+    return filter || null;
   }
 
   private applyContentFilter(filterConfig: FilterConfig): void {
@@ -639,7 +393,6 @@ export class ModernSearchEngine {
             </h2>
             <div class="post-meta">
               <span class="post-date">${new Date(post.pubDate || '').toLocaleDateString('id-ID')}</span>
-              <span class="post-readtime">${post.readTime || '5 min read'}</span>
             </div>
           </div>
           <p class="post-description">${post.description}</p>
@@ -661,29 +414,33 @@ export class ModernSearchEngine {
       .join('');
 
     contentState.innerHTML = postsHTML;
+
+    // フィルタ結果のタグポップアップ初期化
+    this.initializeTagPopupsForResults();
   }
 
-  private displayError(message: string): void {
-    const searchResults: HTMLElement | null = document.getElementById('searchResults');
-    const searchStats: HTMLElement | null = document.getElementById('searchStats');
-    const searchResultsContent: HTMLElement | null = document.getElementById('searchResultsContent');
 
-    if (searchResults && searchStats && searchResultsContent) {
-      searchResults.classList.remove('hidden');
-      searchStats.innerHTML = `<span class="search-results-count">Error</span>`;
-      searchResultsContent.innerHTML = `
-        <div class="search-no-results">
-          <div class="no-results-icon">⚠️</div>
-          <h3>Terjadi Kesalahan</h3>
-          <p>${message}</p>
-        </div>
-      `;
-    }
+  // Fuse.jsスコアから関連度パーセンテージを計算
+  private calculateRelevancePercentage(score: number): number {
+    // Fuse.jsのスコアは0-1の範囲（0が完全一致、1が完全不一致）
+    // 関連度パーセンテージに変換（0-100%）
+    if (score === 0) return 100; // 完全一致
+    if (score >= 1) return 0;    // 完全不一致
+    
+    // スコアを反転してパーセンテージに変換
+    const relevance = Math.round((1 - score) * 100);
+    return Math.max(0, Math.min(100, relevance)); // 0-100の範囲に制限
   }
 
-  private cacheResult(key: string, result: SearchResult): void {
+  // 簡素化されたキャッシュ操作
+  private getCachedResult(key: string): SearchResult | undefined {
+    return this.searchCache.get(key);
+  }
+
+  private setCachedResult(key: string, result: SearchResult): void {
+    // LRU方式の簡素化
     if (this.searchCache.size >= this.maxCacheSize) {
-      const firstKey: string | undefined = this.searchCache.keys().next().value;
+      const firstKey = this.searchCache.keys().next().value;
       if (firstKey) {
         this.searchCache.delete(firstKey);
       }
@@ -691,11 +448,19 @@ export class ModernSearchEngine {
     this.searchCache.set(key, result);
   }
 
-  getPerformanceReport(): SearchPerformanceMetrics {
-    return {
-      ...this.performanceMetrics,
-      cacheSize: this.searchCache.size,
-      searchDataSize: this.searchData.length,
-    };
+
+  // 検索結果のタグポップアップ初期化（簡素化）
+  private async initializeTagPopupsForResults(): Promise<void> {
+    try {
+      const { SimpleTagPopup } = await import('../ui/simple-tag-popup');
+      const tagPopup = new SimpleTagPopup();
+      
+      const tagContainers = document.querySelectorAll('#searchResults .post-tags, #contentState .post-tags');
+      tagContainers.forEach((container) => {
+        tagPopup.setupContainer(container as HTMLElement);
+      });
+    } catch (error) {
+      console.warn('Failed to initialize tag popups:', error);
+    }
   }
 }

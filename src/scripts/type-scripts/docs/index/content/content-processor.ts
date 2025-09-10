@@ -192,6 +192,9 @@ export class ContentProcessor {
       
       // カードを表示
       card.style.display = 'block';
+      
+      // タグポップアップの初期化（動的に追加された要素用）
+      this.initializeTagPopupsForCard(card);
     });
   }
 
@@ -271,6 +274,26 @@ export class ContentProcessor {
         this.changePage(page);
       });
     });
+  }
+
+  /**
+   * 動的に追加されたカードのタグポップアップ初期化
+   */
+  private async initializeTagPopupsForCard(card: HTMLElement): Promise<void> {
+    try {
+      const { SimpleTagPopup } = await import('../ui/simple-tag-popup');
+      const tagPopup = new SimpleTagPopup();
+      
+      // カード内のタグコンテナのみを対象に初期化
+      const tagContainers = card.querySelectorAll('.post-tags');
+      tagContainers.forEach((container) => {
+        tagPopup.setupContainer(container as HTMLElement);
+      });
+    } catch (error) {
+      if (window.clientLogger && window.clientLogger.log) {
+        window.clientLogger.log(`Failed to initialize tag popups for card: ${error}`, 'warning');
+      }
+    }
   }
 
 }
