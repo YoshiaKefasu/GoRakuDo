@@ -69,6 +69,36 @@ const templatesCollection = defineCollection({
   }),
 });
 
+// Pages Collection for Static Page Content
+// Purpose: Store static page content like support-us, about, etc.
+const pagesCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    // Core Content Metadata
+    title: z.string(),
+    description: z.string(),
+    publishedDate: z.string(),
+    author: z.string().default('Tim GoRakuDo'),
+
+    // Basic Content Classification
+    category: z.string().default('general'),
+    tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
+
+    // Content Type Classification
+    contentType: z
+      .enum([
+        'resource', // Static resource pages
+        'info', // Information pages
+        'legal', // Legal pages like privacy policy
+      ])
+      .default('resource'),
+
+    // Read Time Estimation
+    readTime: z.number().optional(),
+  }),
+});
+
 // Tool Articles Collection for Tool Documentation Content
 // Updated to match existing tool content structure from Epic 2.0
 const toolArticlesCollection = defineCollection({
@@ -133,5 +163,6 @@ const toolArticlesCollection = defineCollection({
 export const collections = {
   docs: docsCollection,
   templates: templatesCollection,
+  pages: pagesCollection,
   'tool-articles': toolArticlesCollection,
 };

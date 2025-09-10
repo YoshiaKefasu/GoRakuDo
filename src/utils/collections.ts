@@ -9,13 +9,18 @@ export const COLLECTIONS = {
   docs: {
     displayName: 'Docs',
     icon: '📚',
-    basePath: '/docs'
+    basePath: '/docs',
+  },
+  pages: {
+    displayName: 'Pages',
+    icon: '📄',
+    basePath: '',
   },
   'tool-articles': {
     displayName: 'Tools',
     icon: '🛠️',
-    basePath: '/tools'
-  }
+    basePath: '/tools',
+  },
 } as const;
 
 // ========== TYPE DEFINITIONS ==========
@@ -34,7 +39,9 @@ export interface CollectionInfo {
  * @param collectionName - Name of the collection
  * @returns Collection metadata
  */
-export function getCollectionInfo(collectionName: CollectionName): CollectionInfo {
+export function getCollectionInfo(
+  collectionName: CollectionName
+): CollectionInfo {
   return COLLECTIONS[collectionName];
 }
 
@@ -44,7 +51,10 @@ export function getCollectionInfo(collectionName: CollectionName): CollectionInf
  * @param slug - Content slug
  * @returns Resolved path
  */
-export function resolvePath(collectionName: CollectionName, slug: string): string {
+export function resolvePath(
+  collectionName: CollectionName,
+  slug: string
+): string {
   const info = getCollectionInfo(collectionName);
   return `${info.basePath}/${slug}`;
 }
@@ -53,10 +63,13 @@ export function resolvePath(collectionName: CollectionName, slug: string): strin
  * Get all available collections
  * @returns Array of all collection configurations
  */
-export function getAllCollections(): Array<{ name: CollectionName; info: CollectionInfo }> {
+export function getAllCollections(): Array<{
+  name: CollectionName;
+  info: CollectionInfo;
+}> {
   return Object.entries(COLLECTIONS).map(([name, info]) => ({
     name: name as CollectionName,
-    info
+    info,
   }));
 }
 

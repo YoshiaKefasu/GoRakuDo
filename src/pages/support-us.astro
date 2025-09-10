@@ -1,0 +1,172 @@
+---
+import { getEntry, type CollectionEntry } from "astro:content";
+import { statSync } from "fs";
+import { join } from "path";
+import UnifiedSEO from "../components/UnifiedSEO.astro";
+import Breadcrumb from "../components/public-components/Breadcrumb.astro";
+import Navbar from "../components/public-components/Navbar.vue";
+import PostLayout from '../layouts/PostLayout.astro';
+import DonationButtons from "../components/content/DonationButtons.astro";
+import {
+  resolvePath,
+  getCollectionInfo,
+} from "../utils/collections";
+
+import "../styles/content-page.css";
+
+const post = await getEntry("pages", "support-us");
+
+if (!post) {
+  return Astro.redirect("/pages?error=post-not-found");
+}
+
+const { Content } = await post.render();
+
+const resolvedPath = { path: resolvePath("pages", post.slug) };
+const collectionMetadata = getCollectionInfo("pages");
+
+function getFileDates(slug: string) {
+  try {
+    const filePath = join(process.cwd(), 'src/content/pages', `${slug}.md`);
+    const stats = statSync(filePath);
+    
+    return {
+      createdDate: stats.birthtime.toISOString(),
+      modifiedDate: stats.mtime.toISOString()
+    };
+  } catch (error) {
+    console.warn(`⚠️ Could not get file dates for ${slug}:`, error);
+    return {
+      createdDate: new Date().toISOString(),
+      modifiedDate: new Date().toISOString()
+    };
+  }
+}
+
+const fileDates = getFileDates(post.slug);
+
+const seoData = {
+  title: post.data.title || `Dukung Kami - GoRakuDo`,
+  description: post.data.description || `Dukung pengembangan GoRakuDo dan dapatkan apresiasi untuk kontribusi Anda dalam komunitas open-source ini.`,
+  keywords: post.data.tags || ["dukungan", "kontributor", "komunitas", "open-source"],
+  articleType: "guide",
+  learningStage: post.data.difficulty || "beginner",
+  searchIntent: "informational",
+  publishedDate: post.data.publishedDate || fileDates.createdDate,
+  modifiedDate: post.data.modifiedDate || fileDates.modifiedDate,
+  isDraft: post.data.isDraft || false
+};
+
+const postData = {
+  title: post.data.title,
+  description: post.data.description,
+  resolvedPath: resolvedPath.path,
+};
+---
+
+<html lang="id">
+  <head>
+
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType="article"
+      author={post.data.author || "Tim GoRakuDo"}
+      publishedDate={seoData.publishedDate}
+      modifiedDate={seoData.modifiedDate}
+      noindex={seoData.isDraft}
+    />
+
+    <script src="/core/post-script.js" is:inline></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <Navbar client:visible />
+
+    <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+
+    <div class="stars" aria-hidden="true">
+      <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+      <div class="star" style="top: 20%; right: 20%; animation-delay: 1s;"></div>
+      <div class="star" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
+      <div class="star" style="bottom: 30%; left: 10%; animation-delay: 1.5s;"></div>
+      <div class="star" style="bottom: 20%; right: 30%; animation-delay: 0.5s;"></div>
+      <div class="star" style="top: 60%; left: 15%; animation-delay: 2.5s;"></div>
+      <div class="star" style="top: 80%; right: 20%; animation-delay: 1.8s;"></div>
+      <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
+    </div>
+
+    <PostLayout post={post} collectionMetadata={collectionMetadata}>
+      <Breadcrumb 
+        post={post} 
+        slot="breadcrumb" 
+      />
+      
+      <div class="support-content">
+        <DonationButtons />
+        <Content />
+      </div>
+    </PostLayout>
+
+    <script is:inline src="/core/post-script.js"></script>
+
+    <script define:vars={{ postData }}>
+      function sharePost() {
+        const shareUrl = postData?.resolvedPath
+          ? `${window.location.origin}${postData.resolvedPath}`
+          : window.location.href
+
+        if (navigator.share) {
+          navigator.share({
+            title: postData?.title || "Dukung Kami - GoRakuDo",
+            text: postData?.description || "Dukung pengembangan GoRakuDo dan komunitas open-source ini",
+            url: shareUrl,
+          })
+        } else {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            alert("Link berhasil disalin ke clipboard!")
+          })
+        }
+      }
+
+      window.sharePost = sharePost;
+
+      function addReadingProgress() {
+        const progressBar = document.createElement("div")
+        progressBar.className = "reading-progress"
+        progressBar.setAttribute("role", "progressbar")
+        progressBar.setAttribute("aria-label", "Reading progress")
+        progressBar.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 0%;
+          height: 3px;
+          background: linear-gradient(90deg, #8b5dff, #7b4def);
+          z-index: 1000;
+          transition: width 0.1s ease;
+        `
+        document.body.appendChild(progressBar)
+
+        window.addEventListener("scroll", () => {
+          const scrollTop = window.pageYOffset
+          const docHeight = document.body.scrollHeight - window.innerHeight
+          const scrollPercent = (scrollTop / docHeight) * 100
+          progressBar.style.width = scrollPercent + "%"
+          progressBar.setAttribute("aria-valuenow", Math.round(scrollPercent))
+        })
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        addReadingProgress()
+      })
+    </script>
+
+  </body>
+</html>
