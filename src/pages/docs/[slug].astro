@@ -6,6 +6,7 @@ import UnifiedSEO from "../../components/UnifiedSEO.astro"
 import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
 import Navbar from "../../components/public-components/Navbar.vue"
 import PostLayout from "../../layouts/PostLayout.astro"
+import TableOfContents from "../../components/content/TableOfContents.astro"
 import {
   resolvePath,
   getCollectionInfo,
@@ -33,7 +34,10 @@ if (!post) {
 }
 
 // Render the post content
-const { Content } = await post.render()
+const { Content, headings } = await post.render()
+
+// Filter headings for TOC (h2-h3 levels work best for navigation)
+const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3)
 
 // Dynamic content path resolution for SEO
 const resolvedPath = { path: resolvePath("docs", post.slug) }
@@ -126,13 +130,16 @@ const postData = {
     </div>
 
     <!-- Use the new PostLayout component -->
-    <PostLayout {post} {collectionMetadata}>
+    <PostLayout {post} {collectionMetadata} headings={tocHeadings}>
       <Breadcrumb 
         post={post} 
         slot="breadcrumb" 
       />
       <!-- Render the markdown content in the default slot -->
       <Content />
+      
+      <!-- Table of Contents in sidebar -->
+      <TableOfContents headings={tocHeadings} slot="toc" />
     </PostLayout>
 
     <!-- Scripts Section - Organized and Optimized -->

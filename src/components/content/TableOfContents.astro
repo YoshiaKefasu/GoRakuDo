@@ -1,0 +1,909 @@
+---
+export interface Props {
+  headings?: { depth: number; slug: string; text: string }[]
+}
+
+const { headings = [] } = Astro.props
+---
+
+{headings.length > 0 && (
+  <>
+    <aside class="toc-container" aria-label="Table of Contents">
+      <div class="toc-header">
+        <h2 class="toc-title">
+          On this page
+        </h2>
+        <button class="toc-toggle" aria-label="Hide table of contents" aria-expanded="true" data-state="visible">
+          <svg 
+            class="toc-hide-icon"
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <line x1="4" y1="4" x2="20" y2="20"></line>
+            <line x1="20" y1="4" x2="4" y2="20"></line>
+          </svg>
+          <svg 
+            class="toc-show-icon"
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <nav class="toc-nav" role="navigation" aria-label="Table of contents navigation">
+        <ol class="toc-list">
+          {headings.map((heading) => (
+            <li class={`toc-item toc-level-${heading.depth}`}> 
+              <a 
+                href={`#${heading.slug}`} 
+                class="toc-link"
+                data-heading-id={heading.slug}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </aside>
+
+    <!-- Floating toggle button for when TOC is hidden -->
+    <button class="toc-floating-toggle" aria-label="Show table of contents" style="display: none;">
+      <svg 
+        width="20" 
+        height="20" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      >
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+    </button>
+  </>
+)}
+
+<style>
+  .toc-container {
+    position: sticky;
+    top: 100px;
+    width: 280px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(139, 93, 255, 0.2);
+    border-radius: 12px;
+    padding: 10px 20px;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .toc-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    /* background: linear-gradient(90deg, transparent, #8b5dff, transparent); */
+    border-radius: 12px 12px 0 0;
+    opacity: 0.6;
+  }
+
+  .toc-header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin: 10px 0;
+  }
+
+  .toc-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: #8b5dff;
+    border-radius: 1px;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+
+  .toc-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #8b5dff;
+    margin: 0;
+  }
+
+  .toc-toggle {
+    background: none;
+    border: none;
+    color: #e5e7eb;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    min-height: 32px;
+    position: relative;
+  }
+
+  .toc-toggle:hover {
+    background: rgba(139, 93, 255, 0.1);
+    color: #8b5dff;
+  }
+
+  /* Tooltip for toggle */
+  .toc-toggle::after {
+    content: attr(aria-label);
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+  }
+
+  .toc-toggle:hover::after {
+    opacity: 1;
+  }
+
+  /* TOC States */
+  .toc-container.toc-hidden {
+    display: none !important;
+  }
+
+  /* Use consistent animation-based collapse instead of display:none */
+  .toc-container.toc-collapsed {
+    width: auto;
+    min-width: 200px;
+  }
+
+  /* Toggle button states - Clear visibility rules */
+  .toc-toggle .toc-hide-icon {
+    display: block;
+    transition: transform 0.2s ease;
+  }
+
+  .toc-toggle .toc-show-icon {
+    display: none;
+    transition: transform 0.2s ease;
+  }
+
+  /* When collapsed, show the expand icon (show-icon) and hide the collapse icon (hide-icon) */
+  .toc-container.toc-collapsed .toc-toggle .toc-hide-icon {
+    display: none !important;
+  }
+
+  .toc-container.toc-collapsed .toc-toggle .toc-show-icon {
+    display: block !important;
+  }
+
+  /* Also handle aria-expanded attribute for redundancy */
+  .toc-toggle[aria-expanded="false"] .toc-hide-icon {
+    display: none !important;
+  }
+
+  .toc-toggle[aria-expanded="false"] .toc-show-icon {
+    display: block !important;
+  }
+
+  .toc-toggle:hover .toc-hide-icon,
+  .toc-toggle:hover .toc-show-icon {
+    transform: scale(1.1);
+  }
+
+  /* Floating toggle button - hidden since we only collapse now */
+  .toc-floating-toggle {
+    display: none !important;
+  }
+
+  /* Rotation effects for collapsed state */
+  .toc-container.toc-collapsed .toc-toggle,
+  .toc-toggle[aria-expanded="false"] {
+    transform: rotate(0deg);
+  }
+
+  .toc-container.toc-collapsed .toc-toggle:hover,
+  .toc-toggle[aria-expanded="false"]:hover {
+    transform: rotate(0deg) scale(1.1);
+  }
+
+  .toc-nav {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 93, 255, 0.3) transparent;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    opacity: 1;
+  }
+
+  .toc-container.toc-collapsed .toc-nav {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .toc-nav::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc-nav::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc-nav::-webkit-scrollbar-thumb {
+    background: rgba(139, 93, 255, 0.3);
+    border-radius: 2px;
+  }
+
+  .toc-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 93, 255, 0.5);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-item {
+    margin: 0;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 8px 10px;
+    color: #e5e7eb;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid transparent;
+    position: relative;
+    transform: translateX(0);
+  }
+
+  .toc-link:hover {
+    background: rgba(139, 93, 255, 0.1);
+    color: #8b5dff;
+    transform: translateX(4px);
+  }
+
+  /* Active link highlighting */
+  .toc-link.active {
+    background: rgba(139, 93, 255, 0.15);
+    color: #8b5dff;
+    border-left: 3px solid #8b5dff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(139, 93, 255, 0.2);
+    animation: activeGlow 0.3s ease-in-out;
+  }
+
+  .toc-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #8b5dff, #a855f7);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .toc-link.active::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #8b5dff;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .toc-link.active:hover {
+    background: rgba(139, 93, 255, 0.2);
+    transform: translateX(2px);
+  }
+
+  @keyframes activeGlow {
+    0% {
+      background: rgba(139, 93, 255, 0.05);
+      transform: translateX(0);
+    }
+    50% {
+      background: rgba(139, 93, 255, 0.2);
+      transform: translateX(4px);
+    }
+    100% {
+      background: rgba(139, 93, 255, 0.15);
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: translateY(-50%) scale(1.2);
+    }
+  }
+
+  /* Indentation levels */
+  .toc-level-1 .toc-link {
+    padding-left: 12px;
+    font-weight: 600;
+  }
+
+  .toc-level-2 .toc-link {
+    padding-left: 24px;
+    font-size: 13px;
+  }
+
+  .toc-level-3 .toc-link {
+    padding-left: 36px;
+    font-size: 12px;
+    opacity: 0.9;
+  }
+
+  .toc-level-4 .toc-link,
+  .toc-level-5 .toc-link,
+  .toc-level-6 .toc-link {
+    padding-left: 48px;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  /* Legacy collapsed class support */
+  .toc-container.collapsed .toc-nav {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .toc-container.collapsed {
+    width: auto;
+    min-width: 200px;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 1200px) {
+    .toc-container {
+      display: none;
+    }
+  }
+
+  /* Hide toggle button on desktop - only allow collapse on mobile */
+  @media (min-width: 1201px) {
+    .toc-toggle {
+      display: none !important;
+    }
+  }
+
+  /* Mobile TOC - show as collapsible at top on mobile */
+  @media (max-width: 1200px) {
+    .toc-container.mobile-toc {
+      display: block;
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      top: 0;
+      margin-bottom: 24px;
+      max-height: none;
+      background: rgba(15, 15, 15, 0.98);
+      border: 1px solid rgba(139, 93, 255, 0.3);
+      touch-action: manipulation;
+      padding: 8px 16px;
+    }
+
+    .toc-container.mobile-toc .toc-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .toc-container.mobile-toc .toc-header {
+      margin-left: 0;
+    }
+
+    .toc-container.mobile-toc .toc-nav {
+      max-height: 300px;
+    }
+    
+    .toc-container.mobile-toc.toc-collapsed .toc-nav {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    .toc-container.mobile-toc .toc-toggle {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      color: #e5e7eb;
+    }
+
+    .toc-container.mobile-toc .toc-toggle:hover {
+      color: #8b5dff;
+    }
+
+    .toc-container.mobile-toc .toc-link {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    /* Mobile indentation levels with smaller fonts */
+    .toc-container.mobile-toc .toc-level-1 .toc-link {
+      padding-left: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .toc-container.mobile-toc .toc-level-2 .toc-link {
+      padding-left: 20px;
+      font-size: 13px;
+    }
+
+    .toc-container.mobile-toc .toc-level-3 .toc-link {
+      padding-left: 28px;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .toc-container.mobile-toc .toc-level-4 .toc-link,
+    .toc-container.mobile-toc .toc-level-5 .toc-link,
+    .toc-container.mobile-toc .toc-level-6 .toc-link {
+      padding-left: 36px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .toc-container.mobile-toc .toc-link.active {
+      background: rgba(139, 93, 255, 0.2);
+      color: #8b5dff;
+      border-left: 4px solid #8b5dff;
+      font-weight: 600;
+      position: relative;
+      animation: mobileActiveGlow 0.3s ease-in-out;
+    }
+
+    .toc-container.mobile-toc .toc-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, #8b5dff, #a855f7);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .toc-container.mobile-toc .toc-link.active::after {
+      content: '●';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8b5dff;
+      font-size: 8px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes mobileActiveGlow {
+      0% {
+        background: rgba(139, 93, 255, 0.1);
+      }
+      50% {
+        background: rgba(139, 93, 255, 0.25);
+      }
+      100% {
+        background: rgba(139, 93, 255, 0.2);
+      }
+    }
+  }
+
+  /* Improved mobile styling */
+  @media (max-width: 768px) {
+    .toc-container.mobile-toc {
+      margin: 16px -20px 24px -0px;
+      border-radius: 10px;
+      border-left: none;
+      border-right: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocContainer = document.querySelector('.toc-container') as HTMLElement;
+    const tocToggle = tocContainer?.querySelector('.toc-toggle') as HTMLButtonElement;
+    const floatingToggle = document.querySelector('.toc-floating-toggle') as HTMLButtonElement;
+    const tocLinks = tocContainer?.querySelectorAll('.toc-link') as NodeListOf<HTMLAnchorElement>;
+
+    if (!tocContainer || !tocToggle || !floatingToggle || !tocLinks) {
+      console.warn('TableOfContents: Missing required elements');
+      return;
+    }
+
+    let isCollapsed = false;
+
+    /** ------------------------------
+     * Collapse/Expand TOC
+     * ------------------------------ */
+    const updateToggleState = (toggle: HTMLButtonElement, collapsed: boolean) => {
+      if (collapsed) {
+        toggle.setAttribute('aria-label', 'Expand table of contents');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('data-state', 'collapsed');
+      } else {
+        toggle.setAttribute('aria-label', 'Collapse table of contents');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('data-state', 'expanded');
+      }
+    };
+
+    // Initialize button states
+    updateToggleState(tocToggle, false);
+
+    const collapseToc = () => {
+      isCollapsed = true;
+      tocContainer.classList.add('toc-collapsed');
+      updateToggleState(tocToggle, true);
+    };
+
+    const expandToc = () => {
+      isCollapsed = false;
+      tocContainer.classList.remove('toc-collapsed');
+      updateToggleState(tocToggle, false);
+    };
+
+    const toggleToc = () => {
+      if (isCollapsed) {
+        expandToc();
+      } else {
+        collapseToc();
+      }
+    };
+
+    // Toggle button in TOC - simple collapse/expand
+    tocToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleToc();
+    });
+
+    // Keyboard support for toggle
+    tocToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleToc();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        collapseToc();
+      }
+    });
+
+    // Show button (floating) - now expands TOC
+    floatingToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      expandToc();
+    });
+
+    // Keyboard support for floating toggle
+    floatingToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        expandToc();
+      }
+    });
+
+    /** ------------------------------
+     * Hitung offset navbar dinamis
+     * ------------------------------ */
+    let cachedOffset: number | null = null;
+    let lastCacheTime = 0;
+    const getNavbarOffset = (): number => {
+      const now = Date.now();
+      if (cachedOffset !== null && now - lastCacheTime < 1000) return cachedOffset;
+      const navbar = document.querySelector('nav, .navbar, header, [data-navbar], .header, #header, .top-nav, .main-nav') as HTMLElement;
+      if (navbar) {
+        const rect = navbar.getBoundingClientRect();
+        const style = window.getComputedStyle(navbar);
+        const isFixed = style.position === 'fixed' || style.position === 'sticky';
+        if (isFixed && rect.height > 0) {
+          cachedOffset = rect.height + 30;
+        } else {
+          cachedOffset = rect.height + 20;
+        }
+      } else {
+        cachedOffset = 140; // fallback
+      }
+      lastCacheTime = now;
+      return cachedOffset;
+    };
+
+    /** ------------------------------
+     * Smooth scroll TOC links
+     * ------------------------------ */
+    tocLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const targetId = link.getAttribute('href')?.slice(1);
+        if (!targetId) return;
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) return;
+        
+        // Immediately update highlighting to the clicked link
+        setActiveLinkManual(link);
+        
+        const offset = getNavbarOffset();
+        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({
+          top: elementPosition,
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    /** ------------------------------
+     * Auto-scroll TOC to follow current section with highlighting
+     * ------------------------------ */
+    let currentActiveLink: Element | null = null;
+    const tocNav = tocContainer.querySelector('.toc-nav') as HTMLElement;
+    
+    const setActiveLink = (link: Element | null) => {
+      // Remove active class from previous link (both desktop and mobile)
+      if (currentActiveLink) {
+        currentActiveLink.classList.remove('active');
+        // Also remove from mobile TOC if exists
+        const mobileActiveLink = document.querySelector('.toc-container.mobile-toc .toc-link.active');
+        if (mobileActiveLink) {
+          mobileActiveLink.classList.remove('active');
+        }
+      }
+      
+      // Add active class to new link
+      if (link) {
+        link.classList.add('active');
+        currentActiveLink = link;
+        
+        // Also update mobile TOC if exists
+        const activeId = link.getAttribute('data-heading-id');
+        if (activeId) {
+          const mobileToc = document.querySelector('.toc-container.mobile-toc');
+          if (mobileToc) {
+            const mobileLinkActive = mobileToc.querySelector(`[data-heading-id="${activeId}"]`);
+            if (mobileLinkActive) {
+              mobileLinkActive.classList.add('active');
+            }
+          }
+        }
+        
+        // Auto-scroll TOC to keep current link visible
+        if (tocNav && !isCollapsed) {
+          const linkRect = link.getBoundingClientRect();
+          const navRect = tocNav.getBoundingClientRect();
+          if (linkRect.top < navRect.top || linkRect.bottom > navRect.bottom) {
+            tocNav.scrollTo({
+              top: (link as HTMLElement).offsetTop - tocNav.offsetTop - navRect.height / 2 + linkRect.height / 2,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+    };
+    
+    // Add a flag to prevent intersection observer from interfering with manual clicks
+    let isManualClick = false;
+    let manualClickTimeout: ReturnType<typeof setTimeout> | null = null;
+    
+    // Enhanced setActiveLink function that tracks manual clicks
+    const setActiveLinkManual = (link: Element | null) => {
+      isManualClick = true;
+      if (manualClickTimeout) clearTimeout(manualClickTimeout);
+      manualClickTimeout = setTimeout(() => {
+        isManualClick = false;
+      }, 1500); // Give 1.5 seconds for scroll to complete
+      setActiveLink(link);
+    };
+    
+    const observer = new IntersectionObserver(entries => {
+      // Skip if this is a manual click
+      if (isManualClick) return;
+      
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.getAttribute('id');
+        if (!id) return;
+        const newActiveLink = tocContainer.querySelector(`[data-heading-id="${id}"]`);
+        if (!newActiveLink || newActiveLink === currentActiveLink) return;
+        
+        // Update active link with highlighting
+        setActiveLink(newActiveLink);
+      });
+    }, { rootMargin: '-100px 0px -40% 0px', threshold: [0.1] });
+    document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(h => observer.observe(h));
+
+    /** ------------------------------
+     * Initial TOC position with highlighting
+     * ------------------------------ */
+    const initTOCPosition = () => {
+      if (!tocContainer) return;
+      const scrollTop = window.scrollY + getNavbarOffset();
+      let chosenElement: HTMLElement | null = null;
+      const headings = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+      for (const h of Array.from(headings)) {
+        const element = h as HTMLElement;
+        if (element.offsetTop <= scrollTop) {
+          chosenElement = element;
+        }
+      }
+      if (chosenElement) {
+        const id = chosenElement.getAttribute('id');
+        if (id) {
+          const link = tocContainer.querySelector(`[data-heading-id="${id}"]`);
+          if (link) {
+            setActiveLink(link);
+            // Scroll TOC to show current section
+            if (tocNav && !isCollapsed) {
+              tocNav.scrollTo({
+                top: (link as HTMLElement).offsetTop - tocNav.offsetTop - tocNav.offsetHeight / 2,
+                behavior: 'smooth'
+              });
+            }
+          }
+        }
+      }
+    };
+    setTimeout(initTOCPosition, 200);
+
+    /** ------------------------------
+     * Mobile TOC
+     * ------------------------------ */
+    const createMobileTOC = () => {
+      const existing = document.querySelector('.toc-container.mobile-toc');
+      if (window.innerWidth <= 1200) {
+        if (!existing) {
+          const contentMain = document.getElementById('contentMain');
+          if (contentMain && contentMain.parentNode) {
+            const clone = tocContainer.cloneNode(true) as HTMLElement;
+            clone.classList.add('mobile-toc');
+            
+            // Re-attach event listeners to mobile TOC
+            const mobileToggle = clone.querySelector('.toc-toggle') as HTMLButtonElement;
+            const mobileLinks = clone.querySelectorAll('.toc-link') as NodeListOf<HTMLAnchorElement>;
+            
+            if (mobileToggle) {
+              let mobileCollapsed = false;
+              
+              const updateMobileToggleState = (collapsed: boolean) => {
+                if (collapsed) {
+                  mobileToggle.setAttribute('aria-label', 'Expand table of contents');
+                  mobileToggle.setAttribute('aria-expanded', 'false');
+                } else {
+                  mobileToggle.setAttribute('aria-label', 'Collapse table of contents');
+                  mobileToggle.setAttribute('aria-expanded', 'true');
+                }
+              };
+              
+              mobileToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                mobileCollapsed = !mobileCollapsed;
+                if (mobileCollapsed) {
+                  clone.classList.add('toc-collapsed');
+                } else {
+                  clone.classList.remove('toc-collapsed');
+                }
+                updateMobileToggleState(mobileCollapsed);
+              });
+              
+              // Initialize mobile toggle state
+              updateMobileToggleState(mobileCollapsed);
+            }
+            
+            mobileLinks.forEach(link => {
+              link.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const targetId = link.getAttribute('href')?.slice(1);
+                if (!targetId) return;
+                const targetElement = document.getElementById(targetId);
+                if (!targetElement) return;
+                
+                // Find corresponding desktop link and update highlighting
+                const desktopLink = tocContainer.querySelector(`[data-heading-id="${targetId}"]`);
+                if (desktopLink) {
+                  setActiveLinkManual(desktopLink);
+                }
+                
+                const offset = getNavbarOffset();
+                const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+                window.scrollTo({
+                  top: elementPosition,
+                  behavior: 'smooth'
+                });
+              });
+            });
+            
+            // Apply current active state to mobile TOC
+            if (currentActiveLink) {
+              const activeId = currentActiveLink.getAttribute('data-heading-id');
+              if (activeId) {
+                const mobileLinkActive = clone.querySelector(`[data-heading-id="${activeId}"]`);
+                if (mobileLinkActive) {
+                  mobileLinkActive.classList.add('active');
+                }
+              }
+            }
+            
+            contentMain.parentNode.insertBefore(clone, contentMain);
+          }
+        }
+      } else if (existing) {
+        existing.remove();
+      }
+    };
+    
+    createMobileTOC();
+    window.addEventListener('resize', () => {
+      cachedOffset = null;
+      createMobileTOC();
+    });
+  });
+ </script>
+
