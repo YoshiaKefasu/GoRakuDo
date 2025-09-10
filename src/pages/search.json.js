@@ -36,7 +36,6 @@ export async function GET() {
         title: post.data.title,
         description: post.data.description,
         pubDate: post.data.publishedDate,
-        readTime: post.data.readTime,
         emoji: post.data.emoji,
 
         // Content for search

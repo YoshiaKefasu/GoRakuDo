@@ -7,7 +7,6 @@ import MissionSection from "../components/homepage/MissionSection.astro"
 import InvitationModal from "../components/public-components/InvitationModal.vue"
 import FeaturesSection from "../components/homepage/FeaturesSection.astro"
 import DocumentationPreviewSection from "../components/homepage/DocumentationPreviewSection.astro"
-import WaveAnimation from "../components/animations/WaveAnimation.astro"
 
 // CSSをインポート
 import "../styles/homepage/ImageSlideshow.css"
@@ -42,22 +41,6 @@ const seoData: SEOData = {
   pageType={seoData.pageType}
   lang={seoData.lang}
 >
-  <!-- Enhanced Wave Animation Background - Fixed position for scroll following -->
-  <WaveAnimation 
-    className="wave-canvas" 
-    enableStars={true}
-    starsCount={10}
-    starsOpacity={0.5}
-    starsAnimationDuration="3s"
-    starsColor="oklch(0.8 0.35 296.9)"
-    starsBrightness={1}
-    starsSize={1.5}
-    starsGlow={false}
-  />
-
-  <!-- Stars Background (Hidden from screen readers) - Stars will be created dynamically by the module -->
-  <div class="stars" aria-hidden="true"></div>
-
   <!-- Main Content -->
   <main
     class="main-content"

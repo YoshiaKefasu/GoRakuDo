@@ -9,7 +9,6 @@ interface RawPostData {
   description?: string;
   content?: string;
   pubDate?: string;
-  readTime?: string;
   emoji?: string;
   tags?: string[];
   category?: string;
@@ -102,7 +101,6 @@ export class SearchDataGenerator {
       title: post.title || 'Untitled',
       description: post.description || '',
       pubDate: post.pubDate || '',
-      readTime: post.readTime || '5 min read',
       emoji: post.emoji || '📄',
 
       // コンテンツ
