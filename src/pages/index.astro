@@ -7,6 +7,7 @@ import MissionSection from "../components/homepage/MissionSection.astro"
 import InvitationModal from "../components/public-components/InvitationModal.vue"
 import FeaturesSection from "../components/homepage/FeaturesSection.astro"
 import DocumentationPreviewSection from "../components/homepage/DocumentationPreviewSection.astro"
+import WaveAnimation from "../components/animations/WaveAnimation.astro"
 
 // CSSをインポート
 import "../styles/homepage/ImageSlideshow.css"
@@ -41,9 +42,18 @@ const seoData: SEOData = {
   pageType={seoData.pageType}
   lang={seoData.lang}
 >
-  <!-- Homepage specific background elements -->
-  <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
-  <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+  <!-- Enhanced Wave Animation Background - Fixed position for scroll following -->
+  <WaveAnimation 
+    className="wave-canvas" 
+    enableStars={true}
+    starsCount={10}
+    starsOpacity={0.5}
+    starsAnimationDuration="3s"
+    starsColor="oklch(0.8 0.35 296.9)"
+    starsBrightness={1}
+    starsSize={1.5}
+    starsGlow={false}
+  />
 
   <!-- Stars Background (Hidden from screen readers) - Stars will be created dynamically by the module -->
   <div class="stars" aria-hidden="true"></div>
@@ -75,87 +85,30 @@ const seoData: SEOData = {
   <!-- Invitation Modal - Load only when needed -->
   <InvitationModal client:idle />
 
-  <script fetchpriority="auto" is:inline src="/core/hompage-script.js"></script>
+  <!-- Enhanced wave animation is now handled by WaveAnimation component -->
+  <!-- <script fetchpriority="auto" is:inline src="/core/hompage-script.js"></script> -->
 
   <!-- Animation Modules Integration -->
   <script>
-    // Dynamic import for animation modules with comprehensive error handling
-    Promise.all([import("../scripts/ui/background-animations/stars-animation.js")])
-      .then(([starsModule]) => {
-        console.log("🎬 Stars animation module loaded successfully")
-
-        // Initialize stars animation only
-        const starsAnimation = starsModule.initStarsAnimation({
-          enabled: true,
-          count: 8,
-          animationDuration: "4s",
-          opacity: 0.6,
-          containerClass: "stars",
-          starClass: "star",
-          containerId: "stars",
-          useExistingContainer: true,
-          createContainer: false,
-          containerSelector: ".stars",
-          accessibility: {
-            respectReducedMotion: false,
-            announceChanges: false,
-            screenReaderFriendly: true,
-            highContrastSupport: true,
-            forceEnable: true,
-          },
-        })
-
-        // Start animations when page loads
-        window.addEventListener("load", () => {
-          try {
-            // Initialize stars animation with existing container
-            starsAnimation.init("stars")
-            console.log("✨ Stars animation initialized successfully")
-
-            // Debug: Check if stars were created
-            setTimeout(() => {
-              const stars = document.querySelectorAll(".star")
-              console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
-              if (stars.length > 0) {
-                console.log("✅ Stars are visible in DOM")
-              } else {
-                console.log("⚠️ No stars found in DOM - checking container")
-                const container = document.querySelector(".stars")
-                console.log("Container:", container)
-              }
-            }, 500)
-
-            // Add loaded class to prevent popup effect
-            setTimeout(() => {
-              const starsContainer = document.querySelector(".stars")
-              if (starsContainer) {
-                starsContainer.classList.add("loaded")
-              }
-            }, 100)
-
-            // Trigger hero animation after animations are ready
-            setTimeout(() => {
-              const heroContent = document.querySelector("#hero-content")
-              if (heroContent) {
-                heroContent.classList.remove(
-                  "opacity-0",
-                  "translate-y-16",
-                  "scale-80",
-                  "blur-md"
-                )
-                console.log("✨ Hero content revealed smoothly")
-              }
-            }, 200) // Coordinate with hero component timing
-          } catch (error) {
-            console.error("❌ Animation initialization error:", error)
-          }
-        })
-      })
-      .catch((error) => {
-        console.log("⚠️ Animation modules failed to load:", error.message)
-        // Fallback: continue with existing inline animations
-        console.log("🔄 Falling back to existing inline animations")
-      })
+    // Stars animation is now integrated into WaveAnimation.astro
+    // No separate import needed
+    console.log("🎬 Animation modules integrated into WaveAnimation component")
+    
+    // Trigger hero animation after page loads
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const heroContent = document.querySelector("#hero-content")
+        if (heroContent) {
+          heroContent.classList.remove(
+            "opacity-0",
+            "translate-y-16",
+            "scale-80",
+            "blur-md"
+          )
+          console.log("✨ Hero content revealed smoothly")
+        }
+      }, 200) // Coordinate with hero component timing
+    })
   </script>
 
   <!-- Performance monitoring removed -->
