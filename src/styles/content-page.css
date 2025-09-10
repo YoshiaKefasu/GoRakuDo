@@ -74,7 +74,6 @@
   display: flex;
   /* gap: 40px; */
   max-width: 1400px;
-  /* margin: 0 auto; */
   /* padding: 0 20px; */
 }
 
@@ -458,10 +457,17 @@
   padding-bottom: 0.5rem;
 }
 
-/* Custom heading style for h2 */
 .content-main h2 {
   position: relative;
   padding: 0.5rem 0;
+}
+
+.content-main h3 {
+  padding: 0.5rem 0;
+}
+
+.content-main h4 {
+  padding-bottom: 0.25rem;
 }
 
 .content-main h2::before {
@@ -478,6 +484,14 @@
     var(--color-primary-dark)
   );
   transform: translateY(-50%);
+}
+
+.content-main ul {
+  margin: 0.5rem 0;
+}
+
+.content-main hr {
+  margin: 1rem 0;
 }
 
 .content-main ul li {

@@ -102,9 +102,10 @@ const postData = {
       <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
     </div>
 
-    <PostLayout post={post} collectionMetadata={collectionMetadata} postActions={false}>
+    <PostLayout post={post} collectionMetadata={collectionMetadata} postActions={false} showToc={false}>
       <Breadcrumb 
-        post={post} 
+        currentPath="/support-us"
+        showHome={true}
         slot="breadcrumb" 
       />
       
