@@ -1,7 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 
-// Simplified Content Schema for Indonesian Immersion Learning
-// AI metadata handled by separate files (e.g., anki-guide-metadata.json)
+// Optimized Content Schema for Indonesian Immersion Learning
 const docsCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -10,20 +9,14 @@ const docsCollection = defineCollection({
     description: z.string(),
     publishedDate: z.string(),
     author: z.string().default('Tim GoRakuDo'),
+    emoji: z.string().optional(),
 
-    // Sticky Note Design Support
-    emoji: z.string().optional(), // Optional emoji for sticky note design
-
-    // Basic Content Classification
-    category: z.string().default('general'),
-    tags: z.array(z.string()).default([]),
-
-    // Content Layer Optimization Fields
-    status: z.enum(['published', 'draft', 'archived']).default('published'),
+    // Content Classification (Simplified)
+    categories: z.array(z.string()).default(['general']), // Main classification
+    tags: z.array(z.string()).default([]), // Content labels
     
-    // Search and Performance Optimization
-    searchKeywords: z.array(z.string()).optional(),
-    contentLength: z.number().optional(),
+    // Optional Fields
+    status: z.enum(['published', 'draft', 'archived']).default('published'),
     isRecommended: z.boolean().default(false),
   }),
 });
@@ -42,7 +35,9 @@ const templatesCollection = defineCollection({
 
     // Template Configuration
     isActive: z.boolean().default(true),
-    category: z.string().default('general'),
+    
+    // Content Classification (Simplified)
+    categories: z.array(z.string()).default(['content-creation']),
 
     // Template Structure
     requiredFields: z.array(z.string()).default([]),
@@ -96,7 +91,8 @@ const toolArticlesCollection = defineCollection({
     emoji: z.string().optional(),
     icon: z.string().optional(),
 
-    // Content Classification
+    // Content Classification (Simplified)
+    categories: z.array(z.string()).default(['tools']),
     tags: z.array(z.string()).default([]),
 
 

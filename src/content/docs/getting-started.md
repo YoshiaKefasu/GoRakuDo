@@ -5,6 +5,7 @@ publishedDate: '2024-01-15T00:00:00.000Z'
 author: 'Tim GoRakuDo'
 emoji: '🚀'
 category: 'getting-started'
+categories: ['getting-started', 'getting-started/basics']
 tags: ['immersion', 'beginner', 'hiragana', 'katakana', 'kanji']
 ---
 

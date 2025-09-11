@@ -20,7 +20,7 @@ icon: '/img/tools/anki-icon.png'
 
 # Content Classification
 tags: ['anki', 'srs', 'flashcard', 'vocabulary', 'kanji', 'memorization']
-
+categories: ['tools', 'tools/flashcard', 'tools/anki']
 
 # Read Time Estimation
 

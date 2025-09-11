@@ -5,6 +5,7 @@ publishedDate: '2024-12-19T00:00:00.000Z'
 author: 'Tim GoRakuDo'
 emoji: '🧠'
 category: 'philosophy'
+categories: ['methodology', 'methodology/philosophy', 'methodology/immersion']
 tags:
   [
     'immersion',
