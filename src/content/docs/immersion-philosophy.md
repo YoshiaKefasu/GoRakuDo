@@ -2,10 +2,8 @@
 title: 'SAMPLE POST ASAL: Filosofi Immersion: Landasan Metodologi Pembelajaran Bahasa Jepang'
 description: 'Panduan mendalam tentang filosofi immersion learning, prinsip-prinsip dasar, dan bagaimana menerapkannya dalam pembelajaran bahasa Jepang untuk mencapai kefasihan alami.'
 publishedDate: '2024-12-19T00:00:00.000Z'
-readTime: 25
 author: 'Tim GoRakuDo'
 emoji: '🧠'
-difficulty: 'beginner'
 category: 'philosophy'
 tags:
   [
@@ -18,9 +16,6 @@ tags:
     'input-hypothesis',
     'natural-approach',
   ]
-featured: true
-mindMapBranch: 'A'
-contentType: 'metodologi'
 ---
 
 # SAMPLE POST ASAL: Filosofi Immersion: Landasan Metodologi Pembelajaran Bahasa Jepang

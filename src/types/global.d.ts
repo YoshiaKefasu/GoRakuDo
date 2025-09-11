@@ -38,17 +38,6 @@ declare global {
         title?: string;
         description?: string;
         tags?: string[];
-        aiMetadata?: {
-          contentType?: 'guide' | 'tool' | 'methodology' | 'practice';
-          learningStage?: 'beginner' | 'intermediate' | 'advanced';
-          isRecommended?: boolean;
-          complexity?: string;
-          keywords?: string[];
-          semanticKeywords?: string[];
-          learningObjectives?: string[];
-          learningPath?: string[];
-          recommendations?: string[];
-        };
       };
     }>;
     Fuse?: {

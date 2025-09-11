@@ -2,16 +2,11 @@
 title: 'SAMPLE POST ASAL:Panduan Setup Language Reactor'
 description: 'Setup dan penggunaan Language Reactor untuk belajar bahasa Jepang dengan Netflix subtitle dual-language dan vocabulary tracking.'
 publishedDate: '2024-01-25T00:00:00.000Z'
-readTime: 18
 author: 'Tim GoRakuDo'
 emoji: '🎬'
-difficulty: 'beginner'
 category: 'tools'
 tags:
   ['language-reactor', 'netflix', 'video-learning', 'subtitle', 'vocabulary']
-featured: false
-mindMapBranch: 'D'
-contentType: 'resource'
 ---
 
 # SAMPLE POST ASAL:Panduan Setup Language Reactor

@@ -12,8 +12,6 @@ interface RawPostData {
   emoji?: string;
   tags?: string[];
   category?: string;
-  difficulty?: string;
-  learningStage?: string;
   url?: string;
 }
 
@@ -110,12 +108,6 @@ export class SearchDataGenerator {
       // メタデータ（簡素化）
       tags: post.tags || [],
       category: post.category || 'general',
-      difficulty: post.difficulty || 'medium',
-      learningStage: post.learningStage || 'intermediate',
-
-      // AI メタデータ（完全削除 - 空オブジェクトで統一）
-      aiMetadata: {},
-      contentType: post.category || 'general',
 
       // 検索用テキスト（簡素化）
       searchableText: this.generateSearchableText(post, processedContent),
@@ -126,7 +118,7 @@ export class SearchDataGenerator {
 
       // 機能フラグ（簡素化）
       isRecommended: false,
-      isBeginner: post.difficulty === 'beginner',
+      isBeginner: false,
       isTool: post.category === 'tool',
       hasCodeBlocks: processedContent.hasCodeBlocks,
       hasImages: processedContent.hasImages,
@@ -188,7 +180,6 @@ export class SearchDataGenerator {
       processedContent.cleanedText,
       (post.tags || []).join(' '),
       post.category || '',
-      post.difficulty || '',
     ];
 
     return searchableParts

@@ -15,26 +15,11 @@ const docsCollection = defineCollection({
     emoji: z.string().optional(), // Optional emoji for sticky note design
 
     // Basic Content Classification
-    difficulty: z
-      .enum(['beginner', 'intermediate', 'advanced'])
-      .default('beginner'),
     category: z.string().default('general'),
     tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
-
-    // Simplified Content Type Classification
-    contentType: z
-      .enum([
-        'metodologi', // Learning methodology and theory
-        'tutorial', // Step-by-step guides and tutorials
-        'resource', // Tools, references, and materials
-      ])
-      .default('tutorial'),
-
 
     // Content Layer Optimization Fields
     status: z.enum(['published', 'draft', 'archived']).default('published'),
-    learningStage: z.enum(['pemanasan', 'intermediate', 'advanced']).optional(),
     
     // Search and Performance Optimization
     searchKeywords: z.array(z.string()).optional(),
@@ -103,10 +88,7 @@ const toolArticlesCollection = defineCollection({
       'desktop-app',
     ]),
 
-    // Difficulty and Setup Information
-    difficulty: z
-      .enum(['beginner', 'intermediate', 'advanced'])
-      .default('beginner'),
+    // Setup Information
     setupTime: z.string().optional(),
     cost: z.enum(['free', 'freemium', 'paid', 'subscription']).default('free'),
 
@@ -116,12 +98,6 @@ const toolArticlesCollection = defineCollection({
 
     // Content Classification
     tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
-
-    // Content Type
-    contentType: z
-      .enum(['tool-guide', 'setup-tutorial', 'usage-guide', 'review'])
-      .default('tool-guide'),
 
 
     // Tool Features

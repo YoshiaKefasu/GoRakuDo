@@ -7,8 +7,6 @@ modifiedDate: "2024-12-31"
 author: "GoRakuDo Team"
 image: "/images/test-article.jpg"
 category: "testing"
-difficulty: "beginner"
-readTime: 3
 seoTitle: "MD/MDX対応テスト - UnifiedSEO検証"
 seoDescription: "UnifiedSEOコンポーネントのMD/MDX対応機能を包括的にテスト"
 seoKeywords: ["astro", "mdx", "seo", "unified", "testing"]

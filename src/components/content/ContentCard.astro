@@ -12,23 +12,9 @@ export interface Props {
   description: string
   slug: string
   publishedDate: string
-  readTime: number
   author: string
-  difficulty: "beginner" | "intermediate" | "advanced"
   category: string
   tags: string[]
-  featured: boolean
-  mindMapBranch?: string // Optional - MindMap functionality deprecated
-  understandingLevel: string
-  learningStage: string
-  aiMetadata?: {
-    contentType?: string
-    learningStage?: string
-    complexityScore?: number
-    estimatedStudyTime?: number
-    primaryKeywords?: string[]
-    searchIntent?: string
-  }
 }
 
 const {
@@ -36,16 +22,9 @@ const {
   description,
   slug,
   publishedDate,
-  readTime,
   author,
-  difficulty,
   category,
   tags,
-  featured,
-  mindMapBranch = "general", // Default value for backward compatibility
-  understandingLevel,
-  learningStage,
-  aiMetadata,
 } = Astro.props
 
 // Dynamic content path resolution
@@ -59,123 +38,15 @@ const formattedDate = new Date(publishedDate).toLocaleDateString("id-ID", {
   day: "numeric",
 })
 
-// Get difficulty color
-const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case "beginner":
-      return "bg-green-500"
-    case "intermediate":
-      return "bg-yellow-500"
-    case "advanced":
-      return "bg-red-500"
-    default:
-      return "bg-gray-500"
-  }
-}
 
-// Get mind map branch info - Updated for MindMap deprecation
-const getBranchInfo = (branch: string) => {
-  const branches = {
-    "general": {
-      name: "General Content",
-      icon: "📄",
-      color: "bg-gray-500",
-    },
-    "landasan-filosofi": {
-      name: "Landasan & Filosofi",
-      icon: "🏛️",
-      color: "bg-purple-500",
-    },
-    "tahap-pembelajaran": {
-      name: "Tahap Pembelajaran",
-      icon: "📚",
-      color: "bg-blue-500",
-    },
-    "kerangka-pemahaman": {
-      name: "Kerangka Pemahaman",
-      icon: "🧠",
-      color: "bg-green-500",
-    },
-    "tools-resource": {
-      name: "Tools & Resource",
-      icon: "🛠️",
-      color: "bg-orange-500",
-    },
-    "strategi-tips": {
-      name: "Strategi & Tips",
-      icon: "💡",
-      color: "bg-pink-500",
-    },
-  }
-  return (
-    branches[branch as keyof typeof branches] || {
-      name: branch,
-      icon: "📄",
-      color: "bg-gray-500",
-    }
-  )
-}
 
-// Get understanding level info
-const getLevelInfo = (level: string) => {
-  const levels = {
-    "tingkat-0": { name: "Level 0", desc: "Complete Beginner" },
-    "tingkat-1": { name: "Level 1", desc: "Basic Understanding" },
-    "tingkat-2": { name: "Level 2", desc: "Elementary" },
-    "tingkat-3": { name: "Level 3", desc: "Intermediate" },
-    "tingkat-4": { name: "Level 4", desc: "Upper Intermediate" },
-    "tingkat-5": { name: "Level 5", desc: "Advanced" },
-    "tingkat-6": { name: "Level 6", desc: "Near Native" },
-  }
-  return levels[level as keyof typeof levels] || { name: level, desc: "Unknown" }
-}
-
-// Get learning stage info
-const getStageInfo = (stage: string) => {
-  const stages = {
-    pemanasan: { name: "Pemanasan", desc: "Warm-up Stage (1 Month)" },
-    starter: { name: "Starter", desc: "Starter Stage (3-6 Months)" },
-    normalisasi: {
-      name: "Normalisasi",
-      desc: "Normalization Stage (6-12 Months)",
-    },
-    kompeten: { name: "Kompeten", desc: "Competent Stage (Lifetime)" },
-  }
-  return stages[stage as keyof typeof stages] || { name: stage, desc: "Unknown" }
-}
-
-const branchInfo = getBranchInfo(mindMapBranch)
-const levelInfo = getLevelInfo(understandingLevel)
-const stageInfo = getStageInfo(learningStage)
 ---
 
 <article
   class="content-card group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800">
-  <!-- Featured Badge -->
-  {
-    featured && (
-      <div class="absolute right-4 top-4 z-10">
-        <span class="inline-flex items-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-medium text-white">
-          ⭐ Featured
-        </span>
-      </div>
-    )
-  }
 
   <!-- Card Header -->
   <div class="p-6">
-    <!-- Mind Map Branch Badge -->
-    <div class="mb-3 flex items-center gap-2">
-      <span
-        class={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-white ${branchInfo.color}`}>
-        {branchInfo.icon}
-        {branchInfo.name}
-      </span>
-      <span
-        class={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium text-white ${getDifficultyColor(difficulty)}`}>
-        {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
-      </span>
-    </div>
 
     <!-- Title -->
     <h3
@@ -212,28 +83,8 @@ const stageInfo = getStageInfo(learningStage)
           </svg>
           {formattedDate}
         </span>
-        <span class="flex items-center gap-1">
-          <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-              clip-rule="evenodd"></path>
-          </svg>
-          {readTime} min read
-        </span>
       </div>
 
-      <!-- Learning Information -->
-      <div class="flex flex-wrap gap-2 text-xs">
-        <span
-          class="rounded bg-blue-100 px-2 py-1 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-          📊 {levelInfo.name}: {levelInfo.desc}
-        </span>
-        <span
-          class="rounded bg-green-100 px-2 py-1 text-green-800 dark:bg-green-900 dark:text-green-200">
-          🎯 {stageInfo.name}: {stageInfo.desc}
-        </span>
-      </div>
     </div>
 
     <!-- Tags -->
@@ -254,45 +105,6 @@ const stageInfo = getStageInfo(learningStage)
       )
     }
 
-    <!-- AI Metadata (if available) -->
-    {
-      aiMetadata && (
-        <div class="mb-4 rounded-lg bg-purple-50 p-3 dark:bg-purple-900/20">
-          <div class="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-            <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            AI-Optimized Content
-          </div>
-          <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
-            {aiMetadata.contentType && (
-              <span class="text-purple-600 dark:text-purple-400">
-                Type: {aiMetadata.contentType}
-              </span>
-            )}
-            {aiMetadata.complexityScore && (
-              <span class="text-purple-600 dark:text-purple-400">
-                Complexity: {aiMetadata.complexityScore}/10
-              </span>
-            )}
-            {aiMetadata.estimatedStudyTime && (
-              <span class="text-purple-600 dark:text-purple-400">
-                Study Time: {aiMetadata.estimatedStudyTime}min
-              </span>
-            )}
-            {aiMetadata.searchIntent && (
-              <span class="text-purple-600 dark:text-purple-400">
-                Intent: {aiMetadata.searchIntent}
-              </span>
-            )}
-          </div>
-        </div>
-      )
-    }
 
     <!-- Read More Button -->
     <div class="flex items-center justify-between">
