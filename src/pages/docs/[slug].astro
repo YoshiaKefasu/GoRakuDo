@@ -67,7 +67,6 @@ const seoData = {
   description: post.data.description || `Learn about ${post.slug} in GoRakuDo documentation`,
   keywords: post.data.tags || ["documentation", post.slug, "guide"], // ✅ tagsフィールドを使用
   articleType: "guide",
-  learningStage: post.data.difficulty || "intermediate", // ✅ difficultyフィールドを使用
   searchIntent: "informational",
   // フロントマターの日付があれば使用、なければファイルシステムの日付を使用
   publishedDate: post.data.publishedDate || fileDates.createdDate,
@@ -91,8 +90,6 @@ const postData = {
   description: post.data.description,
   publishedDate: post.data.publishedDate,
   author: post.data.author,
-  readTime: post.data.readTime,
-  difficulty: post.data.difficulty,
   body: post.body,
   slug: post.slug,
   resolvedPath: resolvedPath.path,
@@ -197,13 +194,6 @@ enhancedContent = post.body
             <span class="post-author">by {post.data.author}</span>
           </div>
 
-          <div class="post-tags">
-            <span
-              class="difficulty-badge difficulty-{post.data.difficulty}"
-              aria-label="Difficulty level: {post.data.difficulty}">
-              {post.data.difficulty}
-            </span>
-          </div>
         </header>
 
         <!-- Article Content -->

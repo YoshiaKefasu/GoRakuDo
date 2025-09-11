@@ -7,15 +7,13 @@ export interface SearchPost {
   description: string;
   tags: string[];
   slug: string;
-  contentType: 'guide' | 'tool' | 'methodology' | 'practice';
-  learningStage: 'beginner' | 'intermediate' | 'advanced';
+  contentType: string;
   isRecommended?: boolean;
   element?: HTMLElement; // For DOM manipulation
 }
 
 export interface SearchFilters {
   contentType?: string;
-  learningStage?: string;
   isRecommended?: boolean;
 }
 

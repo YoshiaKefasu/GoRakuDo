@@ -39,12 +39,6 @@ export interface SearchDataItem {
   // Metadata for filtering (51-55行)
   tags: string[];
   category: string;
-  difficulty: string;
-  learningStage: string;
-
-  // AI metadata（完全削除 - 空オブジェクトで統一）
-  aiMetadata: Record<string, unknown>; // 空オブジェクトで統一
-  contentType: string; // post.data.category || 'general'
 
   // Searchable text (66-83行)
   searchableText: string;

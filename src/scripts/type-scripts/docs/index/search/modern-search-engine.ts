@@ -344,9 +344,7 @@ export class ModernSearchEngine {
       return category.keywords.some(
         (keyword: string) =>
           post.title?.toLowerCase().includes(keyword.toLowerCase()) ||
-          post.description?.toLowerCase().includes(keyword.toLowerCase()) ||
-          post.contentType === category.name ||
-          post.learningStage === category.name
+          post.description?.toLowerCase().includes(keyword.toLowerCase())
       );
     });
   }

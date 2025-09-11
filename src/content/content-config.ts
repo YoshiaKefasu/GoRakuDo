@@ -435,8 +435,7 @@ export const ContentConfigUtils = {
           post.data.description
             ?.toLowerCase()
             .includes(keyword.toLowerCase()) ||
-          post.data.category === category.name ||
-          post.data.contentType === category.name
+          post.data.category === category.name
       );
     }).length;
   },
@@ -471,8 +470,7 @@ export const ContentConfigUtils = {
           post.data.description
             ?.toLowerCase()
             .includes(keyword.toLowerCase()) ||
-          post.data.category === category.name ||
-          post.data.contentType === category.name
+          post.data.category === category.name
       )
     );
   },
@@ -493,11 +491,6 @@ export const ContentConfigUtils = {
   },
 
   /**
-   * Filter posts by mind map branch - REMOVED: MindMap functionality deprecated
-   */
-  // filterPostsByMindMapBranch(posts: any[], branchId: string): any[] {
-  //   return posts.filter((post) => post.data.mindMapBranch === branchId);
-  // },
 
   /**
    * Get filter count for display

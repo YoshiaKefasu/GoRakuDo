@@ -192,12 +192,6 @@ export class SimpleSearch {
       }
 
       // Filter by learning stage
-      if (
-        filters.learningStage &&
-        post.learningStage !== filters.learningStage
-      ) {
-        return false;
-      }
 
       // Filter by recommended status
       if (

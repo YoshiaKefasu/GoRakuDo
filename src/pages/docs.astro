@@ -57,7 +57,6 @@ try {
     description: post.data.description || '',
     tags: post.data.tags || [],
     category: post.data.category || '',
-    learningStage: post.data.learningStage || '',
     publishedDate: post.data.publishedDate,
     lastModified: post.data.lastModified || post.data.publishedDate,
     content: post.body.slice(0, 200) // 検索用の短縮コンテンツ
@@ -88,7 +87,7 @@ logger.logPaginationInfo(totalPosts, postsPerPage, currentPage)
 // Phase 2: Content Layer - Build-time categorization optimization
 const contentCategories = {
   beginner: sortedPosts.filter(
-    (post) => post.data.learningStage === "pemanasan" || post.data.difficulty === "beginner"
+    (post) => false
   ),
   tools: sortedPosts.filter((post) => {
     const isTool =
@@ -99,9 +98,9 @@ const contentCategories = {
     return isTool
   }),
   methodology: sortedPosts.filter(
-    (post) => post.data.contentType === "metodologi" || post.data.category === "methodology"
+    (post) => post.data.category === "methodology"
   ),
-  recommended: sortedPosts.filter(post => post.data.featured || post.data.isRecommended).slice(0, 3)
+  recommended: sortedPosts.filter(post => post.data.isRecommended).slice(0, 3)
 }
 
 logger.log(`Content Layer: Categories pre-computed at build time`, "success")
@@ -172,18 +171,14 @@ const searchDataItems = sortedPosts.map((post) => {
       processedContent.cleanedText,
       ...(post.data.tags || []),
       post.data.category,
-      post.data.difficulty,
-      post.data.learningStage,
     ].join(" ").toLowerCase(),
 
     // Essential metadata
     category: post.data.category,
-    difficulty: post.data.difficulty,
-    learningStage: post.data.learningStage,
     tags: post.data.tags || [],
     
     // Computed flags
-    isBeginner: post.data.difficulty === "beginner" || post.data.learningStage === "pemanasan",
+    isBeginner: false,
     isTool: post.data.category === "tools" || post.data.title.toLowerCase().includes("anki"),
     hasCodeBlocks: processedContent.hasCode,
     hasImages: processedContent.hasImages,
@@ -210,8 +205,6 @@ const optimizedSearchData = searchDataItems.map(item => ({
     isBeginner: item.isBeginner,
     isTool: item.isTool,
     category: item.category,
-    difficulty: item.difficulty,
-    learningStage: item.learningStage
   }
 }))
 
@@ -237,8 +230,6 @@ function calculateRelevanceScore(item: any): number {
   
   // Category-based scoring
   if (item.category === 'tools') score += 10
-  if (item.difficulty === 'beginner') score += 8
-  if (item.learningStage === 'pemanasan') score += 12
   
   return Math.min(score, 100)
 }
@@ -495,10 +486,7 @@ function formatDate(dateString: string): string {
                   <article
                     class={`post-card post-card-${index % 4}`}
                     data-post-slug={post.slug}
-                    data-learning-stage={
-                      post.data.aiMetadata?.contentAnalysis?.learningStage || ""
-                    }
-                    data-content-type={post.data.aiMetadata?.contentType || ""}
+                    data-content-type={post.data.category || ""}
                     data-is-recommended={
                       finalRecommendations.some((rec) => rec.slug === post.slug)
                         ? "true"

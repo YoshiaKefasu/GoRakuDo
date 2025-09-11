@@ -45,23 +45,14 @@ export async function GET() {
         // Metadata for filtering
         tags: post.data.tags || [],
         category: post.data.category,
-        difficulty: post.data.difficulty,
-        learningStage: post.data.learningStage,
 
-        // AI metadata（完全削除 - 空オブジェクトで統一）
-        aiMetadata: {},
-        contentType: post.data.category || 'general',
-
-        // Searchable text (simplified - AI fields removed)
+        // Searchable text (simplified)
         searchableText: [
           post.data.title,
           post.data.description,
           cleanedContent,
           ...(post.data.tags || []),
           post.data.category,
-          post.data.difficulty,
-          post.data.learningStage,
-          // AI関連フィールドを完全削除
         ]
           .filter(Boolean)
           .join(' '),
@@ -71,11 +62,9 @@ export async function GET() {
           .length,
         contentLength: cleanedContent.length,
 
-        // Feature flags (simplified - AI recommendations removed)
-        isRecommended: false,  // AI推奨機能を無効化
-        isBeginner:
-          post.data.difficulty === 'beginner' ||
-          post.data.learningStage === 'pemanasan',
+        // Feature flags (simplified)
+        isRecommended: false,
+        isBeginner: false,
         isTool:
           post.data.category === 'tools' ||
           post.data.title.toLowerCase().includes('anki'),
