@@ -6,7 +6,6 @@ description: 'Comprehensive template for creating new blog posts'
 version: '1.0.0'
 lastUpdated: '2024-12-19T00:00:00.000Z'
 isActive: true
-category: 'content-creation'
 categories: ['content-creation', 'content-creation/templates']
 requiredFields:
   [
@@ -14,7 +13,7 @@ requiredFields:
     'description',
     'publishedDate',
     'author',
-    'category',
+    'categories',
     'tags',
   ]
 optionalFields:
@@ -57,7 +56,6 @@ templateContent: |
   description: "DESCRIPTION_PLACEHOLDER - Replace with compelling description (150-160 characters)"
   publishedDate: "YYYY-MM-DDTHH:MM:SS.000Z"
   author: "Tim GoRakuDo"
-  category: "category-name"
   categories: ["category-name", "category-name/subcategory"]
   tags: ["tag1", "tag2", "tag3", "tag4", "tag5"]
 

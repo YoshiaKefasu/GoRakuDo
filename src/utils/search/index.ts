@@ -27,7 +27,7 @@ interface AstroContentPost {
     title?: string;
     description?: string;
     tags?: string[];
-    category?: string;
+    categories?: string[];
   };
 }
 
@@ -39,7 +39,7 @@ export function convertToSearchPost(astroPost: AstroContentPost): SearchPost {
     description: astroPost.data.description || '',
     tags: astroPost.data.tags || [],
     slug: astroPost.slug || '',
-    contentType: astroPost.data.category || 'guide',
+    contentType: astroPost.data.categories?.[0] || 'guide',
     isRecommended: false,
   };
 }

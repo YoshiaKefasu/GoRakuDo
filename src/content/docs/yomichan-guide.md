@@ -4,7 +4,6 @@ description: 'Setup dan penggunaan Yomichan untuk membaca bahasa Jepang dengan h
 publishedDate: '2024-01-25T00:00:00.000Z'
 author: 'Tim GoRakuDo'
 emoji: '🔍'
-category: 'tools'
 categories: ['tools', 'tools/reading', 'tools/yomichan']
 tags: ['yomichan', 'browser-extension', 'reading', 'dictionary', 'furigana']
 ---

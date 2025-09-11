@@ -4,7 +4,6 @@ description: 'Cara memilih anime, manga, dan media Jepang yang sesuai dengan lev
 publishedDate: '2024-01-20T00:00:00.000Z'
 author: 'Tim GoRakuDo'
 emoji: '📺'
-category: 'methodology'
 categories: ['methodology', 'methodology/content-selection']
 tags: ['content-selection', 'anime', 'manga', 'i+1', 'comprehensible-input']
 ---
