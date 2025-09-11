@@ -92,7 +92,7 @@ const { headings = [] } = Astro.props
   .toc-container {
     position: sticky;
     top: 100px;
-    width: 280px;
+    width: 18rem;
     height: fit-content;
     max-height: calc(100vh - 120px);
     background: rgba(15, 15, 15, 0.95);
@@ -103,6 +103,7 @@ const { headings = [] } = Astro.props
     z-index: 10;
     transition: all 0.3s ease;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    overflow-x: hidden;
   }
 
   .toc-container::before {
@@ -256,6 +257,7 @@ const { headings = [] } = Astro.props
 
   .toc-nav {
     overflow-y: auto;
+    overflow-x: hidden;
     max-height: calc(100vh - 200px);
     scrollbar-width: thin;
     scrollbar-color: rgba(139, 93, 255, 0.3) transparent;
@@ -308,6 +310,9 @@ const { headings = [] } = Astro.props
     border-left: 3px solid transparent;
     position: relative;
     transform: translateX(0);
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .toc-link:hover {
@@ -446,6 +451,7 @@ const { headings = [] } = Astro.props
       border: 1px solid rgba(139, 93, 255, 0.3);
       touch-action: manipulation;
       padding: 8px 16px;
+      overflow-x: hidden;
     }
 
     .toc-container.mobile-toc .toc-title {
