@@ -5,6 +5,7 @@ publishedDate: '2024-01-25T00:00:00.000Z'
 author: 'Tim GoRakuDo'
 emoji: '📚'
 category: 'tools'
+categories: ['tools', 'tools/flashcard', 'tools/anki']
 tags: ['anki', 'srs', 'flashcards', 'spaced-repetition', 'vocabulary']
 ---
 

@@ -7,6 +7,7 @@ version: '1.0.0'
 lastUpdated: '2024-12-19T00:00:00.000Z'
 isActive: true
 category: 'content-creation'
+categories: ['content-creation', 'content-creation/templates']
 requiredFields:
   [
     'title',
@@ -57,6 +58,7 @@ templateContent: |
   publishedDate: "YYYY-MM-DDTHH:MM:SS.000Z"
   author: "Tim GoRakuDo"
   category: "category-name"
+  categories: ["category-name", "category-name/subcategory"]
   tags: ["tag1", "tag2", "tag3", "tag4", "tag5"]
 
 

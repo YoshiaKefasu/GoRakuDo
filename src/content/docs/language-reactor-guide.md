@@ -5,6 +5,7 @@ publishedDate: '2024-01-25T00:00:00.000Z'
 author: 'Tim GoRakuDo'
 emoji: '🎬'
 category: 'tools'
+categories: ['tools', 'tools/video-learning', 'tools/language-reactor']
 tags:
   ['language-reactor', 'netflix', 'video-learning', 'subtitle', 'vocabulary']
 ---

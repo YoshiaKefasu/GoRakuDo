@@ -20,7 +20,7 @@ import Navbar from "../components/public-components/Navbar.vue"
 import "../styles/docs/docs.css"
 import { resolvePath, getCollectionInfo } from "../utils/collections"
 // AI content utilities removed - functionality no longer needed
-import { ContentConfigUtils } from "../content/content-config"
+// ContentConfigUtils removed - using direct content access
 
 import { logger, ConsoleLogger } from "../utils/logging/console-logger"
 
@@ -402,36 +402,28 @@ function formatDate(dateString: string): string {
                 >Semua ({formatNumber(totalPosts)})</button
               >
 
-              {/* Automatically generated filter buttons from content config */}
-              {
-                ContentConfigUtils.getSortedFilters()
-                  .filter((filter) => filter.id !== "all") // Exclude "all" button as it's handled above
-                  .map((filter) => {
-                    const count = ContentConfigUtils.getFilterCount(sortedPosts, filter)
-                    return (
-                      <button
-                        class="filter-button filter-button-loading"
-                        data-filter={filter.name}
-                        data-filter-type={filter.type}
-                        data-filter-target={filter.target}
-                        title={filter.description}>
-                        {filter.icon} {filter.displayName}
-                        {count > 0 && ` (${formatNumber(count)})`}
-                      </button>
-                    )
-                  })
-              }
+              {/* Simplified filter buttons - using direct content access */}
+              <button class="filter-button filter-button-loading" data-filter="getting-started" data-filter-type="category" data-filter-target="categories">
+                🚀 Getting Started
+              </button>
+              <button class="filter-button filter-button-loading" data-filter="methodology" data-filter-type="category" data-filter-target="categories">
+                🧠 Methodology
+              </button>
+              <button class="filter-button filter-button-loading" data-filter="tools" data-filter-type="category" data-filter-target="categories">
+                🛠️ Tools
+              </button>
+              <button class="filter-button filter-button-loading" data-filter="testing" data-filter-type="category" data-filter-target="categories">
+                🧪 Testing
+              </button>
             </div>
 
             <div class="search-suggestions" id="searchSuggestions" style="display: none;">
               <div class="suggestions-title">Saran Pencarian:</div>
-              {
-                ContentConfigUtils.getSearchSuggestions().map((suggestion) => (
-                  <span class="suggestion-tag" data-suggestion={suggestion}>
-                    {suggestion}
-                  </span>
-                ))
-              }
+              <span class="suggestion-tag" data-suggestion="immersion">immersion</span>
+              <span class="suggestion-tag" data-suggestion="anki">anki</span>
+              <span class="suggestion-tag" data-suggestion="beginner">beginner</span>
+              <span class="suggestion-tag" data-suggestion="tools">tools</span>
+              <span class="suggestion-tag" data-suggestion="methodology">methodology</span>
             </div>
           </div>
 
