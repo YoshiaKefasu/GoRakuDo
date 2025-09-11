@@ -44,7 +44,7 @@ export async function GET() {
 
         // Metadata for filtering
         tags: post.data.tags || [],
-        category: post.data.category,
+        categories: post.data.categories || ['general'],
 
         // Searchable text (simplified)
         searchableText: [
@@ -52,7 +52,7 @@ export async function GET() {
           post.data.description,
           cleanedContent,
           ...(post.data.tags || []),
-          post.data.category,
+          ...(post.data.categories || []),
         ]
           .filter(Boolean)
           .join(' '),
@@ -66,7 +66,7 @@ export async function GET() {
         isRecommended: false,
         isBeginner: false,
         isTool:
-          post.data.category === 'tools' ||
+          post.data.categories?.includes('tools') ||
           post.data.title.toLowerCase().includes('anki'),
         hasCodeBlocks: fullContent.includes('```'),
         hasImages: fullContent.includes('![') || fullContent.includes('!['),

@@ -341,7 +341,13 @@ export class ModernSearchEngine {
     if (!category) return posts;
 
     return posts.filter((post: SearchDataItem) => {
-      return category.keywords.some(
+      // 新しいcategories配列を使用してフィルタリング
+      return post.categories?.some(cat => 
+        cat.toLowerCase().includes(categoryId.toLowerCase()) ||
+        category.keywords.some(keyword => 
+          cat.toLowerCase().includes(keyword.toLowerCase())
+        )
+      ) || category.keywords.some(
         (keyword: string) =>
           post.title?.toLowerCase().includes(keyword.toLowerCase()) ||
           post.description?.toLowerCase().includes(keyword.toLowerCase())

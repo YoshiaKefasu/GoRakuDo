@@ -38,7 +38,7 @@ export interface SearchDataItem {
 
   // Metadata for filtering (51-55行)
   tags: string[];
-  category: string;
+  categories: string[];
 
   // Searchable text (66-83行)
   searchableText: string;
