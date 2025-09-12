@@ -9,50 +9,50 @@ emoji: '💝'
 ---
 ## Titik Balik: Saat Mimpi Nyaris Terkubur
 
-Nama gue Yosia Kefas, pendiri GoRakuDo. Kisah ini dimulai dari mimpi sederhana: lanjut kuliah ke Jepang. Mimpi yang didukung penuh orang tua, dan berakar sejak kecil, saat gue sering dengerin siaran belajar bahasa Jepang di Radio NHK bareng Bokap.
+Nama saya Yosia Kefas, pendiri GoRakuDo. Kisah ini dimulai dari mimpi sederhana: berakar sejak kecil, saat saya sering mendengarkan siaran belajar bahasa Jepang di Radio NHK, dan melanjutkan kuliah ke Jepang yang awalnya didukung penuh oleh orang tua.
 
-Gue pikir, bahasa Jepang itu mustahil dipelajari tanpa guru. Gue daftar ke sebuah kursus privat, tapi setahun lebih berlalu, gue merasa *stuck* sama sekali. Akhirnya gue pindah ke tempat kursus lain.
+Awalnya saya pikir, bahasa Jepang itu mustahil dipelajari tanpa guru. Saya mendaftar ke sebuah kursus privat, tapi setelah setahun lebih berlalu, saya merasa *stuck* sama sekali. Akhirnya, saya pindah ke tempat kursus lain.
 
-Di sana, semua diulang dari nol. Perlahan, gue naik tingkat dari 初級 (Shokyuu) sampai akhirnya tiba di 上級 (Joukyuu). Tapi setiap ujian kenaikan tingkat adalah mimpi buruk. Stres, nggak bisa tidur, apalagi pas ketemu materi perubahan kata kerja. Dari 30-an orang di kelas awal, cuma gue sendiri yang bertahan sampai tingkat akhir. Ironisnya, meski di atas kertas setara N3, gue ngerasa kemampuan gue nyangkut di level N4.
+Di sana, semua ulang dari nol. Perlahan, saya naik tingkat dari 初級 (Shokyuu) sampai akhirnya tiba di 上級 (Joukyuu). Tapi setiap ujian kenaikan tingkat itu bikin stres, susah tidur, apalagi saat bertemu materi perubahan kata kerja. Dari 30-an orang di kelas awal, hanya saya sendirian yang bertahan sampai tingkat akhir. Ironisnya saat itu meski di atas kertas setara N3, saya merasa kemampuan saya tersangkut di level N4.
 
 
 ### 🌪️ Keajaiban di Tengah Badai
 
-Di tengah perjuangan itu, pandemi COVID-19 melanda. Dan di sanalah keajaiban terjadi. Gue nemu metode **"Immersion"** dari Matt vs Japan, yang didasari oleh teori akuisi bahasa Prof. Stephen Krashen. Awalnya ragu, tapi tetap gue coba barengan dengan metode tradisional dari kursus.
+Di tengah perjuangan waktu itu, ada pandemi COVID-19. Dan di sanalah keajaiban algoritma YouTube terjadi. Saya menemukan metode **"Immersion"** dari Matt vs Japan, yang didasari oleh teori akuisisi bahasa Prof. Stephen Krashen. Awalnya ragu, tapi tetap saya coba bersamaan dengan metode tradisional dari kursus.
 
-Perlahan, seorang guru bernama Andre Sensei mulai sadar ada perubahan drastis. Dari yang awalnya parah banget, kemampuan gue meroket. Di tingkat Joukyuu, tugas yang bikin teman sekelas pusing, bisa gue selesaikan dalam hitungan menit.
+Perlahan, seorang guru bernama Andre Sensei mulai sadar ada perubahan drastis. Dari yang awalnya sangat buruk, kemampuan saya meroket. Di tingkat Joukyuu, tugas yang bikin teman khursus sekelas pusing berpuluh-puluh menit, bisa saya selesaikan kurang dalam 3 menit.
 
-Namun, di saat bersamaan, badai menerpa hidup gue. Tabungan pribadi gue—hampir **20 juta rupiah**—terkuras habis untuk biaya kursus dan sudah sekarat. Kalau gue bayar untuk bulan berikutnya, gue nggak akan punya apa-apa lagi. Di waktu yang sama, orang tua gue bercerai. Mimpi untuk kuliah ke Jepang hancur berkeping-keping. LENYAP.
+Namun, di saat bersamaan, badai menerpa hidup saya. Tabungan pribadi saya—hampir **20 juta rupiah**—terkuras habis untuk biaya kursus. Disaat itu kalau tabuhngan saya (saat smk) hampir sekarat habis. Dan di waktu yang sama, orang tua saya bercerai. Mimpi untuk kuliah ke Jepang hilang begitu saja. Lenyap.
 
-Gue berada di persimpangan jalan paling gelap. Pilihan gue cuma dua: **"Menyerah dan relakan semua pengorbanan sia-sia"** atau **"Trust The Process dengan Immersion"**.
+Saya berada di persimpangan jalan. Pilihan saya cuma dua: **"Menyerah dan relakan semua pengorbanan sia-sia"** atau **"Trust The Process dengan Immersion"**.
 
-Dengan terpaksa, gue berhenti dari kursus tanpa kabar. Gue bertaruh pada satu-satunya hal yang tersisa yaitu "IMMERSION".
+Dengan terpaksa, saya berhenti dari kursus tanpa kabar. Dan bertaruh pada pada "IMMERSION".
 
 ###  ✨ Dari Titik Nol Menjadi Bukti Hidup
 
-Dari sana, setiap hari gue *immerse* bahasa Jepang dengan mengkonsumsi konten native dan anime. *Trust the process*. Dengan ANKI, *sentence mining*, dan novel-novel Jepang. Hasilnya bukan sekedar n1 tapi pencapaian *near-native level*—sebuah *nativeness* yang lebih dari sekadar *fluency*. Sekarang, kalau gue ngobrol sama orang Jepang, mereka sering salah sangka gue ini native jepang, atau pernah tinggal dijepang di sana—padahal, gue belum pernah sekalipun meninggalkan Pulau Jawa.
+Sejak saat itu, setiap hari saya *immerse* bahasa Jepang dengan mengonsumsi konten native dan anime. *Trust the process*. Dengan ANKI, *sentence mining*, dan novel-novel Jepang. Hasilnya bukan sekadar N1, tapi pencapaian *near-native level*—sebuah *nativeness* yang lebih dari sekadar *fluency*. Sekarang, kalau saya berbicara dengan orang Jepang, mereka sering mengira saya ini penutur asli Jepang atau pernah tinggal di sana—padahal, saya belum pernah sekalipun meninggalkan Pulau Jawa.
 
-Gue sadar, gue nggak sendirian. Bersama teman-teman, kami memulai eksperimen kecil di Discord. Apa yang dimulai sebagai obrolan sederhana meledak menjadi sebuah revolusi. Komunitas kami, **Gorakudo 「語楽道」**, tumbuh menjadi rumah bagi lebih dari **10.000 anggota**. Ini adalah bukti hidup bahwa metode ini berhasil.
+Bersama kalian teman-teman, kita memulai eksperimen kecil di Discord. Apa yang dimulai sebagai obrolan sederhana meledak menjadi sebuah revolusi. Komunitas kita **Gorakudo 「語楽道」**, tumbuh menjadi rumah bagi lebih dari **10.000 member**. Ini adalah bukti hidup bahwa metode ini berhasil.
 
 ## Membangun Rumah yang Layak untuk Semua
 
-Discord adalah oasis kami, tapi kami sadar potensinya terbatas. Kami butuh rumah yang sesungguhnya. Sebuah platform pembelajaran terpadu yang didedikasikan sepenuhnya untuk metodologi yang telah terbukti ini.
+Discord adalah oasis, tapi saya sadar potensinya terbatas. Kita butuh rumah yang sesungguhnya. Sebuah platform pembelajaran terpadu yang didedikasikan sepenuhnya untuk metodologi yang telah terbukti ini.
 
-Oleh karena itu, kami harus melangkah ke tahap selanjutnya: membangun website ini (***https://gorakudo.org***).
+Oleh karena itu, kita harus melangkah ke tahap selanjutnya: membangun website ini ( *https://gorakudo.org* ).
 
-Website ini akan menjadi pusat panduan lengkap untuk belajar otodidak, 100% gratis untuk publik, tanpa syarat. Karena kami percaya, pengetahuan tidak boleh menjadi barang mewah.
+Website ini akan menjadi pusat panduan lengkap untuk belajar otodidak, 100% gratis untuk publik, tanpa syarat. Karena kita percaya, pengetahuan tidak boleh menjadi barang mewah.
 
 ### 🎯 Panggilan untuk Mewujudkan Mimpi Bersama
 
-Perjalanan ini tidak bisa kami tempuh sendiri. Untuk mewujudkan website yang profesional dan stabil sebagai rumah permanen bagi puluhan ribu pembelajar, kami membutuhkan dukungan Anda.
+Perjalanan ini tidak bisa di-tempuh sendirian. Untuk mewujudkan website yang profesional dan stabil sebagai rumah permanen bagi puluhan ribu pembelajar, kita membutuhkan dukungan-mu.
 
-Kami menargetkan untuk mencapai tujuan ini sebelum **31 Desember 2025**. Setiap donasi, tidak peduli seberapa kecil, adalah bata yang akan membangun rumah kita bersama. Investasi Anda akan membantu ribuan mimpi untuk menguasai bahasa Jepang menjadi kenyataan.
+Kita menargetkan untuk mencapai tujuan ini sebelum **31 Desember 2025**. Setiap donasi kalian, tidak peduli seberapa kecil, adalah batu bata yang akan membangun rumah kita bersama. Investasi kalian kedepannya akan membantu mewujutkan puluhan ribu mimpi untuk menguasai bahasa Jepang.
 
-Mari kita wujudkan Gorakudo.org. Mari kita tunjukkan pada dunia bahwa tidak ada lagi dinding yang tak bisa ditembus.
+Mari kita wujudkan Website ini Gorakudo.org. Mari kita tunjukkan pada dunia bahwa tidak ada lagi dinding yang tak bisa ditembus.
 
 ### 💝 Donasi Anda adalah nafas bagi mimpi kami
 
-*Jadilah bagian dari sejarah kami dengan memberikan dukungan melalui Trakteer kami ( https://trakteer.id/yosiakefas/tip ).*
+*Jadilah bagian dari sejarah kita dengan memberikan dukungan melalui Trakteer ( https://trakteer.id/yosiakefas/tip ).*
 
 ## Jadi, Donasinya Buat Apa Aja?
 
