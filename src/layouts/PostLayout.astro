@@ -1,4 +1,7 @@
 ---
+import TableOfContents from "../components/content/TableOfContents.astro";
+import Breadcrumb from "../components/public-components/Breadcrumb.astro";
+
 export interface Props {
   post: import("astro:content").CollectionEntry<"docs">;
   collectionMetadata: {
@@ -8,8 +11,16 @@ export interface Props {
   };
   headings?: { depth: number; slug: string; text: string }[];
   postActions?: boolean;
+  // Breadcrumb configuration
+  breadcrumbConfig?: {
+    currentPath?: string;
+    showHome?: boolean;
+    variant?: "compact" | "spacious" | "minimal" | "pill" | "underline";
+    showIcons?: boolean;
+    ariaLabel?: string;
+  };
 }
-const { post, collectionMetadata, headings = [], postActions = true } = Astro.props;
+const { post, collectionMetadata, headings = [], postActions = true, breadcrumbConfig } = Astro.props;
 ---
 
 <!-- Main Content -->
@@ -17,7 +28,18 @@ const { post, collectionMetadata, headings = [], postActions = true } = Astro.pr
   <div class="content-wrapper" >
     <div class="content-container">
       <!-- Breadcrumb Navigation -->
-      <slot name="breadcrumb" />
+      {breadcrumbConfig ? (
+        <Breadcrumb 
+          {post}
+          currentPath={breadcrumbConfig.currentPath}
+          showHome={breadcrumbConfig.showHome}
+          variant={breadcrumbConfig.variant}
+          showIcons={breadcrumbConfig.showIcons}
+          ariaLabel={breadcrumbConfig.ariaLabel}
+        />
+      ) : (
+        <slot name="breadcrumb" />
+      )}
 
       <!-- Article Header -->
       <header class="content-header mt-8">
@@ -103,8 +125,14 @@ const { post, collectionMetadata, headings = [], postActions = true } = Astro.pr
       <slot name="footer" />
     </div>
 
-    <!-- Table of Contents Sidebar -->
-    <slot name="toc" />
+    <!-- Sidebar Container -->
+    <div class="sidebar-container">
+      <!-- Table of Contents Sidebar -->
+      <TableOfContents headings={headings} />
+      
+      <!-- Additional Sidebar Content -->
+      <slot name="additional-sidebar" />
+    </div>
   </div>
 </main>
 

@@ -2,18 +2,17 @@
 import { getEntry, type CollectionEntry } from "astro:content";
 import { statSync } from "fs";
 import { join } from "path";
-import UnifiedSEO from "../components/UnifiedSEO.astro";
-import Breadcrumb from "../components/public-components/Breadcrumb.astro";
-import Navbar from "../components/public-components/Navbar.vue";
-import PostLayout from '../layouts/PostLayout.astro';
-import DonationButtons from "../components/content/DonationButtons.astro";
+import UnifiedSEO from "../../components/UnifiedSEO.astro";
+import Navbar from "../../components/public-components/Navbar.vue";
+import PostLayout from '../../layouts/PostLayout.astro';
+import DonationButtons from "../../components/content/DonationButtons.astro";
+import TrakteerWidget from "../../components/content/TrakteerWidget.astro";
 import {
   resolvePath,
   getCollectionInfo,
-} from "../utils/collections";
+} from "../../utils/collections";
 
-import "../styles/content-page.css";
-import TableOfContents from "../components/content/TableOfContents.astro";
+import "../../styles/content-page.css";
 
 const post = await getEntry("pages", "support-us");
 
@@ -106,31 +105,35 @@ const postData = {
       <div class="star" style="bottom: 40%; right: 60%; animation-delay: 0.8s;"></div>
     </div>
 
-    <PostLayout post={post} collectionMetadata={collectionMetadata} postActions={false} >
-      <Breadcrumb 
-        currentPath="/support-us"
-        showHome={true}
-        slot="breadcrumb" 
-      />
-      
+    <PostLayout 
+      post={post} 
+      collectionMetadata={collectionMetadata} 
+      postActions={false} 
+      headings={tocHeadings}
+      breadcrumbConfig={{
+        variant: "compact",
+        showIcons: true,
+        ariaLabel: "Support us page navigation breadcrumb"
+      }}
+    >
       <div class="support-content">
-        <div class="bg-white rounded-2xl w-[420px] h-96" >
-          <iframe 
-            src="https://stream.trakteer.id/milestone/index.html?ms_font=Work+Sans&ms_icon=https%3A%2F%2Fedge-cdn.trakteer.id%2Fimages%2Fmix%2Fegis-in-bottle.png%3Fv%3D14-05-2025&ms_title=Project+Web+GoRakuDo&ms_1_clr1=rgba(250%2C+250%2C+250%2C+0)&ms_1_clr2=rgba(103%2C+58%2C+183%2C+1)&ms_1_clr7=rgba(103%2C+58%2C+183%2C+1)&ms_1_clr9=rgba(190%2C+30%2C+45%2C+1)&ms_sincedate=12-09-2025&ms_only_show_complete=true&ms_is_show_limit_milestone=false&ms_collapse_future_milestone=true&ms_show_total_limit_milestone=3&ms_collapse_complete_milestone=true&key=trstream-9QWbcPd1n8JhpZo9E1BV&mod=3&hash=b9073almo9r5ekzg&timestamp=1757659645"
-            width="100%"
-            height="100%"
-            frameborder="0"
-            scrolling="no">
-          </iframe>
-        </div>
+       <!-- Trakteer Widget in Sidebar -->
+       <TrakteerWidget 
+       src="https://stream.trakteer.id/milestone/index.html?ms_font=Work+Sans&ms_icon=https%3A%2F%2Fedge-cdn.trakteer.id%2Fimages%2Fmix%2Fegis-in-bottle.png%3Fv%3D14-05-2025&ms_title=Project+Web+GoRakuDo&ms_1_clr1=rgba%28250%2C+250%2C+250%2C+0%29&ms_1_clr2=rgba%28103%2C+58%2C+183%2C+1%29&ms_1_clr7=rgba%28103%2C+58%2C+183%2C+1%29&ms_1_clr9=rgba%28190%2C+30%2C+45%2C+1%29&ms_sincedate=12-09-2025&ms_only_show_complete=true&ms_is_show_limit_milestone=false&ms_collapse_future_milestone=true&ms_show_total_limit_milestone=3&ms_collapse_complete_milestone=true&key=trstream-9QWbcPd1n8JhpZo9E1BV&mod=3&hash=b9073almo9r5ekzg"
+       title="Project Web GoRakuDo"
+       width="100%"
+       maxWidth="312px"
+       maxHeight="400px"
+       className="mt-4"
+       slot="additional-sidebar"
+     />
         <Content />
       </div>
-      <TableOfContents headings={tocHeadings} slot="toc" />
     </PostLayout>
 
     <script is:inline src="/core/post-script.js"></script>
 
-    <script define:vars={{ postData }}>
+    <script is:inline define:vars={{ postData }}>
       function sharePost() {
         const shareUrl = postData?.resolvedPath
           ? `${window.location.origin}${postData.resolvedPath}`

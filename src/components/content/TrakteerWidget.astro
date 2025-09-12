@@ -1,0 +1,41 @@
+---
+// TrakteerWidget.astro - Reusable Trakteer Milestone Widget Component
+// GoRakuDo Engineering Team 2025 - Astro + Tailwind v4.1
+// DRY Principle: Single reusable component for all Trakteer widgets
+
+export interface Props {
+  src: string;
+  title?: string;
+  width?: string;
+  maxWidth?: string;
+  maxHeight?: string;
+  className?: string;
+}
+
+const {
+  src,
+  title = "Trakteer Milestone Widget",
+  width = "90vw",
+  maxWidth = "312px",
+  maxHeight = "312px",
+  className = "my-5"
+} = Astro.props;
+---
+
+<div class="flex items-center justify-center w-full max-w-full my-2.5! overflow-hidden">
+  <div 
+    class={`${className} rounded-2xl shadow-lg overflow-hidden bg-white`}
+    style={`width: ${width}; max-width: ${maxWidth}; max-height: ${maxHeight};`}
+  >
+    <svg viewBox="0 0 412 412" style="display: block; width: 100%; height: auto;">
+      <foreignObject width="412" height="412">
+        <iframe 
+          title={title}
+          style="width: 100%; height: 100%; border: none;"
+          src={src}
+        >
+        </iframe>
+      </foreignObject>
+    </svg>
+  </div>
+</div>

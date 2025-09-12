@@ -3,10 +3,8 @@ import { getCollection, type CollectionEntry } from "astro:content"
 import { statSync } from "fs"
 import { join } from "path"
 import UnifiedSEO from "../../components/UnifiedSEO.astro"
-import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
 import Navbar from "../../components/public-components/Navbar.vue"
 import PostLayout from "../../layouts/PostLayout.astro"
-import TableOfContents from "../../components/content/TableOfContents.astro"
 import {
   resolvePath,
   getCollectionInfo,
@@ -130,16 +128,19 @@ const postData = {
     </div>
 
     <!-- Use the new PostLayout component -->
-    <PostLayout {post} {collectionMetadata} headings={tocHeadings}>
-      <Breadcrumb 
-        post={post} 
-        slot="breadcrumb" 
-      />
+    <PostLayout 
+      {post} 
+      {collectionMetadata} 
+      headings={tocHeadings}
+      breadcrumbConfig={{
+        variant: "compact",
+        showIcons: true,
+        ariaLabel: "Documentation navigation breadcrumb"
+      }}
+    >
       <!-- Render the markdown content in the default slot -->
       <Content />
       
-      <!-- Table of Contents in sidebar -->
-      <TableOfContents headings={tocHeadings} slot="toc" />
     </PostLayout>
 
     <!-- Scripts Section - Organized and Optimized -->
