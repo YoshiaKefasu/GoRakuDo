@@ -8,14 +8,13 @@ export interface Props {
   };
   headings?: { depth: number; slug: string; text: string }[];
   postActions?: boolean;
-  showToc?: boolean;
 }
-const { post, collectionMetadata, headings = [], postActions = true, showToc = true } = Astro.props;
+const { post, collectionMetadata, headings = [], postActions = true } = Astro.props;
 ---
 
 <!-- Main Content -->
 <main class="content-page items-center justify-center w-full max-w-full flex flex-col" role="main">
-  <div class="content-wrapper" style={showToc ? "" : "margin: 0 auto;"}>
+  <div class="content-wrapper" >
     <div class="content-container">
       <!-- Breadcrumb Navigation -->
       <slot name="breadcrumb" />
