@@ -133,6 +133,33 @@ export default {
 
   /* === 📦 Plugins === */
   plugins: [
-    require('@tailwindcss/typography'),
+    require('@tailwindcss/typography')({
+      target: 'modern',
+      modifiers: {
+        'prose': {
+          // Much more generous paragraph spacing for better readability
+          'p': {
+            'margin-bottom': '2.5rem', // 40px - very generous spacing
+            'line-height': '1.8',      // 28.8px - very comfortable reading
+            'margin-top': '0.5rem',    // 8px - small top margin
+          },
+          // Ensure proper spacing between elements
+          'h1, h2, h3, h4, h5, h6': {
+            'margin-top': '3rem',      // 48px - very clear section separation
+            'margin-bottom': '1.5rem', // 24px - generous heading spacing
+          },
+          // Better list spacing
+          'ul, ol': {
+            'margin-bottom': '2.5rem', // 40px - consistent with paragraphs
+            'margin-top': '1rem',      // 16px - space before lists
+          },
+          // Blockquote spacing
+          'blockquote': {
+            'margin-top': '2rem',      // 32px - space before blockquotes
+            'margin-bottom': '2rem',   // 32px - space after blockquotes
+          },
+        },
+      },
+    }),
   ],
 };

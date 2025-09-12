@@ -211,27 +211,17 @@
 
 /* Typography plugin handles all text/paragraph styling automatically */
 
-/* Additional paragraph spacing improvements for better readability */
-.content-main.prose p {
-  @apply mb-8 leading-relaxed; /* 32px bottom margin + relaxed line height */
-}
-
-.content-main.prose p:last-child {
-  @apply mb-0; /* Remove bottom margin from last paragraph */
-}
-
 /* Custom enhancements applied after prose (higher specificity) */
 .content-main.prose :where(h1, h2, h3, h4, h5) {
   @apply scroll-mt-8;
 }
 
-/* Enhanced heading spacing for better readability */
 .content-main.prose h1 {
-  @apply mb-6 mt-8 leading-tight; /* 24px bottom, 32px top margin */
+  @apply pb-2;
 }
 
 .content-main.prose h2 {
-  @apply relative mb-5 mt-8 leading-tight; /* 20px bottom, 32px top margin */
+  @apply relative py-2;
 }
 
 .content-main.prose h2::before {
@@ -251,15 +241,11 @@
 }
 
 .content-main.prose h3 {
-  @apply mb-4 mt-6 leading-snug; /* 16px bottom, 24px top margin */
+  @apply py-2;
 }
 
 .content-main.prose h4 {
-  @apply mb-3 mt-5 leading-snug; /* 12px bottom, 20px top margin */
-}
-
-.content-main.prose h5 {
-  @apply mb-2 mt-4 leading-snug; /* 8px bottom, 16px top margin */
+  @apply pb-2;
 }
 
 .content-main.prose ul {

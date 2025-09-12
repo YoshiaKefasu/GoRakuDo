@@ -5,6 +5,8 @@
 @import './global.css';
 @import './docs/word-internal-links.css';
 
+/* Tailwind Typography plugin is configured in tailwind.config.mjs */
+
 /* ========== TAILWIND V5 THEME INTEGRATION ========== */
 @theme {
   /* Content page design tokens */
@@ -202,39 +204,38 @@
 }
 
 /* ========== CONTENT MAIN ========== */
-/* Typography plugin has priority - only essential layout styles */
+/* Only keep custom styles that cannot be handled by Tailwind Typography */
 .content-main {
   @apply p-6 px-4 max-w-none bg-transparent rounded-lg w-full relative block;
+  @apply text-[var(--color-content-text)];
   @apply md:p-5 md:px-3;
   @apply max-sm:p-4 max-sm:px-2;
 }
 
-/* Typography plugin handles all text/paragraph styling automatically */
+/* Typography plugin handles paragraph spacing automatically */
 
-/* Additional paragraph spacing improvements for better readability */
-.content-main.prose p {
-  @apply mb-8 leading-relaxed; /* 32px bottom margin + relaxed line height */
-}
-
-.content-main.prose p:last-child {
-  @apply mb-0; /* Remove bottom margin from last paragraph */
-}
-
-/* Custom enhancements applied after prose (higher specificity) */
-.content-main.prose :where(h1, h2, h3, h4, h5) {
+/* Custom styles that can't be handled by prose */
+.content-main :where(h1, h2, h3, h4, h5) {
   @apply scroll-mt-8;
 }
 
-/* Enhanced heading spacing for better readability */
-.content-main.prose h1 {
-  @apply mb-6 mt-8 leading-tight; /* 24px bottom, 32px top margin */
+.content-main h1 {
+  @apply pb-2;
 }
 
-.content-main.prose h2 {
-  @apply relative mb-5 mt-8 leading-tight; /* 20px bottom, 32px top margin */
+.content-main h2 {
+  @apply relative py-2;
 }
 
-.content-main.prose h2::before {
+.content-main h3 {
+  @apply py-2;
+}
+
+.content-main h4 {
+  @apply pb-2;
+}
+
+.content-main h2::before {
   content: '';
   position: absolute;
   left: -1rem;
@@ -250,31 +251,19 @@
   transform: translateY(-50%);
 }
 
-.content-main.prose h3 {
-  @apply mb-4 mt-6 leading-snug; /* 16px bottom, 24px top margin */
-}
-
-.content-main.prose h4 {
-  @apply mb-3 mt-5 leading-snug; /* 12px bottom, 20px top margin */
-}
-
-.content-main.prose h5 {
-  @apply mb-2 mt-4 leading-snug; /* 8px bottom, 16px top margin */
-}
-
-.content-main.prose ul {
+.content-main ul {
   @apply my-2;
 }
 
-.content-main.prose hr {
+.content-main hr {
   @apply my-4;
 }
 
-.content-main.prose ul li {
+.content-main ul li {
   @apply relative pl-6 list-none;
 }
 
-.content-main.prose ul li::before {
+.content-main ul li::before {
   content: '〆';
   color: var(--color-primary);
   font-weight: 900;
