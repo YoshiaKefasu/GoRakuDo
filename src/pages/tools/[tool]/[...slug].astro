@@ -3,7 +3,6 @@
 import { getCollection, type CollectionEntry } from "astro:content"
 import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro"
 import { logger } from "../../../utils/logging/console-logger"
-import Breadcrumb from "../../../components/public-components/Breadcrumb.astro"
 import type { ToolName } from "../../../utils/content/breadcrumb-utils"
 
 // Generate static paths for all tool articles
@@ -94,20 +93,8 @@ console.log("✅ Tool article accessed:", {
   description={post.data.description}
   publishedDate={post.data.publishedDate}
   lang="id"
-  showBreadcrumb={false}
+  showBreadcrumb={true}
   currentPath={validatedCurrentPath}>
-  <!-- Enhanced Breadcrumb Navigation -->
-  <Breadcrumb 
-    toolConfig={{
-      toolName: toolName as ToolName,
-      articleTitle: post.data.title,
-      articleSlug: sanitizedSlug,
-      showHome: true
-    }}
-    variant="compact"
-    showIcons={true}
-    ariaLabel={`${toolName} ${post.data.title} navigation breadcrumb`}
-  />
 
   <!-- Article Header -->
   <header class="mb-8">

@@ -1631,7 +1631,11 @@ ul ol,
 ol ul {
   /* REASONING: W3Schools standard nested list styling */
   margin: 0.5rem 0; /* Standard spacing for nested lists */
-  padding-left: 1rem; /* Standard indentation for nesting - shorter */
+  padding-left: 0; /* Standard indentation for nesting - shorter */
+}
+
+ul {
+  padding-left: 1rem; /* Standard left padding for bullets - shorter */
 }
 
 ul ul {
