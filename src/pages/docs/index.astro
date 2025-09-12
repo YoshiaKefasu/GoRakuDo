@@ -14,18 +14,18 @@ const {
 // Note: ContentProcessor and SearchDataGenerator are imported dynamically in client-side scripts
 
 import { getCollection, type CollectionEntry } from "astro:content"
-import UnifiedSEO from "../components/UnifiedSEO.astro"
-import Breadcrumb from "../components/public-components/Breadcrumb.astro"
-import Navbar from "../components/public-components/Navbar.vue"
-import "../styles/docs/docs.css"
-import { resolvePath, getCollectionInfo } from "../utils/collections"
+import UnifiedSEO from "../../components/UnifiedSEO.astro"
+import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
+import Navbar from "../../components/public-components/Navbar.vue"
+import "../../styles/docs/docs.css"
+import { resolvePath, getCollectionInfo } from "../../utils/collections"
 // AI content utilities removed - functionality no longer needed
 // ContentConfigUtils removed - using direct content access
 
-import { logger, ConsoleLogger } from "../utils/logging/console-logger"
+import { logger, ConsoleLogger } from "../../utils/logging/console-logger"
 
-import "../styles/global.css"
-import "../styles/homepage/index.css"
+import "../../styles/global.css"
+import "../../styles/homepage/index.css"
 
 // Set global build mode to suppress console output during build
 ConsoleLogger.setGlobalBuildMode(true)
@@ -306,26 +306,6 @@ function formatDate(dateString: string): string {
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap"
       rel="stylesheet"
     />
-    <!-- Global Client Logger -->
-    <script>
-      // Client-side logger for consistent console output - available globally
-      window.clientLogger = {
-        log: (message, level = "info") => {
-          const emoji = { info: "ℹ️", success: "✅", warning: "⚠️", error: "❌" }[level]
-          console.log(`${emoji} ${message}`)
-        },
-        startGroup: (title) => {
-          console.log(`\n${"=".repeat(50)}`)
-          console.log(`🚀 ${title}`)
-          console.log(`${"=".repeat(50)}`)
-        },
-        endGroup: (title) => {
-          console.log(`${"=".repeat(50)}`)
-          console.log(`✅ ${title}`)
-          console.log(`${"=".repeat(50)}\n`)
-        },
-      }
-    </script>
   </head>
   <body>
     <!-- Server Islands optimization - Navigation with defer loading -->
@@ -416,39 +396,12 @@ function formatDate(dateString: string): string {
                 🧪 Testing
               </button>
             </div>
-
-            <div class="search-suggestions" id="searchSuggestions" style="display: none;">
-              <div class="suggestions-title">Saran Pencarian:</div>
-              <span class="suggestion-tag" data-suggestion="immersion">immersion</span>
-              <span class="suggestion-tag" data-suggestion="anki">anki</span>
-              <span class="suggestion-tag" data-suggestion="beginner">beginner</span>
-              <span class="suggestion-tag" data-suggestion="tools">tools</span>
-              <span class="suggestion-tag" data-suggestion="methodology">methodology</span>
-            </div>
           </div>
 
           <!-- Search Results - Moved to appear immediately after search input -->
           <div id="searchResults" class="search-results hidden">
             <div class="search-stats" id="searchStats"></div>
             <div id="searchResultsContent"></div>
-          </div>
-
-          <!-- Loading State -->
-          <div id="loadingState" class="loading-container" style="display: none;">
-            <div class="skeleton-grid">
-              {
-                Array.from({ length: 3 }).map(() => (
-                  <div class="skeleton-card">
-                    <div class="skeleton-title" />
-                    <div class="skeleton-description" />
-                    <div class="skeleton-meta">
-                      <div class="skeleton-date" />
-                      <div class="skeleton-readtime" />
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
           </div>
 
           <!-- Content State -->
@@ -595,7 +548,7 @@ function formatDate(dateString: string): string {
           // 既存の検索システムを優先し、0-Script最適化は段階的に実装
           // Content Layer optimized search system initialization
           try {
-            const { SearchLoadingManager } = await import('../scripts/type-scripts/docs/index/search/search-loading-manager');
+            const { SearchLoadingManager } = await import('../../scripts/type-scripts/docs/index/search/search-loading-manager');
             const searchLoadingManager = new SearchLoadingManager();
             // Content Layer: Optimized initialization timing
             setTimeout(() => {
@@ -609,7 +562,7 @@ function formatDate(dateString: string): string {
 
         // Deferred tag popup initialization
         try {
-          const { SimpleTagPopup } = await import('../scripts/type-scripts/docs/index/ui/simple-tag-popup');
+          const { SimpleTagPopup } = await import('../../scripts/type-scripts/docs/index/ui/simple-tag-popup');
           const tagPopup = new SimpleTagPopup();
           tagPopup.initialize();
           window.simpleTagPopup = tagPopup;
@@ -625,7 +578,7 @@ function formatDate(dateString: string): string {
 
           // Content Layer optimized content system initialization
           try {
-            const { ContentProcessor } = await import('../scripts/type-scripts/docs/index/content/content-processor');
+            const { ContentProcessor } = await import('../../scripts/type-scripts/docs/index/content/content-processor');
             
             // Content Layer: Server-side data directly set for optimal performance
             const contentProcessor = new ContentProcessor(currentPage, postsPerPage);
@@ -684,5 +637,26 @@ function formatDate(dateString: string): string {
         }
       }
     </script>
+
+        <!-- Global Client Logger -->
+        <script>
+          // Client-side logger for consistent console output - available globally
+          window.clientLogger = {
+            log: (message, level = "info") => {
+              const emoji = { info: "ℹ️", success: "✅", warning: "⚠️", error: "❌" }[level]
+              console.log(`${emoji} ${message}`)
+            },
+            startGroup: (title) => {
+              console.log(`\n${"=".repeat(50)}`)
+              console.log(`🚀 ${title}`)
+              console.log(`${"=".repeat(50)}`)
+            },
+            endGroup: (title) => {
+              console.log(`${"=".repeat(50)}`)
+              console.log(`✅ ${title}`)
+              console.log(`${"=".repeat(50)}\n`)
+            },
+          }
+        </script>
   </body>
 </html>
