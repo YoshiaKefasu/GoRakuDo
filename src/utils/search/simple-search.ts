@@ -192,12 +192,6 @@ export class SimpleSearch {
       }
 
       // Filter by learning stage
-      if (
-        filters.learningStage &&
-        post.learningStage !== filters.learningStage
-      ) {
-        return false;
-      }
 
       // Filter by recommended status
       if (
@@ -256,37 +250,6 @@ export class SimpleSearch {
       result.posts.length
     );
     return result;
-  }
-
-  /**
-   * Get search suggestions based on current posts
-   * Optimized for fast suggestion generation
-   */
-  getSuggestions(query: string, maxSuggestions = 5): string[] {
-    if (!query.trim()) return [];
-
-    const suggestions = new Set<string>();
-    const queryLower = query.toLowerCase();
-
-    // Extract suggestions from titles and tags
-    this.posts.forEach(post => {
-      // Add matching words from title
-      const titleWords = post.title.toLowerCase().split(/\s+/);
-      titleWords.forEach(word => {
-        if (word.includes(queryLower) && word.length > 2) {
-          suggestions.add(word);
-        }
-      });
-
-      // Add matching tags
-      post.tags.forEach(tag => {
-        if (tag.toLowerCase().includes(queryLower)) {
-          suggestions.add(tag);
-        }
-      });
-    });
-
-    return Array.from(suggestions).slice(0, maxSuggestions);
   }
 
   /**

@@ -2,15 +2,10 @@
 title: 'SAMPLE POST ASAL: Panduan Menggunakan Anki'
 description: 'Setup dan strategi optimal untuk menggunakan Anki dalam pembelajaran bahasa Jepang.'
 publishedDate: '2024-01-25T00:00:00.000Z'
-readTime: 12
 author: 'Tim GoRakuDo'
 emoji: '📚'
-difficulty: 'intermediate'
-category: 'tools'
+categories: ['tools', 'tools/flashcard', 'tools/anki']
 tags: ['anki', 'srs', 'flashcards', 'spaced-repetition', 'vocabulary']
-featured: false
-mindMapBranch: 'D'
-contentType: 'resource'
 ---
 
 # SAMPLE POST ASAL: Panduan Menggunakan Anki

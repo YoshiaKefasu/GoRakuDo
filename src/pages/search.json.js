@@ -20,16 +20,11 @@ export async function GET() {
       // Extract full markdown content for comprehensive search
       const fullContent = post.body || '';
 
-      // Clean markdown content for search indexing
+      // AstroネイティブMarkdown処理済みコンテンツの最適化
+      // post.bodyは既にHTML形式で提供されているため、HTMLタグを除去してテキスト抽出
       const cleanedContent = fullContent
-        .replace(/---[\s\S]*?---/, '') // Remove frontmatter
-        .replace(/```[\s\S]*?```/g, ' ') // Remove code blocks
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, ' $1 ') // Replace images with alt text
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1') // Remove links, keep text
-        .replace(/#{1,6}\s+/g, '') // Remove header markers
-        .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold formatting
-        .replace(/\*([^*]+)\*/g, '$1') // Remove italic formatting
-        .replace(/`([^`]+)`/g, '$1') // Remove inline code formatting
+        .replace(/<[^>]*>/g, ' ') // Remove HTML tags
+        .replace(/&[^;]+;/g, ' ') // Remove HTML entities
         .replace(/\n+/g, ' ') // Replace newlines with spaces
         .replace(/\s+/g, ' ') // Normalize spaces
         .trim();
@@ -41,7 +36,6 @@ export async function GET() {
         title: post.data.title,
         description: post.data.description,
         pubDate: post.data.publishedDate,
-        readTime: post.data.readTime,
         emoji: post.data.emoji,
 
         // Content for search
@@ -50,24 +44,15 @@ export async function GET() {
 
         // Metadata for filtering
         tags: post.data.tags || [],
-        category: post.data.category,
-        difficulty: post.data.difficulty,
-        learningStage: post.data.learningStage,
+        categories: post.data.categories || ['general'],
 
-        // AI metadata（完全削除 - 空オブジェクトで統一）
-        aiMetadata: {},
-        contentType: post.data.category || 'general',
-
-        // Searchable text (simplified - AI fields removed)
+        // Searchable text (simplified)
         searchableText: [
           post.data.title,
           post.data.description,
           cleanedContent,
           ...(post.data.tags || []),
-          post.data.category,
-          post.data.difficulty,
-          post.data.learningStage,
-          // AI関連フィールドを完全削除
+          ...(post.data.categories || []),
         ]
           .filter(Boolean)
           .join(' '),
@@ -77,13 +62,11 @@ export async function GET() {
           .length,
         contentLength: cleanedContent.length,
 
-        // Feature flags (simplified - AI recommendations removed)
-        isRecommended: false,  // AI推奨機能を無効化
-        isBeginner:
-          post.data.difficulty === 'beginner' ||
-          post.data.learningStage === 'pemanasan',
+        // Feature flags (simplified)
+        isRecommended: false,
+        isBeginner: false,
         isTool:
-          post.data.category === 'tools' ||
+          post.data.categories?.includes('tools') ||
           post.data.title.toLowerCase().includes('anki'),
         hasCodeBlocks: fullContent.includes('```'),
         hasImages: fullContent.includes('![') || fullContent.includes('!['),

@@ -2,15 +2,10 @@
 title: 'SAMPLE POST ASAL:Panduan Setup Yomichan'
 description: 'Setup dan penggunaan Yomichan untuk membaca bahasa Jepang dengan hover dictionary dan furigana generation.'
 publishedDate: '2024-01-25T00:00:00.000Z'
-readTime: 15
 author: 'Tim GoRakuDo'
 emoji: '🔍'
-difficulty: 'beginner'
-category: 'tools'
+categories: ['tools', 'tools/reading', 'tools/yomichan']
 tags: ['yomichan', 'browser-extension', 'reading', 'dictionary', 'furigana']
-featured: true
-mindMapBranch: 'D'
-contentType: 'resource'
 ---
 
 # Panduan Setup Yomichan

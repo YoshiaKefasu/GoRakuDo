@@ -11,16 +11,15 @@ declare global {
     };
     searchLoadingManager?: SearchLoadingManager;
     searchEngine?: ModernSearchEngine;
+    searchData?: SearchDataItem[]; // 0-Script最適化: サーバーサイド検索データ
     contentConfig?: ContentConfig;
     allPosts?: SearchDataItem[];
-    Fuse?: unknown; // npmパッケージのFuse.js
+    Fuse?: import('fuse.js').default; // npmパッケージ版（型安全性向上）
     contentProcessor?: ContentProcessor; // ContentProcessor instance
     searchDataGenerator?: SearchDataGenerator; // SearchDataGenerator instance
     // Animation and UI functions
-    initializeDocsWaveAnimation?: () => (() => void) | undefined;
-    initializeStars?: () => void;
     initializeTagPopups?: () => void;
-    waveAnimation?: { cleanup: () => void } | null;
+    simpleTagPopup?: import('./ui/simple-tag-popup').SimpleTagPopup;
   }
 }
 
@@ -31,7 +30,6 @@ export interface SearchDataItem {
   title: string;
   description: string;
   pubDate: string;
-  readTime?: string;
   emoji?: string;
 
   // Content for search (47-49行)
@@ -40,13 +38,7 @@ export interface SearchDataItem {
 
   // Metadata for filtering (51-55行)
   tags: string[];
-  category: string;
-  difficulty: string;
-  learningStage: string;
-
-  // AI metadata（完全削除 - 空オブジェクトで統一）
-  aiMetadata: Record<string, unknown>; // 空オブジェクトで統一
-  contentType: string; // post.data.category || 'general'
+  categories: string[];
 
   // Searchable text (66-83行)
   searchableText: string;
@@ -112,26 +104,36 @@ export interface SearchLoadingManager {
 
 export interface ModernSearchEngine {
   searchData: SearchDataItem[];
-  searchCache: Map<string, SearchResult>;
-  maxCacheSize: number;
-  performanceMetrics: SearchPerformanceMetrics;
   initialize(): Promise<boolean>;
   performSearch(query: string): Promise<void>;
   clearSearch(): void;
   handleFilter(filterType: string | null): void;
-  getPerformanceReport(): SearchPerformanceMetrics;
 }
 
 export interface FuseSearchResult<T> {
   item: T;
   score?: number;
   matches?: FuseMatch[];
+  refIndex?: number; // 追加: 参照インデックス
 }
 
 export interface FuseMatch {
   indices: [number, number][];
   key: string;
   value: string;
+}
+
+export interface FuseOptions {
+  keys: Array<string | { name: string; weight?: number }>;
+  threshold?: number;
+  minMatchCharLength?: number;
+  shouldSort?: boolean;
+  findAllMatches?: boolean;
+  useExtendedSearch?: boolean;
+  ignoreLocation?: boolean;
+  distance?: number;
+  includeScore?: boolean;
+  includeMatches?: boolean;
 }
 
 export interface SearchResult {

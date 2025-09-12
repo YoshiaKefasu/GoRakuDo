@@ -19,7 +19,7 @@ export type {
   SearchMetrics,
 };
 
-// Enhanced type definition for Astro content with aiMetadata
+// Enhanced type definition for Astro content
 interface AstroContentPost {
   id?: string;
   slug: string;
@@ -27,17 +27,7 @@ interface AstroContentPost {
     title?: string;
     description?: string;
     tags?: string[];
-    aiMetadata?: {
-      contentType?: 'guide' | 'tool' | 'methodology' | 'practice';
-      learningStage?: 'beginner' | 'intermediate' | 'advanced';
-      isRecommended?: boolean;
-      complexity?: string;
-      keywords?: string[];
-      semanticKeywords?: string[];
-      learningObjectives?: string[];
-      learningPath?: string[];
-      recommendations?: string[];
-    };
+    categories?: string[];
   };
 }
 
@@ -49,9 +39,8 @@ export function convertToSearchPost(astroPost: AstroContentPost): SearchPost {
     description: astroPost.data.description || '',
     tags: astroPost.data.tags || [],
     slug: astroPost.slug || '',
-    contentType: astroPost.data.aiMetadata?.contentType || 'guide',
-    learningStage: astroPost.data.aiMetadata?.learningStage || 'beginner',
-    isRecommended: astroPost.data.aiMetadata?.isRecommended || false,
+    contentType: astroPost.data.categories?.[0] || 'guide',
+    isRecommended: false,
   };
 }
 

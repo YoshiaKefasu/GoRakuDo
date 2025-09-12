@@ -1,7 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 
-// Simplified Content Schema for Indonesian Immersion Learning
-// AI metadata handled by separate files (e.g., anki-guide-metadata.json)
+// Optimized Content Schema for Indonesian Immersion Learning
 const docsCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -10,29 +9,15 @@ const docsCollection = defineCollection({
     description: z.string(),
     publishedDate: z.string(),
     author: z.string().default('Tim GoRakuDo'),
+    emoji: z.string().optional(),
 
-    // Sticky Note Design Support
-    emoji: z.string().optional(), // Optional emoji for sticky note design
-
-    // Basic Content Classification
-    difficulty: z
-      .enum(['beginner', 'intermediate', 'advanced'])
-      .default('beginner'),
-    category: z.string().default('general'),
-    tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
-
-    // Simplified Content Type Classification
-    contentType: z
-      .enum([
-        'metodologi', // Learning methodology and theory
-        'tutorial', // Step-by-step guides and tutorials
-        'resource', // Tools, references, and materials
-      ])
-      .default('tutorial'),
-
-    // Read Time Estimation
-    readTime: z.number().optional(), // Estimated reading time in minutes
+    // Content Classification (Simplified)
+    categories: z.array(z.string()).default(['general']), // Main classification
+    tags: z.array(z.string()).default([]), // Content labels
+    
+    // Optional Fields
+    status: z.enum(['published', 'draft', 'archived']).default('published'),
+    isRecommended: z.boolean().default(false),
   }),
 });
 
@@ -50,7 +35,9 @@ const templatesCollection = defineCollection({
 
     // Template Configuration
     isActive: z.boolean().default(true),
-    category: z.string().default('general'),
+    
+    // Content Classification (Simplified)
+    categories: z.array(z.string()).default(['content-creation']),
 
     // Template Structure
     requiredFields: z.array(z.string()).default([]),
@@ -126,10 +113,7 @@ const toolArticlesCollection = defineCollection({
       'desktop-app',
     ]),
 
-    // Difficulty and Setup Information
-    difficulty: z
-      .enum(['beginner', 'intermediate', 'advanced'])
-      .default('beginner'),
+    // Setup Information
     setupTime: z.string().optional(),
     cost: z.enum(['free', 'freemium', 'paid', 'subscription']).default('free'),
 
@@ -137,17 +121,10 @@ const toolArticlesCollection = defineCollection({
     emoji: z.string().optional(),
     icon: z.string().optional(),
 
-    // Content Classification
+    // Content Classification (Simplified)
+    categories: z.array(z.string()).default(['tools']),
     tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
 
-    // Content Type
-    contentType: z
-      .enum(['tool-guide', 'setup-tutorial', 'usage-guide', 'review'])
-      .default('tool-guide'),
-
-    // Read Time Estimation
-    readTime: z.number().optional(),
 
     // Tool Features
     features: z.array(z.string()).default([]),

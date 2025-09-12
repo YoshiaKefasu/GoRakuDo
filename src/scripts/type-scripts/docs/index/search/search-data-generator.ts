@@ -9,12 +9,9 @@ interface RawPostData {
   description?: string;
   content?: string;
   pubDate?: string;
-  readTime?: string;
   emoji?: string;
   tags?: string[];
-  category?: string;
-  difficulty?: string;
-  learningStage?: string;
+  categories?: string[];
   url?: string;
 }
 
@@ -102,7 +99,6 @@ export class SearchDataGenerator {
       title: post.title || 'Untitled',
       description: post.description || '',
       pubDate: post.pubDate || '',
-      readTime: post.readTime || '5 min read',
       emoji: post.emoji || '📄',
 
       // コンテンツ
@@ -111,13 +107,7 @@ export class SearchDataGenerator {
 
       // メタデータ（簡素化）
       tags: post.tags || [],
-      category: post.category || 'general',
-      difficulty: post.difficulty || 'medium',
-      learningStage: post.learningStage || 'intermediate',
-
-      // AI メタデータ（完全削除 - 空オブジェクトで統一）
-      aiMetadata: {},
-      contentType: post.category || 'general',
+      categories: post.categories || ['general'],
 
       // 検索用テキスト（簡素化）
       searchableText: this.generateSearchableText(post, processedContent),
@@ -128,8 +118,8 @@ export class SearchDataGenerator {
 
       // 機能フラグ（簡素化）
       isRecommended: false,
-      isBeginner: post.difficulty === 'beginner',
-      isTool: post.category === 'tool',
+      isBeginner: false,
+      isTool: post.categories?.includes('tools') || false,
       hasCodeBlocks: processedContent.hasCodeBlocks,
       hasImages: processedContent.hasImages,
 
@@ -189,8 +179,7 @@ export class SearchDataGenerator {
       post.description || '',
       processedContent.cleanedText,
       (post.tags || []).join(' '),
-      post.category || '',
-      post.difficulty || '',
+      (post.categories || []).join(' '),
     ];
 
     return searchableParts

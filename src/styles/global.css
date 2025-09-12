@@ -1189,15 +1189,6 @@
     box-shadow: var(--shadow-xl);
   }
 
-  /* ===== LEGACY SECTION STYLES - PRESERVED ===== */
-  .mission-section,
-  .features-section,
-  .docs-preview-section,
-  .tools-hero,
-  .tools-section {
-    @apply [@media(max-width:768px)]:px-[20px];
-  }
-
   /* ===== RESPONSIVE OVERRIDES - LEGACY COMPATIBILITY ===== */
   @media (max-width: 480px) {
     .primary-button {

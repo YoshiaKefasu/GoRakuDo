@@ -1,17 +1,16 @@
 ---
-import UnifiedSEO from "../components/UnifiedSEO.astro"
 import BaseLayout from "../layouts/BaseLayout.astro"
 
-// Vueコンポーネントをインポート
-import Navbar from "../components/public-components/Navbar.vue"
+// Homepage specific components
 import Hero from "../components/homepage/hero.astro"
+import MissionSection from "../components/homepage/MissionSection.astro"
 import InvitationModal from "../components/public-components/InvitationModal.vue"
+import FeaturesSection from "../components/homepage/FeaturesSection.astro"
+import DocumentationPreviewSection from "../components/homepage/DocumentationPreviewSection.astro"
 
 // CSSをインポート
-import "../styles/global.css"
 import "../styles/homepage/ImageSlideshow.css"
 import "../styles/homepage/index.css"
-import "../styles/homepage/homepage.css"
 
 // 型安全なSEOデータ定義（Astroネイティブ）
 interface SEOData {
@@ -21,7 +20,7 @@ interface SEOData {
   pageType: 'website' | 'article';
   image?: string;
   author?: string;
-  lang?: string; // 言語設定を追加（各ページで自由に変更可能）
+  lang?: "id" | "ja"; // 言語設定を追加（BaseLayoutのPropsと一致）
 }
 
 const seoData: SEOData = {
@@ -35,356 +34,120 @@ const seoData: SEOData = {
 }
 ---
 
-<!doctype html>
-<html lang="id">
-  <head>
-    <!-- Basic HTML head elements -->
-    <!-- UnifiedSEO - 最適化されたAstroネイティブ実装 -->
-    <UnifiedSEO
-      title={seoData.title}
-      description={seoData.description}
-      keywords={seoData.keywords}
-      pageType={seoData.pageType}
-      image={seoData.image}
-      author={seoData.author}
-      lang={seoData.lang}
-      gtag={import.meta.env.PUBLIC_GA_ID}
+<BaseLayout
+  title={seoData.title}
+  description={seoData.description}
+  keywords={seoData.keywords}
+  pageType={seoData.pageType}
+  lang={seoData.lang}
+>
+  <!-- Main Content -->
+  <main
+    class="main-content"
+    role="main"
+    style="background: transparent !important;"
+    transition:name="main-content">
+    <!-- Hero Section -->
+    <Hero
+      missionId="mission"
+      invitationModalId="invitationModal"
+      titleLine1="Belajar Secara Alami,"
+      titleLine2="Kuasai Layaknya Penutur Asli."
     />
 
-    <!-- パフォーマンス最適化: 重要なリソースのプリロード -->
-    <link rel="preload" href="/core/hompage-script.js" as="script" />
+    <!-- Mission Section -->
+    <MissionSection />
+
+    <!-- Features Section -->
+    <FeaturesSection />
+
+    <!-- Documentation Preview Section -->
+    <DocumentationPreviewSection />
+  </main>
+
+  <!-- Invitation Modal - Load only when needed -->
+  <InvitationModal client:idle />
+
+  <!-- Enhanced wave animation is now handled by WaveAnimation component -->
+  <!-- <script fetchpriority="auto" is:inline src="/core/hompage-script.js"></script> -->
+
+  <!-- Animation Modules Integration -->
+  <script>
+    // Stars animation is now integrated into WaveAnimation.astro
+    // No separate import needed
+    console.log("🎬 Animation modules integrated into WaveAnimation component")
     
-    <!-- 非重要リソースのプリフェッチ -->
-    <link fetchpriority="low" rel="prefetch" href="/docs" />
-    <link fetchpriority="low" rel="prefetch" href="/discord" />
-  </head>
-  <body>
-    <!-- Stylesheet -->
-    <!-- Wave Animation Background (Hidden from screen readers) - FIXED TRANSPARENT -->
-    <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
+    // Trigger hero animation after page loads
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const heroContent = document.querySelector("#hero-content")
+        if (heroContent) {
+          heroContent.classList.remove(
+            "opacity-0",
+            "translate-y-16",
+            "scale-80",
+            "blur-md"
+          )
+          console.log("✨ Hero content revealed smoothly")
+        }
+      }, 200) // Coordinate with hero component timing
+    })
+  </script>
 
-    <!-- Stars Background (Hidden from screen readers) - Stars will be created dynamically by the module -->
-    <div class="stars" aria-hidden="true"></div>
-
-    <!-- Navigation -->
-    <Navbar client:visible />
-
-    <!-- Main Content -->
-    <main
-      class="main-content"
-      role="main"
-      style="background: transparent !important;"
-      transition:name="main-content">
-      <!-- Hero Section -->
-      <Hero
-        missionId="mission"
-        invitationModalId="invitationModal"
-        titleLine1="Belajar Secara Alami,"
-        titleLine2="Kuasai Layaknya Penutur Asli."
-      />
-
-      <!-- Mission Section -->
-      <section
-        id="mission"
-        class="mission-section smooth-edge-bottom loading"
-        aria-labelledby="mission-title"
-        transition:name="mission-section"
-        data-lazy>
-        <div class="mission-container">
-          <h2 class="mission-title" id="mission-title" transition:name="mission-title">
-            Misi Kami
-          </h2>
-          <div class="mission-content">
-            <div class="mission-text">
-              <p>
-                🌊✨ <b>Misi kami adalah memberi jalur yang menyenangkan</b>, dan <i
-                  >terbukti secara ilmiah</i
-                > oleh 🎓 Prof. Stephen Krashen bagi siapa pun yang mulai dari <b>nol</b> untuk
-                menguasai bahasa Jepang secara alami 🌱 dan berkelanjutan.
-              </p>
-              <p>
-                Kami yakin belajar bahasa itu bukan sekadar menghafal aturan 📖 atau
-                kosakata, tapi membentuk kemampuan berpikir, 🤔 memahami, dan
-                berkomunikasi seperti penutur asli. Dengan immersion, kamu langsung terjun
-                dalam bahasa Jepang sejak hari pertama—mendengar, membaca, dan ⚡ langsung
-                memahaminya di konteks aslinya.
-              </p>
-              <p>
-                🎯🔥 <b>Tujuan akhir kami</b> adalah membuat-mu "hidup" dalam bahasa Jepang,
-                bukan sekadar mempelajarinya. Kami ingin kamu mencapai titik di mana bahasa
-                Jepang tidak lagi diterjemahkan di kepala, tetapi ⚡ dipahami secara instan
-                seperti bahasa ibu. Dengan immersion, kamu tidak hanya mempelajari aturan,
-                tetapi membangun hubungan yang mendalam dengan 🎎 budaya, pola pikir, dan ekspresi
-                unik orang Jepang. Ini adalah perjalanan menuju <i>Nativeness</i> 💫, bukan
-                sekadar <i>Fluency</i>—dan kami akan menemani setiap langkahmu 👣.
-              </p>
-            </div>
-          </div>
-          <div class="mission-cta">
-            <button
-              class="cta-button"
-              onclick="openInvitationModal()"
-              aria-label="Bergabung dengan komunitas GoRakuDo"
-              transition:name="cta-button">
-              Gabung Komunitas Kami
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Features Section -->
-      <section
-        class="features-section loading"
-        aria-labelledby="features-title"
-        transition:name="features-section"
-        data-lazy>
-        <div class="features-container">
-          <h2 class="features-title" id="features-title" transition:name="features-title">
-            Pendekatan Immersion
-          </h2>
-          <div class="features-grid" role="list">
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-1">
-              <div class="feature-icon" aria-hidden="true">⚡</div>
-              <h3>Adaptive Learning</h3>
-              <p>
-                Rekomendasi yang didukung oleh Metodologi SLA (Ilmu Pembelajaran Bahasa
-                ke-2) terbaru yang sesuai cara otak dirancang untuk memperoleh
-                bahasa—melalui paparan bermakna, bukan sekedar hafalan.
-              </p>
-            </article>
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-2">
-              <div class="feature-icon" aria-hidden="true">👥</div>
-              <h3>Belajar Bersama Komunitas</h3>
-              <p>
-                Bergabunglah dengan sesama pembelajar dan penutur asli dalam lingkungan
-                komunitas yang mendukung.
-              </p>
-            </article>
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-3">
-              <div class="feature-icon" aria-hidden="true">📚</div>
-              <h3>Peta Jalan Terstruktur</h3>
-              <p>
-                Tahapan yang jelas dan dapat dicapai dari kana dasar hingga media
-                kompleks. Setiap langkah dibangun secara alami dari yang sebelumnya.
-              </p>
-            </article>
-            <article
-              class="feature-card"
-              role="listitem"
-              transition:name="feature-card-4">
-              <div class="feature-icon" aria-hidden="true">🧠</div>
-              <h3>Berpikir dalam Jepang</h3>
-              <p>
-                Melampaui terjemahan. Kembangkan kemampuan untuk memahami dan merasakan
-                bahasa Jepang secara instan, seperti penutur asli.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- Documentation Preview Section -->
-      <section
-        class="docs-preview-section loading"
-        aria-labelledby="docs-title"
-        transition:name="docs-section"
-        data-lazy>
-        <div class="docs-container">
-          <h2 class="docs-title" id="docs-title" transition:name="docs-title">
-            Panduan & Dokumentasi
-          </h2>
-          <p class="docs-description">
-            Akses panduan lengkap, metodologi immersion, dan sumber daya pembelajaran yang
-            telah terbukti efektif.
-          </p>
-          <div class="docs-cta">
-            <button
-              class="docs-button"
-              onclick="goToPosts()"
-              aria-label="Lihat semua dokumentasi dan panduan"
-              transition:name="docs-button">
-              Lihat Dokumentasi
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Invitation Modal - Load only when needed -->
-    <InvitationModal client:idle />
-
-    <script fetchpriority="auto" is:inline src="/core/hompage-script.js"
-    ></script>
-
-    <!-- Animation Modules Integration -->
-    <script>
-      // Dynamic import for animation modules with comprehensive error handling
-      Promise.all([import("../scripts/ui/background-animations/stars-animation.js")])
-        .then(([starsModule]) => {
-          console.log("🎬 Stars animation module loaded successfully")
-
-          // Initialize stars animation only
-          const starsAnimation = starsModule.initStarsAnimation({
-            enabled: true,
-            count: 8,
-            animationDuration: "4s",
-            opacity: 0.6,
-            containerClass: "stars",
-            starClass: "star",
-            containerId: "stars",
-            useExistingContainer: true,
-            createContainer: false,
-            containerSelector: ".stars",
-            accessibility: {
-              respectReducedMotion: false,
-              announceChanges: false,
-              screenReaderFriendly: true,
-              highContrastSupport: true,
-              forceEnable: true,
-            },
-          })
-
-          // Start animations when page loads
-          window.addEventListener("load", () => {
-            try {
-              // Initialize stars animation with existing container
-              starsAnimation.init("stars")
-              console.log("✨ Stars animation initialized successfully")
-
-              // Debug: Check if stars were created
-              setTimeout(() => {
-                const stars = document.querySelectorAll(".star")
-                console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
-                if (stars.length > 0) {
-                  console.log("✅ Stars are visible in DOM")
-                } else {
-                  console.log("⚠️ No stars found in DOM - checking container")
-                  const container = document.querySelector(".stars")
-                  console.log("Container:", container)
-                }
-              }, 500)
-
-              // Add loaded class to prevent popup effect
-              setTimeout(() => {
-                const starsContainer = document.querySelector(".stars")
-                if (starsContainer) {
-                  starsContainer.classList.add("loaded")
-                }
-              }, 100)
-
-              // Trigger hero animation after animations are ready
-              setTimeout(() => {
-                const heroContent = document.querySelector("#hero-content")
-                if (heroContent) {
-                  heroContent.classList.remove(
-                    "opacity-0",
-                    "translate-y-16",
-                    "scale-80",
-                    "blur-md"
-                  )
-                  console.log("✨ Hero content revealed smoothly")
-                }
-              }, 200) // Coordinate with hero component timing
-            } catch (error) {
-              console.error("❌ Animation initialization error:", error)
-            }
-          })
-        })
-        .catch((error) => {
-          console.log("⚠️ Animation modules failed to load:", error.message)
-          // Fallback: continue with existing inline animations
-          console.log("🔄 Falling back to existing inline animations")
-        })
-    </script>
-
-    <!-- Performance monitoring removed -->
-    <script>
-      // Intersection Observer for lazy loading optimization
-      const lazyElements = document.querySelectorAll("[data-lazy]")
-      const lazyObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("loaded")
-            lazyObserver.unobserve(entry.target)
-          }
-        })
+  <!-- Performance monitoring removed -->
+  <script>
+    // Intersection Observer for lazy loading optimization
+    const lazyElements = document.querySelectorAll("[data-lazy]")
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("loaded")
+          lazyObserver.unobserve(entry.target)
+        }
       })
+    })
 
-      lazyElements.forEach((el) => lazyObserver.observe(el))
+    lazyElements.forEach((el) => lazyObserver.observe(el))
 
-      // Service Worker registration for caching (if available)
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          // Opt-in only: enable by setting localStorage.setItem('enable-sw','true')
-          const enableSW = localStorage.getItem("enable-sw") === "true"
+    // Service Worker registration for caching (if available)
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        // Opt-in only: enable by setting localStorage.setItem('enable-sw','true')
+        const enableSW = localStorage.getItem("enable-sw") === "true"
 
-          if (enableSW) {
-            navigator.serviceWorker
-              .register("/sw.js")
-              .then((registration) => {
-                console.log("🔧 Service Worker registered:", registration.scope)
+        if (enableSW) {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("🔧 Service Worker registered:", registration.scope)
 
-                // Check for updates
-                registration.addEventListener("updatefound", () => {
-                  const installing = registration.installing
-                  if (!installing) return
-                  installing.addEventListener("statechange", () => {
-                    if (
-                      installing.state === "installed" &&
-                      navigator.serviceWorker.controller
-                    ) {
-                      console.log("🔄 New Service Worker available")
-                    }
-                  })
+              // Check for updates
+              registration.addEventListener("updatefound", () => {
+                const installing = registration.installing
+                if (!installing) return
+                installing.addEventListener("statechange", () => {
+                  if (
+                    installing.state === "installed" &&
+                    navigator.serviceWorker.controller
+                  ) {
+                    console.log("🔄 New Service Worker available")
+                  }
                 })
               })
-              .catch((error) => {
-                console.log(
-                  "⚠️ Service Worker registration failed:",
-                  error?.message || error
-                )
-              })
-          } else {
-            // Disabled by default to avoid GH Pages cache/stale-content issues
-            console.log(
-              "🔧 Service Worker disabled (enable via localStorage 'enable-sw' = 'true')"
-            )
-          }
-        })
-      }
-    </script>
-  </body>
-</html>
+            })
+            .catch((error) => {
+              console.log(
+                "⚠️ Service Worker registration failed:",
+                error?.message || error
+              )
+            })
+        } else {
+          // Disabled by default to avoid GH Pages cache/stale-content issues
+          console.log(
+            "🔧 Service Worker disabled (enable via localStorage 'enable-sw' = 'true')"
+          )
+        }
+      })
+    }
+  </script>
+</BaseLayout>

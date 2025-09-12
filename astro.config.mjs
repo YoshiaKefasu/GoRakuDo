@@ -11,9 +11,21 @@ export default defineConfig({
   // GitHub Pages Optimization
   output: "static",
 
-  // Build optimization for GitHub Pages
+  // Phase 3: Enhanced build optimization with caching strategy
   build: {
     assets: "_astro", // Cleaner asset URLs
+    // Phase 3: Build-time caching optimization
+    cache: {
+      // Enable build cache for faster rebuilds
+      enabled: true,
+      // Cache invalidation strategy
+      invalidate: (file) => {
+        // Invalidate cache for content changes
+        return file.includes('src/content/') || 
+               file.includes('src/pages/') ||
+               file.includes('src/components/')
+      }
+    }
   },
 
   // Public directory configuration for migrated scripts
@@ -35,62 +47,88 @@ export default defineConfig({
     placeholder: "blur",
   },
 
-  // Vite optimization for GitHub Pages with enhanced performance
+  // Phase 3: Enhanced Vite optimization with advanced caching
   vite: {
     plugins: [tailwindcss()],
     build: {
-      // Optimize for GitHub Pages CDN with performance focus
+      // Phase 3: Optimized for GitHub Pages CDN with advanced caching
       rollupOptions: {
         output: {
-          // Optimized chunk naming for better caching
+          // Phase 3: Enhanced chunk naming for optimal caching
           chunkFileNames: "assets/[name]-[hash].js",
           entryFileNames: "assets/[name]-[hash].js",
           assetFileNames: "assets/[name]-[hash].[ext]",
-          // Enhanced manual chunk splitting for optimal performance
+          // Phase 3: Optimized manual chunk splitting
           manualChunks: {
-            // Critical Vue framework chunk (load first) - OPTIMIZED FOR LOCALHOST
+            // Critical Vue framework chunk (load first)
             "vue-core": ["vue"],
-            // Vue runtime optimization for localhost
+            // Vue runtime optimization
             "vue-runtime": ["vue/dist/runtime-dom.esm-bundler.js"],
             // Non-critical Vue components (load after)
             "vue-components": ["@astrojs/vue"],
-            // Performance monitoring removed
-            // Scripts (migrated from public/scripts/)
+            // Phase 3: Optimized script chunks
             "scripts-ui": [
               "./src/scripts/ui/docs-pagination.js",
             ],
-            // AI content utilities (load on demand)
-            "ai-content": ["./src/utils/ai-content/content-analysis.js"],
-            // Semantic relationships (load on demand)
-            semantic: ["./src/utils/ai-content/semantic-relationships.js"],
-            // Discord error reporter (load on demand)
-            discord: ["./src/utils/error-handling/discord-error-reporter.js"],
-            // Image slideshow (load on demand)
-            slideshow: ["./src/components/ImageSlideshow.astro"],
+            // Phase 3: Consolidated utility chunks
+            "utils-core": [
+              "./src/utils/ai-content/content-analysis.js",
+              "./src/utils/ai-content/semantic-relationships.js",
+              "./src/utils/error-handling/discord-error-reporter.js"
+            ],
+            // Phase 3: Component chunks
+            "components": ["./src/components/ImageSlideshow.astro"],
           },
         },
       },
-      // Use esbuild minification for faster builds
+      // Phase 3: Enhanced build optimizations
       minify: "esbuild",
       target: "es2020", // Modern browsers support
-      // Performance optimizations
       cssCodeSplit: true, // Split CSS for better caching
       sourcemap: false, // Disable sourcemaps for production
+      // Phase 3: Advanced caching optimizations
+      cache: {
+        // Enable Vite build cache
+        enabled: true,
+        // Cache directory
+        cacheDir: "node_modules/.vite",
+        // Cache invalidation
+        invalidate: (file) => {
+          return file.includes('src/') || file.includes('astro.config.mjs')
+        }
+      }
     },
-    // Optimize CSS for performance
+    // Phase 3: Enhanced CSS optimization
     css: {
       devSourcemap: false, // Disable sourcemaps in production
+      // Phase 3: CSS optimization
+      postcss: {
+        plugins: [
+          // Add PostCSS plugins for CSS optimization
+        ]
+      }
     },
-    // Enhanced resolve configuration for Vue
+    // Phase 3: Enhanced resolve configuration
     resolve: {
       alias: {
         '@': './src'
-      }
+      },
+      // Phase 3: Optimized module resolution
+      dedupe: ['vue', 'astro']
     },
-    // Performance optimizations
+    // Phase 3: Advanced dependency optimization
     optimizeDeps: {
       include: ["vue"], // Pre-bundle Vue for faster loading
       exclude: [], // Don't exclude anything for localhost
+      // Phase 3: Enhanced dependency optimization
+      force: false, // Don't force re-optimization
+      esbuildOptions: {
+        // Phase 3: ESBuild optimization
+        target: 'es2020',
+        supported: {
+          'top-level-await': true
+        }
+      }
     },
     // Simplified chunking for development stability
     // build configuration moved to main build section above

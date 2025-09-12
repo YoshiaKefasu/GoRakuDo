@@ -2,41 +2,22 @@
 # Template Collection Item - Post Template for GoRakuDo Blog
 templateName: 'Post Template'
 templateType: 'post'
-description: 'Comprehensive template for creating new blog posts with AI-ready metadata and mind map integration'
+description: 'Comprehensive template for creating new blog posts'
 version: '1.0.0'
 lastUpdated: '2024-12-19T00:00:00.000Z'
 isActive: true
-category: 'content-creation'
+categories: ['content-creation', 'content-creation/templates']
 requiredFields:
   [
     'title',
     'description',
     'publishedDate',
-    'readTime',
     'author',
-    'difficulty',
-    'category',
+    'categories',
     'tags',
-    'featured',
-    'mindMapBranch',
-    'understandingLevel',
-    'learningStage',
   ]
 optionalFields:
-  [
-    'aiMetadata',
-    'aiMetadata.contentType',
-    'aiMetadata.learningStage',
-    'aiMetadata.complexityScore',
-    'aiMetadata.estimatedStudyTime',
-    'aiMetadata.primaryKeywords',
-    'aiMetadata.searchIntent',
-    'aiMetadata.languageEntities',
-    'aiMetadata.relationships',
-    'aiMetadata.contentAnalysis',
-    'aiMetadata.seoMetadata',
-    'aiMetadata.technicalMetadata',
-  ]
+  []
 instructions: 'Copy this template to create new posts. Replace all placeholder values with actual content. Remove comment blocks when publishing. Ensure all required fields are filled. Test the post locally before publishing.'
 examples:
   ['anki-guide', 'choosing-content', 'getting-started', 'immersion-philosophy']
@@ -51,13 +32,6 @@ templateContent: |
   # 3. Remove this comment block when publishing
   # 4. Ensure all required fields are filled
   # 5. Test the post locally before publishing
-  #
-  # MIND MAP BRANCHES:
-  # - landasan-filosofi: Foundation & Philosophy
-  # - tahap-pembelajaran: Learning Stages  
-  # - kerangka-pemahaman: 7-Level Understanding Framework
-  # - tools-resource: Tools & Resources
-  # - strategi-tips: Strategies & Tips
   #
   # UNDERSTANDING LEVELS:
   # - tingkat-0: Level 0 (Complete Beginner)
@@ -81,80 +55,10 @@ templateContent: |
   title: "TITLE_PLACEHOLDER - Replace with actual title"
   description: "DESCRIPTION_PLACEHOLDER - Replace with compelling description (150-160 characters)"
   publishedDate: "YYYY-MM-DDTHH:MM:SS.000Z"
-  readTime: 15
   author: "Tim GoRakuDo"
-  difficulty: "beginner" # beginner, intermediate, advanced
-  category: "category-name"
+  categories: ["category-name", "category-name/subcategory"]
   tags: ["tag1", "tag2", "tag3", "tag4", "tag5"]
-  featured: false # true for featured posts
-  mindMapBranch: "landasan-filosofi" # Choose appropriate branch
-  understandingLevel: "tingkat-1" # Choose appropriate level
-  learningStage: "pemanasan" # Choose appropriate stage
 
-  # ========================================
-  # AI METADATA (Optional - Auto-generated if not provided)
-  # ========================================
-  aiMetadata:
-    # Content Type Classification
-    contentType: "guide" # guide, methodology, tool, theory, practice, review, case-study, faq
-    
-    # Learning Stage
-    learningStage: "alphabet" # alphabet, basic-grammar, kanji-intro, intermediate, advanced, fluency
-    
-    # Content Complexity (1-10 scale)
-    complexityScore: 3
-    
-    # Estimated Study Time (minutes)
-    estimatedStudyTime: 15
-    
-    # Primary Keywords for SEO
-    primaryKeywords: ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
-    
-    # Search Intent
-    searchIntent: "informational" # informational, navigational, transactional, commercial
-    
-    # Language Entities (Optional - Phase 2+)
-    languageEntities:
-      grammarPoints: ["grammar-point-1", "grammar-point-2"]
-      vocabularyCategories: ["basic", "nouns", "verbs"] # Choose from: basic, intermediate, advanced, kanji, hiragana, katakana, particles, verbs, adjectives, nouns, adverbs, conjunctions
-      jlptLevel: "N5" # N5, N4, N3, N2, N1 (optional)
-    
-    # Content Relationships (Optional - Phase 2+)
-    relationships:
-      prerequisites: ["post-slug-1", "post-slug-2"] # Posts that should be read first
-      relatedContent: ["post-slug-3", "post-slug-4"] # Related posts
-      nextSteps: ["post-slug-5", "post-slug-6"] # Posts to read next
-      series: "series-name" # If part of a series
-      seriesOrder: 1 # Order in series
-    
-    # Content Analysis (Optional - Phase 2+)
-    contentAnalysis:
-      targetAudience: ["complete-beginner", "self-learner"] # Choose from: complete-beginner, self-learner, classroom-student, heritage-speaker, business-learner, academic-learner
-      learningObjectives: 
-        - "Objective 1"
-        - "Objective 2"
-        - "Objective 3"
-      hasPracticeExercises: false
-      hasAudioContent: false
-      hasVisualContent: true
-    
-    # SEO Metadata (Optional - Phase 2+)
-    seoMetadata:
-      longTailKeywords: ["long-tail-keyword-1", "long-tail-keyword-2", "long-tail-keyword-3"]
-      contentFreshness: "evergreen" # evergreen, seasonal, trending, reference
-    
-    # Technical Metadata (Optional - Phase 2+)
-    technicalMetadata:
-      format: "text" # text, video, audio, interactive, mixed
-      accessibility:
-        hasAltText: false
-        hasCaptions: false
-        hasTranscript: false
-        screenReaderFriendly: true
-      performance:
-        imageOptimized: true
-        mobileFriendly: true
-        loadTimeOptimized: true
 
   # ========================================
   # CONTENT BODY (Replace with actual content)
@@ -192,7 +96,7 @@ templateContent: |
   - [External resource](https://example.com)
 
 author: 'Tim GoRakuDo'
-tags: ['template', 'content-creation', 'blog-post', 'ai-metadata', 'mind-map']
+tags: ['template', 'content-creation', 'blog-post']
 ---
 
 # Post Template Content
@@ -209,8 +113,6 @@ This is the actual template content that will be used for creating new posts. Th
 
 ## Template Features
 
-- **AI-Ready Metadata**: Comprehensive metadata structure for AI optimization
-- **Mind Map Integration**: Proper categorization within the 5-branch mind map
 - **SEO Optimization**: Built-in SEO metadata and keyword structure
 - **Accessibility**: Technical metadata for accessibility compliance
 - **Performance**: Performance optimization metadata included

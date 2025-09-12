@@ -144,16 +144,8 @@ class DocsPagination {
     const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
-    const skeletonPlaceholders = this.createSkeletonPlaceholders(
-      endIndex - startIndex
-    );
-    skeletonPlaceholders.forEach(skeleton => {
-      contentState.appendChild(skeleton);
-    });
-
+    // Skeleton loading removed - direct content loading for better performance
     setTimeout(() => {
-      skeletonPlaceholders.forEach(skeleton => skeleton.remove());
-
       const postsToLoad = this.searchResults.slice(startIndex, endIndex);
       postsToLoad.forEach((post, index) => {
         setTimeout(() => {
@@ -179,34 +171,10 @@ class DocsPagination {
       if (endIndex < this.searchResults.length) {
         this.addLoadingTrigger();
       }
-    }, 800);
+    }, 100); // Reduced delay for better UX without skeleton loading
   }
 
-  /**
-   * Create skeleton placeholder elements
-   */
-  createSkeletonPlaceholders(count) {
-    const placeholders = [];
-    for (let i = 0; i < count; i++) {
-      const skeleton = document.createElement('div');
-      skeleton.className = 'post-card-skeleton';
-      skeleton.innerHTML = `
-        <div class="skeleton-header">
-          <div class="skeleton-title"></div>
-          <div class="skeleton-meta"></div>
-        </div>
-        <div class="skeleton-description"></div>
-        <div class="skeleton-tags">
-          <div class="skeleton-tag"></div>
-          <div class="skeleton-tag"></div>
-          <div class="skeleton-tag"></div>
-        </div>
-        <div class="skeleton-button"></div>
-      `;
-      placeholders.push(skeleton);
-    }
-    return placeholders;
-  }
+  // Skeleton placeholder creation method removed - using direct content loading
 
   /**
    * Add loading trigger element for progressive loading

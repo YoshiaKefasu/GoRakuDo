@@ -11,7 +11,6 @@ toolWebsite: 'https://apps.ankiweb.net/'
 toolCategory: 'flashcard'
 
 # Difficulty and Setup Information
-difficulty: 'intermediate'
 setupTime: '10-15 minutes'
 cost: 'free'
 
@@ -21,16 +20,9 @@ icon: '/img/tools/anki-icon.png'
 
 # Content Classification
 tags: ['anki', 'srs', 'flashcard', 'vocabulary', 'kanji', 'memorization']
-featured: true
-
-# Mind Map Integration
-mindMapBranch: 'D'
-
-# Content Type
-contentType: 'tool-guide'
+categories: ['tools', 'tools/flashcard', 'tools/anki']
 
 # Read Time Estimation
-readTime: 12
 
 # Tool Features
 features:

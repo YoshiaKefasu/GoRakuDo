@@ -1,0 +1,662 @@
+---
+// ページネーション設定（Astro propsで制御可能）
+export interface Props {
+  currentPage?: number;
+  postsPerPage?: number;
+}
+
+const { 
+  currentPage = 1, 
+  postsPerPage = 12 
+} = Astro.props;
+
+// Import separated modules (relative paths preferred)
+// Note: ContentProcessor and SearchDataGenerator are imported dynamically in client-side scripts
+
+import { getCollection, type CollectionEntry } from "astro:content"
+import UnifiedSEO from "../../components/UnifiedSEO.astro"
+import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
+import Navbar from "../../components/public-components/Navbar.vue"
+import "../../styles/docs/docs.css"
+import { resolvePath, getCollectionInfo } from "../../utils/collections"
+// AI content utilities removed - functionality no longer needed
+// ContentConfigUtils removed - using direct content access
+
+import { logger, ConsoleLogger } from "../../utils/logging/console-logger"
+
+import "../../styles/global.css"
+import "../../styles/homepage/index.css"
+
+// Set global build mode to suppress console output during build
+ConsoleLogger.setGlobalBuildMode(true)
+// Set critical errors only mode - only show critical errors
+ConsoleLogger.setGlobalCriticalErrorsOnly(true)
+
+// Astro 5.0 Content Layer Optimization - Build-time processing
+let posts: CollectionEntry<"docs">[] = []
+let error: string | null = null
+
+try {
+  // Phase 1: Content Layer - Build-time filtering and validation
+  posts = await getCollection("docs", ({ data }) => {
+    // Simplified validation - let Astro handle type safety
+    return data.status === 'published' && 
+           data.publishedDate && 
+           new Date(data.publishedDate) <= new Date()
+  })
+  
+  // Phase 1: Build-time sorting optimization
+  posts.sort((a, b) => 
+    new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime()
+  )
+  
+  // Phase 2: 0-Script最適化 - サーバーサイドで検索データを完全生成
+  const searchData = posts.map(post => ({
+    slug: post.slug,
+    title: post.data.title,
+    description: post.data.description || '',
+    tags: post.data.tags || [],
+    categories: post.data.categories || ['general'],
+    publishedDate: post.data.publishedDate,
+    lastModified: post.data.lastModified || post.data.publishedDate,
+    content: post.body.slice(0, 200) // 検索用の短縮コンテンツ
+  }))
+  
+  logger.log(`Content Layer: ${posts.length} posts loaded and sorted at build time`, "success")
+  logger.log(`0-Script Optimization: Search data generated for ${searchData.length} posts`, "success")
+} catch (err: any) {
+  logger.log(`Content Layer error: ${err.message}`, "error")
+  error = err.message
+  posts = []
+}
+
+// Posts are already sorted at build time - no runtime processing needed
+const sortedPosts = posts
+
+// Pagination configuration
+const totalPosts = sortedPosts.length
+
+// Calculate pagination info
+const startIndex = 0
+const endIndex = Math.min(postsPerPage, totalPosts)
+const currentPosts = sortedPosts.slice(startIndex, endIndex)
+
+// Clean pagination logging
+logger.logPaginationInfo(totalPosts, postsPerPage, currentPage)
+
+// Phase 2: Content Layer - Build-time categorization optimization
+const contentCategories = {
+  beginner: sortedPosts.filter(
+    (post) => false
+  ),
+  tools: sortedPosts.filter((post) => {
+    const isTool =
+      post.data.category === "tools" ||
+      post.data.title.toLowerCase().includes("anki") ||
+      post.data.description.toLowerCase().includes("anki") ||
+      post.data.tags.some((tag: string) => tag.toLowerCase().includes("tool"))
+    return isTool
+  }),
+  methodology: sortedPosts.filter(
+    (post) => post.data.category === "methodology"
+  ),
+  recommended: sortedPosts.filter(post => post.data.isRecommended).slice(0, 3)
+}
+
+logger.log(`Content Layer: Categories pre-computed at build time`, "success")
+
+// Extract categorized content for backward compatibility
+const beginnerContent = contentCategories.beginner
+const toolContent = contentCategories.tools
+const finalRecommendations = contentCategories.recommended
+
+// Dynamic content path resolution for all posts
+const postsWithDynamicPaths = sortedPosts.map((post) => {
+  const resolvedPath = { path: resolvePath("docs", post.slug) }
+  return {
+    ...post,
+    resolvedPath: resolvedPath.path,
+    collectionMetadata: getCollectionInfo("docs"),
+  }
+})
+
+// AstroネイティブMarkdown処理最適化 - サーバーサイドで既にHTML変換済み
+function processArticleContent(content: string) {
+  if (!content) return { 
+    cleanedText: "",
+    hasCode: false,
+    hasImages: false,
+    hasSections: false
+  }
+
+  // HTML形式のコンテンツからテキストを抽出（Astroネイティブ処理済み）
+  const cleanedText = content
+    .replace(/<[^>]*>/g, " ") // Remove HTML tags
+    .replace(/&[^;]+;/g, " ") // Remove HTML entities
+    .replace(/\n+/g, " ") // Replace newlines with spaces
+    .replace(/\s+/g, " ") // Normalize spaces
+    .trim()
+
+  return {
+    cleanedText,
+    hasCode: /<pre|<code/.test(content), // HTML形式のコードブロック検出
+    hasImages: /!\[.*?\]\(.*?\)/.test(content),
+    hasSections: /^#{1,6}\s+/.test(content)
+  }
+}
+
+// Phase 3: Content Layer - Optimized search data generation
+const searchDataItems = sortedPosts.map((post) => {
+  const fullContent = post.body || ""
+  const processedContent = processArticleContent(fullContent)
+
+  // Content Layer optimized data structure
+  return {
+    // Core identifiers
+    slug: post.slug,
+    title: post.data.title,
+    description: post.data.description,
+    url: post.resolvedPath || `/docs/${post.slug}`,
+
+    // Essential fields for functionality
+    pubDate: post.data.publishedDate,
+    emoji: post.data.emoji,
+    contentLength: fullContent.length,
+    fullContent: fullContent,
+
+    // Content Layer optimized search data
+    searchableText: [
+      post.data.title,
+      post.data.description,
+      processedContent.cleanedText,
+      ...(post.data.tags || []),
+      ...(post.data.categories || []),
+    ].join(" ").toLowerCase(),
+
+    // Essential metadata
+    categories: post.data.categories || ['general'],
+    tags: post.data.tags || [],
+    
+    // Computed flags
+    isBeginner: false,
+    isTool: post.data.categories?.includes("tools") || post.data.title.toLowerCase().includes("anki"),
+    hasCodeBlocks: processedContent.hasCode,
+    hasImages: processedContent.hasImages,
+  }
+})
+
+logger.log(`Content Layer: Search data optimized for ${searchDataItems.length} posts`, "success")
+
+// Phase 4: Content Layer - Final search data optimization
+const optimizedSearchData = searchDataItems.map(item => ({
+  ...item,
+  // Content Layer optimized search index
+  searchIndex: item.searchableText
+    .split(' ')
+    .filter(word => word.length > 2)
+    .map(word => word.toLowerCase())
+    .filter((word, index, arr) => arr.indexOf(word) === index),
+  // Build-time relevance scoring
+  relevanceScore: calculateRelevanceScore(item),
+  // Optimized search metadata
+  searchMetadata: {
+    hasCode: item.hasCodeBlocks,
+    hasImages: item.hasImages,
+    isBeginner: item.isBeginner,
+    isTool: item.isTool,
+    categories: item.categories,
+  }
+}))
+
+logger.log(`Content Layer: Final search optimization completed`, "success")
+
+// Phase 5: Content Layer - Optimized relevance scoring
+function calculateRelevanceScore(item: any): number {
+  let score = 0
+  
+  // Content Layer optimized scoring
+  if (item.title) score += 15
+  if (item.description) score += 8
+  score += item.tags.length * 3
+  
+  // Content quality assessment
+  if (item.contentLength) {
+    score += Math.min(item.contentLength / 1000, 15)
+  }
+  
+  // Feature-based scoring
+  if (item.hasCodeBlocks) score += 5
+  if (item.hasImages) score += 3
+  
+  // Category-based scoring
+  if (item.category === 'tools') score += 10
+  
+  return Math.min(score, 100)
+}
+
+// AI processing removed - using simplified content system instead
+
+// SEO data - Astroネイティブアプローチ（設定ファイル不要）
+const seoData = {
+  title: "Dokumentasi & Panduan",
+  description: "Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari langkah pertama hingga tingkat lanjut.",
+  keywords: ["dokumentasi", "panduan", "tutorial", "jepang", "belajar", "immersion"],
+  pageType: "article" as const,
+  author: "Tim GoRakuDo"
+};
+
+// Helper function to format numbers with K, M, B suffixes
+function formatNumber(num: number): string {
+  if (num >= 1000000000) {
+    return (num / 1000000000).toFixed(1) + "B"
+  } else if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + "M"
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + "K"
+  }
+  return num.toString()
+}
+
+
+function formatDate(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }
+
+  // Validate input
+  if (!dateString || typeof dateString !== "string") {
+    logger.log(`Invalid date string provided: ${dateString}`, "warning")
+    return "Invalid Date"
+  }
+
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) {
+      logger.log(`Invalid date format: ${dateString}`, "warning")
+      return "Invalid Date"
+    }
+
+    return date.toLocaleDateString("id-ID", options)
+  } catch (error) {
+    logger.log(`Date formatting error: ${error}`, "error")
+    return "Invalid Date"
+  }
+}
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <!-- UnifiedSEO - Astroネイティブアプローチ（設定ファイル不要） -->
+    <UnifiedSEO
+      title={seoData.title}
+      description={seoData.description}
+      keywords={seoData.keywords}
+      pageType={seoData.pageType}
+      author={seoData.author}
+      publishedDate={new Date().toISOString()}
+      modifiedDate={new Date().toISOString()}
+      gtag={import.meta.env.PUBLIC_GA_ID}
+    />
+
+    <link rel="stylesheet" href="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Server Islands optimization - Navigation with defer loading -->
+    <Navbar client:visible />
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="posts-page">
+        <div class="posts-container" 
+             id="postsContainer" 
+             data-current-page={currentPage} 
+             data-posts-per-page={postsPerPage} 
+             data-total-posts={totalPosts} 
+             data-search-data={JSON.stringify(optimizedSearchData)}
+             data-fuse-config={JSON.stringify({
+               keys: [
+                 { name: 'title', weight: 0.7 },
+                 { name: 'description', weight: 0.3 },
+                 { name: 'content', weight: 0.2 },
+                 { name: 'tags', weight: 0.1 },
+                 { name: 'searchableText', weight: 0.15 }
+               ],
+               threshold: 0.4,
+               minMatchCharLength: 2,
+               includeScore: true,
+               includeMatches: true
+             })}
+>
+          <div class="posts-header">
+            <h1>Dokumentasi & Panduan</h1>
+            <p>
+              Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang Anda. Dari
+              langkah pertama hingga tingkat lanjut.
+            </p>
+          </div>
+
+          <!-- Breadcrumb Navigation -->
+          <Breadcrumb currentPath="/docs" />
+
+          <!-- Search Functionality -->
+          <div class="search-container">
+            <div class="search-header">
+              <span class="search-icon">🔍</span>
+              <h2 class="search-title">Cari Dokumentasi</h2>
+            </div>
+
+            <div class="search-input-group">
+              <span class="search-input-icon">📝</span>
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input search-input-loading"
+                placeholder="Memuat sistem pencarian..."
+                autocomplete="off"
+                disabled
+              />
+              <div class="search-loading-indicator" id="searchLoadingIndicator">
+                <!-- Compact Google 2025 Loading Spinner -->
+                <div class="relative inline-flex items-center justify-center size-2.5">
+                  <!-- Outer ring with subtle gradient -->
+                  <div class="absolute inset-0 rounded-full border border-primary-200/20">
+                  </div>
+                  <!-- Spinning inner ring -->
+                  <div
+                    class="absolute inset-0 rounded-full border border-transparent border-t-primary-500 animate-spin">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="search-filters">
+              {/* "Semua" button - always present */}
+              <button class="filter-button filter-button-loading active" data-filter="all"
+                >Semua ({formatNumber(totalPosts)})</button
+              >
+
+              {/* Simplified filter buttons - using direct content access */}
+              <button class="filter-button filter-button-loading" data-filter="getting-started" data-filter-type="category" data-filter-target="categories">
+                🚀 Getting Started
+              </button>
+              <button class="filter-button filter-button-loading" data-filter="methodology" data-filter-type="category" data-filter-target="categories">
+                🧠 Methodology
+              </button>
+              <button class="filter-button filter-button-loading" data-filter="tools" data-filter-type="category" data-filter-target="categories">
+                🛠️ Tools
+              </button>
+              <button class="filter-button filter-button-loading" data-filter="testing" data-filter-type="category" data-filter-target="categories">
+                🧪 Testing
+              </button>
+            </div>
+          </div>
+
+          <!-- Search Results - Moved to appear immediately after search input -->
+          <div id="searchResults" class="search-results hidden">
+            <div class="search-stats" id="searchStats"></div>
+            <div id="searchResultsContent"></div>
+          </div>
+
+          <!-- Content State -->
+          <div id="contentState" class="posts-grid">
+            {
+              error ? (
+                <div class="error-message">
+                  <h2>❌ Error Loading Posts</h2>
+                  <p>{error}</p>
+                  <div class="error-actions">
+                    <button onclick="window.location.reload()" class="docs-button">
+                      🔄 Coba Lagi
+                    </button>
+                    <button onclick="window.location.href = '/'" class="docs-button secondary">
+                      🏠 Kembali ke Beranda
+                    </button>
+                  </div>
+                </div>
+              ) : currentPosts.length === 0 ? (
+                <div class="no-results">
+                  <div class="no-results-icon">📚</div>
+                  <h3>Belum Ada Dokumentasi</h3>
+                  <p>Dokumentasi akan segera tersedia. Tetap pantau untuk pembaruan!</p>
+                </div>
+              ) : (
+                currentPosts.map((post, index) => (
+                  <article
+                    class={`post-card post-card-${index % 4}`}
+                    data-post-slug={post.slug}
+                    data-content-type={post.data.category || ""}
+                    data-is-recommended={
+                      finalRecommendations.some((rec) => rec.slug === post.slug)
+                        ? "true"
+                        : "false"
+                    }
+                    data-is-beginner={
+                      beginnerContent.some((beg) => beg.slug === post.slug)
+                        ? "true"
+                        : "false"
+                    }
+                    data-is-tool={
+                      toolContent.some((tool) => tool.slug === post.slug)
+                        ? "true"
+                        : "false"
+                    }>
+                    {/* Emoji Display */}
+                    {post.data.emoji && <div class="post-emoji">{post.data.emoji}</div>}
+                    <div class="post-card-container">
+                      <div class="post-header">
+                        <h2 class="post-title">
+                          <a href={post.resolvedPath || `/docs/${post.slug}`}>
+                            {post.data.title}
+                          </a>
+                        </h2>
+                        <div class="post-meta">
+                          <span class="post-date">
+                            {formatDate(post.data.publishedDate)}
+                          </span>
+                        </div>
+                      </div>
+                      <p class="post-description">{post.data.description}</p>
+                      <div
+                        class="post-tags"
+                        data-all-tags={JSON.stringify(post.data.tags || [])}>
+                        {post.data.tags?.slice(0, 3).map((tag: string) => (
+                          <span class="post-tag">{tag}</span>
+                        ))}
+                        {post.data.tags && post.data.tags.length > 3 && (
+                          <span
+                            class="post-tag-more"
+                            data-count={post.data.tags.length - 3}>
+                            +{post.data.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                      <a
+                        href={post.resolvedPath || `/docs/${post.slug}`}
+                        class="read-more-btn">
+                        Baca Selengkapnya →
+                      </a>
+                    </div>
+                  </article>
+                ))
+              )
+            }
+          </div>
+
+          <!-- Pagination Controls -->
+          <div id="paginationControls" class="pagination-container">
+            <!-- ページネーションコントロールが動的に生成される -->
+          </div>
+          <!-- Call to Action -->
+          <div class="features-cta">
+            <div class="cta-content">
+              <h3 class="cta-title">Berkontribusi pada Roadmap</h3>
+              <p class="cta-description">
+                Punya ide fitur atau dokumentasi yang ingin Anda lihat? Berikan masukan
+                Anda untuk membantu membentuk masa depan platform ini.
+              </p>
+              <button
+                class="cta-button"
+                type="button"
+                aria-label="Buka form masukan komunitas">
+                <span class="cta-button-text">Berikan Masukan</span>
+                <svg
+                  class="cta-arrow"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Server Islands optimization - deferred initialization
+      document.addEventListener("DOMContentLoaded", async function () {
+        const startTime = performance.now();
+
+        try {
+          // Optimized server-side data retrieval
+          const container = document.getElementById('postsContainer');
+          if (!container) {
+            throw new Error('Posts container not found');
+          }
+
+          // Essential data attributes only
+          const currentPage = parseInt(container.dataset.currentPage || '1');
+          const postsPerPage = parseInt(container.dataset.postsPerPage || '12');
+          const totalPosts = parseInt(container.dataset.totalPosts || '0');
+          const searchData = container.dataset.searchData ? JSON.parse(container.dataset.searchData) : [];
+          const fuseConfig = container.dataset.fuseConfig ? JSON.parse(container.dataset.fuseConfig) : {};
+
+          // 0-Script最適化: グローバル変数に検索データを設定
+          window.searchData = searchData;
+
+          // 既存の検索システムを優先し、0-Script最適化は段階的に実装
+          // Content Layer optimized search system initialization
+          try {
+            const { SearchLoadingManager } = await import('../../scripts/type-scripts/docs/index/search/search-loading-manager');
+            const searchLoadingManager = new SearchLoadingManager();
+            // Content Layer: Optimized initialization timing
+            setTimeout(() => {
+              searchLoadingManager.initializeSearchSystem();
+            }, 50); // Reduced delay for better UX
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Content Layer: Search system initialization failed: ${error}`, "error");
+            }
+          }
+
+        // Deferred tag popup initialization
+        try {
+          const { SimpleTagPopup } = await import('../../scripts/type-scripts/docs/index/ui/simple-tag-popup');
+          const tagPopup = new SimpleTagPopup();
+          tagPopup.initialize();
+          window.simpleTagPopup = tagPopup;
+          
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log("Simple tag popups initialized for docs page", "success");
+          }
+        } catch (error) {
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Simple tag popups failed for docs page: ${error}`, "error");
+          }
+        }
+
+          // Content Layer optimized content system initialization
+          try {
+            const { ContentProcessor } = await import('../../scripts/type-scripts/docs/index/content/content-processor');
+            
+            // Content Layer: Server-side data directly set for optimal performance
+            const contentProcessor = new ContentProcessor(currentPage, postsPerPage);
+            contentProcessor.setServerData(searchData, totalPosts);
+
+            window.contentProcessor = contentProcessor;
+            
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log("Content Layer: Content system initialized successfully", "success");
+            }
+          } catch (error) {
+            if (window.clientLogger && window.clientLogger.log) {
+              window.clientLogger.log(`Content Layer: Content system initialization failed: ${error}`, "error");
+            }
+            throw error;
+          }
+
+          // 初期化完了
+
+        } catch (error) {
+          // Content Layer optimized error handling
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Content Layer: Docs Page Loading Failed: ${error}`, "error");
+          }
+          
+          // Enhanced error handling
+          handleInitializationError(error);
+        }
+
+        if (window.clientLogger && window.clientLogger.log) {
+          window.clientLogger.log("Content Layer: Docs Page Loaded Successfully!", "success");
+        }
+      });
+
+
+      // Content Layer optimized error handling
+      function handleInitializationError(error: Error) {
+        try {
+          // Enhanced error redirection
+          const errorMessage = encodeURIComponent(error.message);
+          window.location.href = `/error?type=content-layer&message=${errorMessage}`;
+        } catch (redirectError) {
+          // Content Layer fallback error display
+          if (window.clientLogger && window.clientLogger.log) {
+            window.clientLogger.log(`Content Layer: Failed to redirect to error page: ${redirectError}`, 'error');
+          }
+          document.body.innerHTML = `
+            <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+              <h1>Content Layer Error</h1>
+              <p>ページの読み込み中にエラーが発生しました。しばらく時間をおいてから再度お試しください。</p>
+              <button onclick="window.location.reload()" style="padding: 10px 20px; margin-top: 20px;">
+                ページを再読み込み
+              </button>
+            </div>
+          `;
+        }
+      }
+    </script>
+
+        <!-- Global Client Logger -->
+        <script>
+          // Client-side logger for consistent console output - available globally
+          window.clientLogger = {
+            log: (message, level = "info") => {
+              const emoji = { info: "ℹ️", success: "✅", warning: "⚠️", error: "❌" }[level]
+              console.log(`${emoji} ${message}`)
+            },
+            startGroup: (title) => {
+              console.log(`\n${"=".repeat(50)}`)
+              console.log(`🚀 ${title}`)
+              console.log(`${"=".repeat(50)}`)
+            },
+            endGroup: (title) => {
+              console.log(`${"=".repeat(50)}`)
+              console.log(`✅ ${title}`)
+              console.log(`${"=".repeat(50)}\n`)
+            },
+          }
+        </script>
+  </body>
+</html>
