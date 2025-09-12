@@ -133,7 +133,6 @@
   @apply opacity-100;
 }
 
-/* Skeleton loading styles removed - functionality disabled */
 
 /* Search Results Animation */
 @keyframes fadeInUp {
@@ -147,7 +146,6 @@
   }
 }
 
-/* Skeleton gradient styles removed - functionality disabled */
 
 /* Loading Trigger */
 .loading-trigger {
@@ -378,7 +376,6 @@
   }
 }
 
-/* Skeleton loading styles removed - functionality disabled */
 
 /* Progressive Loading Animation */
 .posts-grid {
@@ -1865,36 +1862,7 @@
   margin: 1.5rem 0;
 }
 
-.suggestion-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: 0.75rem;
-}
 
-.suggestion-tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.suggestion-tag {
-  background: rgba(139, 93, 255, 0.1);
-  color: var(--color-accent-purple-glow-medium);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  border: 1px solid rgba(139, 93, 255, 0.2);
-}
-
-.suggestion-tag:hover {
-  background: rgba(139, 93, 255, 0.2);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
 
 /* Search Input Enhancement */
 .search-input-ready {
@@ -2348,36 +2316,7 @@
   margin: 1.5rem 0;
 }
 
-.suggestion-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: 0.75rem;
-}
 
-.suggestion-tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.suggestion-tag {
-  background: rgba(139, 93, 255, 0.1);
-  color: var(--color-accent-purple-glow-medium);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  border: 1px solid rgba(139, 93, 255, 0.2);
-}
-
-.suggestion-tag:hover {
-  background: rgba(139, 93, 255, 0.2);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
 
 /* Search Input Enhancement */
 .search-input-ready {

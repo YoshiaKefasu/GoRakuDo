@@ -1,11 +1,11 @@
 ---
-import UnifiedSEO from "../components/UnifiedSEO.astro"
-import BaseLayout from "../layouts/BaseLayout.astro"
-import Navbar from "../components/public-components/Navbar.vue"
+import UnifiedSEO from "../../components/UnifiedSEO.astro"
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import Navbar from "../../components/public-components/Navbar.vue"
 
 // Import CSS
-import "../styles/global.css"
-import "../styles/tools/tools.css"
+import "../../styles/global.css"
+import "../../styles/tools/tools.css"
 
 // Import images
 import homepageOgImage from "../assets/images/Logo Discord.png"
@@ -412,7 +412,7 @@ const tools = [
       })
 
       // Dynamic import for animation modules with comprehensive error handling
-      Promise.all([import("../scripts/ui/background-animations/stars-animation.js")])
+      Promise.all([import("../../scripts/ui/background-animations/stars-animation.js")])
         .then(([starsModule]) => {
           console.log("🎬 Stars animation module loaded successfully")
 
@@ -728,7 +728,7 @@ const tools = [
         try {
           // Import animation modules
           const [starsModule] = await Promise.all([
-            import("../scripts/ui/background-animations/stars-animation.js"),
+            import("../../scripts/ui/background-animations/stars-animation.js"),
           ])
 
           // Initialize stars animation with performance monitoring
