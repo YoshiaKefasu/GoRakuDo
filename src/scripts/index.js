@@ -5,7 +5,6 @@ export { default as DocsPagination } from './ui/docs-pagination.js';
 
 // Core Scripts
 export { default as HomepageScript } from './core/hompage-script.js';
-export { default as PostScript } from './core/post-script.js';
 export { default as UpgradeBrowser } from './core/upgrade-browsermu.js';
 
 // Utility function to load scripts dynamically
@@ -16,7 +15,6 @@ export function loadScript(category, scriptName) {
     },
     core: {
       'homepage-script': () => import('./core/hompage-script.js'),
-      'post-script': () => import('./core/post-script.js'),
       'upgrade-browsermu': () => import('./core/upgrade-browsermu.js'),
     },
   };
@@ -36,9 +34,6 @@ export function initializeScripts() {
   if (path === '/') {
     // Homepage
     import('./core/hompage-script.js');
-  } else if (path.startsWith('/docs/') && path !== '/docs') {
-    // Individual post page
-    import('./core/post-script.js');
   } else if (path === '/docs') {
     // Docs listing page
     import('./ui/docs-pagination.js');

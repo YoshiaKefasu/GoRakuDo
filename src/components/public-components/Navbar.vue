@@ -124,13 +124,13 @@
 .navbar-wrapper {
   /* Wrapper for single root element - ensure proper layout */
   display: block !important;
-  width: 100% !important;
+  width: 100svw !important;
 }
 
 .navbar {
   /* Spacing: REM for responsive scaling with user font preferences */
   padding-top: 0.75rem !important;
-  padding-bottom: 1rem !important;
+  padding-bottom: 0.75rem !important;
   /* Fixed positioning: PX for precise control */
   position: fixed !important;
   left: 0 !important;
@@ -448,9 +448,9 @@
 }
 
 /* ========== RESPONSIVE BREAKPOINTS - ALL BREAKPOINT STYLING BELOW ========== */
-/* ---------- Small Breakpoint (640px+) - Tablet and Up ---------- */
-@media (min-width: 24rem) {
-  /* 640px → 40rem for responsive scaling */
+/* ---------- Small Breakpoint (320px+) - Tablet and Up ---------- */
+@media (min-width: 320px) {
+  /* 320px → 20rem for responsive scaling */
   .nav-left,
   .nav-right {
     display: none !important; /* Show navigation on all screen sizes */
@@ -485,7 +485,7 @@
 }
 
 /* ---------- Small Breakpoint (640px+) - Tablet and Up ---------- */
-@media (min-width: 40rem) {
+@media (min-width: 640px) {
   .navbar {
     /* Enhanced spacing for larger screens */
     padding-top: 1rem !important; /* 16px → 1rem for responsive scaling */
@@ -500,7 +500,7 @@
 }
 
 /* ---------- Medium Breakpoint (768px+) - Desktop and Up ---------- */
-@media (min-width: 48rem) {
+@media (min-width: 768px) {
   /* 768px → 48rem for responsive scaling */
   .nav-left,
   .nav-right {
@@ -528,7 +528,7 @@
 }
 
 /* ---------- Large Breakpoint (1024px+) - Wide Desktop and Up ---------- */
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   /* 1024px → 64rem for responsive scaling */
   .nav-container {
     /* Enhanced container spacing for wide desktop */
@@ -551,7 +551,7 @@
 }
 
 /* ---------- Extra Large Breakpoint (1280px+) - Ultra Wide Desktop ---------- */
-@media (min-width: 80rem) {
+@media (min-width: 1280px) {
   /* 1280px → 80rem for responsive scaling */
   .nav-container {
     /* Maximum container spacing for ultra wide screens */

@@ -8,7 +8,7 @@
       aria-labelledby="modal-title"
       aria-modal="true"
     >
-      <!-- Floating background particles -->
+      <!-- Floating background particles with varied animations -->
       <div
         class="floating-particle"
         style="top: 10%; left: 10%; animation: float 6s ease-in-out infinite"
@@ -20,7 +20,7 @@
         style="
           top: 20%;
           right: 10%;
-          animation: float 8s ease-in-out infinite 2s;
+          animation: float-2 8s ease-in-out infinite 2s;
         "
       >
         ⭐
@@ -30,7 +30,7 @@
         style="
           bottom: 20%;
           left: 20%;
-          animation: float 7s ease-in-out infinite 1s;
+          animation: float-3 7s ease-in-out infinite 1s;
         "
       >
         🎌
@@ -498,13 +498,43 @@ function animateContent() {
   /* Prevent particles from blocking scroll */
 }
 
+/* Buttery smooth floating animations with varied patterns */
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0px) rotate(0deg);
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-8px) translateX(4px);
   }
   50% {
-    transform: translateY(-20px) rotate(180deg);
+    transform: translateY(-4px) translateX(-6px);
+  }
+  75% {
+    transform: translateY(-12px) translateX(2px);
+  }
+}
+
+@keyframes float-2 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-6px) translateX(-3px);
+  }
+  66% {
+    transform: translateY(-10px) translateX(5px);
+  }
+}
+
+@keyframes float-3 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-8px) translateX(-2px);
   }
 }
 

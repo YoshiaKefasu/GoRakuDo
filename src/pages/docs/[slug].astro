@@ -99,9 +99,6 @@ const postData = {
       noindex={seoData.isDraft}
     />
 
-    <!-- Preload critical resources for better performance -->
-    <script src="/core/post-script.js" is:inline></script>
-
     <!-- Fonts with display=swap for better performance -->
     <link
       href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
@@ -130,11 +127,8 @@ const postData = {
       
     </PostLayout>
 
-    <!-- Scripts Section - Organized and Optimized -->
-    <script is:inline src="/core/post-script.js"></script>
-
     <!-- Main Application Script -->
-    <script define:vars={{ postData }}>
+    <script is:inline define:vars={{ postData }}>
       // Share functionality with dynamic path support
       function sharePost() {
         const shareUrl = postData?.resolvedPath

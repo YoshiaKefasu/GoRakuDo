@@ -8,7 +8,6 @@ const STATIC_FILES = [
   '/css/homepage-styles.css',
   '/css/post-styles.css',
   '/scripts/hompage-script.js',
-  '/scripts/post-script.js',
   '/scripts/upgrade-browsermu.js',
   '/favicon/favicon.ico',
   '/favicon/favicon.svg',
