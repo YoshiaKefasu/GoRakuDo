@@ -3,6 +3,8 @@
 export interface Props {
   className?: string;
   style?: string;
+  // Background Layer Props
+  backgroundLayer?: "normal" | "darker";
   // Stars Animation Props
   enableStars?: boolean;
   starsCount?: number;
@@ -18,6 +20,7 @@ export interface Props {
 const defaultConfig = {
   className: "",
   style: "",
+  backgroundLayer: "normal",
   enableStars: true,
   starsCount: 8,
   starsOpacity: 0.8,
@@ -31,9 +34,10 @@ const defaultConfig = {
 const config = { ...defaultConfig, ...Astro.props };
 ---
 
-<div 
-  class={`wave-animation-container ${config.className}`} 
+<div
+  class={`wave-animation-container ${config.className}`}
   style={config.style}
+  data-background-layer={config.backgroundLayer}
   data-stars-config={JSON.stringify({
     enabled: config.enableStars,
     count: config.starsCount,
@@ -84,28 +88,50 @@ const config = { ...defaultConfig, ...Astro.props };
 
 <style>
   .transparent-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(
+    --_bg-layer-normal: linear-gradient(
       180deg,
       oklch(0.01 0.01 280 / 0.75) 0%,
       oklch(0.015 0.01 285 / 0.5) 30%,
       oklch(0.02 0.01 290 / 0.4) 60%,
       oklch(0.025 0.01 295 / 0.3) 100%
     );
+    --_bg-layer-darker: linear-gradient(
+      180deg,
+      oklch(0.025 0.01 295 / 0.35) 0%,
+      oklch(0.015 0.01 285 / 0.75) 60%,
+      oklch(0.01 0.01 280 / 0.9) 100%
+    );
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
     z-index: 0;
     pointer-events: none;
     mix-blend-mode: multiply;
   }
 
+  /* Default background (normal) */
+  .transparent-layer {
+    background: var(--_bg-layer-normal);
+  }
+
+  /* Darker background when backgroundLayer="darker" */
+  [data-background-layer="darker"] .transparent-layer {
+    background: var(--_bg-layer-darker);
+  }
+
   .wave-animation-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
+    z-index: -10;
+    pointer-events: none;
   }
 
   .wave-canvas {

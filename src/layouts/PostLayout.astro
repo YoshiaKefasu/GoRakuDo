@@ -1,6 +1,7 @@
 ---
-import TableOfContents from "../components/content/TableOfContents.astro";
-import Breadcrumb from "../components/public-components/Breadcrumb.astro";
+import Breadcrumb from "../components/public-components/Breadcrumb.astro"
+import TableOfContents from "../components/content/TableOfContents.astro"
+import WaveAnimation from "../components/animations/WaveAnimation.astro"
 
 export interface Props {
   post: import("astro:content").CollectionEntry<"docs">;
@@ -136,4 +137,16 @@ const { post, collectionMetadata, headings = [], postActions = true, breadcrumbC
   </div>
 </main>
 
-
+<!-- Enhanced Wave Animation Background - Fixed position for scroll following -->
+<WaveAnimation 
+className="wave-canvas" 
+enableStars={true}
+starsCount={10}
+starsOpacity={0.5}
+starsAnimationDuration="3s"
+starsColor="oklch(0.8 0.35 296.9)"
+starsBrightness={1}
+starsSize={1.5}
+starsGlow={false}
+backgroundLayer="darker"
+/>

@@ -20,7 +20,7 @@
   --shadow-card-hover: 0 8px 30px rgba(139, 93, 255, 0.2);
 
   /* Z-index system */
-  --z-content-background: 0;
+  --z-content-background: -10;
   --z-content-main: 1;
   --z-content-progress: 50;
   --z-content-modal: 100;
