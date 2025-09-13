@@ -51,6 +51,7 @@
   @apply lg:gap-6 lg:px-5;
   @apply xl:!gap-8 xl:!px-6;
   @apply 2xl:!gap-8 2xl:!px-6;
+  @apply w-dvw max-w-full;
 }
 
 .content-wrapper .content-container {
@@ -387,8 +388,17 @@
   }
 }
 
+html {
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
 body {
   background: #1e1e28;
+  width: 100%;
+  overflow-y: scroll;
+  min-width: 100%;
+  max-width: 100%;
 }
 
 code {
