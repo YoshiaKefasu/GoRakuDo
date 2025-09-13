@@ -55,31 +55,6 @@ const config = { ...defaultConfig, ...Astro.props };
     aria-hidden="true"
   />
   
-  <!-- Additional SVG wave details for extra smoothness -->
-  <div class="svg-overlay">
-    <svg class="wave-svg" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="foamGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="oklch(0.95 0.02 280 0.8)" />
-          <stop offset="50%" stop-color="oklch(0.9 0.05 285 0.4)" />
-          <stop offset="100%" stop-color="oklch(0.85 0.08 290 0.1)" />
-        </linearGradient>
-        
-        <filter id="turbulence">
-          <feTurbulence baseFrequency="0.02" numOctaves="3" />
-          <feDisplacementMap in="SourceGraphic" scale="5" />
-        </filter>
-      </defs>
-      
-      <!-- Animated foam layer -->
-      <path
-        d="M0,70% Q25%,65% 50%,70% T100%,75% L100%,100% L0%,100% Z"
-        fill="url(#foamGradient)"
-        class="foam-path"
-        filter="url(#turbulence)"
-      />
-      </svg>
-    </div>
     
     <!-- WCAG 2.1準拠の読みやすさ向上オーバーレイ -->
     <div class="transparent-layer"></div>
@@ -105,8 +80,8 @@ const config = { ...defaultConfig, ...Astro.props };
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100svw;
+    height: 100svh;
     overflow: hidden;
     z-index: 0;
     pointer-events: none;
@@ -127,8 +102,8 @@ const config = { ...defaultConfig, ...Astro.props };
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100svw;
+    height: 100svh;
     overflow: hidden;
     z-index: -10;
     pointer-events: none;
@@ -138,45 +113,13 @@ const config = { ...defaultConfig, ...Astro.props };
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100svw;
+    height: 100svh;
     background: oklch(0 0 0);
     z-index: -2;
     pointer-events: none;
   }
 
-  .svg-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  .wave-svg {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .foam-path {
-    animation: foam-flow 4s ease-in-out infinite;
-  }
-
-  @keyframes foam-flow {
-    0%, 100% {
-      d: path("M0,70% Q25%,65% 50%,70% T100%,75% L100%,100% L0%,100% Z");
-    }
-    33% {
-      d: path("M0,72% Q25%,67% 50%,72% T100%,77% L100%,100% L0%,100% Z");
-    }
-    66% {
-      d: path("M0,68% Q25%,63% 50%,68% T100%,73% L100%,100% L0%,100% Z");
-    }
-  }
 </style>
 
 <script>
@@ -293,8 +236,8 @@ const config = { ...defaultConfig, ...Astro.props };
           position: fixed;
           top: 0;
           left: 0;
-          width: 100vw;
-          height: 100vh;
+          width: 100svw;
+          height: 100svh;
           pointer-events: none;
           z-index: 5;
         }

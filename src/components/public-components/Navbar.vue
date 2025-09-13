@@ -120,6 +120,35 @@
 </template>
 
 <style scoped>
+
+  /* Navbar Component Variables - 最適化版 */
+  :root {
+    /* コンポーネント固有の変数のみ保持 */
+    --navbar-bg-primary: oklch(4% 0.005 270 / 0.06);
+    --navbar-bg-secondary: oklch(6% 0.008 270 / 0.09);
+    --navbar-bg-tertiary: oklch(8% 0.01 270 / 0.14);
+    --navbar-bg-quaternary: oklch(10% 0.012 270 / 0.18);
+
+    --navbar-button-bg: oklch(45% 0.25 280);
+    --navbar-button-hover: oklch(55% 0.16 280);
+
+    --navbar-overlay-light: oklch(98% 0.002 270 / 0.015);
+    --navbar-overlay-dark: oklch(4% 0.005 270 / 0.03);
+
+    --navbar-glow: oklch(98% 0.002 270 / 0.02);
+    --navbar-border: oklch(98% 0.002 270 / 0.04);
+
+    --navbar-bg-hover: oklch(98% 0.002 270 / 0.1);
+    --navbar-bg-focus: oklch(98% 0.002 270 / 0.15);
+    --navbar-bg-active: oklch(98% 0.002 270 / 0.2);
+
+    --navbar-logo-glow: oklch(65% 0.18 280 / 0.6);
+    --navbar-ruby-text: oklch(65% 0.008 270);
+    --navbar-ruby-hover: oklch(70% 0.12 280);
+    
+    --navbar-opacity: 1;
+  }
+
     /* ---------- Navbar component - GoRakuDo UI/UX Team 2025 CSS Unit Optimization ---------- */
 .navbar-wrapper {
   /* Wrapper for single root element - ensure proper layout */
@@ -138,29 +167,29 @@
   top: 0 !important;
   z-index: 1000 !important; /* Fixed z-index for precise layering */
 
-  /* Enhanced Organic Glass Morphism with Curved Edges */
+  /* Enhanced Organic Glass Morphism with Curved Edges - Using CSS Variables */
   background: 
     /* Primary organic glass layer with softer transparency */
     linear-gradient(
       135deg,
-      oklch(4% 0.005 270 / 0.06) 0%,
-      oklch(6% 0.008 270 / 0.09) 20%,
-      oklch(8% 0.01 270 / 0.14) 40%,
-      oklch(10% 0.012 270 / 0.18) 60%,
-      oklch(8% 0.01 270 / 0.14) 80%,
-      oklch(6% 0.008 270 / 0.09) 100%
+      var(--navbar-bg-primary) 0%,
+      var(--navbar-bg-secondary) 20%,
+      var(--navbar-bg-tertiary) 40%,
+      var(--navbar-bg-quaternary) 60%,
+      var(--navbar-bg-tertiary) 80%,
+      var(--navbar-bg-secondary) 100%
     ),
     /* Soft organic overlay for natural depth */
       radial-gradient(
         ellipse at top,
-        oklch(98% 0.002 270 / 0.015) 0%,
+        var(--navbar-overlay-light) 0%,
         transparent 40%,
-        oklch(4% 0.005 270 / 0.03) 100%
+        var(--navbar-overlay-dark) 100%
       ),
     /* Organic border glow for curved glass effect */
       radial-gradient(
         circle at 50% 0%,
-        oklch(98% 0.002 270 / 0.02) 0%,
+        var(--navbar-glow) 0%,
         transparent 70%
       ) !important;
 
@@ -170,7 +199,7 @@
     contrast(1.02) !important;
 
   /* Organic curved glass border effect */
-  border: 1px solid oklch(98% 0.002 270 / 0.04) !important;
+  border: 1px solid var(--navbar-border) !important;
   border-radius: 0.75rem !important;
 
   /* Smooth transitions for all glass properties */
@@ -203,7 +232,7 @@
   flex-shrink: 0 !important;
   vertical-align: middle !important;
 
-  /* REASONING: Use global.css transition timing for consistency */
+  /* global.cssの変数を使用 */
   transition:
     color var(--duration-fast) ease,
     transform var(--duration-fast) ease,
@@ -228,7 +257,7 @@
   opacity: 0.8 !important;
 }
 
-/* REASONING: Focus state for accessibility */
+/* global.cssの変数を使用 */
 .nav-svg-icon:focus {
   outline: 2px solid var(--color-ring);
   outline-offset: 2px;
@@ -256,8 +285,8 @@
   cursor: pointer !important;
   /* Typography: REM for accessibility scaling with user font preferences */
   font-size: 0.75rem !important; /* Mobile-first: Start with smaller font */
-  /* Enhanced WCAG-compliant text color using OKLCH */
-  color: oklch(75% 0.008 270) !important; /* Enhanced contrast from #cccccc */
+  /* global.cssの変数を使用 */
+  color: var(--color-muted-foreground) !important;
   /* Add padding for better touch targets */
   padding: 0.5rem 0.75rem !important;
   border-radius: 0.375rem !important;
@@ -270,25 +299,23 @@
 }
 
 .nav-item:hover {
-  /* Enhanced hover color using brand purple from global.css */
-  color: oklch(
-    65% 0.18 280
-  ) !important; /* Brand purple with excellent contrast */
-  background-color: oklch(98% 0.002 270 / 0.1) !important;
+  /* global.cssの変数を使用 */
+  color: var(--color-primary) !important;
+  background-color: var(--navbar-bg-hover) !important;
   transform: translateY(-1px) !important;
 }
 
 .nav-item:focus {
-  /* Focus state for accessibility */
-  outline: 2px solid oklch(65% 0.18 280) !important;
+  /* global.cssの変数を使用 */
+  outline: 2px solid var(--color-primary) !important;
   outline-offset: 2px !important;
-  background-color: oklch(98% 0.002 270 / 0.15) !important;
+  background-color: var(--navbar-bg-focus) !important;
 }
 
 .nav-item:active {
   /* Active state for click feedback */
   transform: translateY(0) !important;
-  background-color: oklch(98% 0.002 270 / 0.2) !important;
+  background-color: var(--navbar-bg-active) !important;
 }
 
 .mobile-menu-btn {
@@ -300,10 +327,8 @@
   /* Fixed border radius: PX for precise visual consistency */
   border-radius: 20px !important;
   border: none !important;
-  /* Enhanced WCAG-compliant button background using OKLCH */
-  background-color: oklch(
-    45% 0.25 280
-  ) !important; /* Brand purple converted from #410AC2 */
+  /* global.cssの変数を使用 */
+  background-color: var(--color-primary) !important;
   /* Button spacing: REM for accessibility scaling */
   padding-left: 1rem !important; /* 16px → 1rem for accessibility scaling */
   padding-right: 1rem !important; /* 16px → 1rem for accessibility scaling */
@@ -312,18 +337,16 @@
   /* Typography: REM for accessibility scaling */
   font-size: 0.875rem !important; /* 14px → 0.875rem for accessibility scaling */
   font-weight: 500 !important;
-  /* Enhanced WCAG-compliant text color */
-  color: oklch(98% 0.002 270) !important; /* Pure white for maximum contrast */
+  /* global.cssの変数を使用 */
+  color: var(--color-primary-foreground) !important;
   /* Letter spacing for better text readability */
   letter-spacing: 0.02em !important; /* Slightly looser spacing for "Join" */
   transition: background-color 0.12s ease;
 }
 
 .mobile-menu-btn:hover {
-  /* Enhanced hover state using darker purple from global.css */
-  background-color: oklch(
-    55% 0.16 280
-  ) !important; /* Darker purple for hover */
+  /* global.cssの変数を使用 */
+  background-color: var(--color-primary-dark) !important;
 }
 
 /* ---------- Logo Japanese Component - Brand consistency with accessibility ---------- */
@@ -333,9 +356,9 @@
   font-size: 1.5rem !important; /* Mobile-first: Start with smaller logo */
   line-height: 1 !important;
   text-decoration: none !important;
-  font-family: "Yuji Syuku", serif;
-  /* Enhanced WCAG-compliant logo color using OKLCH */
-  color: oklch(98% 0.002 270) !important; /* Pure white for maximum contrast */
+  /* global.cssの変数を使用 */
+  font-family: var(--font-jp);
+  color: var(--color-foreground) !important;
 
   /* Enhanced hover effects with lift and glow */
   transition:
@@ -346,25 +369,25 @@
 
   /* Initial state with subtle glow */
   text-shadow:
-    0 0 0px oklch(65% 0.18 280 / 0),
-    0 0 0px oklch(65% 0.18 280 / 0) !important;
+    0 0 0px var(--navbar-logo-glow),
+    0 0 0px var(--navbar-logo-glow) !important;
 }
 
 .logo-japanese:hover {
   /* Lift effect with transform */
   transform: translateY(-2px) scale(1.02) !important;
 
-  /* Purple accent glow on hover */
-  color: oklch(75% 0.15 280) !important; /* Lighter purple for hover */
+  /* global.cssの変数を使用 */
+  color: var(--color-primary) !important;
 
   /* Enhanced purple glow effect */
   text-shadow:
-    0 0 8px oklch(65% 0.18 280 / 0.6),
-    0 0 16px oklch(65% 0.18 280 / 0.4),
-    0 0 24px oklch(65% 0.18 280 / 0.2) !important;
+    0 0 8px var(--navbar-logo-glow),
+    0 0 16px var(--navbar-logo-glow),
+    0 0 24px var(--navbar-logo-glow) !important;
 
   /* Additional glow filter for extra effect */
-  filter: drop-shadow(0 0 8px oklch(65% 0.18 280 / 0.3)) !important;
+  filter: drop-shadow(0 0 8px var(--navbar-logo-glow)) !important;
 }
 
 .logo-japanese rt {
@@ -374,8 +397,8 @@
   font-size: 0.4em !important; /* Keep EM for relative scaling to parent logo */
   font-weight: 600 !important;
   font-family: "Inter", sans-serif;
-  /* Enhanced WCAG-compliant ruby text color */
-  color: oklch(65% 0.008 270) !important; /* Light gray with better contrast */
+  /* global.cssの変数を使用 */
+  color: var(--navbar-ruby-text) !important;
 
   /* Coordinated hover transition with parent logo */
   transition:
@@ -383,20 +406,18 @@
     text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 
   /* Initial state */
-  text-shadow: 0 0 0px oklch(65% 0.18 280 / 0) !important;
+  text-shadow: 0 0 0px var(--navbar-logo-glow) !important;
 }
 
 /* Ruby text hover effect coordinated with parent logo */
 .logo-japanese:hover rt {
-  /* Enhanced ruby text color on hover */
-  color: oklch(
-    70% 0.12 280
-  ) !important; /* Slightly lighter purple for ruby text */
+  /* global.cssの変数を使用 */
+  color: var(--navbar-ruby-hover) !important;
 
   /* Subtle purple glow for ruby text */
   text-shadow:
-    0 0 4px oklch(65% 0.18 280 / 0.4),
-    0 0 8px oklch(65% 0.18 280 / 0.2) !important;
+    0 0 4px var(--navbar-logo-glow),
+    0 0 8px var(--navbar-logo-glow) !important;
 }
 
 /* ---------- Get Started Button - REM for accessibility ---------- */
@@ -410,10 +431,9 @@
   padding-bottom: 0.625rem !important; /* 10px → 0.625rem for accessibility scaling */
   cursor: pointer !important;
   border: none !important;
-  color: oklch(98% 0.002 270) !important; /* Pure white for maximum contrast */
-  background-color: oklch(
-    40% 0.28 300
-  ) !important; /* Brand purple converted from #410AC2 */
+  /* global.cssの変数を使用 */
+  color: var(--color-primary-foreground) !important;
+  background-color: var(--color-primary) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius-btn-small);
 
@@ -430,10 +450,8 @@
 }
 
 .get-started-btn:hover {
-  /* Enhanced hover state using darker purple from global.css */
-  background-color: oklch(
-    45% 0.25 280
-  ) !important; /* Darker purple for hover */
+  /* global.cssの変数を使用 */
+  background-color: var(--color-primary-dark) !important;
 
   /* Enhanced hover shadow - larger, more prominent */
   box-shadow:

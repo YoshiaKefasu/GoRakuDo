@@ -84,101 +84,6 @@
     display: flex;
     flex-direction: column;
   }
-
-  /* REASONING: Critical navbar styles preserved from legacy for immediate rendering */
-  .navbar {
-    /* Spacing: REM for responsive scaling with user font preferences */
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
-    /* Fixed positioning: PX for precise control */
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
-    z-index: 1000 !important; /* Fixed z-index for precise layering */
-
-    /* Enhanced Organic Glass Morphism with Curved Edges */
-    background: 
-    /* Primary organic glass layer with softer transparency */
-      linear-gradient(
-        135deg,
-        oklch(4% 0.005 270 / 0.06) 0%,
-        oklch(6% 0.008 270 / 0.09) 20%,
-        oklch(8% 0.01 270 / 0.14) 40%,
-        oklch(10% 0.012 270 / 0.18) 60%,
-        oklch(8% 0.01 270 / 0.14) 80%,
-        oklch(6% 0.008 270 / 0.09) 100%
-      ),
-      /* Soft organic overlay for natural depth */
-        radial-gradient(
-          ellipse at top,
-          oklch(98% 0.002 270 / 0.015) 0%,
-          transparent 40%,
-          oklch(4% 0.005 270 / 0.03) 100%
-        ),
-      /* Organic border glow for curved glass effect */
-        radial-gradient(
-          circle at 50% 0%,
-          oklch(98% 0.002 270 / 0.02) 0%,
-          transparent 70%
-        ) !important;
-
-    /* Enhanced Organic Glass Backdrop Filters */
-    backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
-      contrast(1.02) !important;
-
-    /* Organic curved glass border effect */
-    border: 1px solid oklch(98% 0.002 270 / 0.04) !important;
-    border-radius: 0.75rem !important;
-
-    /* Smooth transitions for all glass properties */
-    transition:
-      background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-      backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  }
-
-  /* ---------- Logo Japanese Component - Brand consistency with accessibility ---------- */
-  .logo-japanese {
-    cursor: pointer !important;
-    /* Logo size: REM for accessibility while maintaining brand recognition */
-    text-decoration: none !important;
-    font-family: 'Yuji Syuku', serif;
-    /* Enhanced WCAG-compliant logo color using OKLCH */
-    color: oklch(
-      98% 0.002 270
-    ) !important; /* Pure white for maximum contrast */
-
-    /* Enhanced hover effects with lift and glow */
-    transition:
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      filter 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-
-    /* Initial state with subtle glow */
-    text-shadow:
-      0 0 0px oklch(65% 0.18 280 / 0),
-      0 0 0px oklch(65% 0.18 280 / 0) !important;
-  }
-
-  .logo-japanese:hover {
-    /* Lift effect with transform */
-    transform: translateY(-2px) scale(1.02) !important;
-
-    /* Purple accent glow on hover */
-    color: oklch(75% 0.15 280) !important; /* Lighter purple for hover */
-
-    /* Enhanced purple glow effect */
-    text-shadow:
-      0 0 8px oklch(65% 0.18 280 / 0.6),
-      0 0 16px oklch(65% 0.18 280 / 0.4),
-      0 0 24px oklch(65% 0.18 280 / 0.2) !important;
-
-    /* Additional glow filter for extra effect */
-    filter: drop-shadow(0 0 8px oklch(65% 0.18 280 / 0.3)) !important;
-  }
 }
 
 /* ========== FONT AND EMOJI UTILITIES ========== */
@@ -430,7 +335,7 @@
 /* Small breakpoint (640px+) */
 @media (min-width: 640px) {
   .article-content {
-    font-size: 1.0625rem; /* Slightly larger base font */
+    font-size: 1rem; /* Slightly larger base font */
   }
 
   .article-content h1 {
@@ -672,7 +577,7 @@
   --container-md: 768px; /* Legacy --container-md */
   --container-lg: 1024px; /* Legacy --container-lg */
   --container-xl: 1280px; /* Legacy --container-xl */
-  --container-2xl: 1536px; /* Legacy --container-2xl */
+  --container-2xl: 1600px; /* Legacy --container-2xl */
 
   /* Backdrop blur values - preserving legacy */
   --backdrop-blur-sm: 4px; /* Legacy --backdrop-blur-sm */
@@ -747,21 +652,9 @@
 
   /* Main content structure - preserved from legacy */
   .main-content {
-    min-height: 100vh;
+    min-height: 100svh;
     position: relative;
     z-index: 1;
-  }
-
-  /* Enhanced navbar styles - building on legacy */
-  .navbar {
-    padding: 8px 0 4px 0;
-    background: linear-gradient(
-      to top,
-      rgba(10, 10, 10, 0) 0%,
-      rgba(10, 10, 10, 0.95) 10%,
-      rgba(10, 10, 10, 0.99) 11%
-    );
-    transition: background 0.3s ease;
   }
 
   /* --- Reusable Components & Transitions --- */
