@@ -36,6 +36,18 @@
 
   /* Animation */
   --transition-speed: 0.3s;
+
+  /* ===== ACCESSIBILITY & TOUCH TARGETS - GLOBAL SYSTEM ===== */
+  /* REASONING: Global touch target standards for consistent accessibility */
+  --touch-target-min: 44px; /* WCAG 2.1 AA minimum touch target size */
+  --touch-target-padding: calc((var(--touch-target-min) - 1.5rem) / 2);
+  
+  /* ===== SAFE AREA INSETS - GLOBAL SYSTEM ===== */
+  /* REASONING: Global safe area variables for consistent mobile support */
+  --safe-area-top: env(safe-area-inset-top, 0);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0);
+  --safe-area-left: env(safe-area-inset-left, 0);
+  --safe-area-right: env(safe-area-inset-right, 0);
 }
 
 /* ========== CRITICAL CSS LAYER - LOADS FIRST FOR PERFORMANCE ========== */

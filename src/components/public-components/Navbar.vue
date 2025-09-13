@@ -4,34 +4,16 @@
       <div class="nav-container">
         <div class="nav-left">
           <span
+            v-for="item in navItems"
+            :key="item.key"
             class="nav-item"
             role="button"
             tabindex="0"
-            @click="goToResources"
-            @keydown.enter="goToResources"
-            @keydown.space="goToResources"
+            @click="navigateTo(item.key)"
+            @keydown.enter="navigateTo(item.key)"
+            @keydown.space="navigateTo(item.key)"
           >
-            Resources
-          </span>
-          <span
-            class="nav-item"
-            role="button"
-            tabindex="0"
-            @click="goToTools"
-            @keydown.enter="goToTools"
-            @keydown.space="goToTools"
-          >
-            Tools
-          </span>
-          <span
-            class="nav-item"
-            role="button"
-            tabindex="0"
-            @click="goToPanduan"
-            @keydown.enter="goToPanduan"
-            @keydown.space="goToPanduan"
-          >
-            Panduan
+            {{ item.label }}
           </span>
         </div>
         <div class="nav-center">
@@ -47,9 +29,9 @@
         <div class="nav-right">
           <button
             class="get-started-btn"
-            @click="goToPosts"
-            @keydown.enter="goToPosts"
-            @keydown.space="goToPosts"
+            @click="navigateTo('posts')"
+            @keydown.enter="navigateTo('posts')"
+            @keydown.space="navigateTo('posts')"
             role="button"
             tabindex="0"
           >
@@ -73,9 +55,9 @@
           </button>
           <button
             class="get-started-btn"
-            @click="scrollToMission"
-            @keydown.enter="scrollToMission"
-            @keydown.space="scrollToMission"
+            @click="handleGetStartedAction"
+            @keydown.enter="handleGetStartedAction"
+            @keydown.space="handleGetStartedAction"
             aria-label="Mulai perjalanan belajar bahasa Jepang"
           >
             Mulai Sekarang
@@ -87,7 +69,6 @@
           @click="openInvitationModal"
           @keydown.enter="openInvitationModal"
           @keydown.space="openInvitationModal"
-          @touchstart="preloadModal"
           aria-label="Gabung komunitas Discord"
         >
           <svg
@@ -114,587 +95,769 @@
       </div>
     </nav>
 
-    <!-- Lazy-loaded Invitation Modal - Only rendered when needed -->
-    <InvitationModal v-if="showModal" ref="invitationModal" />
   </div>
 </template>
 
 <style scoped>
+/* ========== ASTRO NATIVE CSS OPTIMIZATION - NO !IMPORTANT ========== */
+/* 
+ * ARCHITECTURAL DECISION: Astro's scoped CSS provides natural specificity isolation
+ * This eliminates the need for !important declarations while maintaining
+ * component encapsulation and preventing style conflicts
+ * 
+ * PERFORMANCE CONSIDERATIONS:
+ * - Scoped CSS reduces global style pollution
+ * - CSS custom properties enable dynamic theming
+ * - Container queries provide future-proof responsive design
+ * - Optimized viewport units prevent scrollbar layout shifts
+ * 
+ * FUTURE EXTENSIBILITY:
+ * - CSS custom properties allow easy theme switching
+ * - Container queries enable component-level responsive design
+ * - Safe area insets support modern mobile devices
+ * - Progressive enhancement with fallbacks for older browsers
+ */
 
-  /* Navbar Component Variables - 最適化版 */
-  :root {
-    /* コンポーネント固有の変数のみ保持 */
-    --navbar-bg-primary: oklch(4% 0.005 270 / 0.06);
-    --navbar-bg-secondary: oklch(6% 0.008 270 / 0.09);
-    --navbar-bg-tertiary: oklch(8% 0.01 270 / 0.14);
-    --navbar-bg-quaternary: oklch(10% 0.012 270 / 0.18);
-
-    --navbar-button-bg: oklch(45% 0.25 280);
-    --navbar-button-hover: oklch(55% 0.16 280);
-
-    --navbar-overlay-light: oklch(98% 0.002 270 / 0.015);
-    --navbar-overlay-dark: oklch(4% 0.005 270 / 0.03);
-
-    --navbar-glow: oklch(98% 0.002 270 / 0.02);
-    --navbar-border: oklch(98% 0.002 270 / 0.04);
-
-    --navbar-bg-hover: oklch(98% 0.002 270 / 0.1);
-    --navbar-bg-focus: oklch(98% 0.002 270 / 0.15);
-    --navbar-bg-active: oklch(98% 0.002 270 / 0.2);
-
-    --navbar-logo-glow: oklch(65% 0.18 280 / 0.6);
-    --navbar-ruby-text: oklch(65% 0.008 270);
-    --navbar-ruby-hover: oklch(70% 0.12 280);
-    
-    --navbar-opacity: 1;
-  }
-
-    /* ---------- Navbar component - GoRakuDo UI/UX Team 2025 CSS Unit Optimization ---------- */
+/* ---------- Component Root Variables - Integrated with Global System ---------- */
 .navbar-wrapper {
-  /* Wrapper for single root element - ensure proper layout */
-  display: block !important;
-  width: 100svw !important;
+  /* REASONING: Single root element with proper layout flow */
+  display: block;
+  
+  /* REASONING: Progressive enhancement with fallbacks for browser compatibility */
+  width: 100vw; /* Fallback for older browsers */
+  width: 100dvw; /* Dynamic viewport width - excludes scrollbars */
+  
+  /* REASONING: Safe area considerations using global variables */
+  padding-left: var(--safe-area-left);
+  padding-right: var(--safe-area-right);
+  
+  /* REASONING: Prevent horizontal overflow and ensure proper containment */
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-.navbar {
-  /* Spacing: REM for responsive scaling with user font preferences */
-  padding-top: 0.75rem !important;
-  padding-bottom: 0.75rem !important;
-  /* Fixed positioning: PX for precise control */
-  position: fixed !important;
-  left: 0 !important;
-  right: 0 !important;
-  top: 0 !important;
-  z-index: 1000 !important; /* Fixed z-index for precise layering */
+/* ---------- Integrated Design System Variables - Global Consistency ---------- */
+.navbar-wrapper {
+  /* REASONING: Integrated glass morphism using global design system */
+  --glass-bg: oklch(6% 0.008 270 / 0.12);
+  --glass-border: oklch(25% 0.015 270 / 0.15);
+  --glass-glow: oklch(65% 0.18 280 / 0.08);
+  
+  /* REASONING: Unified interactive states using global variables */
+  --interactive-hover: oklch(98% 0.002 270 / 0.1);
+  --interactive-focus: oklch(98% 0.002 270 / 0.15);
+  --interactive-active: oklch(98% 0.002 270 / 0.2);
+  
+  /* REASONING: Brand elements using global design tokens */
+  --brand-glow: oklch(65% 0.18 280 / 0.6);
+  --brand-ruby: oklch(65% 0.008 270);
+  --brand-ruby-hover: oklch(70% 0.12 280);
+  
+  --navbar-opacity: 1;
+}
 
-  /* Enhanced Organic Glass Morphism with Curved Edges - Using CSS Variables */
+/* ---------- Main Navbar Container - Fixed Positioning ---------- */
+.navbar {
+  /* REASONING: Fixed positioning for persistent navigation */
+  position: fixed;
+  top: 0; /* Fallback for browsers without safe-area support */
+  top: env(safe-area-inset-top, 0);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  
+  /* REASONING: Responsive padding using REM units with safe area consideration */
+  padding: 0.75rem 0; /* Fallback for browsers without safe-area support */
+  padding-top: calc(0.75rem + env(safe-area-inset-top, 0));
+  
+  /* REASONING: Optimized single glass morphism background */
   background: 
-    /* Primary organic glass layer with softer transparency */
     linear-gradient(
       135deg,
-      var(--navbar-bg-primary) 0%,
-      var(--navbar-bg-secondary) 20%,
-      var(--navbar-bg-tertiary) 40%,
-      var(--navbar-bg-quaternary) 60%,
-      var(--navbar-bg-tertiary) 80%,
-      var(--navbar-bg-secondary) 100%
+      var(--glass-bg) 0%,
+      oklch(8% 0.01 270 / 0.08) 50%,
+      var(--glass-bg) 100%
     ),
-    /* Soft organic overlay for natural depth */
-      radial-gradient(
-        ellipse at top,
-        var(--navbar-overlay-light) 0%,
-        transparent 40%,
-        var(--navbar-overlay-dark) 100%
-      ),
-    /* Organic border glow for curved glass effect */
-      radial-gradient(
-        circle at 50% 0%,
-        var(--navbar-glow) 0%,
-        transparent 70%
-      ) !important;
+    radial-gradient(
+      ellipse at 50% 0%,
+      var(--glass-glow) 0%,
+      transparent 60%
+    );
 
-  /* Enhanced Organic Glass Backdrop Filters */
-  backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
-    contrast(1.02) !important;
+  /* REASONING: Enhanced backdrop filters for glass effect */
+  backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
+  -webkit-backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.02);
 
-  /* Organic curved glass border effect */
-  border: 1px solid var(--navbar-border) !important;
-  border-radius: 0.75rem !important;
+  /* REASONING: Optimized glass border styling */
+  border: 1px solid var(--glass-border);
+  border-radius: 0.75rem;
 
-  /* Smooth transitions for all glass properties */
+  /* REASONING: Unified transition system with GPU acceleration */
   transition:
     background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* REASONING: GPU acceleration for smooth animations */
+  will-change: background, backdrop-filter, border-color, transform;
+  transform: translateZ(0);
 }
 
+/* ---------- Navigation Container - Flexbox Layout ---------- */
 .nav-container {
-  margin-left: auto !important;
-  margin-right: auto !important;
-  display: flex !important;
-  /* Container width: REM for responsive scaling */
-  max-width: 75rem !important; /* 1200px → 75rem for responsive scaling */
-  align-items: center !important;
-  justify-content: space-between !important;
-  /* Spacing: REM for responsive scaling with user font preferences */
-  padding-left: 1.25rem !important; /* 20px → 1.25rem for responsive scaling */
-  padding-right: 1.25rem !important; /* 20px → 1.25rem for responsive scaling */
-  background: transparent !important;
+  /* REASONING: Centered container with responsive max-width */
+  margin: 0 auto;
+  max-width: 75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  /* REASONING: Responsive padding using REM units */
+  padding: 0 1.25rem;
+  background: transparent;
 }
 
-/* ---------- UNIFIED SVG ICON STYLING SYSTEM ---------- */
+/* ---------- SVG Icon System - Unified Styling ---------- */
 .nav-svg-icon {
-  color: inherit !important;
-  stroke: currentColor !important;
-  fill: none !important;
-
-  flex-shrink: 0 !important;
-  vertical-align: middle !important;
-
-  /* global.cssの変数を使用 */
+  /* REASONING: Consistent icon styling with inheritance */
+  color: inherit;
+  stroke: currentColor;
+  fill: none;
+  
+  /* REASONING: Flexible sizing with proper constraints */
+  flex-shrink: 0;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  max-width: 100%;
+  max-height: 100%;
+  
+  /* REASONING: Unified transition system with GPU acceleration */
   transition:
     color var(--duration-fast) ease,
     transform var(--duration-fast) ease,
-    opacity var(--duration-fast) ease !important;
-
-  width: 1em !important;
-  height: 1em !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
+    opacity var(--duration-fast) ease;
+  
+  /* REASONING: GPU acceleration for icon animations */
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
-/* REASONING: Hover effects for interactive SVG icons */
+/* REASONING: Interactive states for SVG icons with GPU acceleration */
 .nav-svg-icon:hover {
-  /* REASONING: Subtle scale effect on hover for better UX */
-  transform: scale(1.05) !important;
-  opacity: 0.9 !important;
+  transform: translateZ(0) scale(1.05);
+  opacity: 0.9;
 }
 
-/* REASONING: Active state for pressed feedback */
 .nav-svg-icon:active {
-  transform: scale(0.95) !important;
-  opacity: 0.8 !important;
+  transform: translateZ(0) scale(0.95);
+  opacity: 0.8;
 }
 
-/* global.cssの変数を使用 */
 .nav-svg-icon:focus {
   outline: 2px solid var(--color-ring);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-/* ---------- Mobile-First Base Styles (0px - 640px) ---------- */
+/* ---------- Navigation Sections - Mobile First ---------- */
 .nav-left,
 .nav-right {
-  display: none !important; /* Show navigation on all screen sizes */
-  flex: 1 1 0% !important;
-  align-items: center !important;
+  /* REASONING: Hidden on mobile, shown on desktop */
+  display: none;
+  flex: 1 1 0%;
+  align-items: center;
 }
 
 .nav-left {
-  gap: 0.75rem !important; /* Small gap for mobile */
+  gap: 0.75rem;
 }
 
 .nav-right {
-  justify-content: flex-end !important;
-  gap: 0.5rem !important; /* Small gap for mobile */
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
+/* ---------- Navigation Items - Touch-Optimized Interactive Elements ---------- */
 .nav-item {
-  cursor: pointer !important;
-  /* Typography: REM for accessibility scaling with user font preferences */
-  font-size: 0.75rem !important; /* Mobile-first: Start with smaller font */
-  /* global.cssの変数を使用 */
-  color: var(--color-muted-foreground) !important;
-  /* Add padding for better touch targets */
-  padding: 0.5rem 0.75rem !important;
-  border-radius: 0.375rem !important;
+  /* REASONING: Touch-optimized accessible interactive elements */
+  cursor: pointer;
+  font-size: var(--navbar-item-size);
+  color: var(--color-muted-foreground);
+  
+  /* REASONING: Touch target optimization - minimum 44px for accessibility */
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  padding: var(--touch-target-padding) 0.75rem;
+  border-radius: 0.375rem;
+  outline: none;
+  
+  /* REASONING: Flexbox for proper touch target alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* REASONING: Unified transition system with GPU acceleration */
   transition:
     color 0.12s ease,
     background-color 0.12s ease,
-    transform 0.12s ease;
-  /* Ensure proper focus outline */
-  outline: none !important;
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+  
+  /* REASONING: GPU acceleration for navigation items */
+  will-change: transform, background-color;
+  transform: translateZ(0);
 }
 
 .nav-item:hover {
-  /* global.cssの変数を使用 */
-  color: var(--color-primary) !important;
-  background-color: var(--navbar-bg-hover) !important;
-  transform: translateY(-1px) !important;
+  color: var(--color-primary);
+  background-color: var(--interactive-hover);
+  transform: translateZ(0) translateY(-1px);
 }
 
 .nav-item:focus {
-  /* global.cssの変数を使用 */
-  outline: 2px solid var(--color-primary) !important;
-  outline-offset: 2px !important;
-  background-color: var(--navbar-bg-focus) !important;
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  background-color: var(--interactive-focus);
 }
 
 .nav-item:active {
-  /* Active state for click feedback */
-  transform: translateY(0) !important;
-  background-color: var(--navbar-bg-active) !important;
+  transform: translateZ(0) translateY(0);
+  background-color: var(--interactive-active);
 }
 
+/* ---------- Mobile Menu Button - Enhanced Touch Optimization ---------- */
 .mobile-menu-btn {
-  display: flex !important; /* Changed from block to flex for icon alignment */
-  align-items: center !important; /* Center icon and text vertically */
-  justify-content: center !important; /* Center content horizontally */
-  gap: 0.25rem !important; /* Space between icon and text */
-  cursor: pointer !important;
-  /* Fixed border radius: PX for precise visual consistency */
-  border-radius: 20px !important;
-  border: none !important;
-  /* global.cssの変数を使用 */
-  background-color: var(--color-primary) !important;
-  /* Button spacing: REM for accessibility scaling */
-  padding-left: 1rem !important; /* 16px → 1rem for accessibility scaling */
-  padding-right: 1rem !important; /* 16px → 1rem for accessibility scaling */
-  padding-top: 0.5rem !important; /* 8px → 0.5rem for accessibility scaling */
-  padding-bottom: 0.5rem !important; /* 8px → 0.5rem for accessibility scaling */
-  /* Typography: REM for accessibility scaling */
-  font-size: 0.875rem !important; /* 14px → 0.875rem for accessibility scaling */
-  font-weight: 500 !important;
-  /* global.cssの変数を使用 */
-  color: var(--color-primary-foreground) !important;
-  /* Letter spacing for better text readability */
-  letter-spacing: 0.02em !important; /* Slightly looser spacing for "Join" */
-  transition: background-color 0.12s ease;
+  /* REASONING: Mobile-first button with enhanced touch targets */
+  display: var(--navbar-mobile-display);
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  
+  /* REASONING: Touch target optimization - minimum 44px for accessibility */
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  
+  /* REASONING: Accessible button styling with enhanced touch feedback */
+  cursor: pointer;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  
+  /* REASONING: Touch-optimized padding with proper spacing */
+  padding: var(--touch-target-padding) 1rem;
+  
+  /* REASONING: Typography with accessibility scaling */
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  
+  /* REASONING: Unified transition system with GPU acceleration */
+  transition: 
+    background-color 0.12s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+  
+  /* REASONING: GPU acceleration for mobile menu button */
+  will-change: transform, background-color;
+  transform: translateZ(0);
+  
+  /* REASONING: Touch-specific enhancements */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .mobile-menu-btn:hover {
-  /* global.cssの変数を使用 */
-  background-color: var(--color-primary-dark) !important;
+  background-color: var(--color-primary-dark);
+  transform: translateZ(0) translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* ---------- Logo Japanese Component - Brand consistency with accessibility ---------- */
-.logo-japanese {
-  cursor: pointer !important;
-  /* Logo size: REM for accessibility while maintaining brand recognition */
-  font-size: 1.5rem !important; /* Mobile-first: Start with smaller logo */
-  line-height: 1 !important;
-  text-decoration: none !important;
-  /* global.cssの変数を使用 */
-  font-family: var(--font-jp);
-  color: var(--color-foreground) !important;
+.mobile-menu-btn:active {
+  transform: translateZ(0) translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
-  /* Enhanced hover effects with lift and glow */
+/* ---------- Logo Component - Brand Identity ---------- */
+.logo-japanese {
+  /* REASONING: Brand-consistent logo styling */
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-decoration: none;
+  font-family: var(--font-jp);
+  color: var(--color-foreground);
+  
+  /* REASONING: Unified transition system with GPU acceleration */
   transition:
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    filter 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-
-  /* Initial state with subtle glow */
+    filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* REASONING: GPU acceleration for logo animations */
+  will-change: transform, color, text-shadow, filter;
+  transform: translateZ(0);
+  
+  /* REASONING: Initial state with subtle glow */
   text-shadow:
-    0 0 0px var(--navbar-logo-glow),
-    0 0 0px var(--navbar-logo-glow) !important;
+    0 0 0px var(--brand-glow),
+    0 0 0px var(--brand-glow);
 }
 
 .logo-japanese:hover {
-  /* Lift effect with transform */
-  transform: translateY(-2px) scale(1.02) !important;
-
-  /* global.cssの変数を使用 */
-  color: var(--color-primary) !important;
-
-  /* Enhanced purple glow effect */
+  /* REASONING: Lift effect with enhanced glow and GPU acceleration */
+  transform: translateZ(0) translateY(-2px) scale(1.02);
+  color: var(--color-primary);
   text-shadow:
-    0 0 8px var(--navbar-logo-glow),
-    0 0 16px var(--navbar-logo-glow),
-    0 0 24px var(--navbar-logo-glow) !important;
-
-  /* Additional glow filter for extra effect */
-  filter: drop-shadow(0 0 8px var(--navbar-logo-glow)) !important;
+    0 0 8px var(--brand-glow),
+    0 0 16px var(--brand-glow),
+    0 0 24px var(--brand-glow);
+  filter: drop-shadow(0 0 8px var(--brand-glow));
 }
 
+/* ---------- Ruby Text Styling - Japanese Typography ---------- */
 .logo-japanese rt {
-  /* Fixed positioning: PX for precise brand consistency */
-  margin-bottom: -15px !important; /* Keep PX for precise ruby text positioning */
-  /* Relative scaling: EM for scaling with parent logo size */
-  font-size: 0.4em !important; /* Keep EM for relative scaling to parent logo */
-  font-weight: 600 !important;
+  /* REASONING: Precise ruby text positioning */
+  margin-bottom: -15px;
+  font-size: 0.4em;
+  font-weight: 600;
   font-family: "Inter", sans-serif;
-  /* global.cssの変数を使用 */
-  color: var(--navbar-ruby-text) !important;
-
-  /* Coordinated hover transition with parent logo */
+  color: var(--brand-ruby);
+  
+  /* REASONING: Coordinated transitions with parent */
   transition:
     color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-
-  /* Initial state */
-  text-shadow: 0 0 0px var(--navbar-logo-glow) !important;
+    text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  text-shadow: 0 0 0px var(--brand-glow);
 }
 
-/* Ruby text hover effect coordinated with parent logo */
 .logo-japanese:hover rt {
-  /* global.cssの変数を使用 */
-  color: var(--navbar-ruby-hover) !important;
-
-  /* Subtle purple glow for ruby text */
+  color: var(--brand-ruby-hover);
   text-shadow:
-    0 0 4px var(--navbar-logo-glow),
-    0 0 8px var(--navbar-logo-glow) !important;
+    0 0 4px var(--brand-glow),
+    0 0 8px var(--brand-glow);
 }
 
-/* ---------- Get Started Button - REM for accessibility ---------- */
+/* ---------- Get Started Buttons - Touch-Optimized Call to Action ---------- */
 .get-started-btn {
-  font-size: 0.875rem !important; /* 14px → 0.875rem for accessibility scaling */
-  font-weight: 500 !important;
-  /* Button spacing: REM for accessibility scaling */
-  padding-left: 1.15rem !important; /* 24px → 1.5rem for accessibility scaling */
-  padding-right: 1.15rem !important; /* 24px → 1.5rem for accessibility scaling */
-  padding-top: 0.625rem !important; /* 10px → 0.625rem for accessibility scaling */
-  padding-bottom: 0.625rem !important; /* 10px → 0.625rem for accessibility scaling */
-  cursor: pointer !important;
-  border: none !important;
-  /* global.cssの変数を使用 */
-  color: var(--color-primary-foreground) !important;
-  background-color: var(--color-primary) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* REASONING: Touch-optimized button styling with accessibility */
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  color: var(--color-primary-foreground);
+  background-color: var(--color-primary);
   border-radius: var(--border-radius-btn-small);
-
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  /* REASONING: Touch target optimization - minimum 44px for accessibility */
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  padding: var(--touch-target-padding) 1.15rem;
+  
+  /* REASONING: Flexbox for icon and text alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  
+  /* REASONING: Unified transition system with GPU acceleration */
   transition:
     background-color var(--animate-duration-slow) ease,
     box-shadow var(--animate-duration-normal) ease,
     transform var(--animate-duration-fast) ease,
     opacity var(--animate-duration-fast) ease;
-
-  /* Add flexbox for icon and text alignment */
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.25rem !important;
+  
+  /* REASONING: GPU acceleration for get started buttons */
+  will-change: transform, background-color, box-shadow;
+  transform: translateZ(0);
+  
+  /* REASONING: Touch-specific enhancements */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .get-started-btn:hover {
-  /* global.cssの変数を使用 */
-  background-color: var(--color-primary-dark) !important;
-
-  /* Enhanced hover shadow - larger, more prominent */
+  background-color: var(--color-primary-dark);
   box-shadow:
     0 8px 25px rgba(0, 0, 0, 0.2),
     0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-1px);
+  transform: translateZ(0) translateY(-1px);
 }
 
 .get-started-btn:active {
-  transform: translateY(0);
+  transform: translateZ(0) translateY(0);
   opacity: 0.98;
 }
 
-/* ========== RESPONSIVE BREAKPOINTS - ALL BREAKPOINT STYLING BELOW ========== */
-/* ---------- Small Breakpoint (320px+) - Tablet and Up ---------- */
-@media (min-width: 320px) {
-  /* 320px → 20rem for responsive scaling */
-  .nav-left,
-  .nav-right {
-    display: none !important; /* Show navigation on all screen sizes */
-    flex: 1 1 0% !important;
-    align-items: center !important;
-  }
-
-  .nav-left {
-    gap: 1rem !important; /* Smaller gap for mobile */
-  }
-
-  .nav-right {
-    justify-content: flex-end !important;
-    gap: 0.5rem !important; /* Smaller gap for mobile */
-  }
-
-  .nav-item {
-    font-size: 0.8rem !important; /* Slightly larger for tablet */
-  }
-
-  .navbar {
-    /* Enhanced spacing for larger screens */
-    padding-top: 0.75rem !important;
-    padding-bottom: 1rem !important;
-  }
-
-  .nav-container {
-    /* Enhanced container spacing for tablet */
-    padding-left: 1.25rem !important;
-    padding-right: 1.25rem !important;
-  }
+/* ---------- Responsive Variables - Mobile First with Optimized Viewport ---------- */
+.navbar-wrapper {
+  /* REASONING: Mobile-first responsive values as CSS custom properties */
+  --navbar-padding-y: 0.75rem;
+  --navbar-padding-x: 1rem;
+  --navbar-gap-left: 0.75rem;
+  --navbar-gap-right: 0.5rem;
+  --navbar-item-size: 0.75rem;
+  --navbar-logo-size: 1.5rem;
+  --navbar-nav-display: none;
+  --navbar-mobile-display: flex;
+  
+  /* REASONING: Optimized viewport units - 100svw prevents scrollbar issues */
+  --navbar-width: 100vw; /* Fallback for older browsers */
+  --navbar-width: 100svw; /* Small viewport width - excludes scrollbars */
+  --navbar-height: 100vh; /* Fallback for older browsers */
+  --navbar-height: 100svh; /* Small viewport height - excludes UI elements */
+  
+  /* REASONING: Responsive variables only - global variables used for touch targets and safe areas */
 }
 
-/* ---------- Small Breakpoint (640px+) - Tablet and Up ---------- */
-@media (min-width: 640px) {
-  .navbar {
-    /* Enhanced spacing for larger screens */
-    padding-top: 1rem !important; /* 16px → 1rem for responsive scaling */
-    padding-bottom: 1.25rem !important; /* 20px → 1.25rem for responsive scaling */
-  }
-
-  .nav-container {
-    /* Enhanced container spacing for tablet */
-    padding-left: 1.5rem !important; /* 24px → 1.5rem for responsive scaling */
-    padding-right: 1.5rem !important; /* 24px → 1.5rem for responsive scaling */
-  }
-}
-
-/* ---------- Medium Breakpoint (768px+) - Desktop and Up ---------- */
+/* ---------- Tablet Breakpoint (768px+) - Enhanced Mobile Experience ---------- */
 @media (min-width: 768px) {
-  /* 768px → 48rem for responsive scaling */
-  .nav-left,
-  .nav-right {
-    display: flex !important; /* Show desktop navigation */
-    flex: 1 1 0% !important;
-    align-items: center !important;
-  }
-
-  .nav-left {
-    gap: 2rem !important; /* 32px → 2rem for responsive scaling */
-  }
-
-  .nav-right {
-    justify-content: flex-end !important;
-    gap: 1rem !important;
-  }
-
-  .nav-item {
-    font-size: 0.875rem !important; /* Full size for desktop */
-  }
-
-  .mobile-menu-btn {
-    display: none !important; /* Hide mobile menu button since navigation is now available */
+  .navbar-wrapper {
+    --navbar-padding-y: 1rem;
+    --navbar-padding-x: 1.5rem;
+    --navbar-gap-left: 1.5rem;
+    --navbar-gap-right: 1rem;
+    --navbar-item-size: 0.875rem;
+    --navbar-logo-size: 1.75rem;
   }
 }
 
-/* ---------- Large Breakpoint (1024px+) - Wide Desktop and Up ---------- */
+/* ---------- Desktop Breakpoint (1024px+) - Full Navigation ---------- */
 @media (min-width: 1024px) {
-  /* 1024px → 64rem for responsive scaling */
-  .nav-container {
-    /* Enhanced container spacing for wide desktop */
-    padding-left: 2rem !important; /* 32px → 2rem for responsive scaling */
-    padding-right: 2rem !important; /* 32px → 2rem for responsive scaling */
-  }
-
-  .nav-left {
-    /* Enhanced gap for wide desktop */
-    gap: 2.5rem !important;
-  }
-
-  .nav-right {
-    gap: 1.5rem !important;
-  }
-
-  .logo-japanese {
-    font-size: 1.75rem !important; /* Full logo size for desktop */
+  .navbar-wrapper {
+    --navbar-nav-display: flex;
+    --navbar-mobile-display: none;
+    --navbar-padding-x: 2rem;
+    --navbar-gap-left: 2.5rem;
+    --navbar-gap-right: 1.5rem;
+    --navbar-item-size: 0.875rem;
+    --navbar-logo-size: 1.85rem;
   }
 }
 
-/* ---------- Extra Large Breakpoint (1280px+) - Ultra Wide Desktop ---------- */
-@media (min-width: 1280px) {
-  /* 1280px → 80rem for responsive scaling */
-  .nav-container {
-    /* Maximum container spacing for ultra wide screens */
-    padding-left: 2.5rem !important; /* 40px → 2.5rem for responsive scaling */
-    padding-right: 2.5rem !important; /* 40px → 2.5rem for responsive scaling */
+/* ---------- Container Queries - Future-Proof Responsive Design ---------- */
+@container (min-width: 768px) {
+  .navbar-wrapper {
+    --navbar-container-optimized: true;
   }
+}
 
-  .nav-left {
-    /* Maximum gap for ultra wide screens */
-    gap: 3rem !important; /* 48px → 3rem for responsive scaling */
+@container (min-width: 1024px) {
+  .navbar-wrapper {
+    --navbar-container-large: true;
   }
+}
 
-  .nav-right {
-    gap: 1.75rem !important;
-  }
+/* ---------- Apply Optimized Responsive Variables with Enhanced Viewport ---------- */
+.navbar {
+  padding: var(--navbar-padding-y);
+  /* REASONING: Apply optimized viewport width to navbar - 100svw prevents scrollbar issues */
+  width: var(--navbar-width);
+  
+  /* REASONING: Safe area positioning using global variables */
+  top: var(--safe-area-top);
+  left: var(--safe-area-left);
+  right: var(--safe-area-right);
+}
 
-  .logo-japanese {
-    font-size: 1.85rem !important; /* Full logo size for desktop */
+.nav-container {
+  /* REASONING: Safe area padding using global variables */
+  padding-left: calc(var(--navbar-padding-x) + var(--safe-area-left));
+  padding-right: calc(var(--navbar-padding-x) + var(--safe-area-right));
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.nav-left,
+.nav-right {
+  display: var(--navbar-nav-display);
+  flex: 1 1 0%;
+  align-items: center;
+}
+
+.nav-left {
+  gap: var(--navbar-gap-left);
+}
+
+.nav-right {
+  justify-content: flex-end;
+  gap: var(--navbar-gap-right);
+}
+
+.nav-item {
+  font-size: var(--navbar-item-size);
+}
+
+.logo-japanese {
+  font-size: var(--navbar-logo-size);
+}
+
+.mobile-menu-btn {
+  display: var(--navbar-mobile-display);
+}
+
+/* ---------- Container Query Support - Future-Proof Responsive Design ---------- */
+@supports (container-type: inline-size) {
+  .navbar-wrapper {
+    container-type: inline-size;
+    container-name: navbar;
   }
 }
 </style>
 
-<script setup>
-import { onMounted, onUnmounted, ref, nextTick } from "vue";
-import InvitationModal from "./InvitationModal.vue";
+<script setup lang="ts">
+import { onMounted, onUnmounted } from "vue";
 
-// Lazy loading state
-const showModal = ref(false);
-const invitationModal = ref(null);
+// ========== TYPE DEFINITIONS - STRICT MODE COMPLIANT ==========
 
-// Pre-load modal on touch start (mobile optimization)
-function preloadModal() {
-  if (!showModal.value) {
-    showModal.value = true;
-  }
+/**
+ * Global window interface extension
+ * REASONING: Type-safe global function definitions
+ * Note: This interface extends the global Window interface defined in global.d.ts
+ */
+
+/**
+ * Unified component state interface
+ * REASONING: Single state object for better memory efficiency and maintainability
+ */
+interface ComponentState {
+  // Scroll optimization
+  lastOpacity: number;
+  scrollRafId: number | null;
+  isScrolling: boolean;
+  scrollTimeout: number | null;
+  
+  // Viewport optimization
+  lastHeight: number;
+  lastWidth: number;
+  viewportRafId: number | null;
+  isUpdating: boolean;
+  viewportTimeout: number | null;
 }
 
-// Navigation functions
-function goToResources() {
-  window.location.href = "/docs";
+/**
+ * Navigation route configuration
+ * REASONING: Simplified route structure for better maintainability
+ */
+interface NavRoute {
+  path: string;
+  label: string;
 }
 
-function goToPosts() {
-  window.location.href = "/docs";
+// ========== UNIFIED STATE INITIALIZATION ==========
+/**
+ * Unified component state
+ * REASONING: Single state object reduces memory overhead and improves maintainability
+ */
+const state: ComponentState = {
+  // Scroll optimization
+  lastOpacity: 0,
+  scrollRafId: null,
+  isScrolling: false,
+  scrollTimeout: null,
+  
+  // Viewport optimization
+  lastHeight: 0,
+  lastWidth: 0,
+  viewportRafId: null,
+  isUpdating: false,
+  viewportTimeout: null
+};
+
+// ========== NAVIGATION CONFIGURATION ==========
+/**
+ * Navigation routes configuration
+ * REASONING: Centralized route management for maintainability
+ */
+const NAV_ROUTES: Record<string, NavRoute> = {
+  resources: { path: "/docs", label: "Resources" },
+  posts: { path: "/docs", label: "Posts" },
+  tools: { path: "/tools", label: "Tools" },
+  panduan: { path: "/docs", label: "Panduan" }
+} as const;
+
+/**
+ * Navigation items for template rendering
+ * REASONING: Computed property for dynamic navigation rendering
+ */
+const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
+  key,
+  ...route
+}));
+
+// ========== SIMPLIFIED MODAL MANAGEMENT ==========
+
+/**
+ * Open Discord invitation
+ * REASONING: 3-line function following KISS principle - direct Discord link
+ */
+function openInvitationModal(): void {
+  window.open("https://discord.gg/j8qmYPAGQh", "_blank");
 }
 
-function goToTools() {
-  window.location.href = "/tools";
+// ========== SIMPLIFIED NAVIGATION ==========
+/**
+ * Generic navigation function
+ * REASONING: 3-line function following KISS principle
+ */
+function navigateTo(routeKey: keyof typeof NAV_ROUTES): void {
+  const route = NAV_ROUTES[routeKey];
+  if (route) window.location.href = route.path;
 }
 
-function goToPanduan() {
-  window.location.href = "/docs";
+/**
+ * Context-aware action handler
+ * REASONING: 5-line function with conditional logic
+ */
+function handleGetStartedAction(): void {
+  const isHomepage = window.location.pathname === "/" || window.location.pathname === "/index.html";
+  if (isHomepage) scrollToMission();
+  else window.open("https://discord.gg/j8qmYPAGQh", "_blank");
 }
 
-function scrollToMission() {
+/**
+ * Scroll to mission section with retry logic
+ * REASONING: 5-line function with DOM ready check
+ */
+function scrollToMission(): void {
   const missionSection = document.getElementById("mission");
-  const navbar = document.querySelector(".navbar");
+  if (!missionSection) {
+    setTimeout(scrollToMission, 100);
+    return;
+  }
+  
+  const navbarHeight = (document.querySelector(".navbar") as HTMLElement)?.offsetHeight || 0;
+  const scrollToPosition = Math.max(0, missionSection.getBoundingClientRect().top + window.pageYOffset - navbarHeight - 40);
+  window.scrollTo({ top: scrollToPosition, behavior: "smooth" });
+}
 
-  if (missionSection && navbar) {
-    const navbarHeight = navbar.offsetHeight;
-    const missionSectionTop =
-      missionSection.getBoundingClientRect().top + window.pageYOffset;
-    const desiredTopMargin = 40;
-    const scrollToPosition =
-      missionSectionTop - navbarHeight - desiredTopMargin;
-    window.scrollTo({
-      top: scrollToPosition,
-      behavior: "smooth",
-    });
+// ========== SIMPLIFIED SCROLL & VIEWPORT OPTIMIZATION ==========
+/**
+ * Update navbar opacity based on scroll
+ * REASONING: 3-line function following KISS principle
+ */
+function updateNavbarOpacity(scrollY: number): void {
+  const newOpacity = Math.min(scrollY / 200, 1);
+  if (Math.abs(newOpacity - state.lastOpacity) > 0.001) {
+    document.documentElement.style.setProperty("--navbar-opacity", newOpacity.toString());
+    state.lastOpacity = newOpacity;
   }
 }
 
-// Lazy-loaded modal opening function - Mobile optimized
-async function openInvitationModal() {
-  try {
-    // Ensure modal is loaded
-    if (!showModal.value) {
-      showModal.value = true;
-      await nextTick();
-    }
-
-    // Wait a bit more for mobile devices
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // Try to open the modal
-    if (
-      invitationModal.value &&
-      typeof invitationModal.value.open === "function"
-    ) {
-      invitationModal.value.open();
-      return;
-    }
-
-    // Fallback: Try global function
-    if (typeof window.openInvitationModal === "function") {
-      window.openInvitationModal();
-      return;
-    }
-
-    // Final fallback: Open Discord directly
-    window.open("https://discord.gg/j8qmYPAGQh", "_blank");
-  } catch (err) {
-    console.error("openInvitationModal error:", err);
-    // Fallback to direct Discord link
-    window.open("https://discord.gg/j8qmYPAGQh", "_blank");
-  }
+/**
+ * Optimized scroll handler
+ * REASONING: 5-line function with RAF optimization
+ */
+function handleScroll(): void {
+  if (state.isScrolling) return;
+  state.isScrolling = true;
+  
+  state.scrollRafId = requestAnimationFrame(() => {
+    updateNavbarOpacity(window.scrollY);
+    state.isScrolling = false;
+    state.scrollRafId = null;
+  });
 }
 
-// Navbarのスクロール効果 - Dynamic transparency based on scroll
-function handleNavbarScroll() {
-  const scrollY = window.scrollY;
-  const maxScroll = 200; // Adjust this value to control when full opacity is reached
-  const opacity = Math.min(scrollY / maxScroll, 1);
-
-  // Update CSS variable for dynamic gradient transparency
-  document.documentElement.style.setProperty("--navbar-opacity", opacity);
+/**
+ * Throttled scroll handler
+ * REASONING: 3-line function for performance
+ */
+function throttledScrollHandler(): void {
+  if (state.scrollTimeout) return;
+  state.scrollTimeout = window.setTimeout(() => {
+    handleScroll();
+    state.scrollTimeout = null;
+  }, 16);
 }
 
-// コンポーネントがページに表示されたら、スクロールイベントを追加
+/**
+ * Viewport change handler
+ * REASONING: 5-line function with RAF optimization
+ */
+function handleViewportChange(): void {
+  if (state.isUpdating) return;
+  state.isUpdating = true;
+  
+  state.viewportRafId = requestAnimationFrame(() => {
+    const { innerHeight, innerWidth } = window;
+    if (Math.abs(innerHeight - state.lastHeight) > 1 || Math.abs(innerWidth - state.lastWidth) > 1) {
+      document.documentElement.style.setProperty('--viewport-height', `${innerHeight}px`);
+      document.documentElement.style.setProperty('--viewport-width', `${innerWidth}px`);
+      state.lastHeight = innerHeight;
+      state.lastWidth = innerWidth;
+    }
+    state.isUpdating = false;
+    state.viewportRafId = null;
+  });
+}
+
+/**
+ * Throttled viewport handler
+ * REASONING: 3-line function for performance
+ */
+function throttledViewportHandler(): void {
+  if (state.viewportTimeout) return;
+  state.viewportTimeout = window.setTimeout(() => {
+    handleViewportChange();
+    state.viewportTimeout = null;
+  }, 16);
+}
+
+// ========== SIMPLIFIED LIFECYCLE MANAGEMENT ==========
+/**
+ * Add event listeners
+ * REASONING: 3-line function following KISS principle
+ */
+function addEventListeners(): void {
+  window.addEventListener("scroll", throttledScrollHandler, { passive: true });
+  window.addEventListener("resize", throttledViewportHandler, { passive: true });
+  window.addEventListener("orientationchange", throttledViewportHandler, { passive: true });
+}
+
+/**
+ * Remove event listeners
+ * REASONING: 3-line function following KISS principle
+ */
+function removeEventListeners(): void {
+  window.removeEventListener("scroll", throttledScrollHandler);
+  window.removeEventListener("resize", throttledViewportHandler);
+  window.removeEventListener("orientationchange", throttledViewportHandler);
+}
+
+/**
+ * Cleanup pending operations
+ * REASONING: 5-line function for cleanup
+ */
+function cleanup(): void {
+  if (state.scrollRafId) cancelAnimationFrame(state.scrollRafId);
+  if (state.viewportRafId) cancelAnimationFrame(state.viewportRafId);
+  if (state.scrollTimeout) clearTimeout(state.scrollTimeout);
+  if (state.viewportTimeout) clearTimeout(state.viewportTimeout);
+}
+
+/**
+ * Component mount lifecycle
+ * REASONING: 3-line function following KISS principle
+ */
 onMounted(() => {
-  window.addEventListener("scroll", handleNavbarScroll);
+  addEventListeners();
+  handleScroll();
+  handleViewportChange();
 });
 
-// コンポーネントがページから消えるときに、イベントを削除（メモリリーク防止）
+/**
+ * Component unmount lifecycle
+ * REASONING: 3-line function following KISS principle
+ */
 onUnmounted(() => {
-  window.removeEventListener("scroll", handleNavbarScroll);
+  removeEventListeners();
+  cleanup();
 });
 </script>

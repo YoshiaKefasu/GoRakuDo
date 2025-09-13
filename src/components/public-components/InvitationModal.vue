@@ -111,44 +111,108 @@
   </transition>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch, type Ref } from "vue";
 
-const isOpen = ref(false);
+// ========== TYPE DEFINITIONS - STRICT MODE COMPLIANT ==========
+/**
+ * Modal state interface
+ * REASONING: Strict typing for modal component state
+ * Note: Currently unused but available for future state management
+ */
+// interface ModalState {
+//   isOpen: Ref<boolean>;
+// }
 
-function open() {
+/**
+ * Touch event interface
+ * REASONING: Type-safe touch event handling
+ * Note: Extends native TouchEvent for better type safety
+ */
+interface CustomTouchEvent extends TouchEvent {
+  touches: TouchList;
+  changedTouches: TouchList;
+}
+
+/**
+ * Keyboard event interface
+ * REASONING: Type-safe keyboard event handling
+ * Note: Extends native KeyboardEvent for better type safety
+ */
+interface CustomKeyboardEvent extends KeyboardEvent {
+  key: string;
+}
+
+// ========== COMPONENT STATE ==========
+const isOpen: Ref<boolean> = ref<boolean>(false);
+
+/**
+ * Open modal with body scroll lock
+ * REASONING: 3-line function following KISS principle
+ */
+function open(): void {
   isOpen.value = true;
   document.body.style.overflow = "hidden";
 }
 
-function close() {
+/**
+ * Close modal with body scroll restoration
+ * REASONING: 3-line function following KISS principle
+ */
+function close(): void {
   isOpen.value = false;
   document.body.style.overflow = "";
 }
 
-// Keyboard navigation handler
-function handleKeydown(e) {
+// Expose methods to parent component
+defineExpose({
+  open,
+  close
+});
+
+// ========== EVENT HANDLERS - TYPE SAFE ==========
+/**
+ * Keyboard navigation handler
+ * REASONING: Type-safe keyboard event handling
+ */
+function handleKeydown(e: CustomKeyboardEvent): void {
   if (e.key === "Escape" && isOpen.value) {
     close();
   }
 }
 
-// Touch gesture support for mobile
-let touchStartY = 0;
-let touchEndY = 0;
+// ========== TOUCH GESTURE SUPPORT - TYPE SAFE ==========
+/**
+ * Touch gesture state
+ * REASONING: Type-safe touch gesture handling
+ */
+let touchStartY: number = 0;
+let touchEndY: number = 0;
 
-function handleTouchStart(e) {
+/**
+ * Handle touch start event
+ * REASONING: Type-safe touch event handling
+ */
+function handleTouchStart(e: CustomTouchEvent): void {
   touchStartY = e.touches[0].clientY;
 }
 
-function handleTouchEnd(e) {
+/**
+ * Handle touch end event
+ * REASONING: Type-safe touch event handling
+ */
+function handleTouchEnd(e: CustomTouchEvent): void {
   touchEndY = e.changedTouches[0].clientY;
   handleSwipe();
 }
 
-function handleSwipe() {
-  const swipeThreshold = 100;
-  const swipeDistance = touchEndY - touchStartY;
+/**
+ * Handle swipe gesture
+ * REASONING: Type-safe swipe gesture handling
+ */
+function handleSwipe(): void {
+  const swipeThreshold: number = 100;
+  const swipeDistance: number = touchEndY - touchStartY;
 
   // Swipe down to close modal (only if started from top area)
   if (swipeDistance > swipeThreshold && touchStartY < 100) {
@@ -156,10 +220,14 @@ function handleSwipe() {
   }
 }
 
-// Mobile viewport height detection and adjustment
-function adjustModalForMobile() {
-  const modalOverlay = document.querySelector(".modal-overlay");
-  const invitationContainer = document.querySelector(".invitation-container");
+// ========== VIEWPORT ADJUSTMENT - TYPE SAFE ==========
+/**
+ * Mobile viewport height detection and adjustment
+ * REASONING: Type-safe DOM manipulation
+ */
+function adjustModalForMobile(): void {
+  const modalOverlay: HTMLElement | null = document.querySelector(".modal-overlay");
+  const invitationContainer: HTMLElement | null = document.querySelector(".invitation-container");
 
   if (modalOverlay && invitationContainer) {
     if (window.innerHeight < 700) {
@@ -176,19 +244,24 @@ function adjustModalForMobile() {
   }
 }
 
+// ========== LIFECYCLE MANAGEMENT - TYPE SAFE ==========
+/**
+ * Component mount lifecycle
+ * REASONING: Type-safe global function exposure
+ */
 onMounted(() => {
-  // Expose to global for legacy code compatibility
-  window.openInvitationModal = open;
-  window.closeInvitationModal = close;
+  // Expose to global for legacy code compatibility with strict typing
+  (window as Window).openInvitationModal = open;
+  (window as Window).closeInvitationModal = close;
 
   // Add keyboard event listener
   document.addEventListener("keydown", handleKeydown);
 
   // Add touch event listeners for mobile gesture support
-  const modalOverlay = document.querySelector(".modal-overlay");
+  const modalOverlay: HTMLElement | null = document.querySelector(".modal-overlay");
   if (modalOverlay) {
-    modalOverlay.addEventListener("touchstart", handleTouchStart);
-    modalOverlay.addEventListener("touchend", handleTouchEnd);
+    modalOverlay.addEventListener("touchstart", handleTouchStart as unknown as EventListener);
+    modalOverlay.addEventListener("touchend", handleTouchEnd as unknown as EventListener);
   }
 
   // Adjust modal for mobile viewport
@@ -203,8 +276,8 @@ onMounted(() => {
   // Global event listener for opening modal from anywhere
   window.addEventListener("open-invitation-modal", open);
 
-  // Global function for opening modal
-  window.openInvitationModal = open;
+  // Global function for opening modal with strict typing
+  (window as Window).openInvitationModal = open;
 
   // Check URL parameter for modal opening
   const urlParams = new URLSearchParams(window.location.search);
@@ -216,25 +289,32 @@ onMounted(() => {
   }
 });
 
+/**
+ * Component unmount lifecycle
+ * REASONING: Type-safe cleanup with strict typing
+ */
 onUnmounted(() => {
   // Clean up event listeners
-  document.removeEventListener("keydown", handleKeydown);
+  document.removeEventListener("keydown", handleKeydown as unknown as EventListener);
   window.removeEventListener("resize", adjustModalForMobile);
 
-  const modalOverlay = document.querySelector(".modal-overlay");
+  const modalOverlay: HTMLElement | null = document.querySelector(".modal-overlay");
   if (modalOverlay) {
-    modalOverlay.removeEventListener("touchstart", handleTouchStart);
-    modalOverlay.removeEventListener("touchend", handleTouchEnd);
+    modalOverlay.removeEventListener("touchstart", handleTouchStart as unknown as EventListener);
+    modalOverlay.removeEventListener("touchend", handleTouchEnd as unknown as EventListener);
   }
 
-  // Clean up global listeners
-  window.removeEventListener("open-invitation-modal", open);
+  // Clean up global listeners with strict typing
+  window.removeEventListener("open-invitation-modal", open as unknown as EventListener);
   delete window.openInvitationModal;
 });
 
-// Watch for modal open state to trigger animations
-import { watch } from "vue";
-watch(isOpen, (newValue) => {
+// ========== REACTIVE WATCHERS - TYPE SAFE ==========
+/**
+ * Watch for modal open state to trigger animations
+ * REASONING: Type-safe reactive watcher
+ */
+watch(isOpen, (newValue: boolean) => {
   if (newValue) {
     // Trigger animations after modal is rendered
     setTimeout(animateContent, 100);
@@ -243,10 +323,15 @@ watch(isOpen, (newValue) => {
   }
 });
 
-function animateContent() {
-  const elements = document.querySelectorAll(".content p, .member-list li");
-  elements.forEach((el, index) => {
-    const element = el;
+// ========== ANIMATION FUNCTIONS - TYPE SAFE ==========
+/**
+ * Animate content elements
+ * REASONING: Type-safe DOM manipulation and animation
+ */
+function animateContent(): void {
+  const elements: NodeListOf<Element> = document.querySelectorAll(".content p, .member-list li");
+  elements.forEach((el: Element, index: number) => {
+    const element: HTMLElement = el as HTMLElement;
     element.style.opacity = "0";
     element.style.transform = "translateY(20px)";
     element.style.transition = "opacity 0.6s ease, transform 0.6s ease";

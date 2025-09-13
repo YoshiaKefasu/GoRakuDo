@@ -43,6 +43,17 @@ declare global {
     Fuse?: {
       search: (query: string) => unknown[];
     };
+    // ========== NAVBAR MODAL FUNCTIONS - TYPE SAFE ==========
+    /**
+     * Global function for opening invitation modal
+     * REASONING: Type-safe global function exposure for legacy compatibility
+     */
+    openInvitationModal?: () => void;
+    /**
+     * Global function for closing invitation modal
+     * REASONING: Type-safe global function exposure for legacy compatibility
+     */
+    closeInvitationModal?: () => void;
   }
 }
 
