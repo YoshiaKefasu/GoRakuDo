@@ -395,36 +395,8 @@
 
 /* 🌊 DOCS PAGE SPECIFIC STYLES - Google Engineering Team 2025 */
 
-/* Background Elements */
-.wave-canvas {
-  @apply pointer-events-none fixed inset-0 z-0;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(139, 93, 255, 0.03) 0%,
-    rgba(10, 10, 10, 1) 70%
-  );
-}
+/* Background Elements - Removed wave and stars animations */
 
-.stars {
-  @apply pointer-events-none fixed inset-0 z-10;
-}
-
-.star {
-  @apply absolute h-0.5 w-0.5 rounded-full bg-purple-500 opacity-70;
-  animation: twinkle 3s infinite;
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
 
 /* Main Content Layout */
 .main-content {

@@ -96,7 +96,6 @@ const tools = [
 
     <!-- Background Animations -->
     <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
-    <div class="stars" id="stars" aria-hidden="true"></div>
 
     <!-- Main Content -->
     <main
@@ -411,83 +410,7 @@ const tools = [
         }
       })
 
-      // Dynamic import for animation modules with comprehensive error handling
-      Promise.all([import("../../scripts/ui/background-animations/stars-animation.js")])
-        .then(([starsModule]) => {
-          console.log("🎬 Stars animation module loaded successfully")
-
-          // Initialize stars animation only
-          const starsAnimation = starsModule.initStarsAnimation({
-            enabled: true,
-            count: 8,
-            animationDuration: "4s",
-            opacity: 0.6,
-            containerClass: "stars",
-            starClass: "star",
-            containerId: "stars",
-            useExistingContainer: true,
-            createContainer: false,
-            containerSelector: ".stars",
-            accessibility: {
-              respectReducedMotion: false,
-              announceChanges: false,
-              screenReaderFriendly: true,
-              highContrastSupport: true,
-              forceEnable: true,
-            },
-          })
-
-          // Start animations when page loads
-          window.addEventListener("load", () => {
-            try {
-              // Initialize stars animation with existing container
-              starsAnimation.init("stars")
-              console.log("✨ Stars animation initialized successfully")
-
-              // Debug: Check if stars were created
-              setTimeout(() => {
-                const stars = document.querySelectorAll(".star")
-                console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
-                if (stars.length > 0) {
-                  console.log("✅ Stars are visible in DOM")
-                } else {
-                  console.log("⚠️ No stars found in DOM - checking container")
-                  const container = document.querySelector(".stars")
-                  console.log("Container:", container)
-                }
-              }, 500)
-
-              // Add loaded class to prevent popup effect
-              setTimeout(() => {
-                const starsContainer = document.querySelector(".stars")
-                if (starsContainer) {
-                  starsContainer.classList.add("loaded")
-                }
-              }, 100)
-
-              // Trigger hero animation after animations are ready
-              setTimeout(() => {
-                const heroContent = document.querySelector("#hero-content")
-                if (heroContent) {
-                  heroContent.classList.remove(
-                    "opacity-0",
-                    "translate-y-16",
-                    "scale-80",
-                    "blur-md"
-                  )
-                  console.log("✨ Hero content revealed smoothly")
-                }
-              }, 200) // Coordinate with hero component timing
-            } catch (error) {
-              console.error("❌ Animation initialization error:", error)
-            }
-          })
-        })
-        .catch((error) => {
-          console.log("⚠️ Animation modules failed to load:", error.message)
-          // Fallback: continue with existing inline animations
-          console.log("🔄 Falling back to existing inline animations")
-        })
+      // Stars animation removed - using inline wave animation only
 
       // Cleanup on page unload
       window.addEventListener("beforeunload", function () {
@@ -723,75 +646,7 @@ const tools = [
         })
       })
 
-      // Animation Modules Integration
-      window.addEventListener("load", async () => {
-        try {
-          // Import animation modules
-          const [starsModule] = await Promise.all([
-            import("../../scripts/ui/background-animations/stars-animation.js"),
-          ])
-
-          // Initialize stars animation with performance monitoring
-          const starsAnimation = starsModule.initStarsAnimation({
-            enabled: true,
-            count: 8,
-            animationDuration: "4s",
-            opacity: 0.6,
-            containerClass: "stars",
-            starClass: "star",
-            containerId: "stars",
-            useExistingContainer: true,
-            createContainer: false,
-            containerSelector: ".stars",
-            performance: {
-              targetFPS: 60,
-              memoryThreshold: 100 * 1024 * 1024, // 100MB
-              autoReduceComplexity: true,
-              reduceThreshold: 30,
-            },
-            accessibility: {
-              respectReducedMotion: true, // Enable for better performance monitoring
-              announceChanges: false,
-              screenReaderFriendly: true,
-              highContrastSupport: true,
-              forceEnable: false, // Allow performance monitoring to control
-            },
-          })
-
-          // Initialize the animation with performance optimizations
-          starsAnimation.init("stars")
-
-          // ENHANCED: Monitor stars animation performance
-          ;(window as any).starsAnimationInstance = starsAnimation
-
-          // Add smooth fade-in for stars
-          setTimeout(() => {
-            const starsContainer = document.querySelector(".stars")
-            if (starsContainer) {
-              starsContainer.classList.add("loaded")
-            }
-          }, 100)
-
-          console.log("✅ Tools page animations initialized successfully")
-
-          // Debug: Check if stars were created
-          setTimeout(() => {
-            const stars = document.querySelectorAll(".star")
-            console.log(`🔍 Debug: Found ${stars.length} stars in DOM`)
-            if (stars.length > 0) {
-              console.log("✅ Stars are visible in DOM")
-              console.log("First star element:", stars[0])
-            } else {
-              console.log("⚠️ No stars found in DOM - checking container")
-              const container = document.querySelector(".stars")
-              console.log("Container:", container)
-              console.log("Container HTML:", container?.innerHTML)
-            }
-          }, 500)
-        } catch (error) {
-          console.error("❌ Error initializing tools page animations:", error)
-        }
-      })
+      // Stars animation removed - wave animation only remains
 
       // Enhanced Intersection Observer for lazy loading (unchanged)
       const lazyElements = document.querySelectorAll("[data-lazy]")
