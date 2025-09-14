@@ -94,9 +94,6 @@ templateContent: |
   - [Related post 1](/docs/related-post-1)
   - [Related post 2](/docs/related-post-2)
   - [External resource](https://example.com)
-
-author: 'Tim GoRakuDo'
-tags: ['template', 'content-creation', 'blog-post']
 ---
 
 # Post Template Content

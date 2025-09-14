@@ -1,7 +1,7 @@
 ---
 title: 'Panduan Lengkap Anki untuk Pembelajaran Bahasa Jepang'
 description: 'Setup dan penggunaan Anki dengan Spaced Repetition System (SRS) untuk menghafal kosakata dan kanji bahasa Jepang secara efektif.'
-publishedDate: '2025-01-25'
+publishedDate: '2025-01-25T00:00:00.000Z'
 author: 'Tim GoRakuDo'
 
 # Tool-Specific Metadata

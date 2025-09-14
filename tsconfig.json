@@ -12,6 +12,7 @@
   "exclude": ["dist", "node_modules", "src/**/*.astro"],
   "compilerOptions": {
     "strict": true,
+    "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,

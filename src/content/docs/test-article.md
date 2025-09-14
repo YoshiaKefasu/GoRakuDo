@@ -1,16 +1,10 @@
 ---
 title: "テスト記事: MD/MDX対応の検証"
 description: "この記事はUnifiedSEOコンポーネントのMD/MDX対応をテストするためのものです"
-tags: ["test", "mdx", "seo", "unified"]
-publishedDate: "2024-12-31"
-modifiedDate: "2024-12-31"
-author: "GoRakuDo Team"
-image: "/images/test-article.jpg"
+publishedDate: "2024-12-31T00:00:00.000Z"
+author: "Tim GoRakuDo"
 categories: ["testing", "testing/seo", "testing/mdx"]
-seoTitle: "MD/MDX対応テスト - UnifiedSEO検証"
-seoDescription: "UnifiedSEOコンポーネントのMD/MDX対応機能を包括的にテスト"
-seoKeywords: ["astro", "mdx", "seo", "unified", "testing"]
-canonicalUrl: "https://gorakudo.org/docs/test-article"
+tags: ["test", "mdx", "seo", "unified"]
 ---
 
 # テスト記事: MD/MDX対応の検証

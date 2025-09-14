@@ -1,65 +1,46 @@
 // tailwind.config.mjs
 // GoRakuDo Project - Updated Tailwind Configuration
-// Tailwind CSS v4.1.13 with Astro Native Approach
-// Updated: 2025-01-11
 
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
-    // Include all pages and components for proper purging
-    "./src/pages/**/*.{astro,ts,js}",
-    "./src/components/**/*.{astro,vue,ts,js}",
-    "./src/layouts/**/*.{astro,ts,js}",
-    // Include content collections that might use Tailwind classes
-    "./src/content/**/*.{md,astro}",
+    // === Astro Native Optimization ===
+    // Priority 1: Astro files (static-first approach)
+    "./src/**/*.astro",
+    "./src/pages/**/*.astro",
+    "./src/components/**/*.astro",
+    "./src/layouts/**/*.astro",
+    
+    // Priority 2: Content Collections (structured content)
+    "./src/content/**/*.{md,mdx}",
+    
+    // Priority 3: Interactive Islands (minimal JS components)
+    "./src/components/**/*.vue", // Only Vue components that need hydration
+    
+    // Priority 4: TypeScript/JavaScript (only for utilities and configs)
+    "./src/utils/**/*.ts",
+    "./src/scripts/**/*.ts",
+    
+    // Exclude: jsx, svelte, tsx (not used in Astro-native approach)
+    // Exclude: html (handled by Astro)
   ],
 
   theme: {
     extend: {
-      /* === 🎨 Colors - Full OKLCH Color Space === */
+      /* === 🎨 Colors - Unified OKLCH Color System === */
       colors: {
-        // Converted to OKLCH for consistency
+        // === Core Semantic Colors ===
         background: "oklch(0.05 0 0)",
+        foreground: "oklch(1 0 0)",
+        
+        // === Text Colors ===
         text: {
           primary: "oklch(1 0 0)",
           secondary: "oklch(0.8 0 0)",
           muted: "oklch(0.67 0 0)",
         },
-        accent: {
-          DEFAULT: "oklch(0.65 0.25 280)",
-          dark: "oklch(0.6 0.25 280)",
-        },
-        gold: {
-          light: "oklch(0.95 0.08 85)",
-          dark: "oklch(0.75 0.12 85)",
-        },
-
-        // OKLCH Color System - Modern color space
-        'color-background': 'oklch(0.05 0 0)',
-        'color-text-primary': 'oklch(1 0 0)',
-        'color-text-secondary': 'oklch(0.8 0 0)',
-        'color-text-muted': 'oklch(0.67 0 0)',
-        'color-accent': 'oklch(0.65 0.25 280)',
-        'color-accent-purple': 'oklch(0.65 0.25 280)',
-        'color-accent-purple-dark': 'oklch(0.6 0.25 280)',
-        'color-gold-light': 'oklch(0.95 0.08 85)',
-        'color-gold-dark': 'oklch(0.75 0.12 85)',
         
-        // Paper theme colors
-        'color-paper-bg': 'oklch(0.97 0.01 60)',
-        'color-paper-text-primary': 'oklch(0.25 0 0)',
-        'color-paper-text-secondary': 'oklch(0.35 0 0)',
-        'color-paper-border': 'oklch(0.9 0.01 60)',
-        'color-paper-lines': 'oklch(0.88 0.01 60)',
-        
-        // Content specific colors
-        'color-content-border': 'oklch(0.2 0.01 280)',
-        'color-content-meta': 'oklch(0.6 0 0)',
-        'color-content-text': 'oklch(0.9 0 0)',
-        'color-primary': 'oklch(0.65 0.25 280)',
-
-        // Primary color scale - OKLCH Purple Scale
+        // === Primary Color Scale (Purple) ===
         primary: {
           50: "oklch(0.98 0.02 280)",
           100: "oklch(0.95 0.05 280)",
@@ -73,7 +54,8 @@ export default {
           900: "oklch(0.45 0.25 280)",
           950: "oklch(0.3 0.25 280)",
         },
-        // Secondary color scale - OKLCH Gold Scale
+        
+        // === Secondary Color Scale (Gold) ===
         secondary: {
           50: "oklch(0.98 0.02 85)",
           100: "oklch(0.95 0.05 85)",
@@ -87,6 +69,14 @@ export default {
           900: "oklch(0.55 0.12 85)",
           950: "oklch(0.4 0.12 85)",
         },
+        
+        // === Accent Colors (Aliases for Primary) ===
+        accent: {
+          DEFAULT: "oklch(0.65 0.25 280)", // primary-500
+          dark: "oklch(0.6 0.25 280)",     // primary-600
+        },
+        
+        // === Paper Theme Colors ===
         paper: {
           bg: "oklch(0.97 0.01 60)",
           border: "oklch(0.9 0.01 60)",
@@ -95,6 +85,36 @@ export default {
             primary: "oklch(0.25 0 0)",
             secondary: "oklch(0.35 0 0)",
           },
+        },
+        
+        // === Content Specific Colors ===
+        content: {
+          border: "oklch(0.2 0.01 280)",
+          meta: "oklch(0.6 0 0)",
+          text: "oklch(0.9 0 0)",
+        },
+        
+        // === Legacy Aliases (for backward compatibility) ===
+        gold: {
+          light: "oklch(0.95 0.08 85)", // secondary-100
+          dark: "oklch(0.75 0.12 85)",  // secondary-500
+        },
+        
+        // === Accessibility & Interactive States ===
+        focus: {
+          DEFAULT: "oklch(0.65 0.25 280)", // Primary focus color
+          ring: "oklch(0.65 0.25 280 / 0.5)", // Focus ring
+        },
+        interactive: {
+          hover: "oklch(0.6 0.25 280)", // Hover state
+          active: "oklch(0.55 0.25 280)", // Active state
+          disabled: "oklch(0.4 0 0)", // Disabled state
+        },
+        semantic: {
+          error: "oklch(0.6 0.2 20)", // Error color
+          success: "oklch(0.6 0.15 140)", // Success color
+          warning: "oklch(0.7 0.15 85)", // Warning color
+          info: "oklch(0.6 0.15 240)", // Info color
         },
       },
 
@@ -229,6 +249,23 @@ export default {
         'normal': '0.5s',
         'slow': '1s',
       },
+
+      /* === 🏝️ Islands Architecture Utilities === */
+      // Client directive specific utilities
+      islands: {
+        'load': 'opacity-100', // client:load - immediately visible
+        'idle': 'opacity-0 transition-opacity duration-300', // client:idle - below fold
+        'visible': 'opacity-0 transition-opacity duration-500', // client:visible - when in view
+        'media': 'opacity-0 transition-opacity duration-300', // client:media - responsive
+      },
+      
+      // Hydration states
+      hydration: {
+        'pending': 'opacity-50 pointer-events-none',
+        'loading': 'opacity-75 pointer-events-none',
+        'loaded': 'opacity-100 pointer-events-auto',
+        'error': 'opacity-100 pointer-events-auto border-2 border-semantic-error',
+      },
     },
   },
 
@@ -277,6 +314,18 @@ export default {
           'color': 'oklch(0.9 0 0)', // Light text
           'max-width': 'none', // Full width for content
         },
+        // Astro Content Collections optimized prose
+        'prose-content': {
+          'color': 'oklch(0.9 0 0)',
+          'max-width': '65ch', // Optimal reading width
+          '--tw-prose-body': 'oklch(0.9 0 0)',
+          '--tw-prose-headings': 'oklch(1 0 0)',
+          '--tw-prose-links': 'oklch(0.65 0.25 280)',
+          '--tw-prose-code': 'oklch(0.8 0 0)',
+          '--tw-prose-pre-bg': 'oklch(0.05 0 0)',
+          '--tw-prose-th-borders': 'oklch(0.2 0.01 280)',
+          '--tw-prose-td-borders': 'oklch(0.2 0.01 280)',
+        },
       },
     }),
   ],
@@ -284,8 +333,25 @@ export default {
   /* === 🎨 Dark Mode Configuration === */
   darkMode: 'class', // Enable class-based dark mode
 
+  /* === ⚡ Astro Native Performance Optimization === */
+  corePlugins: {
+    // Disable unused features to reduce bundle size (Astro performance budget)
+    float: false,        // Not needed for Astro static-first approach
+    clear: false,        // Rarely used in modern layouts
+    skew: false,         // Uncommon transform
+    caretColor: false,   // Not needed for content sites
+    resize: false,       // Not needed for static content
+    scrollSnap: false,   // Can be added back if needed
+    scrollBehavior: false, // Not needed for static sites
+  },
+
   /* === 🔧 Future Configuration === */
   future: {
     hoverOnlyWhenSupported: true, // Better mobile support
+  },
+
+  /* === 🚀 Experimental Optimizations === */
+  experimental: {
+    optimizeUniversalDefaults: true, // Optimize default values for better performance
   },
 };
