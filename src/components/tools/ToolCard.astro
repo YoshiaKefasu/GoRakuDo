@@ -1,0 +1,349 @@
+---
+// ToolCard.astro - ツールカードコンポーネント
+// AstroネイティブアプローチでDRY原則を適用
+
+import type { ToolCardProps } from '../../types/tool';
+
+export interface Props extends ToolCardProps {}
+
+const {
+  id,
+  name,
+  description,
+  iconUrl,
+  color = 'var(--clr-accent)',
+  link,
+  interactiveElements = {
+    hasHoverEffect: true,
+    hasClickAction: true,
+    animationType: 'scale',
+  },
+} = Astro.props;
+
+// アニメーションクラスを動的に生成
+const animationClass = interactiveElements.animationType
+  ? `animation-${interactiveElements.animationType}`
+  : 'animation-scale';
+---
+
+<div class='tool-grid-item'>
+  <article class='tool-card-wrapper'>
+    <a
+      href={link}
+      class={`tool-card group tools-interactive-optimized ${animationClass}`}
+      aria-labelledby={`tool-name-${id}`}
+      aria-describedby={`tool-desc-${id}`}
+      role='link'
+      tabindex='0'
+      aria-label={`Learn more about ${name} tool`}
+    >
+      <header class='tool-card-header'>
+        <div class='tool-title-container'>
+          <div class='tool-icon' role='img' aria-label={`${name} tool icon`}>
+            <img
+              src={iconUrl}
+              alt={`${name} tool icon`}
+              class='tool-icon-image'
+              loading='lazy'
+              decoding='async'
+            />
+          </div>
+          <h3 class='tool-name' id={`tool-name-${id}`}>
+            {name}
+          </h3>
+        </div>
+      </header>
+      <div class='tool-card-body'>
+        <p class='tool-description-card' id={`tool-desc-${id}`}>
+          {description}
+        </p>
+      </div>
+      <footer class='tool-card-footer'>
+        <span class='tool-cta-text'>Lihat Panduan</span>
+        <svg
+          class='tool-arrow'
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='2.5'
+          role='img'
+          aria-label='Arrow indicating link to tool guide'
+        >
+          <path d='M5 12h14M12 5l7 7-7 7'></path>
+        </svg>
+      </footer>
+    </a>
+  </article>
+</div>
+
+<style>
+  /* Tool Card Specific Styles */
+  .tool-card {
+    display: block;
+    padding: var(--spacing-6);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-card);
+    transition: all var(--transition-speed) var(--transition-ease);
+  }
+
+  .tool-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg-accent);
+  }
+
+  .tool-card:focus {
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(139, 93, 255, 0.3);
+  }
+
+  .tool-card:focus-visible {
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 2px;
+  }
+
+  .tool-card-article {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tool-card-header {
+    margin-bottom: var(--spacing-6);
+  }
+
+  .tool-title-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+  }
+
+  .tool-icon {
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: linear-gradient(
+      135deg,
+      rgba(139, 93, 255, 0.1),
+      rgba(59, 130, 246, 0.1)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .tool-icon-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0.25rem;
+    transition: transform var(--transition-speed) var(--transition-ease);
+  }
+
+  .tool-card:hover .tool-icon-image {
+    transform: scale(1.05);
+  }
+
+  /* Fallback for failed image loads */
+  .tool-icon-image:not([src]),
+  .tool-icon-image[src=''] {
+    display: none;
+  }
+
+  .tool-icon::before {
+    content: '🔧';
+    font-size: 1.25rem;
+    display: none;
+  }
+
+  .tool-icon:has(.tool-icon-image:not([src]))::before,
+  .tool-icon:has(.tool-icon-image[src=''])::before {
+    display: block;
+  }
+
+  @media (min-width: 640px) {
+    .tool-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
+
+  .tool-card-body {
+    flex-grow: 1;
+    margin-bottom: var(--spacing-6);
+    margin-top: 0;
+  }
+
+  .tool-name {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.25;
+    color: var(--clr-text-primary);
+    flex: 1;
+  }
+
+  @media (min-width: 640px) {
+    .tool-name {
+      font-size: 1.25rem;
+    }
+
+    .tool-title-container {
+      gap: var(--spacing-5);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .tool-title-container {
+      gap: var(--spacing-6);
+    }
+  }
+
+  .tool-description-card {
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    opacity: 0.8;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (min-width: 640px) {
+    .tool-description-card {
+      font-size: var(--fs-base);
+    }
+  }
+
+  .tool-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--spacing-4);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .tool-cta-text {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: rgba(139, 93, 255, 0.8);
+  }
+
+  .tool-arrow {
+    width: 1rem;
+    height: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: transform var(--transition-speed) var(--transition-ease);
+  }
+
+  .group:hover .tool-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Animation Classes */
+  .animation-scale:hover {
+    transform: scale(1.02);
+  }
+
+  .animation-slide:hover {
+    transform: translateX(4px);
+  }
+
+  .animation-fade:hover {
+    opacity: 0.9;
+  }
+
+  /* WCAG 2.1 Accessibility Enhancements */
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .tool-card {
+      border: 2px solid #ffffff;
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .tool-card:hover {
+      border-color: var(--clr-accent);
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    .tool-name {
+      color: #ffffff;
+    }
+
+    .tool-description-card {
+      color: #e5e5e5;
+    }
+
+    .tool-title-container {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: var(--spacing-2);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .tool-card {
+      transition: none;
+    }
+
+    .tool-card:hover {
+      transform: none;
+    }
+
+    .animation-scale:hover,
+    .animation-slide:hover,
+    .animation-fade:hover {
+      transform: none;
+      opacity: 1;
+    }
+
+    .tool-arrow {
+      transition: none;
+    }
+
+    .group:hover .tool-arrow {
+      transform: none;
+    }
+
+    .tool-icon-image {
+      transition: none;
+    }
+
+    .tool-card:hover .tool-icon-image {
+      transform: none;
+    }
+  }
+
+  /* Focus management for keyboard navigation */
+  .tool-card:focus-visible {
+    outline: 3px solid var(--clr-accent);
+    outline-offset: 2px;
+  }
+
+  /* Ensure sufficient color contrast */
+  .tool-cta-text {
+    color: rgba(139, 93, 255, 0.9);
+  }
+
+  .tool-arrow {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Screen reader improvements */
+  .tool-card-wrapper {
+    position: relative;
+  }
+
+  /* Ensure interactive elements are large enough */
+  .tool-card {
+    min-height: 44px;
+    min-width: 44px;
+  }
+</style>

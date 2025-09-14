@@ -1,0 +1,117 @@
+---
+// ToolsGridSection.astro - ツールグリッドセクションコンポーネント
+// AstroネイティブアプローチでDRY原則を適用
+
+import ToolCard from './ToolCard.astro';
+import type { Tool } from '../../types/tool';
+
+// Tools data - structured for easy management and expansion
+const tools: Tool[] = [
+  {
+    id: 'anki',
+    name: 'Anki',
+    description:
+      'Sistem flashcard dengan Spaced Repetition System (SRS) untuk menghafal kosakata dan kanji secara efektif.',
+    iconUrl: '/icon/anki-icon-240.webp',
+    color: 'var(--clr-accent)',
+    link: '/tools/anki',
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: 'scale' as const,
+    },
+  },
+  {
+    id: 'yomitan',
+    name: 'Yomichan',
+    description:
+      'Browser extension untuk membaca bahasa Jepang dengan hover dictionary dan furigana generation.',
+    iconUrl: '/icon/yomitan-icon-240.webp',
+    color: 'var(--clr-accent-dark)',
+    link: '/tools/yomitan',
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: 'slide' as const,
+    },
+  },
+  {
+    id: 'migaku',
+    name: 'Migaku',
+    description:
+      'Suite tools untuk immersion learning termasuk browser extension dan Anki integration.',
+    iconUrl: '/icon/migaku-icon-240.webp',
+    color: 'var(--clr-accent-glow-strong)',
+    link: '/tools/migaku',
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: 'scale' as const,
+    },
+  },
+];
+---
+
+<section
+  class='npmnpm loading py-8 sm:py-12 lg:py-16 scroll-reveal'
+  aria-labelledby='tools-title'
+  role='main'
+  id='tools-main-content'
+  transition:name='tools-section'
+  data-lazy
+>
+  <div class='container px-4 sm:px-6 lg:px-8'>
+    <!-- Semantic List for Accessibility -->
+    <div
+      class='tools-grid max-w-7xl mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 tools-migration-enabled'
+      role='list'
+      aria-label='Available learning tools'
+    >
+      {
+        tools.map((tool, index) => (
+          <div
+            role='listitem'
+            aria-label={`Tool ${index + 1} of ${tools.length}: ${tool.name}`}
+          >
+            <ToolCard
+              id={tool.id}
+              name={tool.name}
+              description={tool.description}
+              iconUrl={tool.iconUrl}
+              color={tool.color}
+              link={tool.link}
+              interactiveElements={tool.interactiveElements}
+            />
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Screen reader announcement for tools count -->
+    <div class='sr-only' aria-live='polite' aria-atomic='true'>
+      {tools.length} tools available for Japanese language learning
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Screen reader only class */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal {
+      transition: none;
+    }
+  }
+</style>

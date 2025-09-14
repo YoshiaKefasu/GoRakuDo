@@ -1,0 +1,284 @@
+---
+// ToolsHeaderSection.astro - ツールヘッダーセクションコンポーネント
+// Astroネイティブアプローチでモダンなデザインを実装
+---
+
+<section
+  class='tools-header-section'
+  aria-labelledby='tools-header-title'
+  role='banner'
+  transition:name='tools-header'
+>
+  <div class='tools-header-container'>
+    <!-- Background Elements -->
+    <div class='tools-header-bg'></div>
+
+    <!-- Main Content -->
+    <div class='tools-header-content'>
+      <h2 class='tools-header-title' id='tools-header-title'>
+        <span class='tools-title-main'>Tools & Aplikasi</span>
+        <span class='tools-title-accent'>Pembelajaran Bahasa Jepang</span>
+      </h2>
+
+      <p class='tools-header-description'>
+        Pilih tool yang sesuai dengan tahap pembelajaran dan kebutuhan Anda.
+        Setiap tool telah dipilih berdasarkan efektivitas dan kemudahan
+        penggunaan.
+      </p>
+
+      <!-- Stats Section -->
+      <div class='tools-header-stats'>
+        <div class='tools-stat-item'>
+          <span class='tools-stat-number'>3+</span>
+          <span class='tools-stat-label'>Tools Terpilih</span>
+        </div>
+        <div class='tools-stat-divider'></div>
+        <div class='tools-stat-item'>
+          <span class='tools-stat-number'>100%</span>
+          <span class='tools-stat-label'>Gratis</span>
+        </div>
+        <div class='tools-stat-divider'></div>
+        <div class='tools-stat-item'>
+          <span class='tools-stat-number'>24/7</span>
+          <span class='tools-stat-label'>Akses</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Tools Header Section Styles */
+  .tools-header-section {
+    position: relative;
+    padding: 4.5rem 0 1rem;
+    overflow: hidden;
+  }
+
+  .tools-header-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* Background Elements */
+  .tools-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: 
+      /* Pattern overlay */
+      radial-gradient(
+        circle at 20% 20%,
+        rgba(139, 93, 255, 0.08) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(59, 130, 246, 0.08) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 40% 60%,
+        rgba(16, 185, 129, 0.08) 0%,
+        transparent 50%
+      ),
+      /* Base gradient */
+        linear-gradient(
+          135deg,
+          rgba(139, 93, 255, 0.1) 0%,
+          rgba(59, 130, 246, 0.05) 50%,
+          rgba(16, 185, 129, 0.1) 100%
+        );
+    border-radius: 2rem;
+  }
+
+  /* Main Content */
+  .tools-header-content {
+    position: relative;
+    text-align: center;
+    z-index: 1;
+    padding: 1rem 0.5rem;
+  }
+
+  /* Title */
+  .tools-header-title {
+    margin: 0 0 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #ffffff;
+  }
+
+  .tools-title-main {
+    display: block;
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .tools-title-accent {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    background: linear-gradient(135deg, #8b5dff 0%, #3b82f6 50%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Description */
+  .tools-header-description {
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Stats Section */
+  .tools-header-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .tools-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .tools-stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  .tools-stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+  }
+
+  .tools-stat-divider {
+    width: 1px;
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Responsive Design */
+  @media (min-width: 640px) {
+    .tools-header-section {
+      padding: 4rem 0 1rem;
+    }
+
+    .tools-header-container {
+      padding: 0 2rem;
+    }
+
+    .tools-header-content {
+      padding: 1.25rem 0.75rem;
+    }
+
+    .tools-header-title {
+      font-size: 3rem;
+    }
+
+    .tools-title-accent {
+      font-size: 1.75rem;
+    }
+
+    .tools-header-description {
+      font-size: 1.25rem;
+    }
+
+    .tools-stat-number {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .tools-header-section {
+      padding: 5rem 0 2rem;
+    }
+
+    .tools-header-content {
+      padding: 1.5rem 1rem;
+    }
+
+    .tools-header-title {
+      font-size: 3.5rem;
+    }
+
+    .tools-title-accent {
+      font-size: 2rem;
+    }
+
+    .tools-header-stats {
+      gap: 3rem;
+    }
+
+    .tools-stat-number {
+      font-size: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .tools-header-content {
+      padding: 1.75rem 1.25rem;
+    }
+
+    .tools-header-title {
+      font-size: 4rem;
+    }
+
+    .tools-title-accent {
+      font-size: 2.25rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .tools-header-content {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  /* High Contrast Mode Support */
+  @media (prefers-contrast: high) {
+    .tools-header-gradient {
+      background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.6) 100%
+      );
+    }
+
+    .tools-title-main {
+      color: #ffffff;
+      -webkit-text-fill-color: #ffffff;
+    }
+
+    .tools-title-accent {
+      color: #8b5dff;
+      -webkit-text-fill-color: #8b5dff;
+    }
+  }
+
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    .tools-header-section {
+      transition: none;
+    }
+  }
+</style>

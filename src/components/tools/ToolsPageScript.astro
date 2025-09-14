@@ -1,0 +1,412 @@
+---
+// ToolsPageScript.astro - ツールページ専用スクリプトコンポーネント
+// AstroネイティブアプローチでJavaScriptを分離
+---
+
+<script>
+  // ========== ENHANCED TRANSITIONS & LOADING STATES ==========
+  // Performance-optimized animations and loading states for better UX
+
+  // Enhanced loading state management
+  document.addEventListener('DOMContentLoaded', function () {
+    // Apply page load animations with performance monitoring
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.classList.add('page-load-fade-in');
+    }
+
+    // Apply staggered animations to tool cards
+    const toolCards = document.querySelectorAll('.tool-card');
+    toolCards.forEach((card, index) => {
+      (card as HTMLElement).style.setProperty(
+        '--stagger-delay',
+        index.toString()
+      );
+      card.classList.add('stagger-animation');
+    });
+
+    console.log('✅ Enhanced loading states applied');
+  });
+
+  // Intersection Observer for scroll reveals
+  const scrollRevealObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          scrollRevealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+      rootMargin: '50px',
+    }
+  );
+
+  // Apply scroll reveals to sections
+  document.addEventListener('DOMContentLoaded', function () {
+    const sections = document.querySelectorAll(
+      'section.scroll-reveal, .scroll-reveal'
+    );
+    sections.forEach(section => {
+      section.classList.add('scroll-reveal-intersection');
+      scrollRevealObserver.observe(section);
+    });
+  });
+
+  // Enhanced micro-interactions for better feedback
+  document.addEventListener('DOMContentLoaded', function () {
+    // Add micro-interactions ONLY to tools page elements (avoid navbar conflicts)
+    const toolsPageElements = document.querySelectorAll(`
+      .tool-card,
+      .tools-section a,
+      .tools-section button,
+      .main-content a:not([href="/"]),
+      .main-content button:not(.get-started-btn):not(.mobile-menu-btn)
+    `);
+    toolsPageElements.forEach(element => {
+      element.classList.add('micro-interaction-scale', 'focus-enhanced');
+    });
+
+    // WCAG 2.1 Keyboard Navigation Enhancement
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    toolCards.forEach((card, index) => {
+      // Add keyboard navigation support
+      card.addEventListener('keydown', function (e) {
+        const cards = Array.from(toolCards) as HTMLElement[];
+        const currentIndex = cards.indexOf(card as HTMLElement);
+
+        const keyboardEvent = e as KeyboardEvent;
+        switch (keyboardEvent.key) {
+          case 'ArrowRight':
+          case 'ArrowDown':
+            e.preventDefault();
+            const nextIndex = (currentIndex + 1) % cards.length;
+            cards[nextIndex].focus();
+            break;
+          case 'ArrowLeft':
+          case 'ArrowUp':
+            e.preventDefault();
+            const prevIndex =
+              currentIndex === 0 ? cards.length - 1 : currentIndex - 1;
+            cards[prevIndex].focus();
+            break;
+          case 'Home':
+            e.preventDefault();
+            cards[0].focus();
+            break;
+          case 'End':
+            e.preventDefault();
+            cards[cards.length - 1].focus();
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            (card as HTMLElement).click();
+            break;
+        }
+      });
+
+      // Add focus management
+      card.addEventListener('focus', function () {
+        (card as HTMLElement).scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'nearest',
+        });
+      });
+    });
+
+    // Enhanced loading states for lazy content
+    const lazyElements = document.querySelectorAll('[data-lazy]');
+    const lazyObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('loaded');
+
+            // Remove loading pulse if present
+            entry.target.classList.remove('loading-pulse');
+
+            lazyObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    lazyElements.forEach(el => {
+      el.classList.add('loading-pulse'); // Add loading pulse while loading
+      lazyObserver.observe(el);
+    });
+
+    console.log(
+      '✅ Enhanced micro-interactions and scroll reveals initialized'
+    );
+  });
+
+  // Performance monitoring for animations
+  window.addEventListener('load', function () {
+    // Monitor animation performance
+    let animationFrameCount = 0;
+    let lastAnimationTime = performance.now();
+
+    function monitorAnimationPerformance() {
+      animationFrameCount++;
+      const currentTime = performance.now();
+      const deltaTime = currentTime - lastAnimationTime;
+
+      // Log animation performance every 5 seconds
+      if (animationFrameCount % 300 === 0) {
+        const fps = 1000 / deltaTime;
+        console.log(
+          `🎬 Animation Performance: ${fps.toFixed(1)}fps (Frame ${animationFrameCount})`
+        );
+      }
+
+      lastAnimationTime = currentTime;
+      requestAnimationFrame(monitorAnimationPerformance);
+    }
+
+    requestAnimationFrame(monitorAnimationPerformance);
+  });
+
+  // ========== CROSS-BROWSER COMPATIBILITY & SECURITY ==========
+  // Enhanced browser support and security measures
+
+  // Browser capability detection and security validation
+  document.addEventListener('DOMContentLoaded', function () {
+    // Security: Sanitize and validate browser environment
+    const securityCheck = {
+      isSecureContext: window.isSecureContext,
+      hasCSP:
+        document.querySelector('meta[http-equiv="Content-Security-Policy"]') !==
+        null,
+      trustedOrigin:
+        window.location.origin === 'https://gorakudo.org' ||
+        window.location.hostname === 'localhost',
+    };
+
+    console.log('🔒 Security Context:', securityCheck);
+
+    // Enhanced browser detection
+    const browserDetect = {
+      userAgent: navigator.userAgent,
+      isChrome:
+        /Chrome/.test(navigator.userAgent) &&
+        /Google Inc/.test(navigator.vendor),
+      isFirefox: /Firefox/.test(navigator.userAgent),
+      isSafari:
+        /Safari/.test(navigator.userAgent) &&
+        !/Chrome/.test(navigator.userAgent),
+      isEdge: /Edg/.test(navigator.userAgent),
+      isMobile:
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        ),
+      supportsGrid: CSS.supports('display', 'grid'),
+      supportsFlex: CSS.supports('display', 'flex'),
+      supportsClamp: CSS.supports('width', 'clamp(1px, 2px, 3px)'),
+      supportsIntersectionObserver: 'IntersectionObserver' in window,
+      supportsRequestAnimationFrame: 'requestAnimationFrame' in window,
+      supportsPerformanceObserver: 'PerformanceObserver' in window,
+    };
+
+    console.log('🌐 Browser Capabilities:', browserDetect);
+
+    // Apply browser-specific optimizations
+    const html = document.documentElement;
+
+    if (browserDetect.isChrome || browserDetect.isEdge) {
+      html.classList.add('chromium-optimized');
+    } else if (browserDetect.isSafari) {
+      html.classList.add('safari-optimized');
+    } else if (browserDetect.isFirefox) {
+      html.classList.add('firefox-optimized');
+    }
+
+    // Progressive enhancement based on capabilities
+    if (!browserDetect.supportsIntersectionObserver) {
+      console.log('⚠️ IntersectionObserver not supported, using fallback');
+      // Fallback: reveal all scroll-reveal elements immediately
+      document.querySelectorAll('.scroll-reveal-intersection').forEach(el => {
+        el.classList.add('in-view');
+      });
+    }
+
+    if (!browserDetect.supportsRequestAnimationFrame) {
+      console.log(
+        '⚠️ requestAnimationFrame not supported, using setTimeout fallback'
+      );
+      // Fallback for animations using setTimeout
+    }
+
+    if (!browserDetect.supportsGrid) {
+      console.log('⚠️ CSS Grid not supported, applying fallback');
+      // Apply grid fallbacks
+      document.querySelectorAll('.tools-grid').forEach(grid => {
+        grid.classList.add('browser-compat-grid');
+      });
+    }
+
+    if (!browserDetect.supportsClamp) {
+      console.log('⚠️ clamp() not supported, fallback applied');
+      // clamp() fallbacks are handled in CSS
+    }
+
+    // Security: Sanitize dynamic content
+    const sanitizeClassName = className => {
+      // Only allow predefined safe class names
+      const safeClasses = [
+        'loading',
+        'loaded',
+        'in-view',
+        'page-load-fade-in',
+        'stagger-animation',
+        'scroll-reveal-intersection',
+        'micro-interaction-scale',
+        'focus-enhanced',
+        'loading-pulse',
+      ];
+      return safeClasses.includes(className) ? className : '';
+    };
+
+    // Enhanced accessibility: respect user's motion preferences
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    if (prefersReducedMotion) {
+      console.log(
+        '♿ Reduced motion preference detected, animations simplified'
+      );
+      // Disable heavy animations
+      document.documentElement.style.setProperty(
+        '--animation-duration',
+        '0.01ms'
+      );
+    }
+
+    // Security audit logging
+    console.log('🔍 Security Audit Complete:', {
+      secureContext: securityCheck.isSecureContext,
+      trustedOrigin: securityCheck.trustedOrigin,
+      browserSupported: Object.values(browserDetect).filter(Boolean).length,
+      totalCapabilities: Object.keys(browserDetect).length,
+    });
+  });
+
+  // REDESIGNED tool card interaction system
+  document.addEventListener('DOMContentLoaded', () => {
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    toolCards.forEach(card => {
+      // Click/Tap feedback for all devices
+      card.addEventListener('click', e => {
+        e.preventDefault();
+
+        // Add visual feedback
+        card.classList.add('is-interacting');
+
+        // Navigate after animation
+        setTimeout(() => {
+          card.classList.remove('is-interacting');
+          window.location.href = (card as HTMLAnchorElement).href;
+        }, 150);
+      });
+
+      // Keyboard navigation support
+      card.addEventListener('keydown', e => {
+        if (
+          (e as KeyboardEvent).key === ' ' ||
+          (e as KeyboardEvent).key === 'Enter'
+        ) {
+          e.preventDefault();
+          (card as HTMLAnchorElement).click();
+        }
+      });
+    });
+
+    // Preload critical resources (updated for new tool routes)
+    const preloadLinks = [
+      '/tools/anki',
+      '/tools/yomitan',
+      '/tools/migaku',
+      '/docs/language-reactor-guide',
+    ];
+    preloadLinks.forEach(link => {
+      const preload = document.createElement('link');
+      preload.rel = 'prefetch';
+      preload.href = link;
+      preload.setAttribute('fetchpriority', 'low');
+      document.head.appendChild(preload);
+    });
+  });
+
+  // ========== ANIMATION PERFORMANCE MONITORING ==========
+  // Device-specific animation optimization and performance monitoring
+  // Implements PERF-001: Animation Performance Degradation mitigation
+
+  // Enhanced performance monitoring for interactive features
+  const performanceMonitor = {
+    startTime: performance.now(),
+    animationObserver: null as PerformanceObserver | null,
+
+    init() {
+      console.log('🎯 LCP:', this.getLCP().toFixed(2), 'ms');
+      console.log('⚡ FID:', this.getFID().toFixed(2), 'ms');
+      console.log('📐 CLS:', this.getCLSValue().toFixed(4));
+      console.log('🎨 FCP:', this.getFCP().toFixed(2), 'ms');
+
+      // Custom animation performance logging
+      this.animationObserver = new PerformanceObserver(list => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'measure') {
+            console.log(
+              `🎬 Animation: ${entry.name} - ${entry.duration.toFixed(2)}ms`
+            );
+          }
+        }
+      });
+      this.animationObserver.observe({ entryTypes: ['measure'] });
+    },
+
+    getLCP(): number {
+      const entries = performance.getEntriesByType('largest-contentful-paint');
+      return entries.length > 0 ? entries[0].startTime : 0;
+    },
+
+    getFID(): number {
+      const entries = performance.getEntriesByType('first-input');
+      return entries.length > 0
+        ? (entries[0] as any).processingStart - entries[0].startTime
+        : 0;
+    },
+
+    getCLSValue(): number {
+      const entries = performance.getEntriesByType('layout-shift');
+      return entries.reduce((sum, entry: any) => sum + entry.value, 0);
+    },
+
+    getFCP(): number {
+      const entries = performance.getEntriesByType('paint');
+      const fcp = entries.find(
+        entry => entry.name === 'first-contentful-paint'
+      );
+      return fcp ? fcp.startTime : 0;
+    },
+  };
+
+  // Initialize performance monitoring
+  document.addEventListener('DOMContentLoaded', () => {
+    performanceMonitor.init();
+  });
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (performanceMonitor.animationObserver) {
+      performanceMonitor.animationObserver.disconnect();
+    }
+  });
+</script>

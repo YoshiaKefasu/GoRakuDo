@@ -11,7 +11,6 @@ src/content/
 ├── config.ts              # メイン設定ファイル
 ├── README.md              # このファイル
 ├── docs/                  # メインコンテンツ（ブログ記事、ガイド）
-├── templates/             # 記事作成用テンプレート
 ├── pages/                 # 静的ページ（サポートページなど）
 └── tool-articles/         # ツール紹介記事
 ```
@@ -35,22 +34,6 @@ mindmap
         tags
       オプション
         status
-    📝 templates
-      テンプレート情報
-        templateName
-        templateType
-        description
-        version
-        lastUpdated
-      テンプレート構造
-        requiredFields
-        optionalFields
-        instructions
-        examples
-        templateContent
-      管理用メタデータ
-        author
-        tags
     📄 pages
       基本情報
         title
@@ -143,16 +126,12 @@ mindmap
         tags
         keywords
         relatedTools
-        requiredFields
-        optionalFields
-        examples
     🎯 列挙型フィールド
       状態管理
         status (published/draft/archived)
         contentType (resource/info/legal)
       分類
-        templateType (post/guide/tutorial/review/case-study)
-        toolCategory (flashcard/reading/listening/writing/suite/video/browser-extension/mobile-app/desktop-app)
+        toolCategory (動的文字列: 英数字、ハイフン、スペースのみ)
 ```
 
 ## 🎯 各コレクション詳細
@@ -182,36 +161,6 @@ graph TD
     D --> D1[status: 公開状態]
 ```
 
-### 📝 templates コレクション
-
-**用途**: 記事作成用テンプレート管理  
-**場所**: `src/content/templates/`  
-**必須フィールド**: templateName, templateType, description, lastUpdated, templateContent
-
-#### フィールド構造
-```mermaid
-graph TD
-    A[templates] --> B[テンプレート情報]
-    A --> C[テンプレート構造]
-    A --> D[使用方法・説明]
-    A --> E[管理用メタデータ]
-    
-    B --> B1[templateName: 1-50文字]
-    B --> B2[templateType: 5種類から選択]
-    B --> B3[description: 10-200文字]
-    B --> B4[version: セマンティック形式]
-    B --> B5[lastUpdated: ISO形式]
-    
-    C --> C1[requiredFields: 最大15個]
-    C --> C2[optionalFields: 最大15個]
-    C --> C3[templateContent: 必須]
-    
-    D --> D1[instructions: 最大500文字]
-    D --> D2[examples: 最大10個]
-    
-    E --> E1[author: デフォルト値あり]
-    E --> E2[tags: 最大10個]
-```
 
 ### 📄 pages コレクション
 
@@ -264,7 +213,7 @@ graph TD
     C --> C1[toolName: 1-50文字]
     C --> C2[toolVersion: バージョン形式]
     C --> C3[toolWebsite: URL形式]
-    C --> C4[toolCategory: 9種類から選択]
+    C --> C4[toolCategory: 任意のカテゴリ名を設定可能]
     
     E --> E1[emoji: 絵文字のみ]
     E --> E2[icon: ファイルパス形式]
@@ -300,13 +249,21 @@ const DEFAULTS = {
 
 #### 3. 選択肢の追加・変更
 ```typescript
-// z.enum() の配列に項目を追加
-toolCategory: z.enum([
-  'flashcard',
-  'reading',
-  'new-category',  // 新しいカテゴリを追加
+// z.enum() の配列に項目を追加（toolCategoryは動的文字列のため変更不要）
+status: z.enum([
+  'published',
+  'draft',
+  'new-status',  // 新しいステータスを追加
   // ...
 ])
+
+// toolCategoryは動的文字列バリデーション（コード変更不要）
+toolCategory: z.string()
+  .min(1, { message: 'ツールカテゴリを入力してください' })
+  .max(30, { message: 'ツールカテゴリは30文字以内で入力してください' })
+  .regex(/^[a-zA-Z0-9\-\s]+$/, { 
+    message: 'ツールカテゴリは英数字、ハイフン、スペースのみ使用可能です' 
+  })
 ```
 
 #### 4. 新しいフィールドの追加
@@ -324,6 +281,45 @@ schema: z.object({
 2. **ビルドテスト**: 変更後は必ず `npm run build` でビルドテストを実行
 3. **破壊的変更**: 必須フィールドの追加など、破壊的変更の場合は既存コンテンツの更新が必要
 4. **バックアップ**: 重要な変更前は設定ファイルのバックアップを取る
+5. **toolCategoryの柔軟性**: toolCategoryは動的文字列バリデーションのため、新しいカテゴリの追加時にコード変更は不要
+
+## 🚀 toolCategory動的読み込みの利点
+
+### 従来のenum定義との比較
+
+**従来（enum定義）:**
+```typescript
+toolCategory: z.enum([
+  'flashcard', 'reading', 'listening', 'writing', 'suite',
+  'video', 'browser-extension', 'mobile-app', 'desktop-app'
+])
+```
+- 新しいカテゴリ追加時にコード変更が必要
+- 開発者の介入が必要
+- デプロイが必要
+
+**現在（動的文字列バリデーション）:**
+```typescript
+toolCategory: z.string()
+  .min(1, { message: 'ツールカテゴリを入力してください' })
+  .max(30, { message: 'ツールカテゴリは30文字以内で入力してください' })
+  .regex(/^[a-zA-Z0-9\-\s]+$/, { 
+    message: 'ツールカテゴリは英数字、ハイフン、スペースのみ使用可能です' 
+  })
+```
+- 新しいカテゴリ追加時にコード変更不要
+- コンテンツ作成者が直接設定可能
+- 即座に反映
+
+### 使用例
+
+```yaml
+---
+title: 'AI学習アシスタントの紹介'
+toolName: 'ChatGPT'
+toolCategory: 'ai-assistant'  # 新しいカテゴリを自由に設定
+---
+```
 
 ## 📞 サポート
 
