@@ -1,6 +1,17 @@
 ---
 // ToolsHeaderSection.astro - ツールヘッダーセクションコンポーネント
 // Astroネイティブアプローチでモダンなデザインを実装
+
+import type { Tool } from '../../types/tool';
+
+export interface Props {
+  tools: Tool[];
+}
+
+const { tools } = Astro.props;
+
+// ツール数を自動計算
+const toolsCount = tools.length;
 ---
 
 <section
@@ -29,7 +40,7 @@
       <!-- Stats Section -->
       <div class='tools-header-stats'>
         <div class='tools-stat-item'>
-          <span class='tools-stat-number'>3+</span>
+          <span class='tools-stat-number'>{toolsCount}+</span>
           <span class='tools-stat-label'>Tools Terpilih</span>
         </div>
         <div class='tools-stat-divider'></div>

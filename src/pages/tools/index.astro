@@ -2,10 +2,57 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ToolsHeaderSection from '../../components/tools/ToolsHeaderSection.astro';
 import ToolsGridSection from '../../components/tools/ToolsGridSection.astro';
-import ToolsPageScript from '../../components/tools/ToolsPageScript.astro';
+import ToolCard from '../../components/tools/ToolCard.astro';
+import type { Tool } from '../../types/tool';
 
 // Import CSS
 import '../../styles/tools/tools.css';
+
+// Tools data - 中央集権化されたデータ管理
+const tools: Tool[] = [
+  {
+    id: 'anki',
+    name: 'Anki',
+    description:
+      'Sistem flashcard dengan Spaced Repetition System (SRS) untuk menghafal kosakata dan kanji secara efektif.',
+    iconUrl: '/icon/anki-icon-240.webp',
+    color: 'var(--clr-accent)',
+    link: '/tools/anki',
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: 'scale' as const,
+    },
+  },
+  {
+    id: 'yomitan',
+    name: 'Yomichan',
+    description:
+      'Browser extension untuk membaca bahasa Jepang dengan hover dictionary dan furigana generation.',
+    iconUrl: '/icon/yomitan-icon-240.webp',
+    color: 'var(--clr-accent-dark)',
+    link: '/tools/yomitan',
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: 'slide' as const,
+    },
+  },
+  {
+    id: 'migaku',
+    name: 'Migaku',
+    description:
+      'Suite tools untuk immersion learning termasuk browser extension dan Anki integration.',
+    iconUrl: '/icon/migaku-icon-240.webp',
+    color: 'var(--clr-accent-glow-strong)',
+    link: '/tools/migaku',
+    interactiveElements: {
+      hasHoverEffect: true,
+      hasClickAction: true,
+      animationType: 'scale' as const,
+    },
+  },
+];
 
 // SEO data - Astroネイティブアプローチ（設定ファイル不要）
 const seoData = {
@@ -35,6 +82,15 @@ const seoData = {
   pageType={seoData.pageType}
   lang='id'
 >
+  <!-- Astro Native Resource Preloading (0 JavaScript) -->
+  <link rel='prefetch' href='/tools/anki' fetchpriority='low' />
+  <link rel='prefetch' href='/tools/yomitan' fetchpriority='low' />
+  <link rel='prefetch' href='/tools/migaku' fetchpriority='low' />
+  <link
+    rel='prefetch'
+    href='/docs/language-reactor-guide'
+    fetchpriority='low'
+  />
   <!-- Main Content -->
   <main
     class='main-content min-h-screen tools-layout-optimized'
@@ -43,12 +99,155 @@ const seoData = {
     aria-label='Japanese learning tools and applications'
   >
     <!-- Tools Header Section -->
-    <ToolsHeaderSection />
+    <ToolsHeaderSection tools={tools} />
 
     <!-- Tools Grid Section -->
-    <ToolsGridSection />
+    <ToolsGridSection>
+      {
+        tools.map((tool, index) => (
+          <div
+            role='listitem'
+            aria-label={`Tool ${index + 1} of ${tools.length}: ${tool.name}`}
+          >
+            <ToolCard
+              id={tool.id}
+              name={tool.name}
+              description={tool.description}
+              iconUrl={tool.iconUrl}
+              color={tool.color}
+              link={tool.link}
+              interactiveElements={tool.interactiveElements}
+            />
+          </div>
+        ))
+      }
+    </ToolsGridSection>
   </main>
-
-  <!-- Tools Page Scripts -->
-  <ToolsPageScript />
 </BaseLayout>
+
+<script>
+  // ========== ASTRO NATIVE APPROACH (Minimal JavaScript) ==========
+  // Performance-optimized with CSS-first approach
+
+  // Minimal loading state management (CSS handles most animations)
+  document.addEventListener('DOMContentLoaded', function () {
+    // Apply page load animations with performance monitoring
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.classList.add('page-load-fade-in');
+    }
+
+    // Apply staggered animations to tool cards using CSS custom properties
+    const toolCards = document.querySelectorAll('.tool-card');
+    toolCards.forEach((card, index) => {
+      (card as HTMLElement).style.setProperty(
+        '--stagger-delay',
+        `${index * 0.1}s`
+      );
+      card.classList.add('stagger-animation');
+    });
+
+    console.log('✅ Astro native loading states applied');
+  });
+
+  // Enhanced micro-interactions for better feedback
+  document.addEventListener('DOMContentLoaded', function () {
+    // Add micro-interactions ONLY to tools page elements (avoid navbar conflicts)
+    const toolsPageElements = document.querySelectorAll(`
+      .tool-card,
+      .tools-section a,
+      .tools-section button,
+      .main-content a:not([href="/"]),
+      .main-content button:not(.get-started-btn):not(.mobile-menu-btn)
+    `);
+    toolsPageElements.forEach(element => {
+      element.classList.add('micro-interaction-scale', 'focus-enhanced');
+    });
+
+    // WCAG 2.1 Keyboard Navigation Enhancement
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    toolCards.forEach((card, index) => {
+      // Add keyboard navigation support
+      card.addEventListener('keydown', function (e) {
+        const cards = Array.from(toolCards) as HTMLElement[];
+        const currentIndex = cards.indexOf(card as HTMLElement);
+
+        const keyboardEvent = e as KeyboardEvent;
+        switch (keyboardEvent.key) {
+          case 'ArrowRight':
+          case 'ArrowDown':
+            e.preventDefault();
+            const nextIndex = (currentIndex + 1) % cards.length;
+            cards[nextIndex].focus();
+            break;
+          case 'ArrowLeft':
+          case 'ArrowUp':
+            e.preventDefault();
+            const prevIndex =
+              currentIndex === 0 ? cards.length - 1 : currentIndex - 1;
+            cards[prevIndex].focus();
+            break;
+          case 'Home':
+            e.preventDefault();
+            cards[0].focus();
+            break;
+          case 'End':
+            e.preventDefault();
+            cards[cards.length - 1].focus();
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            (card as HTMLElement).click();
+            break;
+        }
+      });
+
+      // Add focus management
+      card.addEventListener('focus', function () {
+        (card as HTMLElement).scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'nearest',
+        });
+      });
+    });
+
+    console.log(
+      '✅ Astro native micro-interactions and scroll reveals initialized'
+    );
+  });
+
+  // REDESIGNED tool card interaction system
+  document.addEventListener('DOMContentLoaded', () => {
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    toolCards.forEach(card => {
+      // Click/Tap feedback for all devices
+      card.addEventListener('click', e => {
+        e.preventDefault();
+
+        // Add visual feedback
+        card.classList.add('is-interacting');
+
+        // Navigate after animation
+        setTimeout(() => {
+          card.classList.remove('is-interacting');
+          window.location.href = (card as HTMLAnchorElement).href;
+        }, 150);
+      });
+
+      // Keyboard navigation support
+      card.addEventListener('keydown', e => {
+        if (
+          (e as KeyboardEvent).key === ' ' ||
+          (e as KeyboardEvent).key === 'Enter'
+        ) {
+          e.preventDefault();
+          (card as HTMLAnchorElement).click();
+        }
+      });
+    });
+  });
+</script>

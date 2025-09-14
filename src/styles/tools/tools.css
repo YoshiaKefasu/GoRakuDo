@@ -16,7 +16,7 @@
 
   /* Typography */
   --fs-h1: clamp(2.25rem, 5vw, 3rem);
-  --fs-h3: 1.25rem; /* 20px */
+  --fs-h3: 1.75rem; /* 28px */
   --fs-base: 1rem; /* 16px */
   --fs-sm: 0.875rem; /* 14px */
   --fs-xs: 0.75rem; /* 12px */
@@ -757,6 +757,118 @@ body {
 .tools-migration-disabled {
   /* Keep legacy classes during migration */
   --migration-phase: 1;
+}
+
+/* ========== ASTRO NATIVE LAZY LOADING (0 JavaScript) ========== */
+/* CSS-only lazy loading with Intersection Observer API and CSS animations */
+
+/* Lazy loading base styles */
+[data-lazy] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+/* Lazy loading pulse animation */
+[data-lazy]:not(.loaded) {
+  animation: loading-pulse 2s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Astro Native Scroll Reveal (0 JavaScript) */
+@supports (animation-timeline: view()) {
+  [data-lazy] {
+    animation: lazy-reveal linear;
+    animation-timeline: view();
+    animation-range: entry 0% entry 20%;
+  }
+
+  @keyframes lazy-reveal {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Enhanced CSS-only scroll reveal for all elements */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+/* CSS-only intersection detection using :has() and viewport units */
+@supports (selector(:has(*))) {
+  .scroll-reveal:has([data-intersection-trigger]) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fallback: CSS-only reveal using container queries and viewport */
+@container (min-height: 100vh) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fallback for browsers without animation-timeline support */
+@supports not (animation-timeline: view()) {
+  [data-lazy] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  /* CSS-only reveal using viewport intersection */
+  @media (min-height: 100vh) {
+    [data-lazy] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Enhanced loading states with CSS-only approach */
+.loading-pulse {
+  animation: loading-pulse 2s ease-in-out infinite;
+}
+
+.loaded {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  animation: none !important;
+}
+
+/* Performance-optimized animations */
+@media (prefers-reduced-motion: reduce) {
+  [data-lazy] {
+    transition: none;
+    animation: none;
+  }
+
+  [data-lazy].loaded {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ========== ORIGINAL CLASSES (PRESERVED FOR MIGRATION) ========== */
