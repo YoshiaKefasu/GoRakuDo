@@ -1,104 +1,136 @@
-<template>
-  <div class="navbar-wrapper">
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-      <div class="nav-container">
-        <div class="nav-left">
+---
+// Navbar.astro - Astro Native Navigation Component
+// GoRakuDo Engineering Team 2025 - Astro + Tailwind v4.1
+// ARCHITECTURAL DECISION: Astro-native approach with zero JavaScript by default
+// PERFORMANCE: CSS-only scroll animations, minimal JavaScript for interactivity
+
+// ========== ASTRO-NATIVE PROPS INTERFACE ==========
+export interface Props {
+  // KISS Principle: Essential props only
+  variant?: "default" | "minimal" | "glass";
+  theme?: "dark" | "light" | "auto";
+  className?: string;
+}
+
+// ========== ASTRO-NATIVE DEFAULT PROPS ==========
+const {
+  variant = "default",
+  theme = "auto",
+  className = ""
+} = Astro.props;
+
+// ========== NAVIGATION CONFIGURATION ==========
+// REASONING: Centralized route management following DRY principle
+const NAV_ROUTES = {
+  resources: { path: "/docs", label: "Resources" },
+  posts: { path: "/docs", label: "Posts" },
+  tools: { path: "/tools", label: "Tools" },
+  panduan: { path: "/docs", label: "Panduan" }
+} as const;
+
+// ========== ASTRO-NATIVE NAVIGATION ITEMS ==========
+const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
+  key,
+  ...route
+}));
+---
+
+<div class={`navbar-wrapper ${className}`}>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <!-- Left Navigation - Desktop Only -->
+      <div class="nav-left">
+        {navItems.map((item) => (
           <span
-            v-for="item in navItems"
-            :key="item.key"
             class="nav-item"
             role="button"
             tabindex="0"
-            @click="navigateTo(item.key)"
-            @keydown.enter="navigateTo(item.key)"
-            @keydown.space="navigateTo(item.key)"
+            data-route={item.key}
+            data-path={item.path}
           >
-            {{ item.label }}
+            {item.label}
           </span>
-        </div>
-        <div class="nav-center">
-          <a
-            href="/"
-            class="logo-japanese"
-            aria-label="GoRakuDo - Kembali ke beranda"
-            title="GoRakuDo - Kembali ke beranda"
-          >
-            語楽道
-          </a>
-        </div>
-        <div class="nav-right">
-          <button
-            class="get-started-btn"
-            @click="navigateTo('posts')"
-            @keydown.enter="navigateTo('posts')"
-            @keydown.space="navigateTo('posts')"
-            role="button"
-            tabindex="0"
-          >
-            <svg
-              class="nav-svg-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M11 3V11L14 8L17 11V3M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            Metodologi
-          </button>
-          <button
-            class="get-started-btn"
-            @click="handleGetStartedAction"
-            @keydown.enter="handleGetStartedAction"
-            @keydown.space="handleGetStartedAction"
-            aria-label="Mulai perjalanan belajar bahasa Jepang"
-          >
-            Mulai Sekarang
-          </button>
-        </div>
-        <!-- Mobile menu button -->
+        ))}
+      </div>
+
+      <!-- Center Logo -->
+      <div class="nav-center">
+        <a
+          href="/"
+          class="logo-japanese"
+          aria-label="GoRakuDo - Kembali ke beranda"
+          title="GoRakuDo - Kembali ke beranda"
+        >
+          語楽道
+        </a>
+      </div>
+
+      <!-- Right Actions - Desktop Only -->
+      <div class="nav-right">
         <button
-          class="mobile-menu-btn"
-          @click="openInvitationModal"
-          @keydown.enter="openInvitationModal"
-          @keydown.space="openInvitationModal"
-          aria-label="Gabung komunitas Discord"
+          class="get-started-btn"
+          data-action="metodologi"
+          aria-label="Lihat metodologi pembelajaran"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            class="nav-svg-icon"
             width="16"
             height="16"
             viewBox="0 0 24 24"
-            class="nav-svg-icon lucide lucide-gamepad2-icon lucide-gamepad-2"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >
-            <line x1="6" x2="10" y1="11" y2="11" />
-            <line x1="8" x2="8" y1="9" y2="13" />
-            <line x1="15" x2="15.01" y1="12" y2="12" />
-            <line x1="18" x2="18.01" y1="10" y2="10" />
             <path
-              d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"
+              d="M11 3V11L14 8L17 11V3M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
           </svg>
-          Join
+          Metodologi
+        </button>
+        <button
+          class="get-started-btn"
+          data-action="get-started"
+          aria-label="Mulai perjalanan belajar bahasa Jepang"
+        >
+          Mulai Sekarang
         </button>
       </div>
-    </nav>
 
-  </div>
-</template>
+      <!-- Mobile Menu Button -->
+      <button
+        class="mobile-menu-btn"
+        data-action="discord"
+        aria-label="Gabung komunitas Discord"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          class="nav-svg-icon lucide lucide-gamepad2-icon lucide-gamepad-2"
+          aria-hidden="true"
+        >
+          <line x1="6" x2="10" y1="11" y2="11" />
+          <line x1="8" x2="8" y1="9" y2="13" />
+          <line x1="15" x2="15.01" y1="12" y2="12" />
+          <line x1="18" x2="18.01" y1="10" y2="10" />
+          <path
+            d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Join
+      </button>
+    </div>
+  </nav>
+</div>
 
-<style scoped>
+<style>
 /* ========== ASTRO NATIVE CSS OPTIMIZATION - NO !IMPORTANT ========== */
 /* 
  * ARCHITECTURAL DECISION: Astro's scoped CSS provides natural specificity isolation
@@ -157,7 +189,7 @@
   --navbar-opacity: 1;
 }
 
-/* ---------- Main Navbar Container - Fixed Positioning ---------- */
+/* ---------- Main Navbar Container - Fixed Positioning with CSS Scroll Animation ---------- */
 .navbar {
   /* REASONING: Fixed positioning for persistent navigation */
   position: fixed;
@@ -170,6 +202,11 @@
   /* REASONING: Responsive padding using REM units with safe area consideration */
   padding: 0.75rem 0; /* Fallback for browsers without safe-area support */
   padding-top: calc(0.75rem + env(safe-area-inset-top, 0));
+  
+  /* REASONING: CSS Scroll-driven Animation for opacity based on scroll */
+  animation: navbarScrollOpacity linear;
+  animation-timeline: scroll(root);
+  animation-range: 0px 200px;
   
   /* REASONING: Optimized single glass morphism background */
   background: 
@@ -495,7 +532,7 @@
   opacity: 0.98;
 }
 
-/* ---------- Responsive Variables - Mobile First with Optimized Viewport ---------- */
+/* ---------- Safe CSS Viewport Units - Stable Implementation ---------- */
 .navbar-wrapper {
   /* REASONING: Mobile-first responsive values as CSS custom properties */
   --navbar-padding-y: 0.75rem;
@@ -507,13 +544,13 @@
   --navbar-nav-display: none;
   --navbar-mobile-display: flex;
   
-  /* REASONING: Optimized viewport units - 100svw prevents scrollbar issues */
-  --navbar-width: 100vw; /* Fallback for older browsers */
-  --navbar-width: 100svw; /* Small viewport width - excludes scrollbars */
-  --navbar-height: 100vh; /* Fallback for older browsers */
-  --navbar-height: 100svh; /* Small viewport height - excludes UI elements */
+  /* REASONING: Safe viewport units - using stable 100vw/100vh */
+  --navbar-width: 100vw;
+  --navbar-height: 100vh;
   
-  /* REASONING: Responsive variables only - global variables used for touch targets and safe areas */
+  /* REASONING: Container query setup for responsive design */
+  container-type: inline-size;
+  container-name: navbar;
 }
 
 /* ---------- Tablet Breakpoint (768px+) - Enhanced Mobile Experience ---------- */
@@ -541,23 +578,36 @@
   }
 }
 
-/* ---------- Container Queries - Future-Proof Responsive Design ---------- */
-@container (min-width: 768px) {
+/* ---------- Container Queries - Modern Responsive Design ---------- */
+@container navbar (min-width: 768px) {
   .navbar-wrapper {
     --navbar-container-optimized: true;
+    --navbar-padding-y: 1rem;
+    --navbar-padding-x: 1.5rem;
+    --navbar-gap-left: 1.5rem;
+    --navbar-gap-right: 1rem;
+    --navbar-item-size: 0.875rem;
+    --navbar-logo-size: 1.75rem;
   }
 }
 
-@container (min-width: 1024px) {
+@container navbar (min-width: 1024px) {
   .navbar-wrapper {
     --navbar-container-large: true;
+    --navbar-nav-display: flex;
+    --navbar-mobile-display: none;
+    --navbar-padding-x: 2rem;
+    --navbar-gap-left: 2.5rem;
+    --navbar-gap-right: 1.5rem;
+    --navbar-item-size: 0.875rem;
+    --navbar-logo-size: 1.85rem;
   }
 }
 
-/* ---------- Apply Optimized Responsive Variables with Enhanced Viewport ---------- */
+/* ---------- Apply Safe Responsive Variables ---------- */
 .navbar {
   padding: var(--navbar-padding-y);
-  /* REASONING: Apply optimized viewport width to navbar - 100svw prevents scrollbar issues */
+  /* REASONING: Apply safe viewport width to navbar */
   width: var(--navbar-width);
   
   /* REASONING: Safe area positioning using global variables */
@@ -602,130 +652,124 @@
   display: var(--navbar-mobile-display);
 }
 
-/* ---------- Container Query Support - Future-Proof Responsive Design ---------- */
+/* ---------- Container Query Support - Modern Responsive Design ---------- */
 @supports (container-type: inline-size) {
   .navbar-wrapper {
     container-type: inline-size;
     container-name: navbar;
   }
 }
+
+/* ---------- CSS Scroll-driven Animations - No JavaScript Required ---------- */
+@keyframes navbarScrollOpacity {
+  from {
+    /* REASONING: Initial state - transparent background */
+    background: 
+      linear-gradient(
+        135deg,
+        oklch(6% 0.008 270 / 0) 0%,
+        oklch(8% 0.01 270 / 0) 50%,
+        oklch(6% 0.008 270 / 0) 100%
+      ),
+      radial-gradient(
+        ellipse at 50% 0%,
+        oklch(65% 0.18 280 / 0) 0%,
+        transparent 60%
+      );
+    backdrop-filter: blur(0px) saturate(100%) brightness(1) contrast(1);
+    -webkit-backdrop-filter: blur(0px) saturate(100%) brightness(1) contrast(1);
+    border-color: oklch(25% 0.015 270 / 0);
+  }
+  to {
+    /* REASONING: Final state - full glass morphism effect */
+    background: 
+      linear-gradient(
+        135deg,
+        var(--glass-bg) 0%,
+        oklch(8% 0.01 270 / 0.08) 50%,
+        var(--glass-bg) 100%
+      ),
+      radial-gradient(
+        ellipse at 50% 0%,
+        var(--glass-glow) 0%,
+        transparent 60%
+      );
+    backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
+    -webkit-backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.02);
+    border-color: var(--glass-border);
+  }
+}
+
+/* ---------- Fallback for browsers without Scroll-driven Animations ---------- */
+@supports not (animation-timeline: scroll(root)) {
+  .navbar {
+    /* REASONING: Fallback - use CSS custom property for JavaScript control */
+    background: 
+      linear-gradient(
+        135deg,
+        oklch(6% 0.008 270 / var(--navbar-opacity, 0.12)) 0%,
+        oklch(8% 0.01 270 / calc(var(--navbar-opacity, 0.12) * 0.67)) 50%,
+        oklch(6% 0.008 270 / var(--navbar-opacity, 0.12)) 100%
+      ),
+      radial-gradient(
+        ellipse at 50% 0%,
+        oklch(65% 0.18 280 / calc(var(--navbar-opacity, 0.12) * 0.67)) 0%,
+        transparent 60%
+      );
+    backdrop-filter: blur(calc(var(--navbar-opacity, 0.12) * 100px)) saturate(calc(100% + var(--navbar-opacity, 0.12) * 50%)) brightness(calc(1 + var(--navbar-opacity, 0.12) * 0.05)) contrast(calc(1 + var(--navbar-opacity, 0.12) * 0.05));
+    -webkit-backdrop-filter: blur(calc(var(--navbar-opacity, 0.12) * 100px)) saturate(calc(100% + var(--navbar-opacity, 0.12) * 50%)) brightness(calc(1 + var(--navbar-opacity, 0.12) * 0.05)) contrast(calc(1 + var(--navbar-opacity, 0.12) * 0.02));
+    border-color: oklch(25% 0.015 270 / calc(var(--navbar-opacity, 0.12) * 1.25));
+  }
+}
+
+/* ---------- Safe Viewport Units Support - Removed Problematic Units ---------- */
+/* REASONING: Removed modern viewport units that were causing display issues */
+/* Using stable 100vw/100vh for consistent cross-browser compatibility */
 </style>
 
-<script setup lang="ts">
-import { onMounted, onUnmounted } from "vue";
-
-// ========== TYPE DEFINITIONS - STRICT MODE COMPLIANT ==========
-
-/**
- * Global window interface extension
- * REASONING: Type-safe global function definitions
- * Note: This interface extends the global Window interface defined in global.d.ts
- */
+<script>
+// ========== ASTRO-NATIVE JAVASCRIPT - MINIMAL AND PERFORMANT ==========
+// REASONING: Following Astro's zero-JavaScript philosophy with minimal interactivity
+// KISS Principle: Simple, focused functions under 5 lines each
 
 /**
- * Unified component state interface
- * REASONING: Single state object for better memory efficiency and maintainability
+ * Navigation configuration - matches Astro component data
  */
-interface ComponentState {
-  // Scroll optimization
-  lastOpacity: number;
-  scrollRafId: number | null;
-  isScrolling: boolean;
-  scrollTimeout: number | null;
-  
-  // Viewport optimization
-  lastHeight: number;
-  lastWidth: number;
-  viewportRafId: number | null;
-  isUpdating: boolean;
-  viewportTimeout: number | null;
-}
-
-/**
- * Navigation route configuration
- * REASONING: Simplified route structure for better maintainability
- */
-interface NavRoute {
-  path: string;
-  label: string;
-}
-
-// ========== UNIFIED STATE INITIALIZATION ==========
-/**
- * Unified component state
- * REASONING: Single state object reduces memory overhead and improves maintainability
- */
-const state: ComponentState = {
-  // Scroll optimization
-  lastOpacity: 0,
-  scrollRafId: null,
-  isScrolling: false,
-  scrollTimeout: null,
-  
-  // Viewport optimization
-  lastHeight: 0,
-  lastWidth: 0,
-  viewportRafId: null,
-  isUpdating: false,
-  viewportTimeout: null
-};
-
-// ========== NAVIGATION CONFIGURATION ==========
-/**
- * Navigation routes configuration
- * REASONING: Centralized route management for maintainability
- */
-const NAV_ROUTES: Record<string, NavRoute> = {
+const NAV_ROUTES = {
   resources: { path: "/docs", label: "Resources" },
   posts: { path: "/docs", label: "Posts" },
   tools: { path: "/tools", label: "Tools" },
   panduan: { path: "/docs", label: "Panduan" }
-} as const;
+};
 
 /**
- * Navigation items for template rendering
- * REASONING: Computed property for dynamic navigation rendering
+ * Open Discord invitation - 3-line function following KISS principle
  */
-const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
-  key,
-  ...route
-}));
-
-// ========== SIMPLIFIED MODAL MANAGEMENT ==========
-
-/**
- * Open Discord invitation
- * REASONING: 3-line function following KISS principle - direct Discord link
- */
-function openInvitationModal(): void {
+function openInvitationModal() {
   window.open("https://discord.gg/j8qmYPAGQh", "_blank");
 }
 
-// ========== SIMPLIFIED NAVIGATION ==========
 /**
- * Generic navigation function
- * REASONING: 3-line function following KISS principle
+ * Generic navigation function - 3-line function following KISS principle
  */
-function navigateTo(routeKey: keyof typeof NAV_ROUTES): void {
+function navigateTo(routeKey) {
   const route = NAV_ROUTES[routeKey];
   if (route) window.location.href = route.path;
 }
 
 /**
- * Context-aware action handler
- * REASONING: 5-line function with conditional logic
+ * Context-aware action handler - 5-line function with conditional logic
  */
-function handleGetStartedAction(): void {
+function handleGetStartedAction() {
   const isHomepage = window.location.pathname === "/" || window.location.pathname === "/index.html";
   if (isHomepage) scrollToMission();
   else window.open("https://discord.gg/j8qmYPAGQh", "_blank");
 }
 
 /**
- * Scroll to mission section with retry logic
- * REASONING: 5-line function with DOM ready check
+ * Scroll to mission section with retry logic - 5-line function with DOM ready check
  */
-function scrollToMission(): void {
+function scrollToMission() {
   const missionSection = document.getElementById("mission");
   if (!missionSection) {
     setTimeout(scrollToMission, 100);
@@ -737,127 +781,50 @@ function scrollToMission(): void {
   window.scrollTo({ top: scrollToPosition, behavior: "smooth" });
 }
 
-// ========== SIMPLIFIED SCROLL & VIEWPORT OPTIMIZATION ==========
 /**
- * Update navbar opacity based on scroll
- * REASONING: 3-line function following KISS principle
+ * Event delegation for efficient event handling
  */
-function updateNavbarOpacity(scrollY: number): void {
-  const newOpacity = Math.min(scrollY / 200, 1);
-  if (Math.abs(newOpacity - state.lastOpacity) > 0.001) {
-    document.documentElement.style.setProperty("--navbar-opacity", newOpacity.toString());
-    state.lastOpacity = newOpacity;
+function handleNavbarClick(event) {
+  const target = event.target.closest('[data-route], [data-action]');
+  if (!target) return;
+
+  const route = target.dataset.route;
+  const action = target.dataset.action;
+
+  if (route) {
+    navigateTo(route);
+  } else if (action === 'discord') {
+    openInvitationModal();
+  } else if (action === 'metodologi') {
+    navigateTo('posts');
+  } else if (action === 'get-started') {
+    handleGetStartedAction();
   }
 }
 
 /**
- * Optimized scroll handler
- * REASONING: 5-line function with RAF optimization
+ * Keyboard navigation support
  */
-function handleScroll(): void {
-  if (state.isScrolling) return;
-  state.isScrolling = true;
-  
-  state.scrollRafId = requestAnimationFrame(() => {
-    updateNavbarOpacity(window.scrollY);
-    state.isScrolling = false;
-    state.scrollRafId = null;
-  });
+function handleNavbarKeydown(event) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    handleNavbarClick(event);
+  }
 }
 
 /**
- * Throttled scroll handler
- * REASONING: 3-line function for performance
+ * Initialize navbar functionality
  */
-function throttledScrollHandler(): void {
-  if (state.scrollTimeout) return;
-  state.scrollTimeout = window.setTimeout(() => {
-    handleScroll();
-    state.scrollTimeout = null;
-  }, 16);
+function initNavbar() {
+  // Event delegation for efficient event handling
+  document.addEventListener('click', handleNavbarClick);
+  document.addEventListener('keydown', handleNavbarKeydown);
 }
 
-/**
- * Viewport change handler
- * REASONING: 5-line function with RAF optimization
- */
-function handleViewportChange(): void {
-  if (state.isUpdating) return;
-  state.isUpdating = true;
-  
-  state.viewportRafId = requestAnimationFrame(() => {
-    const { innerHeight, innerWidth } = window;
-    if (Math.abs(innerHeight - state.lastHeight) > 1 || Math.abs(innerWidth - state.lastWidth) > 1) {
-      document.documentElement.style.setProperty('--viewport-height', `${innerHeight}px`);
-      document.documentElement.style.setProperty('--viewport-width', `${innerWidth}px`);
-      state.lastHeight = innerHeight;
-      state.lastWidth = innerWidth;
-    }
-    state.isUpdating = false;
-    state.viewportRafId = null;
-  });
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNavbar);
+} else {
+  initNavbar();
 }
-
-/**
- * Throttled viewport handler
- * REASONING: 3-line function for performance
- */
-function throttledViewportHandler(): void {
-  if (state.viewportTimeout) return;
-  state.viewportTimeout = window.setTimeout(() => {
-    handleViewportChange();
-    state.viewportTimeout = null;
-  }, 16);
-}
-
-// ========== SIMPLIFIED LIFECYCLE MANAGEMENT ==========
-/**
- * Add event listeners
- * REASONING: 3-line function following KISS principle
- */
-function addEventListeners(): void {
-  window.addEventListener("scroll", throttledScrollHandler, { passive: true });
-  window.addEventListener("resize", throttledViewportHandler, { passive: true });
-  window.addEventListener("orientationchange", throttledViewportHandler, { passive: true });
-}
-
-/**
- * Remove event listeners
- * REASONING: 3-line function following KISS principle
- */
-function removeEventListeners(): void {
-  window.removeEventListener("scroll", throttledScrollHandler);
-  window.removeEventListener("resize", throttledViewportHandler);
-  window.removeEventListener("orientationchange", throttledViewportHandler);
-}
-
-/**
- * Cleanup pending operations
- * REASONING: 5-line function for cleanup
- */
-function cleanup(): void {
-  if (state.scrollRafId) cancelAnimationFrame(state.scrollRafId);
-  if (state.viewportRafId) cancelAnimationFrame(state.viewportRafId);
-  if (state.scrollTimeout) clearTimeout(state.scrollTimeout);
-  if (state.viewportTimeout) clearTimeout(state.viewportTimeout);
-}
-
-/**
- * Component mount lifecycle
- * REASONING: 3-line function following KISS principle
- */
-onMounted(() => {
-  addEventListeners();
-  handleScroll();
-  handleViewportChange();
-});
-
-/**
- * Component unmount lifecycle
- * REASONING: 3-line function following KISS principle
- */
-onUnmounted(() => {
-  removeEventListeners();
-  cleanup();
-});
 </script>

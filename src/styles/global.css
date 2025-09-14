@@ -1,7 +1,8 @@
 @import 'tailwindcss';
 
 :root {
-  /* Colors - OKLCH Color Space */
+  /* ===== PRIMARY COLOR SYSTEM - OKLCH Color Space ===== */
+  /* Core colors */
   --clr-background: oklch(0.05 0 0);
   --clr-text-primary: oklch(1 0 0);
   --clr-text-secondary: oklch(0.8 0 0);
@@ -15,39 +16,82 @@
   --clr-gold-light: oklch(0.95 0.08 85);
   --clr-gold-dark: oklch(0.75 0.12 85);
 
-  /* Modal "Paper" Theme - OKLCH */
+  /* ===== LEGACY COLOR MAPPING - COMPATIBILITY LAYER ===== */
+  /* Legacy color mapping converted to OKLCH system */
+  --color-accent-dark: oklch(0.6 0.25 280); /* Converted to OKLCH */
+  --color-text-primary: oklch(1 0 0); /* Maps to --color-foreground */
+  --color-accent-purple: oklch(0.65 0.25 280); /* Maps to --color-primary */
+  --color-gold-dark: oklch(0.75 0.12 85); /* Maps to --color-secondary */
+  --color-text-secondary: oklch(0.8 0 0); /* Maps to --color-muted-foreground */
+  --color-text-muted: oklch(0.67 0 0);
+  --color-gold-light: oklch(0.95 0.08 85);
+
+  /* Complex rgba values converted to OKLCH */
+  --color-accent-purple-rgb: 139, 93, 255; /* Keep RGB for legacy compatibility */
+  --color-accent-purple-glow-faint: oklch(0.65 0.25 280 / 0.05);
+  --color-accent-purple-glow-medium: oklch(0.65 0.25 280 / 0.25);
+  --color-accent-purple-glow-strong: oklch(0.65 0.25 280 / 0.5);
+  --color-accent-glow-faint: oklch(0.65 0.25 280 / 0.05);
+  --color-accent-glow-medium: oklch(0.65 0.25 280 / 0.1);
+  --color-accent-glow-strong: oklch(0.65 0.25 280 / 0.2);
+  --color-accent-shadow: oklch(0.65 0.25 280 / 0.4);
+  --color-gold-dark-transparent: oklch(0.75 0.12 85 / 0.25);
+
+  /* ===== PAPER THEME - OKLCH ===== */
   --clr-paper-bg: oklch(0.97 0.01 60);
   --clr-paper-text-primary: oklch(0.25 0 0);
   --clr-paper-text-secondary: oklch(0.35 0 0);
   --clr-paper-border: oklch(0.9 0.01 60);
   --clr-paper-lines: oklch(0.88 0.01 60);
+  
+  /* Legacy paper theme colors converted to OKLCH */
+  --color-paper-bg: oklch(0.97 0.01 60);
+  --color-paper-text-primary: oklch(0.25 0 0);
+  --color-paper-text-secondary: oklch(0.35 0 0);
+  --color-paper-border: oklch(0.9 0.01 60);
+  --color-paper-lines: oklch(0.88 0.01 60);
 
-  /* Typography */
+  /* ===== TYPOGRAPHY SYSTEM ===== */
   --font-primary: 'Inter', sans-serif;
   --font-serif: 'Lora', serif;
   --font-jp: 'Yuji Syuku', serif;
   --font-cursive: 'Cedarville Cursive', cursive;
+  
+  /* Font family for legacy compatibility */
+  --font-family-base:
+    'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Spacing & Borders */
+  /* ===== SPACING & BORDERS ===== */
   --section-padding-y: clamp(80px, 10vw, 120px);
   --border-radius-pill: 35px;
   --border-radius-card: 20px;
   --border-radius-btn-small: 25px;
+  
+  /* Legacy design token mapping */
+  --border-radius-lg: 12px;
+  --border-radius-md: 8px;
+  --border-radius-sm: 4px;
 
-  /* Animation */
+  /* ===== ANIMATION SYSTEM ===== */
   --transition-speed: 0.3s;
+  --animate-duration-fast: 150ms;
+  --animate-duration-normal: 300ms;
+  --animate-duration-slow: 500ms;
+  --animate-duration-slower: 700ms;
 
-  /* ===== ACCESSIBILITY & TOUCH TARGETS - GLOBAL SYSTEM ===== */
-  /* REASONING: Global touch target standards for consistent accessibility */
+  /* ===== ACCESSIBILITY & TOUCH TARGETS ===== */
   --touch-target-min: 44px; /* WCAG 2.1 AA minimum touch target size */
   --touch-target-padding: calc((var(--touch-target-min) - 1.5rem) / 2);
   
-  /* ===== SAFE AREA INSETS - GLOBAL SYSTEM ===== */
-  /* REASONING: Global safe area variables for consistent mobile support */
+  /* ===== SAFE AREA INSETS ===== */
   --safe-area-top: env(safe-area-inset-top, 0);
   --safe-area-bottom: env(safe-area-inset-bottom, 0);
   --safe-area-left: env(safe-area-inset-left, 0);
   --safe-area-right: env(safe-area-inset-right, 0);
+
+  /* ===== OPTIMIZATION FLAGS ===== */
+  --localhost-optimization: true;
 }
 
 /* ========== CRITICAL CSS LAYER - LOADS FIRST FOR PERFORMANCE ========== */
@@ -148,8 +192,8 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .article-content {
-    --color-foreground: #000000;
-    --color-background: #ffffff;
+    --color-foreground: oklch(0 0 0);
+    --color-background: oklch(1 0 0);
   }
 }
 
@@ -601,59 +645,6 @@
   --animate-twinkle: twinkle 3s infinite;
 }
 
-/* ========== LEGACY COLOR VARIABLES - PRESERVED FOR COMPATIBILITY ========== */
-/* 
- * REASONING: Many existing components may reference these exact variable names
- * CHANGE: Maintaining all legacy color variables but mapping to new OKLCH system where possible
- */
-:root {
-  /* Legacy hex color mapping to new system */
-  --color-accent-dark: #7b4def; /* Preserved for legacy compatibility */
-  --color-text-primary: #ffffff; /* Maps to --color-foreground */
-  --color-accent-purple: #8b5dff; /* Maps to --color-primary */
-  --color-gold-dark: #e4b43b; /* Maps to --color-secondary */
-  --color-text-secondary: #cccccc; /* Maps to --color-muted-foreground */
-  --color-text-muted: #aaaaaa;
-  --color-gold-light: #ffefb8;
-
-  /* Complex rgba values - preserved exactly from legacy */
-  --color-accent-purple-rgb: 139, 93, 255;
-  --color-accent-purple-glow-faint: rgba(139, 93, 255, 0.05);
-  --color-accent-purple-glow-medium: rgba(139, 93, 255, 0.25);
-  --color-accent-purple-glow-strong: rgba(139, 93, 255, 0.5);
-  --color-accent-glow-faint: rgba(139, 93, 255, 0.05);
-  --color-accent-glow-medium: rgba(139, 93, 255, 0.1);
-  --color-accent-glow-strong: rgba(139, 93, 255, 0.2);
-  --color-accent-shadow: rgba(139, 93, 255, 0.4);
-  --color-gold-dark-transparent: rgba(228, 180, 59, 0.25);
-
-  /* Paper theme colors - preserved for potential use */
-  --color-paper-bg: #f7f4f1;
-  --color-paper-text-primary: #3c3c3c;
-  --color-paper-text-secondary: #555555;
-  --color-paper-border: #e0dcd8;
-  --color-paper-lines: #dcd9d5;
-
-  /* Legacy design token mapping */
-  --border-radius-pill: 35px; /* Original legacy value for compatibility */
-  --border-radius-card: 20px;
-  --border-radius-btn-small: 25px;
-  --border-radius-lg: 12px;
-  --border-radius-md: 8px;
-  --border-radius-sm: 4px;
-  --animate-duration-fast: 150ms;
-  --animate-duration-normal: 300ms;
-  --animate-duration-slow: 500ms;
-  --animate-duration-slower: 700ms;
-
-  /* Font family for legacy compatibility */
-  --font-family-base:
-    'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui,
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-  /* Localhost optimization flag - preserved from legacy */
-  --localhost-optimization: true;
-}
 
 /* ========== BASE LAYER - FOUNDATIONAL STYLES ========== */
 @layer base {
@@ -719,7 +710,7 @@
     background: linear-gradient(
       135deg,
       var(--color-accent-purple) 0%,
-      #7b4def 100%
+      oklch(0.6 0.25 280) 100%
     );
     color: var(--color-text-primary);
   }
@@ -907,9 +898,9 @@
       float 8s ease-in-out infinite;
     /* Enhanced visibility with glow effect */
     box-shadow:
-      0 0 4px rgba(139, 93, 255, 0.6),
-      0 0 8px rgba(139, 93, 255, 0.4),
-      0 0 12px rgba(139, 93, 255, 0.2);
+      0 0 4px oklch(0.65 0.25 280 / 0.6),
+      0 0 8px oklch(0.65 0.25 280 / 0.4),
+      0 0 12px oklch(0.65 0.25 280 / 0.2);
     /* Balanced visibility */
     opacity: 0.6 !important;
   }
@@ -966,7 +957,7 @@
 
   /* ===== LEGACY GOLD MARKER - PRESERVED EXACTLY ===== */
   .gold-marker {
-    @apply mb-2 block text-[var(--color-gold-dark)] [text-shadow:1px_1px_5px_rgba(0,0,0,0.1)];
+    @apply mb-2 block text-[var(--color-gold-dark)] [text-shadow:1px_1px_5px_oklch(0_0_0/0.1)];
     background-image: linear-gradient(
       135deg,
       var(--color-gold-light) 0%,
@@ -1100,10 +1091,10 @@
     box-shadow: var(--shadow-xl);
   }
   .shadow-accent {
-    box-shadow: 0 4px 12px rgba(139, 93, 255, 0.3);
+    box-shadow: 0 4px 12px oklch(0.65 0.25 280 / 0.3);
   }
   .shadow-gold {
-    box-shadow: 0 4px 12px rgba(228, 180, 59, 0.3);
+    box-shadow: 0 4px 12px oklch(0.75 0.12 85 / 0.3);
   }
 
   /* ===== LEGACY OKLCH UTILITIES - PRESERVED ===== */
@@ -1180,10 +1171,10 @@
 
   /* ===== LEGACY FOCUS UTILITIES - PRESERVED ===== */
   .focus-visible-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8b5dff] focus-visible:ring-offset-2;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.25_280)] focus-visible:ring-offset-2;
   }
   .focus-visible-glow {
-    @apply focus-visible:shadow-[0_0_0_3px_rgba(139,93,255,0.3)] focus-visible:outline-none;
+    @apply focus-visible:shadow-[0_0_0_3px_oklch(0.65_0.25_280/0.3)] focus-visible:outline-none;
   }
 
   /* ===== LEGACY PERFORMANCE UTILITIES - PRESERVED ===== */

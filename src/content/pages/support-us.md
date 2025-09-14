@@ -99,7 +99,7 @@ Dukungan kalian, baik dalam bentuk finansial maupun non-finansial, adalah alasan
 
 ### (Sampingan)
 
-1. Refactor Navbar.vue ke NavBar.astro
+1. Refactor Navbar.vue ke Navbar.astro
 2. Refactor InvitationModal.vue ke InvitationModal.astro
 
 Dah itu aja final, ga bakal ada tambahan lagi sampe tahun depan.

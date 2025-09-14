@@ -16,7 +16,7 @@ const {
 import { getCollection, type CollectionEntry } from "astro:content"
 import UnifiedSEO from "../../components/UnifiedSEO.astro"
 import Breadcrumb from "../../components/public-components/Breadcrumb.astro"
-import Navbar from "../../components/public-components/Navbar.vue"
+import Navbar from "../../components/public-components/Navbar.astro"
 import "../../styles/docs/docs.css"
 import { resolvePath, getCollectionInfo } from "../../utils/collections"
 // AI content utilities removed - functionality no longer needed
@@ -309,7 +309,7 @@ function formatDate(dateString: string): string {
   </head>
   <body>
     <!-- Server Islands optimization - Navigation with defer loading -->
-    <Navbar client:visible />
+    <Navbar />
 
     <!-- Main Content -->
     <main class="main-content">

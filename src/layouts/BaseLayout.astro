@@ -1,6 +1,6 @@
 ---
 import UnifiedSEO from "../components/UnifiedSEO.astro"
-import Navbar from "../components/public-components/Navbar.vue"
+import Navbar from "../components/public-components/Navbar.astro"
 import WaveAnimation from "../components/animations/WaveAnimation.astro"
 
 // CSSをインポート
@@ -53,7 +53,7 @@ const { title, description, ogImage, pageType, publishedDate, lang, keywords, se
   </head>
   <body>
     <!-- Navigation - 共通コンポーネント -->
-    <Navbar client:visible />
+    <Navbar />
 
     <!-- Enhanced Wave Animation Background - Fixed position for scroll following -->
     <WaveAnimation 

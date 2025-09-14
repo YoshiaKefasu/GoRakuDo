@@ -3,7 +3,7 @@ import { getEntry, type CollectionEntry } from "astro:content";
 import { statSync } from "fs";
 import { join } from "path";
 import UnifiedSEO from "../../components/UnifiedSEO.astro";
-import Navbar from "../../components/public-components/Navbar.vue";
+import Navbar from "../../components/public-components/Navbar.astro";
 import PostLayout from '../../layouts/PostLayout.astro';
 import DonationButtons from "../../components/content/DonationButtons.astro";
 import TrakteerWidget from "../../components/content/TrakteerWidget.astro";
@@ -88,7 +88,7 @@ const postData = {
   </head>
 
   <body>
-    <Navbar client:visible />
+    <Navbar />
 
 
     <PostLayout 

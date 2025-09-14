@@ -1,7 +1,7 @@
 ---
 import UnifiedSEO from "../../components/UnifiedSEO.astro"
 import BaseLayout from "../../layouts/BaseLayout.astro"
-import Navbar from "../../components/public-components/Navbar.vue"
+import Navbar from "../../components/public-components/Navbar.astro"
 
 // Import CSS
 import "../../styles/global.css"
@@ -92,7 +92,7 @@ const tools = [
   </head>
   <body>
     <!-- Navigation -->
-    <Navbar client:visible />
+    <Navbar />
 
     <!-- Background Animations -->
     <canvas id="waveCanvas" class="wave-canvas" aria-hidden="true"></canvas>
