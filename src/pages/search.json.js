@@ -63,8 +63,6 @@ export async function GET() {
         contentLength: cleanedContent.length,
 
         // Feature flags (simplified)
-        isRecommended: false,
-        isBeginner: false,
         isTool:
           post.data.categories?.includes('tools') ||
           post.data.title.toLowerCase().includes('anki'),

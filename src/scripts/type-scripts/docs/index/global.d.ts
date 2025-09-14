@@ -48,8 +48,6 @@ export interface SearchDataItem {
   contentLength: number;
 
   // Feature flags (90-99行)
-  isRecommended: boolean;
-  isBeginner: boolean;
   isTool: boolean;
   hasCodeBlocks: boolean;
   hasImages: boolean;

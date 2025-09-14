@@ -8,13 +8,11 @@ export interface SearchPost {
   tags: string[];
   slug: string;
   contentType: string;
-  isRecommended?: boolean;
   element?: HTMLElement; // For DOM manipulation
 }
 
 export interface SearchFilters {
   contentType?: string;
-  isRecommended?: boolean;
 }
 
 export interface SearchResult {

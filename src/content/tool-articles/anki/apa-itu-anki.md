@@ -11,8 +11,6 @@ toolWebsite: 'https://apps.ankiweb.net/'
 toolCategory: 'flashcard'
 
 # Difficulty and Setup Information
-setupTime: '10-15 minutes'
-cost: 'free'
 
 # Visual Elements
 emoji: '📚'
@@ -24,20 +22,6 @@ categories: ['tools', 'tools/flashcard', 'tools/anki']
 
 # Read Time Estimation
 
-# Tool Features
-features:
-  - 'Spaced Repetition System (SRS)'
-  - 'Customizable card templates'
-  - 'Media support (images, audio, video)'
-  - 'Statistics and progress tracking'
-  - 'Cross-platform sync'
-  - 'Community decks available'
-
-# Requirements
-requirements:
-  - 'Windows, macOS, or Linux computer'
-  - 'Internet connection for initial setup'
-  - 'Basic computer literacy'
 
 # SEO and Discovery
 keywords:

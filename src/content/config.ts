@@ -43,7 +43,6 @@ const DEFAULTS = {
   AUTHOR: 'Tim GoRakuDo',           // デフォルトの作者名
   VERSION: '1.0.0',                 // デフォルトのバージョン
   STATUS: 'published' as const,     // デフォルトの公開状態
-  COST: 'free' as const,            // デフォルトの料金体系
   CONTENT_TYPE: 'resource' as const, // デフォルトのコンテンツタイプ
 } as const;
 
@@ -125,9 +124,6 @@ const docsCollection = defineCollection({
     status: z.enum(['published', 'draft', 'archived'], {
       errorMap: () => ({ message: "公開状態は 'published', 'draft', 'archived' のいずれかを選択してください" })
     }).default(DEFAULTS.STATUS),
-    
-    /** おすすめ記事フラグ（true: おすすめ表示, false: 通常表示） */
-    isRecommended: z.boolean().default(false),
   }),
 });
 
@@ -328,16 +324,6 @@ const pagesCollection = defineCollection({
       })
     }).default(DEFAULTS.CONTENT_TYPE),
 
-    // ========================================
-    // 読了時間設定
-    // ========================================
-    
-    /** 読了時間（1-120分、任意） */
-    readTime: z.number()
-      .int({ message: "読了時間は整数で入力してください" })
-      .min(1, { message: "読了時間は1分以上で入力してください" })
-      .max(120, { message: "読了時間は120分以内で入力してください" })
-      .optional(),
   }),
 });
 
@@ -357,9 +343,6 @@ const pagesCollection = defineCollection({
  * よく使用されるフィールド：
  * - toolVersion: ツールのバージョン
  * - toolWebsite: ツールの公式サイト
- * - setupTime: セットアップ時間
- * - cost: 料金体系
- * - features: ツールの機能一覧
  */
 const toolArticlesCollection = defineCollection({
   type: 'content',
@@ -425,22 +408,6 @@ const toolArticlesCollection = defineCollection({
       })
     }),
 
-    // ========================================
-    // セットアップ情報
-    // ========================================
-    
-    /** セットアップ時間（例：10-15 minutes、任意） */
-    setupTime: z.string()
-      .regex(/^\d+-\d+\s*(minutes?|hours?|days?)$/, 
-        { message: "セットアップ時間は '10-15 minutes', '1-2 hours', '1-3 days' 形式で入力してください" })
-      .optional(),
-    
-    /** 料金体系（デフォルト：free） */
-    cost: z.enum(['free', 'freemium', 'paid', 'subscription'], {
-      errorMap: () => ({ 
-        message: "料金体系は 'free'（無料）, 'freemium'（フリーミアム）, 'paid'（有料）, 'subscription'（サブスクリプション）のいずれかを選択してください" 
-      })
-    }).default(DEFAULTS.COST),
 
     // ========================================
     // 視覚的要素
@@ -477,23 +444,6 @@ const toolArticlesCollection = defineCollection({
       .max(10, { message: "タグは10個以内で設定してください" })
       .default([]),
 
-    // ========================================
-    // ツール機能・要件
-    // ========================================
-    
-    /** ツールの機能一覧（最大20個、各100文字以内） */
-    features: z.array(z.string()
-      .min(1, { message: "機能名を入力してください" })
-      .max(100, { message: "機能名は100文字以内で入力してください" }))
-      .max(20, { message: "機能は20個以内で設定してください" })
-      .default([]),
-    
-    /** システム要件（最大15個、各100文字以内） */
-    requirements: z.array(z.string()
-      .min(1, { message: "要件を入力してください" })
-      .max(100, { message: "要件は100文字以内で入力してください" }))
-      .max(15, { message: "要件は15個以内で設定してください" })
-      .default([]),
 
     // ========================================
     // SEO・発見性

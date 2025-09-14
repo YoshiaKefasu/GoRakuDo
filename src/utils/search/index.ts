@@ -40,7 +40,6 @@ export function convertToSearchPost(astroPost: AstroContentPost): SearchPost {
     tags: astroPost.data.tags || [],
     slug: astroPost.slug || '',
     contentType: astroPost.data.categories?.[0] || 'guide',
-    isRecommended: false,
   };
 }
 

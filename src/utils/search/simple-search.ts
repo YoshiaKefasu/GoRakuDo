@@ -193,13 +193,6 @@ export class SimpleSearch {
 
       // Filter by learning stage
 
-      // Filter by recommended status
-      if (
-        filters.isRecommended !== undefined &&
-        post.isRecommended !== filters.isRecommended
-      ) {
-        return false;
-      }
 
       return true;
     });

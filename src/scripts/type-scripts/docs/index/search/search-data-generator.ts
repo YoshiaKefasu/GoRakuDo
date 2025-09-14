@@ -117,8 +117,6 @@ export class SearchDataGenerator {
       contentLength: processedContent.contentLength,
 
       // 機能フラグ（簡素化）
-      isRecommended: false,
-      isBeginner: false,
       isTool: post.categories?.includes('tools') || false,
       hasCodeBlocks: processedContent.hasCodeBlocks,
       hasImages: processedContent.hasImages,

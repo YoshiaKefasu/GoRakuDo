@@ -100,7 +100,7 @@ const contentCategories = {
   methodology: sortedPosts.filter(
     (post) => post.data.category === "methodology"
   ),
-  recommended: sortedPosts.filter(post => post.data.isRecommended).slice(0, 3)
+  recommended: sortedPosts.slice(0, 3)
 }
 
 logger.log(`Content Layer: Categories pre-computed at build time`, "success")
@@ -178,7 +178,6 @@ const searchDataItems = sortedPosts.map((post) => {
     tags: post.data.tags || [],
     
     // Computed flags
-    isBeginner: false,
     isTool: post.data.categories?.includes("tools") || post.data.title.toLowerCase().includes("anki"),
     hasCodeBlocks: processedContent.hasCode,
     hasImages: processedContent.hasImages,
@@ -202,7 +201,6 @@ const optimizedSearchData = searchDataItems.map(item => ({
   searchMetadata: {
     hasCode: item.hasCodeBlocks,
     hasImages: item.hasImages,
-    isBeginner: item.isBeginner,
     isTool: item.isTool,
     categories: item.categories,
   }
