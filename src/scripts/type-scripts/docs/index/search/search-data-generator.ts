@@ -40,18 +40,27 @@ export class SearchDataGenerator {
   private async init(): Promise<void> {
     try {
       if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log('Initializing Search Data Generator...', 'info');
+        window.clientLogger.log(
+          'Initializing Search Data Generator...',
+          'info'
+        );
       }
 
       // 検索データの生成
       await this.generateSearchData();
 
       if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log('Search Data Generator initialized successfully', 'success');
+        window.clientLogger.log(
+          'Search Data Generator initialized successfully',
+          'success'
+        );
       }
     } catch (error) {
       if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(`Search Data Generator initialization failed: ${error}`, 'error');
+        window.clientLogger.log(
+          `Search Data Generator initialization failed: ${error}`,
+          'error'
+        );
       }
     }
   }
@@ -61,16 +70,18 @@ export class SearchDataGenerator {
    */
   private async generateSearchData(): Promise<void> {
     try {
-      // search.jsonからデータを取得
-      const response = await fetch('/search.json');
+      // docs/DocsSearch.jsonからデータを取得
+      const response = await fetch('/docs/DocsSearch.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const rawData = await response.json();
-      
+
       // 簡素化された検索データの生成
-      this.searchData = rawData.map((post: RawPostData) => this.processPostForSearch(post));
+      this.searchData = rawData.map((post: RawPostData) =>
+        this.processPostForSearch(post)
+      );
 
       if (window.clientLogger && window.clientLogger.log) {
         window.clientLogger.log(
@@ -80,7 +91,10 @@ export class SearchDataGenerator {
       }
     } catch (error) {
       if (window.clientLogger && window.clientLogger.log) {
-        window.clientLogger.log(`Error generating search data: ${error}`, 'error');
+        window.clientLogger.log(
+          `Error generating search data: ${error}`,
+          'error'
+        );
       }
       throw error;
     }
@@ -92,7 +106,7 @@ export class SearchDataGenerator {
   private processPostForSearch(post: RawPostData): SearchDataItem {
     // 基本的なコンテンツ処理のみ
     const processedContent = this.processContent(post.content || '');
-    
+
     return {
       // 基本情報
       slug: post.slug || '',
@@ -128,7 +142,7 @@ export class SearchDataGenerator {
 
   /**
    * コンテンツ処理（簡素化版）
-   * 
+   *
    * 実装詳細:
    * - Markdown記法の基本的なクリーニング
    * - コードブロックと画像の検出
@@ -171,7 +185,10 @@ export class SearchDataGenerator {
   /**
    * 検索用テキスト生成（簡素化版）
    */
-  private generateSearchableText(post: RawPostData, processedContent: ProcessedContent): string {
+  private generateSearchableText(
+    post: RawPostData,
+    processedContent: ProcessedContent
+  ): string {
     const searchableParts = [
       post.title || '',
       post.description || '',

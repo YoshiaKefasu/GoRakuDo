@@ -1,11 +1,11 @@
 // 0-Script最適化対応のFuse.js検索エンジン
-import type { 
-  SearchDataItem, 
-  SearchResult, 
+import type {
+  SearchDataItem,
+  SearchResult,
   FilterConfig,
   CategoryConfig,
   TagConfig,
-  ContentConfig
+  ContentConfig,
 } from '../global';
 
 /**
@@ -31,25 +31,27 @@ export class ModernSearchEngine {
   async initialize(): Promise<boolean> {
     try {
       // 簡素化: サーバーサイドデータを直接使用
-      this.searchData = window.searchData || await this.loadSearchData();
-      
+      this.searchData = window.searchData || (await this.loadSearchData());
+
       // Fuse.jsの簡素化された初期化
       const { default: Fuse } = await import('fuse.js');
       this.fuse = new Fuse(this.searchData, this.getFuseOptions());
-      
+
       // イベントリスナーの簡素化
       this.setupSimpleEventListeners();
-      
+
       // ローディング状態の更新
       if (window.searchLoadingManager) {
         window.searchLoadingManager.setReadyState();
       }
-      
+
       return true;
     } catch (error) {
       console.error('Search initialization failed:', error);
       if (window.searchLoadingManager) {
-        window.searchLoadingManager.setErrorState('Search temporarily unavailable');
+        window.searchLoadingManager.setErrorState(
+          'Search temporarily unavailable'
+        );
       }
       return false;
     }
@@ -57,7 +59,7 @@ export class ModernSearchEngine {
 
   private async loadSearchData(): Promise<SearchDataItem[]> {
     try {
-      const response = await fetch('/search.json');
+      const response = await fetch('/docs/DocsSearch.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -75,33 +77,37 @@ export class ModernSearchEngine {
         { name: 'title', weight: 0.7 },
         { name: 'description', weight: 0.3 },
         { name: 'tags', weight: 0.1 },
-        { name: 'searchableText', weight: 0.15 }
+        { name: 'searchableText', weight: 0.15 },
       ],
       threshold: 0.4,
-      includeScore: true
+      includeScore: true,
     };
   }
 
   // 簡素化されたイベントリスナー設定
   private setupSimpleEventListeners(): void {
     // 検索入力のイベントリスナー
-    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+    const searchInput = document.getElementById(
+      'searchInput'
+    ) as HTMLInputElement;
     if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
+      searchInput.addEventListener('input', e => {
         this.performSearch((e.target as HTMLInputElement).value);
       });
     }
 
     // フィルタボタンのイベントリスナー
     document.querySelectorAll('.filter-button').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const filterType = (e.target as HTMLElement).getAttribute('data-filter');
+      button.addEventListener('click', e => {
+        const filterType = (e.target as HTMLElement).getAttribute(
+          'data-filter'
+        );
         this.handleFilter(filterType);
       });
     });
 
     // クリア検索ボタンのイベント委譲
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       const target = e.target as HTMLElement;
       if (target?.closest('[data-action="clear-search"]')) {
         this.clearSearch();
@@ -128,11 +134,11 @@ export class ModernSearchEngine {
     const searchResult = {
       results: results.map(r => ({
         ...r.item,
-        relevancePercentage: this.calculateRelevancePercentage(r.score || 0)
+        relevancePercentage: this.calculateRelevancePercentage(r.score || 0),
       })),
       total: results.length,
       query: query,
-      searchStrategy: 'fuzzy' as const
+      searchStrategy: 'fuzzy' as const,
     };
 
     // 簡素化されたキャッシュ保存
@@ -140,12 +146,16 @@ export class ModernSearchEngine {
     this.displaySearchResults(searchResult);
   }
 
-
   private displaySearchResults(searchResult: SearchResult): void {
-    const searchResults: HTMLElement | null = document.getElementById('searchResults');
-    const searchStats: HTMLElement | null = document.getElementById('searchStats');
-    const searchResultsContent: HTMLElement | null = document.getElementById('searchResultsContent');
-    const contentState: HTMLElement | null = document.getElementById('contentState');
+    const searchResults: HTMLElement | null =
+      document.getElementById('searchResults');
+    const searchStats: HTMLElement | null =
+      document.getElementById('searchStats');
+    const searchResultsContent: HTMLElement | null = document.getElementById(
+      'searchResultsContent'
+    );
+    const contentState: HTMLElement | null =
+      document.getElementById('contentState');
 
     if (!searchResults || !searchStats || !searchResultsContent) {
       if (window.clientLogger && window.clientLogger.log) {
@@ -204,7 +214,9 @@ export class ModernSearchEngine {
           const description: string = result.description || '';
           const url: string = result.url || `/docs/${result.slug}`;
           const relevance: number = result.relevancePercentage || 0;
-          const pubDate: Date | null = result.pubDate ? new Date(result.pubDate) : null;
+          const pubDate: Date | null = result.pubDate
+            ? new Date(result.pubDate)
+            : null;
           const formattedDate: string = pubDate
             ? pubDate.toLocaleDateString('id-ID', {
                 year: 'numeric',
@@ -260,8 +272,10 @@ export class ModernSearchEngine {
   }
 
   private displayAllPosts(): void {
-    const searchResults: HTMLElement | null = document.getElementById('searchResults');
-    const contentState: HTMLElement | null = document.getElementById('contentState');
+    const searchResults: HTMLElement | null =
+      document.getElementById('searchResults');
+    const contentState: HTMLElement | null =
+      document.getElementById('contentState');
 
     if (searchResults) {
       searchResults.classList.add('hidden');
@@ -273,7 +287,9 @@ export class ModernSearchEngine {
 
   clearSearch(): void {
     // 検索入力のクリア
-    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+    const searchInput = document.getElementById(
+      'searchInput'
+    ) as HTMLInputElement;
     if (searchInput) {
       searchInput.value = '';
       searchInput.dispatchEvent(new Event('input'));
@@ -285,8 +301,12 @@ export class ModernSearchEngine {
 
   handleFilter(filterType: string | null): void {
     // アクティブフィルタボタンの更新
-    document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
-    const activeButton = document.querySelector(`[data-filter="${filterType}"]`);
+    document
+      .querySelectorAll('.filter-button')
+      .forEach(btn => btn.classList.remove('active'));
+    const activeButton = document.querySelector(
+      `[data-filter="${filterType}"]`
+    );
     if (activeButton) {
       activeButton.classList.add('active');
     }
@@ -304,9 +324,14 @@ export class ModernSearchEngine {
     }
 
     // Find filter in content configuration
-    const windowWithConfig = window as Window & { contentConfig?: ContentConfig };
-    const filters: Record<string, FilterConfig> = windowWithConfig.contentConfig?.filters || {};
-    const filter: FilterConfig | undefined = Object.values(filters).find((f: FilterConfig) => f.name === filterType);
+    const windowWithConfig = window as Window & {
+      contentConfig?: ContentConfig;
+    };
+    const filters: Record<string, FilterConfig> =
+      windowWithConfig.contentConfig?.filters || {};
+    const filter: FilterConfig | undefined = Object.values(filters).find(
+      (f: FilterConfig) => f.name === filterType
+    );
 
     return filter || null;
   }
@@ -335,29 +360,45 @@ export class ModernSearchEngine {
     this.displayFilteredPosts(filteredPosts, filterConfig);
   }
 
-  private filterByCategory(posts: SearchDataItem[], categoryId: string): SearchDataItem[] {
-    const windowWithConfig = window as Window & { contentConfig?: ContentConfig };
-    const category: CategoryConfig | undefined = windowWithConfig.contentConfig?.categories?.[categoryId];
+  private filterByCategory(
+    posts: SearchDataItem[],
+    categoryId: string
+  ): SearchDataItem[] {
+    const windowWithConfig = window as Window & {
+      contentConfig?: ContentConfig;
+    };
+    const category: CategoryConfig | undefined =
+      windowWithConfig.contentConfig?.categories?.[categoryId];
     if (!category) return posts;
 
     return posts.filter((post: SearchDataItem) => {
       // 新しいcategories配列を使用してフィルタリング
-      return post.categories?.some(cat => 
-        cat.toLowerCase().includes(categoryId.toLowerCase()) ||
-        category.keywords.some(keyword => 
-          cat.toLowerCase().includes(keyword.toLowerCase())
+      return (
+        post.categories?.some(
+          cat =>
+            cat.toLowerCase().includes(categoryId.toLowerCase()) ||
+            category.keywords.some(keyword =>
+              cat.toLowerCase().includes(keyword.toLowerCase())
+            )
+        ) ||
+        category.keywords.some(
+          (keyword: string) =>
+            post.title?.toLowerCase().includes(keyword.toLowerCase()) ||
+            post.description?.toLowerCase().includes(keyword.toLowerCase())
         )
-      ) || category.keywords.some(
-        (keyword: string) =>
-          post.title?.toLowerCase().includes(keyword.toLowerCase()) ||
-          post.description?.toLowerCase().includes(keyword.toLowerCase())
       );
     });
   }
 
-  private filterByTag(posts: SearchDataItem[], tagId: string): SearchDataItem[] {
-    const windowWithConfig = window as Window & { contentConfig?: ContentConfig };
-    const tag: TagConfig | undefined = windowWithConfig.contentConfig?.tags?.[tagId];
+  private filterByTag(
+    posts: SearchDataItem[],
+    tagId: string
+  ): SearchDataItem[] {
+    const windowWithConfig = window as Window & {
+      contentConfig?: ContentConfig;
+    };
+    const tag: TagConfig | undefined =
+      windowWithConfig.contentConfig?.tags?.[tagId];
     if (!tag) return posts;
 
     return posts.filter((post: SearchDataItem) => {
@@ -369,8 +410,12 @@ export class ModernSearchEngine {
     });
   }
 
-  private displayFilteredPosts(posts: SearchDataItem[], filterConfig: FilterConfig): void {
-    const contentState: HTMLElement | null = document.getElementById('contentState');
+  private displayFilteredPosts(
+    posts: SearchDataItem[],
+    filterConfig: FilterConfig
+  ): void {
+    const contentState: HTMLElement | null =
+      document.getElementById('contentState');
     if (!contentState) return;
 
     if (posts.length === 0) {
@@ -403,7 +448,7 @@ export class ModernSearchEngine {
           <div class="post-tags">
             ${(post.tags || [])
               .slice(0, 3)
-              .map((tag) => `<span class="post-tag">${tag}</span>`)
+              .map(tag => `<span class="post-tag">${tag}</span>`)
               .join('')}
             ${
               (post.tags || []).length > 3
@@ -423,14 +468,13 @@ export class ModernSearchEngine {
     this.initializeTagPopupsForResults();
   }
 
-
   // Fuse.jsスコアから関連度パーセンテージを計算
   private calculateRelevancePercentage(score: number): number {
     // Fuse.jsのスコアは0-1の範囲（0が完全一致、1が完全不一致）
     // 関連度パーセンテージに変換（0-100%）
     if (score === 0) return 100; // 完全一致
-    if (score >= 1) return 0;    // 完全不一致
-    
+    if (score >= 1) return 0; // 完全不一致
+
     // スコアを反転してパーセンテージに変換
     const relevance = Math.round((1 - score) * 100);
     return Math.max(0, Math.min(100, relevance)); // 0-100の範囲に制限
@@ -452,15 +496,16 @@ export class ModernSearchEngine {
     this.searchCache.set(key, result);
   }
 
-
   // 検索結果のタグポップアップ初期化（簡素化）
   private async initializeTagPopupsForResults(): Promise<void> {
     try {
       const { SimpleTagPopup } = await import('../ui/simple-tag-popup');
       const tagPopup = new SimpleTagPopup();
-      
-      const tagContainers = document.querySelectorAll('#searchResults .post-tags, #contentState .post-tags');
-      tagContainers.forEach((container) => {
+
+      const tagContainers = document.querySelectorAll(
+        '#searchResults .post-tags, #contentState .post-tags'
+      );
+      tagContainers.forEach(container => {
         tagPopup.setupContainer(container as HTMLElement);
       });
     } catch (error) {

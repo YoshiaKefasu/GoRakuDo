@@ -11,6 +11,7 @@ export interface Props {
   className?: string;
   ariaLabel?: string;
   tooltip?: string;
+  toolFilter?: string; // ツール固有の検索フィルター
 }
 
 // ========== PROPS DESTRUCTURING WITH VALIDATION ==========
@@ -20,6 +21,7 @@ const {
   className = '',
   ariaLabel = 'Open search interface',
   tooltip = 'Search',
+  toolFilter = '', // ツール固有フィルター（デフォルトは空文字列）
 } = Astro.props;
 
 // ========== VALIDATION AND SANITIZATION ==========
@@ -62,12 +64,13 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
   <!-- ========== SEARCH POPOVER CONTENT ========== -->
   <div
     id='search-popover'
-    class='search-popover'
+    class='search-popover glassmorphism glassmorphism-card'
     popover='auto'
     role='search'
     aria-label='Search interface'
     aria-modal='true'
   >
+    <!-- ========== SEARCH FORM ========== -->
     <form
       class='search-form'
       action={sanitizedSearchAction}
@@ -115,6 +118,65 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
         Enter your search terms and press Enter or click the search button
       </div>
     </form>
+
+    <!-- ========== SEARCH RESULTS ========== -->
+    <div
+      id='search-results'
+      class='search-results'
+      aria-live='polite'
+      aria-label='Search results'
+    >
+      <div class='search-results-header'>
+        <h3 class='search-results-title'>Search Results</h3>
+        <button
+          id='clear-search'
+          class='clear-search-btn'
+          aria-label='Clear search results'
+        >
+          <svg
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+            aria-hidden='true'
+          >
+            <path
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              stroke-width='2'
+              d='M6 18L18 6M6 6l12 12'></path>
+          </svg>
+        </button>
+      </div>
+      <div id='search-results-list' class='search-results-list'>
+        <!-- Search results will be populated here -->
+      </div>
+      <div id='search-loading' class='search-loading' style='display: none;'>
+        <div class='loading-spinner'></div>
+        <span>Searching...</span>
+      </div>
+      <div
+        id='search-no-results'
+        class='search-no-results'
+        style='display: none;'
+      >
+        <div class='no-results-icon'>
+          <svg
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+            aria-hidden='true'
+          >
+            <path
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              stroke-width='2'
+              d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'></path>
+          </svg>
+        </div>
+        <h4>No results found</h4>
+        <p>Try different keywords or check your spelling</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -140,37 +202,96 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     display: inline-block;
   }
 
-  /* Search Toggle Button - Optimized with clamp() */
+  /* Search Toggle Button - Enhanced Design */
   .search-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(2.25rem, 4vw, 2.75rem);
-    height: clamp(2.25rem, 4vw, 2.75rem);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: clamp(2.5rem, 4.5vw, 3rem);
+    height: clamp(2.5rem, 4.5vw, 3rem);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50%;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-toggle-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(139, 93, 255, 0.1) 0%,
+      rgba(59, 130, 246, 0.1) 50%,
+      rgba(16, 185, 129, 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
   }
 
   .search-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.15) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.15),
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .search-toggle-btn:hover::before {
+    opacity: 1;
+  }
+
+  .search-toggle-btn:active {
+    transform: translateY(-1px) scale(1.02);
+    transition: all 0.1s ease;
   }
 
   .search-toggle-btn:focus-visible {
     outline: 2px solid var(--clr-accent, #8b5dff);
-    outline-offset: 2px;
+    outline-offset: 3px;
+    box-shadow:
+      0 0 0 4px rgba(139, 93, 255, 0.2),
+      0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   .search-toggle-btn[aria-expanded='true'] {
-    background: rgba(139, 93, 255, 0.2);
+    background: linear-gradient(
+      135deg,
+      rgba(139, 93, 255, 0.25) 0%,
+      rgba(139, 93, 255, 0.15) 50%,
+      rgba(139, 93, 255, 0.2) 100%
+    );
     border-color: var(--clr-accent, #8b5dff);
+    box-shadow:
+      0 6px 20px rgba(139, 93, 255, 0.3),
+      0 2px 8px rgba(139, 93, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
   .search-icon {
@@ -178,24 +299,52 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     height: clamp(1rem, 2vw, 1.25rem);
   }
 
-  /* Search Popover - Optimized with clamp() */
+  /* Search Popover - GlassMorphism Design */
   .search-popover {
-    background: rgba(0, 0, 0, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: clamp(0.5rem, 1vw, 0.75rem);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    min-width: clamp(280px, 50vw, 400px);
+    min-width: clamp(320px, 55vw, 450px);
     max-width: 90vw;
     z-index: 1000;
-    padding: clamp(0.75rem, 2vw, 1rem);
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+
+    /* Centered positioning with smooth animation */
+    position: fixed;
+    top: 25vh;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    opacity: 0;
+    animation: popoverSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+    /* Enhanced visual effects */
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Popover entrance animation */
+  @keyframes popoverSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-10px) scale(1);
+    }
   }
 
   .search-popover::backdrop {
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: backdropFadeIn 0.3s ease;
+  }
+
+  @keyframes backdropFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   /* Search Form */
@@ -213,49 +362,121 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
 
   .search-input {
     flex: 1;
-    padding: clamp(0.625rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
-    background: rgba(255, 255, 255, 0.1);
+    padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.25rem);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius-card, 0.75rem);
+    border-radius: clamp(1rem, 2.5vw, 1.5rem);
     color: #ffffff;
     font-size: clamp(0.875rem, 2vw, 1rem);
-    transition: all 0.2s ease;
+    font-weight: 400;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
   }
 
   .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 300;
+    transition: color 0.3s ease;
   }
 
   .search-input:focus {
     outline: none;
     border-color: var(--clr-accent, #8b5dff);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.18) 50%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+    box-shadow:
+      0 0 0 3px rgba(139, 93, 255, 0.15),
+      0 4px 12px rgba(139, 93, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .search-input:focus::placeholder {
+    color: rgba(255, 255, 255, 0.4);
   }
 
   .search-submit-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(2.25rem, 4vw, 2.75rem);
-    height: clamp(2.25rem, 4vw, 2.75rem);
-    background: var(--clr-accent, #8b5dff);
+    width: clamp(2.5rem, 4.5vw, 3rem);
+    height: clamp(2.5rem, 4.5vw, 3rem);
+    background: linear-gradient(
+      135deg,
+      var(--clr-accent, #8b5dff) 0%,
+      #7c3aed 50%,
+      #6d28d9 100%
+    );
     border: none;
-    border-radius: var(--border-radius-card, 0.75rem);
+    border-radius: clamp(1rem, 2.5vw, 1.5rem);
     color: #ffffff;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
+    box-shadow:
+      0 4px 12px rgba(139, 93, 255, 0.3),
+      0 2px 6px rgba(139, 93, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.2) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
   }
 
   .search-submit-btn:hover {
-    background: var(--clr-accent-dark, #7c3aed);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow:
+      0 8px 20px rgba(139, 93, 255, 0.4),
+      0 4px 10px rgba(139, 93, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .search-submit-btn:hover::before {
+    opacity: 1;
+  }
+
+  .search-submit-btn:active {
+    transform: translateY(-1px) scale(1.02);
+    transition: all 0.1s ease;
   }
 
   .search-submit-btn:focus-visible {
     outline: 2px solid #ffffff;
-    outline-offset: 2px;
+    outline-offset: 3px;
+    box-shadow:
+      0 0 0 4px rgba(255, 255, 255, 0.2),
+      0 4px 12px rgba(139, 93, 255, 0.3);
   }
 
   .search-submit-btn svg {
@@ -263,15 +484,141 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     height: clamp(1rem, 2vw, 1.25rem);
   }
 
-  /* Responsive Design - Mobile First */
-  @media (max-width: 640px) {
+  /* ========== RESPONSIVE DESIGN - MIN-WIDTH APPROACH ========== */
+
+  /* Mobile First - Base styles (320px+) */
+  @media (min-width: 320px) {
+    .search-popover {
+      top: 15vh;
+      min-width: clamp(280px, 96vw, 320px);
+      max-width: 95vw;
+      padding: clamp(1rem, 2.5vw, 1.25rem);
+    }
+
     .search-input-wrapper {
       flex-direction: column;
+      gap: clamp(0.75rem, 2vw, 1rem);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: clamp(1rem, 3.5vw, 1.25rem) clamp(1.25rem, 4vw, 1.5rem);
+      font-size: clamp(1rem, 2.8vw, 1.125rem);
+      border-radius: clamp(1.25rem, 3vw, 1.75rem);
+      min-height: clamp(3.25rem, 7.5vw, 3.75rem);
+      line-height: 1.4;
     }
 
     .search-submit-btn {
       width: 100%;
-      height: clamp(2.5rem, 5vw, 2.75rem);
+      height: clamp(3.25rem, 7.5vw, 3.75rem);
+      border-radius: clamp(1.25rem, 3vw, 1.75rem);
+      font-size: clamp(1rem, 2.8vw, 1.125rem);
+      font-weight: 500;
+    }
+
+    .search-submit-btn svg {
+      width: clamp(1.25rem, 3vw, 1.5rem);
+      height: clamp(1.25rem, 3vw, 1.5rem);
+    }
+
+    .search-toggle-btn {
+      width: clamp(3rem, 6.5vw, 3.5rem);
+      height: clamp(3rem, 6.5vw, 3.5rem);
+    }
+
+    .search-icon {
+      width: clamp(1.25rem, 3vw, 1.5rem);
+      height: clamp(1.25rem, 3vw, 1.5rem);
+    }
+  }
+
+  /* Tablet and Desktop - 768px+ */
+  @media (min-width: 768px) {
+    .search-popover {
+      top: 25vh;
+      min-width: clamp(400px, 50vw, 500px);
+      max-width: 90vw;
+      padding: clamp(0.75rem, 1.25vw, 1rem);
+    }
+
+    .search-input-wrapper {
+      flex-direction: row;
+      gap: clamp(0.75rem, 1.5vw, 1rem);
+    }
+
+    .search-input {
+      flex: 1;
+      padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.25rem);
+      font-size: clamp(1rem, 1.5vw, 1.125rem);
+      border-radius: clamp(1rem, 2vw, 1.25rem);
+      min-height: clamp(2.5rem, 4vw, 3rem);
+      line-height: 1.5;
+    }
+
+    .search-submit-btn {
+      width: clamp(2.5rem, 4vw, 3rem);
+      height: clamp(2.5rem, 4vw, 3rem);
+      border-radius: clamp(1rem, 2vw, 1.25rem);
+      font-size: clamp(1rem, 1.5vw, 1.125rem);
+    }
+
+    .search-submit-btn svg {
+      width: clamp(1rem, 2vw, 1.25rem);
+      height: clamp(1rem, 2vw, 1.25rem);
+    }
+
+    .search-toggle-btn {
+      width: clamp(2.5rem, 4vw, 3rem);
+      height: clamp(2.5rem, 4vw, 3rem);
+    }
+
+    .search-icon {
+      width: clamp(1rem, 2vw, 1.25rem);
+      height: clamp(1rem, 2vw, 1.25rem);
+    }
+  }
+
+  /* Large Desktop - 1280px+ */
+  @media (min-width: 1280px) {
+    .search-popover {
+      top: 25vh;
+      min-width: clamp(360px, 32vw, 480px);
+      max-width: 64vw;
+      padding: clamp(0.8rem, 0.8vw, 1rem);
+    }
+
+    .search-input-wrapper {
+      gap: clamp(0.8rem, 1.2vw, 1rem);
+    }
+
+    .search-input {
+      padding: clamp(0.8rem, 1.2vw, 1rem) clamp(1rem, 1.6vw, 1.2rem);
+      font-size: clamp(0.9rem, 0.96vw, 1rem);
+      border-radius: clamp(1rem, 1.2vw, 1.25rem);
+      min-height: clamp(2.4rem, 2.8vw, 2.8rem);
+    }
+
+    .search-submit-btn {
+      width: clamp(2.4rem, 2.8vw, 2.8rem);
+      height: clamp(2.4rem, 2.8vw, 2.8rem);
+      border-radius: clamp(1rem, 1.2vw, 1.25rem);
+      font-size: clamp(0.9rem, 0.96vw, 1rem);
+    }
+
+    .search-submit-btn svg {
+      width: clamp(1rem, 1.2vw, 1.2rem);
+      height: clamp(1rem, 1.2vw, 1.2rem);
+    }
+
+    .search-toggle-btn {
+      width: clamp(2.4rem, 2.8vw, 2.8rem);
+      height: clamp(2.4rem, 2.8vw, 2.8rem);
+    }
+
+    .search-icon {
+      width: clamp(1rem, 1.2vw, 1.2rem);
+      height: clamp(1rem, 1.2vw, 1.2rem);
     }
   }
 
@@ -284,7 +631,6 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
 
     .search-popover {
       border: 2px solid #ffffff;
-      background: rgba(0, 0, 0, 0.95);
     }
 
     .search-input {
@@ -305,22 +651,19 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     .search-submit-btn:hover {
       transform: none;
     }
-  }
 
-  /* Dark Mode Support */
-  @media (prefers-color-scheme: dark) {
     .search-popover {
-      background: rgba(0, 0, 0, 0.95);
+      animation: none;
+      opacity: 1;
+    }
+
+    .search-popover::backdrop {
+      animation: none;
     }
   }
 
   /* Light Mode Support */
   @media (prefers-color-scheme: light) {
-    .search-popover {
-      background: rgba(255, 255, 255, 0.95);
-      border-color: rgba(0, 0, 0, 0.2);
-    }
-
     .search-input {
       background: rgba(0, 0, 0, 0.1);
       border-color: rgba(0, 0, 0, 0.2);
@@ -331,12 +674,229 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
       color: rgba(0, 0, 0, 0.5);
     }
   }
+
+  /* ========== SEARCH RESULTS STYLES ========== */
+
+  .search-results {
+    margin-top: clamp(1rem, 2.5vw, 1.5rem);
+    max-height: clamp(300px, 50vh, 500px);
+    overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: clamp(1rem, 2.5vw, 1.5rem);
+  }
+
+  .search-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(0.75rem, 2vw, 1rem);
+  }
+
+  .search-results-title {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+  }
+
+  .clear-search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(1.5rem, 3vw, 2rem);
+    height: clamp(1.5rem, 3vw, 2rem);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .clear-search-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .clear-search-btn svg {
+    width: clamp(0.75rem, 1.5vw, 1rem);
+    height: clamp(0.75rem, 1.5vw, 1rem);
+  }
+
+  .search-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.5vw, 0.75rem);
+  }
+
+  .search-result-item {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(0.75rem, 2vw, 1rem);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: clamp(0.5rem, 1.5vw, 0.75rem);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .search-result-item:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .search-result-item:focus {
+    outline: 2px solid var(--clr-accent, #8b5dff);
+    outline-offset: 2px;
+  }
+
+  .search-result-title {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0 0 clamp(0.25rem, 0.8vw, 0.5rem) 0;
+    line-height: 1.4;
+  }
+
+  .search-result-description {
+    font-size: clamp(0.75rem, 1.8vw, 0.875rem);
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 clamp(0.5rem, 1.2vw, 0.75rem) 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .search-result-meta {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 1.2vw, 0.75rem);
+    font-size: clamp(0.625rem, 1.5vw, 0.75rem);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .search-result-type {
+    background: rgba(139, 93, 255, 0.2);
+    color: var(--clr-accent, #8b5dff);
+    padding: clamp(0.125rem, 0.4vw, 0.25rem) clamp(0.375rem, 1vw, 0.5rem);
+    border-radius: clamp(0.25rem, 0.8vw, 0.375rem);
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  .search-result-tool {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    padding: clamp(0.125rem, 0.4vw, 0.25rem) clamp(0.375rem, 1vw, 0.5rem);
+    border-radius: clamp(0.25rem, 0.8vw, 0.375rem);
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  .search-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 3rem);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .loading-spinner {
+    width: clamp(2rem, 4vw, 2.5rem);
+    height: clamp(2rem, 4vw, 2.5rem);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-top: 2px solid var(--clr-accent, #8b5dff);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: clamp(0.75rem, 2vw, 1rem);
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .search-no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 3rem);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .no-results-icon {
+    width: clamp(3rem, 6vw, 4rem);
+    height: clamp(3rem, 6vw, 4rem);
+    margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+    opacity: 0.5;
+  }
+
+  .no-results-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .search-no-results h4 {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 600;
+    margin: 0 0 clamp(0.5rem, 1.2vw, 0.75rem) 0;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .search-no-results p {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    margin: 0;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* ========== RESPONSIVE SEARCH RESULTS ========== */
+
+  @media (min-width: 320px) {
+    .search-results {
+      max-height: clamp(250px, 40vh, 400px);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .search-results {
+      max-height: clamp(300px, 50vh, 500px);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .search-results {
+      max-height: clamp(350px, 45vh, 600px);
+    }
+  }
 </style>
 
 <script>
-  // ========== OPTIMIZED SEARCH FUNCTIONALITY ==========
-  // Architect Optimization: Performance-first, Astro-native approach
-  // Purpose: Minimalist search functionality with Popover API and optimal performance
+  // ========== ENHANCED SEARCH FUNCTIONALITY ==========
+  // Architect Optimization: Performance-first, Astro-native approach with client-side search
+  // Purpose: Comprehensive search functionality with real-time results and optimal performance
 
   (() => {
     'use strict';
@@ -352,28 +912,215 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     const toggleButton = document.querySelector(
       '.search-toggle-btn'
     ) as HTMLButtonElement;
+    const searchResults = document.getElementById('search-results');
+    const searchResultsList = document.getElementById('search-results-list');
+    const searchLoading = document.getElementById('search-loading');
+    const searchNoResults = document.getElementById('search-no-results');
+    const clearSearchBtn = document.getElementById('clear-search');
 
     // Early return if essential elements not found
-    if (!searchPopover || !searchInput || !searchForm || !toggleButton) {
+    if (
+      !searchPopover ||
+      !searchInput ||
+      !searchForm ||
+      !toggleButton ||
+      !searchResults
+    ) {
       console.warn('SearchPopover: Essential elements not found');
       return;
     }
 
-    // ========== PERFORMANCE OPTIMIZATION ==========
+    // ========== SEARCH STATE MANAGEMENT ==========
     let isPopoverOpen = false;
     let focusTimeout: number | null = null;
+    let searchTimeout: number | null = null;
+    let searchData: any[] = [];
+    let isSearchDataLoaded = false;
+
+    // ツールフィルター（Astro propsから取得）
+    const toolFilter = '${toolFilter}';
+
+    // ========== SEARCH DATA LOADING ==========
+    const loadSearchData = async (): Promise<void> => {
+      if (isSearchDataLoaded) return;
+
+      try {
+        // ツールフィルターがある場合はtools/ToolsSearch.json、ない場合はdocs/DocsSearch.jsonを使用
+        const searchUrl = toolFilter
+          ? `/tools/ToolsSearch.json?tool=${encodeURIComponent(toolFilter)}`
+          : '/docs/DocsSearch.json';
+
+        const response = await fetch(searchUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        searchData = data.data || [];
+        isSearchDataLoaded = true;
+
+        console.log(
+          `SearchPopover: Loaded ${searchData.length} search items from ${toolFilter ? 'tools/ToolsSearch.json' : 'docs/DocsSearch.json'}${toolFilter ? ` for tool: ${toolFilter}` : ''}`
+        );
+      } catch (error) {
+        console.error('SearchPopover: Failed to load search data:', error);
+        searchData = [];
+      }
+    };
+
+    // ========== SEARCH FUNCTIONALITY ==========
+    const performSearch = (query: string): any[] => {
+      if (!query.trim() || !isSearchDataLoaded) return [];
+
+      const searchTerm = query.toLowerCase().trim();
+      const results = searchData.filter(item => {
+        const searchableText = [
+          item.title,
+          item.description,
+          item.content,
+          ...(item.tags || []),
+          ...(item.categories || []),
+          item.toolName || '',
+        ]
+          .join(' ')
+          .toLowerCase();
+
+        return searchableText.includes(searchTerm);
+      });
+
+      // Sort by relevance (title matches first, then description, then content)
+      return results.sort((a, b) => {
+        const aTitle = a.title.toLowerCase();
+        const bTitle = b.title.toLowerCase();
+        const aDesc = a.description.toLowerCase();
+        const bDesc = b.description.toLowerCase();
+
+        // Title exact match
+        if (aTitle.includes(searchTerm) && !bTitle.includes(searchTerm))
+          return -1;
+        if (!aTitle.includes(searchTerm) && bTitle.includes(searchTerm))
+          return 1;
+
+        // Description match
+        if (aDesc.includes(searchTerm) && !bDesc.includes(searchTerm))
+          return -1;
+        if (!aDesc.includes(searchTerm) && bDesc.includes(searchTerm)) return 1;
+
+        // Alphabetical by title
+        return aTitle.localeCompare(bTitle);
+      });
+    };
+
+    // ========== RENDER SEARCH RESULTS ==========
+    const renderSearchResults = (results: any[]): void => {
+      if (!searchResultsList) return;
+
+      // Clear previous results
+      searchResultsList.innerHTML = '';
+
+      if (results.length === 0) {
+        searchResultsList.style.display = 'none';
+        if (searchNoResults) searchNoResults.style.display = 'flex';
+        return;
+      }
+
+      searchResultsList.style.display = 'block';
+      if (searchNoResults) searchNoResults.style.display = 'none';
+
+      // Render results
+      results.slice(0, 10).forEach(result => {
+        const resultItem = document.createElement('a');
+        resultItem.href = result.url;
+        resultItem.className = 'search-result-item';
+        resultItem.setAttribute('aria-label', `Go to ${result.title}`);
+
+        const typeClass =
+          result.type === 'tool-article'
+            ? 'search-result-tool'
+            : 'search-result-type';
+        const typeText =
+          result.type === 'tool-article' ? result.toolName : result.type;
+
+        resultItem.innerHTML = `
+          <div class="search-result-title">${result.title}</div>
+          <div class="search-result-description">${result.description || ''}</div>
+          <div class="search-result-meta">
+            <span class="${typeClass}">${typeText}</span>
+            ${result.pubDate ? `<span>${new Date(result.pubDate).toLocaleDateString()}</span>` : ''}
+          </div>
+        `;
+
+        searchResultsList.appendChild(resultItem);
+      });
+    };
+
+    // ========== SHOW/HIDE SEARCH STATES ==========
+    const showLoading = (): void => {
+      if (searchLoading) searchLoading.style.display = 'flex';
+      if (searchResultsList) searchResultsList.style.display = 'none';
+      if (searchNoResults) searchNoResults.style.display = 'none';
+    };
+
+    const hideLoading = (): void => {
+      if (searchLoading) searchLoading.style.display = 'none';
+    };
+
+    const clearSearchResults = (): void => {
+      if (searchResultsList) {
+        searchResultsList.innerHTML = '';
+        searchResultsList.style.display = 'none';
+      }
+      if (searchNoResults) searchNoResults.style.display = 'none';
+      if (searchLoading) searchLoading.style.display = 'none';
+    };
+
+    // ========== SEARCH INPUT HANDLING ==========
+    const handleSearchInput = async (event: Event): Promise<void> => {
+      const input = event.target as HTMLInputElement;
+      const query = input.value.trim();
+
+      // Clear previous timeout
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+
+      if (!query) {
+        clearSearchResults();
+        return;
+      }
+
+      // Show loading state
+      showLoading();
+
+      // Load search data if not already loaded
+      await loadSearchData();
+
+      // Debounce search
+      searchTimeout = window.setTimeout(() => {
+        const results = performSearch(query);
+        hideLoading();
+        renderSearchResults(results);
+      }, 300);
+    };
 
     // ========== POPOVER STATE MANAGEMENT ==========
-    const updatePopoverState = (isOpen: boolean) => {
+    const updatePopoverState = (isOpen: boolean): void => {
       isPopoverOpen = isOpen;
       toggleButton.setAttribute('aria-expanded', isOpen.toString());
 
       if (isOpen) {
+        // Load search data when popover opens
+        loadSearchData();
+
         // Focus search input when popover opens (with delay for animation)
         focusTimeout = window.setTimeout(() => {
           searchInput.focus();
         }, 100);
       } else {
+        // Clear search results when popover closes
+        clearSearchResults();
+        searchInput.value = '';
+
         // Clear focus timeout if popover closes
         if (focusTimeout) {
           clearTimeout(focusTimeout);
@@ -383,20 +1130,20 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     };
 
     // ========== EVENT HANDLERS ==========
-    const handlePopoverToggle = (event: Event) => {
+    const handlePopoverToggle = (event: Event): void => {
       const customEvent = event as CustomEvent & { newState: string };
       const isOpen = customEvent.newState === 'open';
       updatePopoverState(isOpen);
     };
 
-    const handleEscapeKey = (event: KeyboardEvent) => {
+    const handleEscapeKey = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && isPopoverOpen) {
         event.preventDefault();
         (searchPopover as any).hidePopover();
       }
     };
 
-    const handleFormSubmit = (event: Event) => {
+    const handleFormSubmit = (event: Event): void => {
       const query = searchInput.value.trim();
       if (!query || query.length < 1) {
         event.preventDefault();
@@ -404,11 +1151,18 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
         return;
       }
 
-      // Optional: Add loading state or analytics here
-      console.log('Search query submitted:', query);
+      // For now, prevent default form submission and handle search client-side
+      event.preventDefault();
+      console.log('SearchPopover: Search query submitted:', query);
     };
 
-    const handleInputValidation = (event: Event) => {
+    const handleClearSearch = (): void => {
+      searchInput.value = '';
+      clearSearchResults();
+      searchInput.focus();
+    };
+
+    const handleInputValidation = (event: Event): void => {
       const input = event.target as HTMLInputElement;
       const isValid = input.value.trim().length >= 1;
 
@@ -428,18 +1182,28 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
 
     // Form events
     searchForm.addEventListener('submit', handleFormSubmit);
+    searchInput.addEventListener('input', handleSearchInput);
     searchInput.addEventListener('input', handleInputValidation);
 
+    // Clear search button
+    if (clearSearchBtn) {
+      clearSearchBtn.addEventListener('click', handleClearSearch);
+    }
+
     // ========== CLEANUP ==========
-    // Cleanup function for component unmount
-    const cleanup = () => {
-      if (focusTimeout) {
-        clearTimeout(focusTimeout);
-      }
+    const cleanup = (): void => {
+      if (focusTimeout) clearTimeout(focusTimeout);
+      if (searchTimeout) clearTimeout(searchTimeout);
+
       searchPopover.removeEventListener('beforetoggle', handlePopoverToggle);
       document.removeEventListener('keydown', handleEscapeKey);
       searchForm.removeEventListener('submit', handleFormSubmit);
+      searchInput.removeEventListener('input', handleSearchInput);
       searchInput.removeEventListener('input', handleInputValidation);
+
+      if (clearSearchBtn) {
+        clearSearchBtn.removeEventListener('click', handleClearSearch);
+      }
     };
 
     // Expose cleanup for potential use

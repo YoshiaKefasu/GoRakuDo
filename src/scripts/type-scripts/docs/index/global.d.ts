@@ -1,11 +1,14 @@
-// 実際のsearch.json.jsの出力構造に基づく正確な型定義
-// search.json.jsの38-113行の実際のデータ構造を完全に反映
-// 実際のファイル構造: src/pages/search.json.js (38-113行)
+// 実際のDocsSearch.json.tsの出力構造に基づく正確な型定義
+// DocsSearch.json.tsの実際のデータ構造を完全に反映
+// 実際のファイル構造: src/pages/docs/DocsSearch.json.ts
 
 declare global {
   interface Window {
     clientLogger: {
-      log: (message: string, level?: "info" | "success" | "warning" | "error") => void;
+      log: (
+        message: string,
+        level?: 'info' | 'success' | 'warning' | 'error'
+      ) => void;
       startGroup: (title: string) => void;
       endGroup: (title: string) => void;
     };
@@ -23,7 +26,7 @@ declare global {
   }
 }
 
-// 実際のsearch.json.jsの出力構造（38-113行）に基づく正確な型定義
+// 実際のDocsSearch.json.tsの出力構造に基づく正確な型定義
 export interface SearchDataItem {
   // Core post data (38-45行)
   slug: string;
