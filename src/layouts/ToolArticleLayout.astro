@@ -5,6 +5,7 @@ import '../styles/tools/[tool]/tool-index.css';
 import Navbar from '../components/public-components/Navbar.astro';
 import UnifiedSEO from '../components/UnifiedSEO.astro';
 import WaveAnimation from '../components/animations/WaveAnimation.astro';
+import ToolIdHeader from '../components/tools/Tool-IdHeader.astro';
 
 export interface Props {
   title: string;
@@ -16,6 +17,14 @@ export interface Props {
   readingTime?: number;
   author?: string;
   tags?: string[];
+  // ToolIdHeader props
+  tool?: string;
+  articleCount?: number;
+  toolTitle?: string;
+  toolDescription?: string;
+  iconPath?: string;
+  formattedToolName?: string;
+  currentYear?: number;
 }
 
 const {
@@ -28,7 +37,16 @@ const {
   readingTime,
   author,
   tags = [],
+  tool,
+  articleCount = 0,
+  toolTitle,
+  toolDescription,
+  iconPath,
+  formattedToolName,
+  currentYear,
 } = Astro.props;
+
+// Simplified data handling - data management moved to page level
 ---
 
 <!doctype html>
@@ -76,13 +94,27 @@ const {
       <!-- Enhanced Main Content Area with Navbar Spacing -->
       <main class='article-main-content' style='padding-top: 5rem;'>
         <div class='article-content-wrapper'>
-          <!-- Article Content with Enhanced Typography -->
-          <article class='article-content-enhanced'>
-            <slot />
-          </article>
+          <!-- Tool ID Header -->
+          {tool && iconPath && formattedToolName && currentYear && (
+            <ToolIdHeader 
+              tool={tool} 
+              articleCount={articleCount}
+              title={toolTitle || ''}
+              description={toolDescription || ''}
+              iconPath={iconPath}
+              formattedToolName={formattedToolName}
+              currentYear={currentYear}
+            />
+          )}
 
-          <!-- Optimized Article Footer with Enhanced Actions -->
-          <footer class='article-footer' role='contentinfo'>
+          <!-- Page Content Slot -->
+          <div class='page-content'>
+            <slot />
+          </div>
+
+          <!-- Optimized Article Footer with Enhanced Actions (only for article pages) -->
+          {!tool && (
+            <footer class='article-footer' role='contentinfo'>
             <div class='article-actions' role='group' aria-label='Article actions'>
               <button 
                 class='action-btn share-btn' 
@@ -156,20 +188,21 @@ const {
               </a>
             </nav>
           </footer>
+          )}
         </div>
       </main>
     </div>
 
     <!-- Optimized Astro-native Scripts -->
-    {showProgressBar && (
+    {showProgressBar && !tool && (
       <script is:inline>
-        // Optimized reading progress functionality
+        // Optimized reading progress functionality (only for article pages)
         (() => {
           const progressBar = document.getElementById('reading-progress');
           if (!progressBar) return;
           
           const updateProgress = () => {
-            const article = document.querySelector('.article-content-enhanced');
+            const article = document.querySelector('.page-content');
             if (!article) return;
             
             const scrollTop = window.pageYOffset;

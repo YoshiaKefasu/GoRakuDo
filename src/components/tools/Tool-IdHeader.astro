@@ -1,0 +1,185 @@
+---
+// Simplified Props Interface - Data managed centrally in ToolArticleLayout
+export interface Props {
+  tool: string;
+  articleCount: number;
+  title: string;
+  description: string;
+  iconPath: string;
+  formattedToolName: string;
+  currentYear: number;
+}
+
+// Destructure props from centralized data management
+const {
+  tool,
+  articleCount,
+  title,
+  description,
+  iconPath,
+  formattedToolName,
+  currentYear,
+} = Astro.props;
+---
+
+<!-- Component HEADER - Based on Wireframe Analysis -->
+<header class='component-header'>
+  <div class='header-container'>
+    <!-- Integrated Content Section with Icon and Text -->
+    <div class='header-content-section'>
+      <!-- Icon Container -->
+      <div class='tool-icon-container'>
+        <img
+          src={iconPath}
+          alt={`${formattedToolName} icon`}
+          class='tool-icon-large'
+          loading='eager'
+        />
+      </div>
+
+      <!-- Text Content -->
+      <div class='header-text-content'>
+        <h1 class='header-title'>
+          {title}
+        </h1>
+        <p class='header-description'>
+          {description}
+        </p>
+        <div class='header-meta'>
+          <span class='meta-item'>
+            <svg
+              class='meta-icon'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+              ></path>
+            </svg>
+            {articleCount} Articles
+          </span>
+          <span class='meta-item'>
+            <svg
+              class='meta-icon'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+            </svg>
+            Free Resources
+          </span>
+          <span class='meta-item'>
+            <svg
+              class='meta-icon'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M13 10V3L4 14h7v7l9-11h-7z'></path>
+            </svg>
+            Updated {currentYear}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Tool Icon Responsive Styles */
+  .tool-icon-large {
+    width: clamp(75px, 7.5vw, 175px);
+    height: clamp(75px, 7.5vw, 175px);
+    object-fit: contain;
+    border-radius: 12px;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    margin: 0;
+  }
+
+  .tool-icon-large:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Mobile First - Base Styles */
+  .header-content-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .tool-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(80px, 8vw, 160px);
+    height: clamp(80px, 8vw, 160px);
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .header-text-content {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Tablet Breakpoint (640px+) */
+  @media (min-width: 640px) {
+    .header-content-section {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .header-text-content {
+      text-align: left;
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  /* Desktop Breakpoint (768px+) */
+  @media (min-width: 768px) {
+    .header-content-section {
+      gap: 2rem;
+    }
+  }
+
+  /* Large Desktop Breakpoint (1024px+) */
+  @media (min-width: 1024px) {
+    .header-content-section {
+      gap: 2.5rem;
+    }
+  }
+
+  /* Container Layout Adjustments */
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+</style>
