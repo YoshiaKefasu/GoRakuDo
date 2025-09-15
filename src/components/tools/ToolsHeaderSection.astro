@@ -122,8 +122,8 @@ const toolsCount = tools.length;
     }
 
     .tools-header-content {
-      /* コンテンツのパディングを調整 - 左右を半分減らす */
-      padding: 1rem 0.75rem 1.5rem 0.75rem !important;
+      /* コンテンツのパディングを調整 - 左右を0に設定 */
+      padding: 1rem 0 1.5rem 0 !important;
     }
   }
 
@@ -132,13 +132,13 @@ const toolsCount = tools.length;
     position: relative;
     text-align: center;
     z-index: 1;
-    padding: 1rem 0.5rem;
+    padding: 1rem 0;
   }
 
   /* デスクトップ用のパディング調整 - メディアクエリの後に配置 */
   @media (min-width: 768px) {
     .tools-header-content {
-      padding: 1rem 0.5rem;
+      padding: 1rem 0;
     }
   }
 

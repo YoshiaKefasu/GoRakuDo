@@ -4,7 +4,7 @@ export interface Props {
   className?: string;
   style?: string;
   // Background Layer Props
-  backgroundLayer?: "normal" | "darker";
+  backgroundLayer?: 'normal' | 'darker';
   // Stars Animation Props
   enableStars?: boolean;
   starsCount?: number;
@@ -18,17 +18,17 @@ export interface Props {
 
 // デフォルト設定の統合
 const defaultConfig = {
-  className: "",
-  style: "",
-  backgroundLayer: "normal",
+  className: '',
+  style: '',
+  backgroundLayer: 'normal',
   enableStars: true,
   starsCount: 8,
   starsOpacity: 0.8,
-  starsAnimationDuration: "3s",
-  starsColor: "oklch(0.7 0.3 296.9)",
+  starsAnimationDuration: '3s',
+  starsColor: 'oklch(0.7 0.3 296.9)',
   starsBrightness: 1.5,
   starsSize: 1.2,
-  starsGlow: true
+  starsGlow: true,
 };
 
 const config = { ...defaultConfig, ...Astro.props };
@@ -46,20 +46,14 @@ const config = { ...defaultConfig, ...Astro.props };
     color: config.starsColor,
     brightness: config.starsBrightness,
     size: config.starsSize,
-    glow: config.starsGlow
+    glow: config.starsGlow,
   })}
 >
-  <canvas
-    id="waveCanvas"
-    class="wave-canvas"
-    aria-hidden="true"
-  />
-  
-    
-    <!-- WCAG 2.1準拠の読みやすさ向上オーバーレイ -->
-    <div class="transparent-layer"></div>
-  </div>
+  <canvas id='waveCanvas' class='wave-canvas' aria-hidden='true'></canvas>
 
+  <!-- WCAG 2.1準拠の読みやすさ向上オーバーレイ -->
+  <div class='transparent-layer'></div>
+</div>
 
 <style>
   .transparent-layer {
@@ -80,10 +74,14 @@ const config = { ...defaultConfig, ...Astro.props };
     position: fixed;
     top: 0;
     left: 0;
-    width: 100svw;
-    height: 100svh;
-    overflow: hidden;
-    z-index: 0;
+    right: 0; /* 四方を固定 */
+    bottom: 0; /* 四方を固定 */
+    width: 100vw;
+    width: 100lvw;
+    height: 100vh;
+    height: 100lvh;
+    overflow: hidden; /* 念のため、はみ出しをクリップ */
+    z-index: -50;
     pointer-events: none;
     mix-blend-mode: multiply;
   }
@@ -94,7 +92,7 @@ const config = { ...defaultConfig, ...Astro.props };
   }
 
   /* Darker background when backgroundLayer="darker" */
-  [data-background-layer="darker"] .transparent-layer {
+  [data-background-layer='darker'] .transparent-layer {
     background: var(--_bg-layer-darker);
   }
 
@@ -102,10 +100,12 @@ const config = { ...defaultConfig, ...Astro.props };
     position: fixed;
     top: 0;
     left: 0;
-    width: 100svw;
-    height: 100svh;
+    right: 0; /* 四方を固定 */
+    bottom: 0; /* 四方を固定 */
+    width: 100vw; /* 明示的にビューポート幅を指定 */
+    height: 100vh; /* 明示的にビューポート高を指定 */
     overflow: hidden;
-    z-index: -10;
+    z-index: -75;
     pointer-events: none;
   }
 
@@ -113,13 +113,15 @@ const config = { ...defaultConfig, ...Astro.props };
     position: fixed;
     top: 0;
     left: 0;
-    width: 100svw;
-    height: 100svh;
+    right: 0; /* 四方を固定 */
+    bottom: 0; /* 四方を固定 */
+    width: 100vw; /* 明示的にビューポート幅を指定 */
+    height: 100vh; /* 明示的にビューポート高を指定 */
+    overflow: hidden;
     background: oklch(0 0 0);
-    z-index: -2;
+    z-index: -60;
     pointer-events: none;
   }
-
 </style>
 
 <script>
@@ -166,16 +168,16 @@ const config = { ...defaultConfig, ...Astro.props };
         color: 'oklch(0.7 0.3 296.9)',
         brightness: 1.5,
         size: 1.2,
-        glow: true
+        glow: true,
       };
     }
 
     init() {
       if (!this.config.enabled) {
-        console.log("🌟 Stars animation disabled via props");
+        console.log('🌟 Stars animation disabled via props');
         return;
       }
-      
+
       this.createContainer();
       this.updateContainerSize();
       this.injectStyles();
@@ -185,26 +187,22 @@ const config = { ...defaultConfig, ...Astro.props };
     }
 
     setupResizeHandler() {
-      // 参考スクリプトのリサイズハンドリング
-      let resizeTimeout: ReturnType<typeof setTimeout>;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          // 既存のアニメーションをキャンセル
-          if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
-          }
-          
-          // コンテナサイズを更新
-          this.updateContainerSize();
-          
-          // 星を再作成
-          this.createStars();
-          
-          // アニメーションを再開
-          this.startAnimation();
-        }, 250);
-      });
+      // ★★★ こちらも大幅に簡略化 ★★★
+      const handleResize = () => {
+        // コンテナの描画境界サイズを更新するだけ。
+        // 星の再生成は不要で、パフォーマンスが劇的に向上します。
+        this.updateContainerSize();
+      };
+
+      // 最初のロード時に一度実行
+      handleResize();
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleResize);
+      } else {
+        window.addEventListener('resize', handleResize);
+      }
+      window.addEventListener('orientationchange', handleResize);
     }
 
     createContainer() {
@@ -212,13 +210,18 @@ const config = { ...defaultConfig, ...Astro.props };
       this.container.id = 'stars-container';
       this.container.className = 'stars-container';
       this.container.setAttribute('aria-hidden', 'true');
+
+      // 初期サイズを設定
+      this.updateContainerSize();
+
       document.body.appendChild(this.container);
     }
 
     updateContainerSize() {
       if (this.container) {
-        this.containerWidth = this.container.offsetWidth || window.innerWidth;
-        this.containerHeight = this.container.offsetHeight || window.innerHeight;
+        // CSSで決まったサイズを読み取るだけ
+        this.containerWidth = this.container.clientWidth;
+        this.containerHeight = this.container.clientHeight;
       } else {
         this.containerWidth = window.innerWidth;
         this.containerHeight = window.innerHeight;
@@ -236,10 +239,14 @@ const config = { ...defaultConfig, ...Astro.props };
           position: fixed;
           top: 0;
           left: 0;
-          width: 100svw;
-          height: 100svh;
+          right: 0;  /* 四方を固定 */
+          bottom: 0; /* 四方を固定 */
+          width: 100vw; /* 明示的にビューポート幅を指定 */
+          height: 100vh; /* 明示的にビューポート高を指定 */
+          overflow: hidden;
           pointer-events: none;
-          z-index: 5;
+          background: transparent;
+          z-index: -45;
         }
         
         .star {
@@ -250,10 +257,14 @@ const config = { ...defaultConfig, ...Astro.props };
           border-radius: 50%;
           opacity: ${this.config.opacity};
           animation: twinkle ${this.config.animationDuration} infinite;
-          ${this.config.glow ? `
+          ${
+            this.config.glow
+              ? `
             box-shadow: 0 0 6px ${this.config.color}, 0 0 12px ${this.config.color};
             filter: brightness(${this.config.brightness}) drop-shadow(0 0 3px ${this.config.color});
-          ` : ''}
+          `
+              : ''
+          }
         }
         
         @keyframes twinkle {
@@ -288,7 +299,7 @@ const config = { ...defaultConfig, ...Astro.props };
       for (let i = 0; i < this.config.count; i++) {
         const starElement = document.createElement('div');
         starElement.className = 'star';
-        
+
         // 参考スクリプトの粒子システムに基づく初期化
         const baseSize = Math.random() * 1.5 + 0.5;
         const star = {
@@ -297,33 +308,35 @@ const config = { ...defaultConfig, ...Astro.props };
           y: Math.random() * this.containerHeight,
           vx: (Math.random() - 0.5) * 0.3, // より遅い速度でスムーズに
           vy: (Math.random() - 0.5) * 0.3,
-          size: baseSize * this.config.size // サイズ倍率を適用
+          size: baseSize * this.config.size, // サイズ倍率を適用
         };
-        
+
         // 星の要素のスタイル設定
         starElement.style.position = 'absolute';
         starElement.style.width = `${star.size}px`;
         starElement.style.height = `${star.size}px`;
         starElement.style.borderRadius = '50%';
         starElement.style.background = this.config.color;
-        starElement.style.opacity = (this.config.opacity * this.config.brightness).toString();
+        starElement.style.opacity = (
+          this.config.opacity * this.config.brightness
+        ).toString();
         starElement.style.pointerEvents = 'none';
         starElement.style.transition = 'opacity 0.3s ease';
-        
+
         // グロー効果の適用
         if (this.config.glow) {
           starElement.style.boxShadow = `0 0 ${star.size * 2}px ${this.config.color}, 0 0 ${star.size * 4}px ${this.config.color}`;
           starElement.style.filter = `brightness(${this.config.brightness}) drop-shadow(0 0 ${star.size}px ${this.config.color})`;
         }
-        
+
         // 初期位置を設定
         starElement.style.left = `${star.x}px`;
         starElement.style.top = `${star.y}px`;
-        
+
         // 個別のアニメーション遅延
         const delay = Math.random() * 4;
         starElement.style.animationDelay = `${delay}s`;
-        
+
         this.container.appendChild(starElement);
         this.stars.push(star);
       }
@@ -336,21 +349,21 @@ const config = { ...defaultConfig, ...Astro.props };
           // 参考スクリプトの粒子システムに基づく更新
           star.x += star.vx;
           star.y += star.vy;
-          
+
           // 画面端でのループ処理（参考スクリプトと同じ）
           if (star.x < -star.size) star.x = this.containerWidth + star.size;
           if (star.x > this.containerWidth + star.size) star.x = -star.size;
           if (star.y < -star.size) star.y = this.containerHeight + star.size;
           if (star.y > this.containerHeight + star.size) star.y = -star.size;
-          
+
           // 位置を更新
           star.element.style.left = `${star.x}px`;
           star.element.style.top = `${star.y}px`;
         });
-        
+
         this.animationId = requestAnimationFrame(animate);
       };
-      
+
       this.animationId = requestAnimationFrame(animate);
     }
 
@@ -358,7 +371,7 @@ const config = { ...defaultConfig, ...Astro.props };
       if (this.animationId) {
         cancelAnimationFrame(this.animationId);
       }
-      
+
       // 星の要素をクリーンアップ
       this.stars.forEach(star => {
         if (star.element && star.element.parentNode) {
@@ -366,7 +379,7 @@ const config = { ...defaultConfig, ...Astro.props };
         }
       });
       this.stars = [];
-      
+
       if (this.container) {
         this.container.remove();
       }
@@ -402,13 +415,13 @@ const config = { ...defaultConfig, ...Astro.props };
     starsAnimation: StarsAnimation | null;
 
     constructor(starsConfig: any = {}) {
-      this.canvas = document.getElementById("waveCanvas") as HTMLCanvasElement;
+      this.canvas = document.getElementById('waveCanvas') as HTMLCanvasElement;
       if (!this.canvas) {
-        console.warn("Wave canvas not found");
+        console.warn('Wave canvas not found');
         return;
       }
 
-      this.ctx = this.canvas.getContext("2d");
+      this.ctx = this.canvas.getContext('2d');
       this.animationId = null;
       this.time = 0;
       this.dimensions = { width: 0, height: 0 };
@@ -416,11 +429,41 @@ const config = { ...defaultConfig, ...Astro.props };
 
       // Wave parameters - 速度を半分に調整
       this.waves = [
-        { amplitude: 60, frequency: 0.008, phase: 0, speed: 0.01, yOffset: 0.7 },      // 0.02 → 0.01
-        { amplitude: 40, frequency: 0.012, phase: Math.PI / 3, speed: 0.0075, yOffset: 0.75 }, // 0.015 → 0.0075
-        { amplitude: 80, frequency: 0.006, phase: Math.PI / 2, speed: 0.0125, yOffset: 0.65 }, // 0.025 → 0.0125
-        { amplitude: 35, frequency: 0.015, phase: Math.PI, speed: 0.009, yOffset: 0.8 },       // 0.018 → 0.009
-        { amplitude: 100, frequency: 0.004, phase: Math.PI * 1.5, speed: 0.015, yOffset: 0.6 } // 0.03 → 0.015
+        {
+          amplitude: 60,
+          frequency: 0.008,
+          phase: 0,
+          speed: 0.01,
+          yOffset: 0.7,
+        }, // 0.02 → 0.01
+        {
+          amplitude: 40,
+          frequency: 0.012,
+          phase: Math.PI / 3,
+          speed: 0.0075,
+          yOffset: 0.75,
+        }, // 0.015 → 0.0075
+        {
+          amplitude: 80,
+          frequency: 0.006,
+          phase: Math.PI / 2,
+          speed: 0.0125,
+          yOffset: 0.65,
+        }, // 0.025 → 0.0125
+        {
+          amplitude: 35,
+          frequency: 0.015,
+          phase: Math.PI,
+          speed: 0.009,
+          yOffset: 0.8,
+        }, // 0.018 → 0.009
+        {
+          amplitude: 100,
+          frequency: 0.004,
+          phase: Math.PI * 1.5,
+          speed: 0.015,
+          yOffset: 0.6,
+        }, // 0.03 → 0.015
       ];
 
       // Particle system for foam - TSX実装と完全に同一
@@ -430,24 +473,48 @@ const config = { ...defaultConfig, ...Astro.props };
     }
 
     init(starsConfig: any = {}) {
-      this.updateDimensions();
-      window.addEventListener('resize', () => this.updateDimensions());
-      
-      // 星のアニメーションを初期化（Propsから設定を渡す）
+      // ★★★ handleResizeを大幅に簡略化 ★★★
+      const handleResize = () => {
+        // CSSが要素のサイズを管理するので、JSは描画解像度を更新するだけ
+        this.updateDimensions();
+      };
+
+      // 最初のロード時に一度実行
+      handleResize();
+
+      // visualViewportのresizeイベントを監視
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleResize);
+      } else {
+        window.addEventListener('resize', handleResize);
+      }
+      window.addEventListener('orientationchange', handleResize);
+
+      // 星のアニメーションを初期化
       this.starsAnimation = new StarsAnimation(starsConfig);
       this.starsAnimation.init();
-      
+
       this.animate();
-      console.log("🌊 Enhanced Wave Animation with Stars initialized");
+      console.log('🌊 Final Wave Animation initialized');
     }
 
     updateDimensions() {
-      this.dimensions = {
-        width: window.innerWidth,
-        height: window.innerHeight
-      };
-      
-      if (this.canvas) {
+      if (!this.canvas) return;
+
+      // ★★★ CSSでリサイズされた後のサイズを読み取る ★★★
+      const newWidth = this.canvas.clientWidth;
+      const newHeight = this.canvas.clientHeight;
+
+      // 解像度が実際に変わった場合のみ更新
+      if (
+        this.dimensions.width !== newWidth ||
+        this.dimensions.height !== newHeight
+      ) {
+        this.dimensions = {
+          width: newWidth,
+          height: newHeight,
+        };
+        // 描画解像度のみを更新（styleはCSSに任せる）
         this.canvas.width = this.dimensions.width;
         this.canvas.height = this.dimensions.height;
       }
@@ -457,19 +524,19 @@ const config = { ...defaultConfig, ...Astro.props };
       this.particles.push({
         x,
         y,
-        vx: (Math.random() - 0.5) * 2,  // 4 → 2 (水平速度を半分に)
+        vx: (Math.random() - 0.5) * 2, // 4 → 2 (水平速度を半分に)
         vy: -Math.random() * 1.5 - 0.5, // 3 → 1.5, 1 → 0.5 (垂直速度を半分に)
         size: Math.random() * 4 + 1,
         life: 1,
-        maxLife: Math.random() * 60 + 30
+        maxLife: Math.random() * 60 + 30,
       });
     }
 
     animate() {
       if (!this.ctx || !this.canvas) return;
-      
+
       this.time += 1;
-      
+
       // Clear canvas with black background - 波の背景を黒色に統一（OKLCH形式）
       this.ctx.fillStyle = 'oklch(0 0 0)';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -477,35 +544,39 @@ const config = { ...defaultConfig, ...Astro.props };
       // Draw wave layers from back to front - TSX実装と完全に同一
       this.waves.forEach((wave, index) => {
         if (!this.ctx || !this.canvas) return;
-        
+
         this.ctx.beginPath();
-        
-        const points: Array<{x: number, y: number}> = [];
-        
+
+        const points: Array<{ x: number; y: number }> = [];
+
         // Calculate wave points
         for (let x = 0; x <= this.canvas.width + 20; x += 10) {
-          const y = this.canvas.height * wave.yOffset + 
-                   wave.amplitude * Math.sin(x * wave.frequency + wave.phase + this.time * wave.speed) +
-                   (Math.sin(x * 0.003 + this.time * 0.01) * 20) +
-                   (Math.cos(x * 0.002 + this.time * 0.008) * 15);
+          const y =
+            this.canvas.height * wave.yOffset +
+            wave.amplitude *
+              Math.sin(
+                x * wave.frequency + wave.phase + this.time * wave.speed
+              ) +
+            Math.sin(x * 0.003 + this.time * 0.01) * 20 +
+            Math.cos(x * 0.002 + this.time * 0.008) * 15;
           points.push({ x, y });
         }
 
         // Create smooth curve through points
         this.ctx.moveTo(points[0].x, points[0].y);
-        
+
         for (let i = 1; i < points.length - 2; i++) {
           const xc = (points[i].x + points[i + 1].x) / 2;
           const yc = (points[i].y + points[i + 1].y) / 2;
           this.ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
         }
-        
+
         // Complete the wave shape
         this.ctx.lineTo(this.canvas.width, this.canvas.height);
         this.ctx.lineTo(0, this.canvas.height);
         this.ctx.closePath();
 
-        const alpha = 0.8 - (index * 0.15);
+        const alpha = 0.8 - index * 0.15;
 
         // 単色塗り（OKLCH色空間）
         this.ctx.fillStyle = `oklch(0.6 0.25 290 / ${alpha.toFixed(3)})`;
@@ -514,9 +585,13 @@ const config = { ...defaultConfig, ...Astro.props };
         // Generate foam particles at wave crests - TSX実装と完全に同一
         if (index === 0 && Math.random() < 0.3) {
           for (let x = 0; x < this.canvas.width; x += 50) {
-            const y = this.canvas.height * wave.yOffset + 
-                     wave.amplitude * Math.sin(x * wave.frequency + wave.phase + this.time * wave.speed);
-            
+            const y =
+              this.canvas.height * wave.yOffset +
+              wave.amplitude *
+                Math.sin(
+                  x * wave.frequency + wave.phase + this.time * wave.speed
+                );
+
             if (Math.sin(x * wave.frequency + this.time * wave.speed) > 0.7) {
               this.createParticle(x + Math.random() * 30 - 15, y);
             }
@@ -527,7 +602,7 @@ const config = { ...defaultConfig, ...Astro.props };
       // Update and draw particles - TSX実装と完全に同一
       for (let i = this.particles.length - 1; i >= 0; i--) {
         const particle = this.particles[i];
-        
+
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.vy += 0.1; // gravity
@@ -539,28 +614,43 @@ const config = { ...defaultConfig, ...Astro.props };
         }
 
         if (!this.ctx) continue;
-        
+
         const alpha = particle.life / particle.maxLife;
         // OKLCH色空間: パーティクルを美しい白紫に
         this.ctx.fillStyle = `oklch(0.627 0.274 296.9 / ${alpha * 0.8})`;
         this.ctx.beginPath();
-        this.ctx.arc(particle.x, particle.y, particle.size * alpha, 0, Math.PI * 2);
+        this.ctx.arc(
+          particle.x,
+          particle.y,
+          particle.size * alpha,
+          0,
+          Math.PI * 2
+        );
         this.ctx.fill();
       }
 
       // Create dramatic wave crests (Kanagawa-style) - TSX実装と完全に同一
       if (!this.ctx || !this.canvas) return;
-      
+
       const mainWave = this.waves[2];
       this.ctx.beginPath();
-      
+
       for (let x = 0; x <= this.canvas.width; x += 5) {
-        const baseY = this.canvas.height * mainWave.yOffset + 
-                     mainWave.amplitude * Math.sin(x * mainWave.frequency + mainWave.phase + this.time * mainWave.speed);
-        
-        const crestHeight = Math.max(0, Math.sin(x * 0.003 + this.time * 0.02) * 40);
+        const baseY =
+          this.canvas.height * mainWave.yOffset +
+          mainWave.amplitude *
+            Math.sin(
+              x * mainWave.frequency +
+                mainWave.phase +
+                this.time * mainWave.speed
+            );
+
+        const crestHeight = Math.max(
+          0,
+          Math.sin(x * 0.003 + this.time * 0.02) * 40
+        );
         const y = baseY - crestHeight;
-        
+
         if (x === 0) {
           this.ctx.moveTo(x, y);
         } else {
@@ -571,7 +661,7 @@ const config = { ...defaultConfig, ...Astro.props };
         if (crestHeight > 20 && Math.random() < 0.1) {
           for (let j = 0; j < 3; j++) {
             this.createParticle(
-              x + Math.random() * 20 - 10, 
+              x + Math.random() * 20 - 10,
               y - Math.random() * 20
             );
           }
@@ -585,13 +675,13 @@ const config = { ...defaultConfig, ...Astro.props };
       if (this.animationId) {
         cancelAnimationFrame(this.animationId);
       }
-      
+
       // 星のアニメーションをクリーンアップ
       if (this.starsAnimation) {
         this.starsAnimation.destroy();
         this.starsAnimation = null;
       }
-      
+
       window.removeEventListener('resize', () => this.updateDimensions());
     }
   }
@@ -603,11 +693,13 @@ const config = { ...defaultConfig, ...Astro.props };
       // データ属性から設定を取得
       const container = document.querySelector('.wave-animation-container');
       if (!container) return;
-      
-      const starsConfig = JSON.parse(container.getAttribute('data-stars-config') || '{}');
-      
+
+      const starsConfig = JSON.parse(
+        container.getAttribute('data-stars-config') || '{}'
+      );
+
       const waveAnimation = new WaveAnimation(starsConfig);
-      
+
       // ページが非表示の時はアニメーションを停止
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
@@ -616,7 +708,7 @@ const config = { ...defaultConfig, ...Astro.props };
           waveAnimation.init(starsConfig);
         }
       });
-      
+
       // Cleanup on page unload
       window.addEventListener('beforeunload', () => {
         if (waveAnimation) {

@@ -138,6 +138,7 @@
   main {
     min-height: 100vh;
     min-height: 100svh; /* Modern viewport units for mobile */
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
     display: flex;
     flex-direction: column;
   }
@@ -655,7 +656,9 @@
 
   /* Main content structure - preserved from legacy */
   .main-content {
+    min-height: 100vh;
     min-height: 100svh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
     position: relative;
     z-index: 1;
   }

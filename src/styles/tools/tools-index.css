@@ -561,12 +561,13 @@ body {
   transform: scale(1.01);
 }
 
-/* Loading state indicators */
+/* Loading state indicators - DISABLED */
 .loading-pulse {
-  animation: loading-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* animation: loading-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
+  opacity: 1;
 }
 
-@keyframes loading-pulse {
+/* @keyframes loading-pulse {
   0%,
   100% {
     opacity: 1;
@@ -574,7 +575,7 @@ body {
   50% {
     opacity: 0.5;
   }
-}
+} */
 
 .loading-spinner {
   animation: loading-spinner 1s linear infinite;
@@ -771,12 +772,13 @@ body {
     transform 0.6s ease-out;
 }
 
-/* Lazy loading pulse animation */
+/* Lazy loading pulse animation - DISABLED */
 [data-lazy]:not(.loaded) {
-  animation: loading-pulse 2s ease-in-out infinite;
+  /* animation: loading-pulse 2s ease-in-out infinite; */
+  opacity: 1;
 }
 
-@keyframes loading-pulse {
+/* @keyframes loading-pulse {
   0%,
   100% {
     opacity: 0.3;
@@ -784,7 +786,7 @@ body {
   50% {
     opacity: 0.7;
   }
-}
+} */
 
 /* Astro Native Scroll Reveal (0 JavaScript) */
 @supports (animation-timeline: view()) {
@@ -847,9 +849,10 @@ body {
   }
 }
 
-/* Enhanced loading states with CSS-only approach */
+/* Enhanced loading states with CSS-only approach - DISABLED */
 .loading-pulse {
-  animation: loading-pulse 2s ease-in-out infinite;
+  /* animation: loading-pulse 2s ease-in-out infinite; */
+  opacity: 1;
 }
 
 .loaded {

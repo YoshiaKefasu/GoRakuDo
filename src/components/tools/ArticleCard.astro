@@ -1,0 +1,593 @@
+---
+export interface Props {
+  article: {
+    slug?: string;
+    id: string;
+    data: {
+      title?: string;
+      description?: string;
+      tags?: string[];
+      publishedDate?: string;
+      image?: string;
+      featuredImage?: string;
+    };
+  };
+  tool: string;
+  index: number;
+}
+
+const { article, tool, index } = Astro.props;
+
+const articleSlug = article.slug || article.id;
+const articleTitle =
+  article.data.title ||
+  `Complete ${tool.charAt(0).toUpperCase() + tool.slice(1)} Guide`;
+const articleDescription =
+  article.data.description ||
+  `Master ${tool} with our comprehensive guide. Learn essential techniques, best practices, and advanced tips to enhance your learning experience and achieve better results.`;
+const articleTags = article.data.tags || [tool, 'guide', 'tutorial'];
+const publishedDate = article.data.publishedDate
+  ? new Date(article.data.publishedDate).toLocaleDateString('id-ID')
+  : new Date().toLocaleDateString('id-ID');
+const formattedToolName = tool.charAt(0).toUpperCase() + tool.slice(1);
+
+// 画像の取得（featuredImage または image の順で確認）
+const articleImage = article.data.featuredImage || article.data.image;
+const hasImage = articleImage && articleImage.trim() !== '';
+
+// リデザイン用の追加データ
+const isNew =
+  new Date(article.data.publishedDate || Date.now()).getTime() >
+  Date.now() - 7 * 24 * 60 * 60 * 1000; // 7日以内
+---
+
+<a
+  href={`/tools/${tool}/${articleSlug}`}
+  class='article-card-modern glassmorphism glassmorphism-card'
+  role='article'
+  aria-label={`Read article: ${articleTitle}`}
+  data-index={index}
+>
+  <!-- カードヘッダー -->
+  <div class='card-header'>
+    <div class='card-meta-group'>
+      <div class='card-date-group'>
+        <span class='card-date'>{publishedDate}</span>
+        {isNew && <span class='new-badge'>NEW</span>}
+      </div>
+    </div>
+  </div>
+
+  <!-- メインコンテンツエリア -->
+  <div class='card-content'>
+    <!-- 画像セクション -->
+    {
+      hasImage && (
+        <div class='card-image-section'>
+          <div class='image-container'>
+            <img
+              src={articleImage}
+              alt={`${articleTitle} - ${formattedToolName} guide`}
+              class='card-image'
+              loading='lazy'
+              decoding='async'
+            />
+            <div class='image-overlay' />
+          </div>
+        </div>
+      )
+    }
+
+    <!-- テキストコンテンツ -->
+    <div class='card-text-content'>
+      <h3 class='card-title'>{articleTitle}</h3>
+      <p class='card-description'>{articleDescription}</p>
+
+      <!-- タグとメタ情報 -->
+      <div class='card-footer'>
+        <div class='card-tags'>
+          {
+            articleTags
+              .slice(0, 3)
+              .map((tag: string) => <span class='card-tag'>#{tag}</span>)
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ホバー時のアクションインジケーター -->
+  <div class='card-action-indicator'>
+    <svg
+      class='arrow-icon'
+      fill='none'
+      stroke='currentColor'
+      viewBox='0 0 24 24'
+    >
+      <path
+        stroke-linecap='round'
+        stroke-linejoin='round'
+        stroke-width='2'
+        d='M17 8l4 4m0 0l-4 4m4-4H3'></path>
+    </svg>
+  </div>
+</a>
+
+<style>
+  /* ========== モダンカードデザイン ========== */
+  .article-card-modern {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    min-height: clamp(280px, 25vw + 200px, 340px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    /* 軽いぼかし効果でTool-IdHeaderと同じレベルに調整 */
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 50%,
+      rgba(255, 255, 255, 0.03) 100%
+    );
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 4px 16px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .article-card-modern:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.04) 50%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-color: rgba(139, 93, 255, 0.2);
+  }
+
+  /* タッチデバイス用のアクティブ状態 */
+  .article-card-modern:active {
+    transform: translateY(-4px) scale(1.01);
+    transition: transform 0.1s ease;
+  }
+
+  /* ========== カードヘッダー ========== */
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    z-index: 2;
+  }
+
+  .card-meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-date-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-date {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+  }
+
+  .new-badge {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ========== メインコンテンツ ========== */
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1rem;
+  }
+
+  .card-image-section {
+    flex: 0 0 auto;
+  }
+
+  .image-container {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(139, 93, 255, 0.1) 0%,
+      rgba(59, 130, 246, 0.05) 50%,
+      rgba(16, 185, 129, 0.05) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .article-card-modern:hover .card-image {
+    transform: scale(1.05);
+  }
+
+  .article-card-modern:hover .image-overlay {
+    opacity: 1;
+  }
+
+  /* ========== テキストコンテンツ ========== */
+  .card-text-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-description {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ========== カードフッター ========== */
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+  }
+
+  .card-tag {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+  }
+
+  /* ========== アクションインジケーター ========== */
+  .card-action-indicator {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    background: rgba(139, 93, 255, 0.2);
+    border: 1px solid rgba(139, 93, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(0.5rem);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .arrow-icon {
+    width: 1rem;
+    height: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .article-card-modern:hover .card-action-indicator {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ========== レスポンシブデザイン ========== */
+
+  /* スマートフォン最適化 (320px - 640px) */
+  @media (max-width: 640px) {
+    .article-card-modern {
+      padding: 1.25rem;
+      min-height: clamp(320px, 40vh, 400px);
+      border-radius: 1.25rem;
+      /* タッチターゲットの最小サイズを確保 */
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .card-header {
+      margin-bottom: 1.25rem;
+    }
+
+    .card-date {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .new-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.75rem;
+      /* タッチターゲットサイズを確保 */
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .card-content {
+      gap: 1.25rem;
+    }
+
+    .image-container {
+      height: 140px;
+      border-radius: 0.875rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      line-height: 1.3;
+      -webkit-line-clamp: 2;
+    }
+
+    .card-description {
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      -webkit-line-clamp: 3;
+    }
+
+    .card-footer {
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      padding: 0.375rem 0.625rem;
+      border-radius: 0.875rem;
+      /* タッチターゲットサイズを確保 */
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .card-action-indicator {
+      width: 2.5rem;
+      height: 2.5rem;
+      top: 1.25rem;
+      right: 1.25rem;
+      /* タッチターゲットサイズを確保 */
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .arrow-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* スマートフォンでのホバー効果を調整 */
+    .article-card-modern:hover {
+      transform: translateY(-4px) scale(1.01);
+    }
+
+    .article-card-modern:active {
+      transform: translateY(-2px) scale(1.005);
+    }
+  }
+
+  /* タブレット (640px - 768px) */
+  @media (min-width: 640px) and (max-width: 768px) {
+    .article-card-modern {
+      padding: 1.75rem;
+      min-height: clamp(300px, 35vh, 380px);
+    }
+
+    .card-title {
+      font-size: 1.3125rem;
+    }
+
+    .card-description {
+      font-size: 0.9375rem;
+    }
+
+    .image-container {
+      height: 150px;
+    }
+  }
+
+  /* デスクトップ (768px+) */
+  @media (min-width: 768px) {
+    .article-card-modern {
+      padding: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.375rem;
+    }
+
+    .image-container {
+      height: 160px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .article-card-modern {
+      /* min-height is now handled by clamp() in base styles */
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+    }
+
+    .card-description {
+      font-size: 1rem;
+    }
+  }
+
+  /* ========== アニメーション ========== */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .article-card-modern {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+  }
+
+  .article-card-modern[data-index='0'] {
+    animation-delay: 0.1s;
+  }
+  .article-card-modern[data-index='1'] {
+    animation-delay: 0.2s;
+  }
+  .article-card-modern[data-index='2'] {
+    animation-delay: 0.3s;
+  }
+  .article-card-modern[data-index='3'] {
+    animation-delay: 0.4s;
+  }
+  .article-card-modern[data-index='4'] {
+    animation-delay: 0.5s;
+  }
+  .article-card-modern[data-index='5'] {
+    animation-delay: 0.6s;
+  }
+
+  /* ========== アクセシビリティ ========== */
+  @media (prefers-reduced-motion: reduce) {
+    .article-card-modern {
+      animation: none;
+      transition: none;
+    }
+
+    .article-card-modern:hover {
+      transform: none;
+    }
+
+    .article-card-modern:active {
+      transform: none;
+    }
+  }
+
+  @media (prefers-contrast: high) {
+    .article-card-modern {
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .card-title {
+      color: rgba(255, 255, 255, 1);
+    }
+
+    .card-description {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .card-tag {
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  /* タッチデバイス用の追加スタイル */
+  @media (hover: none) and (pointer: coarse) {
+    .article-card-modern {
+      /* タッチデバイスではホバー効果を無効化 */
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .article-card-modern:hover {
+      transform: none;
+    }
+
+    .article-card-modern:active {
+      transform: scale(0.98);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.08) 100%
+      );
+    }
+
+    .card-action-indicator {
+      /* タッチデバイスでは常に表示 */
+      opacity: 0.6;
+    }
+  }
+
+  /* フォーカス状態の改善 */
+  .article-card-modern:focus-visible {
+    outline: 2px solid rgba(139, 93, 255, 0.6);
+    outline-offset: 2px;
+  }
+</style>
