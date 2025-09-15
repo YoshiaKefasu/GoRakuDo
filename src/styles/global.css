@@ -16,6 +16,11 @@
   --clr-gold-light: oklch(0.95 0.08 85);
   --clr-gold-dark: oklch(0.75 0.12 85);
 
+  /* Fallback colors for immediate rendering */
+  --clr-background-fallback: #0a0a0a;
+  --clr-text-primary-fallback: #ffffff;
+  --clr-accent-fallback: #8b5dff;
+
   /* ===== LEGACY COLOR MAPPING - COMPATIBILITY LAYER ===== */
   /* Legacy color mapping converted to OKLCH system */
   --color-accent-dark: oklch(0.6 0.25 280); /* Converted to OKLCH */
@@ -58,10 +63,19 @@
   --font-jp: 'Yuji Syuku', serif;
   --font-cursive: 'Cedarville Cursive', cursive;
 
-  /* Font family for legacy compatibility */
+  /* Font family for legacy compatibility with fallbacks */
   --font-family-base:
-    'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui,
+    'Inter', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui,
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Font family variables with immediate fallbacks (overriding previous definitions) */
+  --font-primary:
+    'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-jp:
+    'Yuji Syuku', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', serif;
+  --font-serif: 'Lora', 'Times New Roman', Times, serif;
+  --font-cursive: 'Cedarville Cursive', cursive;
 
   /* ===== SPACING & BORDERS ===== */
   --section-padding-y: clamp(80px, 10vw, 120px);
@@ -100,36 +114,24 @@
   html {
     /* REASONING: Legacy used 16px, keeping it for compatibility but with modern optimizations */
     font-size: 1rem; /* Base font size (Respecting the user's font size preference) for REM calculations */
-    scroll-behavior: smooth;
     font-display: swap; /* Prevent layout shift during font loading */
-    scrollbar-gutter: stable; /* Prevent content shifting when scrollbar appears */
+    scroll-behavior: smooth !important;
+    scrollbar-gutter: stable !important; /* Prevent content shifting when scrollbar appears */
+    text-rendering: optimizeSpeed !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
   }
 
   body {
-    /* REASONING: Preserving legacy font-family and base styles for compatibility */
-    font-family:
-      'Noto Sans JP',
-      'Hiragino Sans',
-      'Yu Gothic',
-      'Meiryo',
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      Roboto,
-      sans-serif;
-    color: var(--clr-text-primary);
+    /* REASONING: Optimized font stack with Inter as primary to prevent layout shift */
+    font-family: var(--font-primary);
+    color: var(--clr-text-primary, var(--clr-text-primary-fallback));
+    background-color: var(--clr-background, var(--clr-background-fallback));
     font-size: 1rem; /* 16px base - matches legacy */
     font-weight: 400;
     line-height: 1.5; /* Preserved from legacy */
     letter-spacing: -0.01em; /* Slightly tighter for modern feel */
     flex-direction: column;
-
-    /* Performance optimizations - enhanced from legacy */
-    text-rendering: optimizeLegibility !important; /* Changed from optimizeSpeed for better quality */
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
-    overflow-x: hidden !important;
   }
 
   /* REASONING: Preserving legacy layout structure */
@@ -718,13 +720,35 @@
     color: var(--color-text-primary);
   }
 
-  /* Loading states - preserved from legacy */
+  /* Loading states - optimized to prevent layout shift */
   .loading {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
+    /* Prevent layout shift by maintaining minimum height */
+    min-height: 400px;
     transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+
+  /* Loaded state - smooth reveal */
+  .loading.loaded {
+    opacity: 1;
+    transform: translateY(0);
+    min-height: auto;
+  }
+
+  /* Section-specific loading states with proper height allocation */
+  .mission-section.loading {
+    min-height: 500px;
+  }
+
+  .features-section.loading {
+    min-height: 600px;
+  }
+
+  .docs-preview-section.loading {
+    min-height: 400px;
   }
 
   .loaded {

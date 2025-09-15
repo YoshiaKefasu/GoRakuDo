@@ -3,10 +3,11 @@
 
 /*
 ================================================================================
---- GLOBAL HOMEPAGE BODY & ACCESSIBILITY STYLES ---
+--- OPTIMIZED HOMEPAGE STYLES ---
 ================================================================================
 */
 
+/* ===== GLOBAL STYLES ===== */
 body {
   font-family: var(--font-primary);
   background: var(--clr-background);
@@ -20,16 +21,7 @@ body.modal-open {
   overflow: hidden;
 }
 
-/* Mobile First Approach */
-@apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
-
-/* Typography Scaling */
-@apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
-
-/* Grid Responsive */
-@apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
-
-/* Accessibility - Focus indicators for keyboard navigation */
+/* ===== ACCESSIBILITY ===== */
 :focus-visible {
   outline: 3px solid var(--clr-accent);
   outline-offset: 4px;
@@ -40,12 +32,7 @@ body.modal-open {
   outline-color: var(--clr-accent-dark);
 }
 
-/*
-================================================================================
---- GRADIENT TEXT EFFECTS - CRITICAL STYLING ---
-================================================================================
-*/
-
+/* ===== GRADIENT TEXT EFFECTS ===== */
 .white-gradient-text {
   display: block;
   background: linear-gradient(
@@ -59,12 +46,7 @@ body.modal-open {
   color: var(--clr-text-primary); /* Fallback */
 }
 
-/*
-================================================================================
---- VIEW TRANSITIONS API SUPPORT ---
-================================================================================
-*/
-
+/* ===== OPTIMIZED ANIMATIONS ===== */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -96,7 +78,6 @@ body.modal-open {
   }
 }
 
-/* Buttery smooth floating animations with varied patterns */
 @keyframes buttery-wave-float {
   0%,
   100% {
@@ -117,7 +98,6 @@ body.modal-open {
   }
 }
 
-/* Homepage-specific star twinkle animation */
 @keyframes twinkle {
   0%,
   100% {
@@ -142,7 +122,6 @@ body.modal-open {
   }
 }
 
-/* Homepage floating animations */
 @keyframes float {
   0%,
   100% {
@@ -182,186 +161,317 @@ body.modal-open {
   }
 }
 
-/*
-================================================================================
---- HERO COMPONENT STYLES (hero.astro) ---
-================================================================================
-*/
-
-/* Hero-specific transitions */
-::view-transition-old(hero-content),
-::view-transition-new(hero-content) {
-  animation-duration: 0.4s;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+/* ===== SECTION STYLES ===== */
+.section-base {
+  padding: 3rem 1rem;
 }
 
-::view-transition-old(hero-title),
-::view-transition-new(hero-title) {
-  animation-duration: 0.35s;
-  animation-timing-function: ease-out;
+@media (min-width: 640px) {
+  .section-base {
+    padding: 4rem 1.5rem;
+  }
 }
 
-::view-transition-old(hero-buttons),
-::view-transition-new(hero-buttons) {
-  animation-duration: 0.3s;
-  animation-delay: 0.1s;
+@media (min-width: 768px) {
+  .section-base {
+    padding: 5rem 2rem;
+  }
 }
 
-/*
-================================================================================
---- SLIDESHOW COMPONENT STYLES (Slideshow/ImageSlideshow.astro) ---
-================================================================================
-*/
-
-/* Slideshow section transitions */
-::view-transition-old(slideshow-section),
-::view-transition-new(slideshow-section) {
-  animation-duration: 0.4s;
-  animation-timing-function: ease-in-out;
+@media (min-width: 1024px) {
+  .section-base {
+    padding: 6rem 3rem;
+  }
 }
 
-/*
-================================================================================
---- MISSION SECTION COMPONENT STYLES (MissionSection.astro) ---
-================================================================================
-*/
+@media (min-width: 1280px) {
+  .section-base {
+    padding: 8rem 4rem;
+  }
+}
 
-.mission-section,
+.section-container {
+  max-width: 72rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-bottom: 4rem;
+}
+
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-title {
+    font-size: 3.75rem;
+  }
+}
+
+.section-text {
+  text-align: justify;
+  margin-bottom: 4rem;
+}
+
+.section-text p {
+  color: var(--clr-text-secondary);
+  line-height: 1.625;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .section-text p {
+    font-size: 1.125rem;
+  }
+}
+
+/* ===== MISSION SECTION ===== */
+.mission-section {
+  padding: 3rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .mission-section {
+    padding: 4rem 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .mission-section {
+    padding: 5rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mission-section {
+    padding: 6rem 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .mission-section {
+    padding: 8rem 4rem;
+  }
+}
+
 .mission-container {
-  @apply px-2.5 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
-}
-
-.mission-container {
-  @apply mx-auto text-center;
+  max-width: 72rem;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .mission-title {
-  @apply text-4xl sm:text-5xl lg:text-6xl font-semibold mb-16;
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-bottom: 4rem;
+}
+
+@media (min-width: 640px) {
+  .mission-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mission-title {
+    font-size: 3.75rem;
+  }
 }
 
 .mission-text {
-  @apply text-justify mb-16;
+  text-align: justify;
+  margin-bottom: 4rem;
 }
 
 .mission-text p {
   color: var(--clr-text-secondary);
-  @apply sm:text-lg leading-relaxed mb-6;
+  line-height: 1.625;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .mission-text p {
+    font-size: 1.125rem;
+  }
 }
 
 .mission-cta {
-  @apply text-center;
+  text-align: center;
 }
 
-/* Mission section transitions */
-::view-transition-old(mission-section),
-::view-transition-new(mission-section) {
-  animation-duration: 0.35s;
-  animation-timing-function: ease-out;
-}
-
-::view-transition-old(mission-title),
-::view-transition-new(mission-title) {
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-}
-
-/*
-================================================================================
---- FEATURES SECTION COMPONENT STYLES (FeaturesSection.astro & FeatureCard.astro) ---
-================================================================================
-*/
-
+/* ===== FEATURES SECTION ===== */
 .features-section {
-  @apply px-10 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
+  padding: 3rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .features-section {
+    padding: 4rem 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .features-section {
+    padding: 5rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .features-section {
+    padding: 6rem 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .features-section {
+    padding: 8rem 4rem;
+  }
 }
 
 .features-container {
-  @apply max-w-6xl mx-auto text-center;
+  max-width: 72rem;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .features-title {
-  @apply text-4xl sm:text-5xl lg:text-6xl font-semibold mb-20;
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-bottom: 5rem;
+}
+
+@media (min-width: 640px) {
+  .features-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .features-title {
+    font-size: 3.75rem;
+  }
 }
 
 .features-grid {
-  @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .feature-card {
   background: var(--clr-accent-glow-faint);
   border: 1px solid var(--clr-accent-glow-medium);
   border-radius: var(--border-radius-card);
-  @apply p-8 text-center;
+  padding: 2rem;
+  text-align: center;
 }
 
 .feature-icon {
-  @apply text-5xl md:text-6xl mb-6;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .feature-icon {
+    font-size: 3.75rem;
+  }
 }
 
 .feature-card h3 {
-  @apply text-xl md:text-2xl font-semibold mb-4;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
   color: var(--clr-text-primary);
+}
+
+@media (min-width: 768px) {
+  .feature-card h3 {
+    font-size: 1.5rem;
+  }
 }
 
 .feature-card p {
   color: var(--clr-text-muted);
-  @apply text-gray-400 leading-relaxed text-sm md:text-base;
+  color: #9ca3af;
+  line-height: 1.625;
+  font-size: 0.875rem;
 }
 
-/* Features section transitions */
-::view-transition-old(features-section),
-::view-transition-new(features-section) {
-  animation-duration: 0.4s;
-  animation-timing-function: ease-in-out;
+@media (min-width: 768px) {
+  .feature-card p {
+    font-size: 1rem;
+  }
 }
 
-::view-transition-old(features-title),
-::view-transition-new(features-title) {
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-}
-
-/* Feature cards staggered animation */
-::view-transition-old(feature-card-1),
-::view-transition-new(feature-card-1) {
-  animation-duration: 0.3s;
-  animation-delay: 0s;
-}
-
-::view-transition-old(feature-card-2),
-::view-transition-new(feature-card-2) {
-  animation-duration: 0.3s;
-  animation-delay: 0.05s;
-}
-
-::view-transition-old(feature-card-3),
-::view-transition-new(feature-card-3) {
-  animation-duration: 0.3s;
-  animation-delay: 0.1s;
-}
-
-::view-transition-old(feature-card-4),
-::view-transition-new(feature-card-4) {
-  animation-duration: 0.3s;
-  animation-delay: 0.15s;
-}
-
-/*
-================================================================================
---- DOCUMENTATION PREVIEW SECTION COMPONENT STYLES (DocumentationPreviewSection.astro) ---
-================================================================================
-*/
-
+/* ===== DOCS PREVIEW SECTION ===== */
 .docs-preview-section {
-  @apply px-10 sm:px-16 lg:px-20 xl:px-32 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
+  padding: 3rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .docs-preview-section {
+    padding: 4rem 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .docs-preview-section {
+    padding: 5rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .docs-preview-section {
+    padding: 6rem 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .docs-preview-section {
+    padding: 8rem 4rem;
+  }
 }
 
 .docs-container {
-  @apply max-w-4xl mx-auto text-center;
+  max-width: 56rem;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .docs-title {
-  @apply text-4xl sm:text-5xl lg:text-6xl font-semibold mb-8;
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .docs-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .docs-title {
+    font-size: 3.75rem;
+  }
 }
 
 .docs-description {
@@ -374,44 +484,24 @@ body.modal-open {
 }
 
 .docs-cta {
-  @apply text-center;
+  text-align: center;
 }
 
-/* Docs section transitions */
-::view-transition-old(docs-section),
-::view-transition-new(docs-section) {
-  animation-duration: 0.35s;
-  animation-timing-function: ease-out;
-}
-
-::view-transition-old(docs-title),
-::view-transition-new(docs-title) {
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-}
-
-::view-transition-old(docs-button),
-::view-transition-new(docs-button) {
-  animation-duration: 0.25s;
-  animation-timing-function: ease-out;
-}
-
-/*
-================================================================================
---- DOCUMENTATION PREVIEW SECTION COMPONENT STYLES (DocumentationPreviewSection.astro) ---
-================================================================================
-*/
-
-/*
-================================================================================
---- HOMEPAGE BUTTONS & CTA STYLES ---
-================================================================================
-*/
-
+/* ===== BUTTONS & CTA ===== */
 .cta-button,
 .docs-button {
   border-radius: var(--border-radius-pill);
-  @apply inline-flex items-center justify-center gap-3 px-6 py-4 min-h-[44px] border-none text-lg font-semibold cursor-pointer transition-all duration-300;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  min-height: 44px;
+  border: none;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 .cta-button {
@@ -439,19 +529,7 @@ body.modal-open {
   box-shadow: 0 10px 30px var(--clr-accent-glow-strong);
 }
 
-/* Button transitions */
-::view-transition-old(cta-button),
-::view-transition-new(cta-button) {
-  animation-duration: 0.25s;
-  animation-timing-function: ease-out;
-}
-
-/*
-================================================================================
---- MODAL COMPONENT STYLES ---
-================================================================================
-*/
-
+/* ===== MODAL COMPONENT ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -536,35 +614,7 @@ body.modal-open {
   margin-bottom: 1.2em;
 }
 
-.modal-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 1rem 1rem;
-  position: relative;
-}
-
-.modal-list li {
-  position: relative;
-  padding-left: 1.5rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.6;
-  font-family: var(--font-primary);
-  color: var(--clr-paper-text-primary);
-  font-size: 1rem;
-}
-
-.modal-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.75rem;
-  width: 0.375rem;
-  height: 0.375rem;
-  background-color: var(--clr-accent);
-  border-radius: 50%;
-  transform: translateY(-50%);
-}
-
+.modal-list,
 .member-list {
   list-style: none;
   padding: 0;
@@ -572,6 +622,7 @@ body.modal-open {
   position: relative;
 }
 
+.modal-list li,
 .member-list li {
   position: relative;
   padding-left: 1.5rem;
@@ -582,6 +633,7 @@ body.modal-open {
   font-size: 1rem;
 }
 
+.modal-list li::before,
 .member-list li::before {
   content: '';
   position: absolute;
@@ -673,121 +725,103 @@ body.modal-open {
   margin: 0;
 }
 
-/*
-================================================================================
---- SECTION BACKGROUND EFFECTS (FEATHERED BACKGROUNDS) ---
-================================================================================
-*/
-
+/* ===== MOBILE-FRIENDLY SECTION BACKGROUNDS ===== */
 .main-content > section {
-  position: relative;
-  background: transparent !important;
+  background: transparent;
   z-index: 20;
 }
 
-.main-content > section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 25%,
-    black 75%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 25%,
-    black 75%,
-    transparent 100%
-  );
-}
-
-.mission-section::before {
-  max-width: 100% !important;
-  padding: 0 !important;
+/* Mission section - シンプルな背景グラデーション */
+.mission-section {
   background:
     linear-gradient(
       180deg,
-      rgba(10, 10, 10, 0.08) 0%,
-      rgba(10, 10, 10, 0.3) 30%,
-      rgba(10, 10, 10, 0.6) 70%,
-      rgba(10, 10, 10, 0.7) 100%
+      rgba(10, 10, 10, 0.05) 0%,
+      rgba(10, 10, 10, 0.15) 50%,
+      rgba(10, 10, 10, 0.25) 100%
     ),
     radial-gradient(
       ellipse at 50% 80%,
-      rgba(139, 93, 255, 0.03) 0%,
-      transparent 50%
-    );
-  transition:
-    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: buttery-wave-float 10s ease-in-out infinite;
-}
-
-.features-section::before {
-  max-width: 100% !important;
-  padding: 0 !important;
-  background:
-    radial-gradient(
-      ellipse at 50% 100%,
-      rgba(139, 93, 255, 0.12) 0%,
-      rgba(139, 93, 255, 0.08) 25%,
-      rgba(139, 93, 255, 0.04) 50%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse at 30% 90%,
-      rgba(139, 93, 255, 0.06) 0%,
-      rgba(139, 93, 255, 0.03) 40%,
+      rgba(139, 93, 255, 0.02) 0%,
       transparent 60%
-    ),
-    radial-gradient(
-      ellipse at 70% 95%,
-      rgba(139, 93, 255, 0.04) 0%,
-      rgba(139, 93, 255, 0.02) 30%,
-      transparent 50%
     );
-  transition:
-    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: buttery-wave-float 8s ease-in-out infinite;
+  transition: background 0.6s ease-out;
 }
 
-.docs-preview-section::before {
-  max-width: 100% !important;
-  padding: 0 !important;
-  background:
-    linear-gradient(
+/* Features section - 軽量な背景エフェクト */
+.features-section {
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(139, 93, 255, 0.08) 0%,
+    rgba(139, 93, 255, 0.04) 40%,
+    transparent 70%
+  );
+  transition: background 0.6s ease-out;
+}
+
+/* Docs section - ミニマルな背景 */
+.docs-preview-section {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.3) 0%,
+    rgba(10, 10, 10, 0.1) 50%,
+    rgba(10, 10, 10, 0.05) 100%
+  );
+  transition: background 0.6s ease-out;
+}
+
+/* モバイルでの最適化 - デフォルトで軽微なエフェクト */
+.mission-section {
+  background: rgba(139, 93, 255, 0.01);
+}
+
+.features-section {
+  background: rgba(139, 93, 255, 0.02);
+}
+
+.docs-preview-section {
+  background: rgba(10, 10, 10, 0.02);
+}
+
+/* タブレット以上で背景エフェクトを有効化 */
+@media (min-width: 768px) {
+  .mission-section {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.05) 0%,
+        rgba(10, 10, 10, 0.15) 50%,
+        rgba(10, 10, 10, 0.25) 100%
+      ),
+      radial-gradient(
+        ellipse at 50% 80%,
+        rgba(139, 93, 255, 0.02) 0%,
+        transparent 60%
+      );
+  }
+
+  .features-section {
+    background: radial-gradient(
+      ellipse at 50% 100%,
+      rgba(139, 93, 255, 0.08) 0%,
+      rgba(139, 93, 255, 0.04) 40%,
+      transparent 70%
+    );
+  }
+
+  .docs-preview-section {
+    background: linear-gradient(
       180deg,
-      rgba(10, 10, 10, 0.7) 0%,
-      rgba(10, 10, 10, 0.5) 30%,
-      rgba(10, 10, 10, 0.2) 70%,
-      rgba(10, 10, 10, 0.1) 100%
-    ),
-    radial-gradient(
-      ellipse at 50% 20%,
-      rgba(139, 93, 255, 0.04) 0%,
-      transparent 50%
+      rgba(10, 10, 10, 0.3) 0%,
+      rgba(10, 10, 10, 0.1) 50%,
+      rgba(10, 10, 10, 0.05) 100%
     );
-  transition:
-    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: buttery-wave-float 12s ease-in-out infinite;
+  }
 }
 
-/*
-================================================================================
---- VIEW TRANSITIONS API SUPPORT ---
-================================================================================
-*/
-
+/* ===== OPTIMIZED VIEW TRANSITIONS API ===== */
 @supports (view-transition-name: none) {
-  /* Smooth transitions for main content */
+  /* Main content transitions */
   ::view-transition-old(main-content),
   ::view-transition-new(main-content) {
     animation-duration: 0.3s;
@@ -796,54 +830,100 @@ body.modal-open {
 
   /* Hero section transitions */
   ::view-transition-old(hero-section),
-  ::view-transition-new(hero-section) {
+  ::view-transition-new(hero-section),
+  ::view-transition-old(hero-content),
+  ::view-transition-new(hero-content) {
     animation-duration: 0.4s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
-}
 
-/*
-================================================================================
---- RESPONSIVE DESIGN & MEDIA QUERIES ---
-================================================================================
-*/
+  ::view-transition-old(hero-title),
+  ::view-transition-new(hero-title) {
+    animation-duration: 0.35s;
+    animation-timing-function: ease-out;
+  }
 
-/* Desktop modal scroll override */
-@media (min-width: 1024px) {
-  .modal-content {
-    max-height: none;
-    overflow-y: visible;
+  ::view-transition-old(hero-buttons),
+  ::view-transition-new(hero-buttons) {
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+  }
+
+  /* Section transitions */
+  ::view-transition-old(mission-section),
+  ::view-transition-new(mission-section),
+  ::view-transition-old(features-section),
+  ::view-transition-new(features-section),
+  ::view-transition-old(docs-section),
+  ::view-transition-new(docs-section) {
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+  }
+
+  /* Title transitions */
+  ::view-transition-old(mission-title),
+  ::view-transition-new(mission-title),
+  ::view-transition-old(features-title),
+  ::view-transition-new(features-title),
+  ::view-transition-old(docs-title),
+  ::view-transition-new(docs-title) {
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+  }
+
+  /* Feature card transitions with staggered delays */
+  ::view-transition-old(feature-card-1),
+  ::view-transition-new(feature-card-1) {
+    animation-duration: 0.3s;
+    animation-delay: 0s;
+  }
+  ::view-transition-old(feature-card-2),
+  ::view-transition-new(feature-card-2) {
+    animation-duration: 0.3s;
+    animation-delay: 0.05s;
+  }
+  ::view-transition-old(feature-card-3),
+  ::view-transition-new(feature-card-3) {
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+  }
+  ::view-transition-old(feature-card-4),
+  ::view-transition-new(feature-card-4) {
+    animation-duration: 0.3s;
+    animation-delay: 0.15s;
+  }
+
+  /* Button transitions */
+  ::view-transition-old(cta-button),
+  ::view-transition-new(cta-button),
+  ::view-transition-old(docs-button),
+  ::view-transition-new(docs-button) {
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
   }
 }
 
-/* Tablet styles */
-@media (max-width: 768px) {
-  .hero-buttons {
-    @apply flex-col items-stretch max-w-sm mx-auto;
-  }
+/* ===== OPTIMIZED STANDARD BREAKPOINTS ===== */
+/* Mobile First - Base styles (320px+) */
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 24rem;
+  margin: 0 auto;
+}
 
-  .primary-button,
-  .secondary-button {
-    @apply justify-center;
-  }
+.primary-button,
+.secondary-button {
+  justify-content: center;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+}
 
-  .mission-section,
-  .features-section,
-  .docs-preview-section {
-    @apply px-4;
-  }
-
-  .modal-overlay {
-    @apply items-start;
-  }
-
-  .modal-content {
-    @apply p-8;
-  }
-
-  .modal-japanese-title {
-    @apply text-4xl;
-  }
+.cta-button,
+.docs-button {
+  font-size: 1rem;
+  padding: 1rem 1.5rem;
 }
 
 .mission-section,
@@ -851,91 +931,202 @@ body.modal-open {
 .docs-preview-section,
 .tools-hero,
 .tools-section {
-  @apply [@media(max-width:768px)]:px-[20px];
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-/* Mobile styles */
-@media (max-width: 480px) {
+.modal-overlay {
+  align-items: flex-start;
+}
+
+.modal-content {
+  margin: 1rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.modal-japanese-title {
+  font-size: 1.875rem;
+}
+
+.modal-body {
+  font-size: 1rem;
+}
+
+.signature-name {
+  font-size: 1.25rem;
+}
+
+.modal-signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.signature-text {
+  text-align: center;
+}
+
+/* Small Mobile (640px+) */
+@media (min-width: 640px) {
   .primary-button,
   .secondary-button {
-    @apply text-sm px-6 py-3;
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
   }
 
   .cta-button,
   .docs-button {
-    @apply text-base px-6 py-4;
+    font-size: 1.125rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .mission-section,
+  .features-section,
+  .docs-preview-section,
+  .tools-hero,
+  .tools-section {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   .modal-content {
-    @apply p-6 max-h-[90%];
+    margin: 2rem auto;
+    padding: 2rem;
+    max-height: 90%;
   }
 
   .modal-japanese-title {
-    @apply text-3xl;
+    font-size: 2.25rem;
   }
 
   .modal-body {
-    @apply text-base;
+    font-size: 1.1rem;
   }
 
   .signature-name {
-    @apply text-xl;
+    font-size: 1.9rem;
   }
 
   .modal-signature {
-    @apply flex-col items-center gap-5 text-center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: left;
   }
 
   .signature-text {
-    @apply text-center;
+    text-align: right;
   }
 }
 
-@media (max-width: 640px) {
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .hero-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: none;
+    margin: 0;
+  }
+
+  .primary-button,
+  .secondary-button {
+    justify-content: center;
+  }
+
+  .mission-section,
+  .features-section,
+  .docs-preview-section,
+  .tools-hero,
+  .tools-section {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .modal-overlay {
+    align-items: center;
+  }
+
   .modal-content {
-    @apply mx-4 my-8 max-h-[90vh] overflow-y-auto;
+    max-height: 95vh;
   }
 }
 
-/*
-================================================================================
---- FALLBACK ANIMATIONS FOR NON-VIEW TRANSITIONS BROWSERS ---
-================================================================================
-*/
-
-@supports not (view-transition-name: none) {
-  .main-content {
-    animation: fade-in 0.3s ease-in-out;
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .mission-section,
+  .features-section,
+  .docs-preview-section,
+  .tools-hero,
+  .tools-section {
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 
+  .modal-content {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
+/* Large Desktop (1280px+) */
+@media (min-width: 1280px) {
+  .mission-section,
+  .features-section,
+  .docs-preview-section,
+  .tools-hero,
+  .tools-section {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* ===== OPTIMIZED FALLBACK ANIMATIONS ===== */
+@supports not (view-transition-name: none) {
+  /* Main content animations */
+  .main-content,
+  #hero-content {
+    animation: fade-in 0.6s ease-out;
+  }
+
+  /* Hero button animations */
+  .hero-buttons {
+    animation: slide-from-bottom 0.6s ease-out 0.3s both;
+  }
+
+  /* Feature card staggered animations */
   .feature-card {
-    animation: slide-from-bottom 0.4s ease-out;
+    animation: slide-from-bottom 0.6s ease-out;
   }
 
   .feature-card:nth-child(1) {
     animation-delay: 0s;
   }
   .feature-card:nth-child(2) {
-    animation-delay: 0.05s;
-  }
-  .feature-card:nth-child(3) {
     animation-delay: 0.1s;
   }
+  .feature-card:nth-child(3) {
+    animation-delay: 0.2s;
+  }
   .feature-card:nth-child(4) {
-    animation-delay: 0.15s;
+    animation-delay: 0.3s;
   }
 
+  /* Button animations */
   .cta-button,
   .docs-button {
-    animation: slide-from-right 0.25s ease-out;
+    animation: slide-from-right 0.5s ease-out;
   }
 
-  /* Hero fallback animations */
-  #hero-content {
-    animation: fade-in 0.8s ease-out;
-  }
-
-  .hero-buttons {
-    animation: slide-from-bottom 0.6s ease-out 0.2s both;
+  /* Section loading animations */
+  .mission-section.loaded,
+  .features-section.loaded,
+  .docs-preview-section.loaded {
+    animation: slide-from-bottom 0.6s ease-out;
   }
 }

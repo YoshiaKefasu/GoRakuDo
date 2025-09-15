@@ -71,7 +71,7 @@ const config = { ...defaultConfig, ...Astro.props };
       oklch(0.01 0.01 280 / 0.9) 100%
     );
 
-    position: fixed;
+    position: fixed !important;
     top: 0;
     left: 0;
     right: 0; /* 四方を固定 */
@@ -97,28 +97,29 @@ const config = { ...defaultConfig, ...Astro.props };
   }
 
   .wave-animation-container {
-    position: fixed;
+    position: fixed !important;
     top: 0;
     left: 0;
     right: 0; /* 四方を固定 */
     bottom: 0; /* 四方を固定 */
     width: 100vw; /* 明示的にビューポート幅を指定 */
     height: 100vh; /* 明示的にビューポート高を指定 */
+    height: 100lvh; /* 明示的にビューポート高を指定 */
     overflow: hidden;
     z-index: -75;
     pointer-events: none;
   }
 
   .wave-canvas {
-    position: fixed;
+    position: fixed !important;
     top: 0;
     left: 0;
     right: 0; /* 四方を固定 */
     bottom: 0; /* 四方を固定 */
     width: 100vw; /* 明示的にビューポート幅を指定 */
     height: 100vh; /* 明示的にビューポート高を指定 */
+    height: 100lvh; /* 明示的にビューポート高を指定 */
     overflow: hidden;
-    background: oklch(0 0 0);
     z-index: -60;
     pointer-events: none;
   }
@@ -243,6 +244,7 @@ const config = { ...defaultConfig, ...Astro.props };
           bottom: 0; /* 四方を固定 */
           width: 100vw; /* 明示的にビューポート幅を指定 */
           height: 100vh; /* 明示的にビューポート高を指定 */
+          height: 100lvh; /* 明示的にビューポート高を指定 */
           overflow: hidden;
           pointer-events: none;
           background: transparent;

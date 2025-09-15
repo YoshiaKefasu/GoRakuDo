@@ -133,11 +133,14 @@ const jsonLD = {
 <link rel="icon" type="image/svg+xml" href={defaultConfig.favicon} />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-<!-- Font Preload - 日本語フォントと絵文字の完全対応 -->
+<!-- Font Preload - 日本語フォントと絵文字の完全対応 (Layout Shift Prevention) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Noto+Emoji:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Noto+Emoji:wght@300;400;500;600;700&display=swap" /></noscript>
+<!-- Critical font loading - synchronous to prevent layout shift -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Noto+Emoji:wght@300;400;500;600;700&display=swap" />
+<!-- Preload individual font files for faster loading -->
+<link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="https://fonts.gstatic.com/s/notoemoji/v47/bMrnmSyK7YY-MEu6b_7wM4FqN1sQrcFmow.woff2" as="font" type="font/woff2" crossorigin />
 
 <!-- 文字エンコーディング設定 -->
 <meta charset="UTF-8" />
