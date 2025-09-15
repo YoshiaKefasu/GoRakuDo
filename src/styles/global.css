@@ -27,7 +27,8 @@
   --color-gold-light: oklch(0.95 0.08 85);
 
   /* Complex rgba values converted to OKLCH */
-  --color-accent-purple-rgb: 139, 93, 255; /* Keep RGB for legacy compatibility */
+  --color-accent-purple-rgb:
+    139, 93, 255; /* Keep RGB for legacy compatibility */
   --color-accent-purple-glow-faint: oklch(0.65 0.25 280 / 0.05);
   --color-accent-purple-glow-medium: oklch(0.65 0.25 280 / 0.25);
   --color-accent-purple-glow-strong: oklch(0.65 0.25 280 / 0.5);
@@ -43,7 +44,7 @@
   --clr-paper-text-secondary: oklch(0.35 0 0);
   --clr-paper-border: oklch(0.9 0.01 60);
   --clr-paper-lines: oklch(0.88 0.01 60);
-  
+
   /* Legacy paper theme colors converted to OKLCH */
   --color-paper-bg: oklch(0.97 0.01 60);
   --color-paper-text-primary: oklch(0.25 0 0);
@@ -56,7 +57,7 @@
   --font-serif: 'Lora', serif;
   --font-jp: 'Yuji Syuku', serif;
   --font-cursive: 'Cedarville Cursive', cursive;
-  
+
   /* Font family for legacy compatibility */
   --font-family-base:
     'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui,
@@ -67,7 +68,7 @@
   --border-radius-pill: 35px;
   --border-radius-card: 20px;
   --border-radius-btn-small: 25px;
-  
+
   /* Legacy design token mapping */
   --border-radius-lg: 12px;
   --border-radius-md: 8px;
@@ -83,7 +84,7 @@
   /* ===== ACCESSIBILITY & TOUCH TARGETS ===== */
   --touch-target-min: 44px; /* WCAG 2.1 AA minimum touch target size */
   --touch-target-padding: calc((var(--touch-target-min) - 1.5rem) / 2);
-  
+
   /* ===== SAFE AREA INSETS ===== */
   --safe-area-top: env(safe-area-inset-top, 0);
   --safe-area-bottom: env(safe-area-inset-bottom, 0);
@@ -645,7 +646,6 @@
   --animate-twinkle: twinkle 3s infinite;
 }
 
-
 /* ========== BASE LAYER - FOUNDATIONAL STYLES ========== */
 @layer base {
   /* 
@@ -1075,6 +1075,172 @@
   .backdrop-blur-xl {
     backdrop-filter: blur(var(--backdrop-blur-xl));
     -webkit-backdrop-filter: blur(var(--backdrop-blur-xl));
+  }
+
+  /* ===== GLASSMORPHISM UTILITIES - REUSABLE COMPONENTS ===== */
+  .glassmorphism {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.04) 50%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
+    backdrop-filter: blur(35px) saturate(200%) brightness(110%);
+    -webkit-backdrop-filter: blur(35px) saturate(200%) brightness(110%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-speed) var(--transition-ease);
+  }
+
+  .glassmorphism::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(
+        ellipse 200px 150px at 20% 30%,
+        rgba(255, 255, 255, 0.02) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 180px 120px at 80% 70%,
+        rgba(255, 255, 255, 0.015) 0%,
+        transparent 45%
+      ),
+      radial-gradient(
+        ellipse 150px 200px at 60% 20%,
+        rgba(255, 255, 255, 0.018) 0%,
+        transparent 40%
+      ),
+      radial-gradient(
+        ellipse 220px 100px at 10% 80%,
+        rgba(255, 255, 255, 0.012) 0%,
+        transparent 35%
+      ),
+      radial-gradient(
+        ellipse 100px 180px at 90% 20%,
+        rgba(255, 255, 255, 0.016) 0%,
+        transparent 38%
+      ),
+      radial-gradient(
+        ellipse 160px 140px at 40% 60%,
+        rgba(255, 255, 255, 0.014) 0%,
+        transparent 42%
+      ),
+      radial-gradient(
+        ellipse 120px 160px at 70% 80%,
+        rgba(255, 255, 255, 0.013) 0%,
+        transparent 36%
+      ),
+      radial-gradient(
+        ellipse 140px 110px at 30% 10%,
+        rgba(255, 255, 255, 0.017) 0%,
+        transparent 44%
+      );
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .glassmorphism::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .glassmorphism:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    backdrop-filter: blur(40px) saturate(220%) brightness(115%);
+    -webkit-backdrop-filter: blur(40px) saturate(220%) brightness(115%);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-4px);
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.15),
+      0 8px 24px rgba(139, 93, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .glassmorphism:hover::before {
+    opacity: 0.8;
+  }
+
+  .glassmorphism:hover::after {
+    opacity: 1;
+  }
+
+  /* GlassMorphism variants */
+  .glassmorphism-sm {
+    backdrop-filter: blur(20px) saturate(150%) brightness(105%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(105%);
+  }
+
+  .glassmorphism-lg {
+    backdrop-filter: blur(50px) saturate(250%) brightness(120%);
+    -webkit-backdrop-filter: blur(50px) saturate(250%) brightness(120%);
+  }
+
+  .glassmorphism-card {
+    border-radius: var(--border-radius-card);
+  }
+
+  .glassmorphism-pill {
+    border-radius: var(--border-radius-pill);
+  }
+
+  /* GlassMorphism performance optimizations */
+  .glassmorphism {
+    will-change:
+      transform, background, border-color, box-shadow, backdrop-filter;
+    transform: translateZ(0);
+    contain: layout style paint;
+  }
+
+  /* GlassMorphism accessibility */
+  @media (prefers-contrast: high) {
+    .glassmorphism {
+      border: 2px solid #ffffff;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(25px) saturate(150%) brightness(90%);
+      -webkit-backdrop-filter: blur(25px) saturate(150%) brightness(90%);
+    }
+
+    .glassmorphism:hover {
+      border-color: var(--clr-accent);
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(30px) saturate(180%) brightness(95%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%) brightness(95%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glassmorphism {
+      transition: none;
+    }
+
+    .glassmorphism:hover {
+      transform: none;
+    }
   }
 
   /* ===== LEGACY SHADOW UTILITIES - PRESERVED ===== */
@@ -1558,7 +1724,7 @@ ol ol {
   animation: buttery-wave-float 8s ease-in-out infinite;
 }
 */
- 
+
 /* ========== GLOBAL ANIMATIONS - PRESERVED FROM LEGACY ========== */
 /* 
  * REASONING: These animations are used throughout the existing codebase

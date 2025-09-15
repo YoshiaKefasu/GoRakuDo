@@ -25,6 +25,9 @@ const {
 <!-- Component HEADER - Based on Wireframe Analysis -->
 <header class='component-header'>
   <div class='header-container'>
+    <!-- Background Elements -->
+    <div class='header-bg glassmorphism glassmorphism-card'></div>
+
     <!-- Integrated Content Section with Icon and Text -->
     <div class='header-content-section'>
       <!-- Icon Container -->
@@ -124,6 +127,8 @@ const {
     justify-content: center;
     gap: 1rem;
     width: 100%;
+    position: relative;
+    z-index: 1;
   }
 
   .tool-icon-container {
@@ -176,10 +181,31 @@ const {
 
   /* Container Layout Adjustments */
   .header-container {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     text-align: center;
+    padding: 2rem 1rem;
+    border-radius: var(--border-radius-card);
+    overflow: hidden;
+  }
+
+  /* Background Elements */
+  .header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    /* GlassMorphism効果はグローバルクラスで適用 */
+  }
+
+  /* Content Section Positioning */
+  .header-content-section {
+    position: relative;
+    z-index: 1;
   }
 </style>

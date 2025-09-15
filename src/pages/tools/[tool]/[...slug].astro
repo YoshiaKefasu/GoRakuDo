@@ -3,13 +3,12 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import ToolArticleLayout from '../../../layouts/ToolArticleLayout.astro';
 import { logger } from '../../../utils/logging/console-logger';
-import type { ToolName } from '../../../utils/content/breadcrumb-utils';
 
 // Generate static paths for all tool articles
 export async function getStaticPaths() {
   const posts = await getCollection('tool-articles');
 
-  return posts.map(post => {
+  return posts.map((post: CollectionEntry<'tool-articles'>) => {
     // Extract tool name from slug (first part before first slash)
     const slugParts = post.slug.split('/');
     const toolName = slugParts[0]; // e.g., "anki" from "anki/apa-itu-anki"

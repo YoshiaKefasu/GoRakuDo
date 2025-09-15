@@ -132,12 +132,12 @@
 
 /* ========== COMPONENT HEADER ========== */
 .component-header {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  backdrop-filter: blur(20px);
-  border-radius: var(--radius-2xl);
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  border-radius: 0;
   margin-bottom: var(--spacing-2xl);
-  padding: var(--spacing-2xl) var(--spacing-xl);
+  padding: 0;
 }
 
 .header-container {
@@ -226,6 +226,12 @@
   backdrop-filter: blur(20px);
   border-radius: var(--radius-lg);
   margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-lg);
+}
+
+/* Search Popover Integration */
+.tool-search-popover {
+  flex-shrink: 0;
 }
 
 .nav-actions {
@@ -808,6 +814,10 @@
     padding: var(--spacing-md);
     flex-direction: column;
     gap: var(--spacing-sm);
+  }
+
+  .tool-search-popover {
+    width: 100%;
   }
 
   .nav-actions {

@@ -30,7 +30,7 @@ const animationClass = interactiveElements.animationType
   <article class='tool-card-wrapper'>
     <a
       href={link}
-      class={`tool-card group tools-interactive-optimized ${animationClass}`}
+      class={`tool-card glassmorphism glassmorphism-card group tools-interactive-optimized ${animationClass}`}
       aria-labelledby={`tool-name-${id}`}
       aria-describedby={`tool-desc-${id}`}
       role='link'
@@ -79,22 +79,11 @@ const animationClass = interactiveElements.animationType
 </div>
 
 <style>
-  /* Tool Card Specific Styles */
+  /* Tool Card Base Styles */
   .tool-card {
     display: block;
     padding: var(--spacing-6);
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--border-radius-card);
-    transition: all var(--transition-speed) var(--transition-ease);
-  }
-
-  .tool-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg-accent);
   }
 
   .tool-card:focus {
@@ -131,14 +120,10 @@ const animationClass = interactiveElements.animationType
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.5rem;
-    background: linear-gradient(
-      135deg,
-      rgba(139, 93, 255, 0.1),
-      rgba(59, 130, 246, 0.1)
-    );
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    position: relative;
     overflow: hidden;
+    transition: all var(--transition-speed) var(--transition-ease);
   }
 
   .tool-icon-image {
@@ -147,6 +132,10 @@ const animationClass = interactiveElements.animationType
     object-fit: contain;
     border-radius: 0.25rem;
     transition: transform var(--transition-speed) var(--transition-ease);
+  }
+
+  .tool-card:hover .tool-icon {
+    /* Background, border, and box-shadow removed for cleaner design */
   }
 
   .tool-card:hover .tool-icon-image {
@@ -226,7 +215,23 @@ const animationClass = interactiveElements.animationType
     align-items: center;
     justify-content: space-between;
     padding-top: var(--spacing-4);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+  }
+
+  .tool-card-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
   }
 
   .tool-cta-text {
@@ -263,14 +268,12 @@ const animationClass = interactiveElements.animationType
 
   /* High contrast mode support */
   @media (prefers-contrast: high) {
-    .tool-card {
-      border: 2px solid #ffffff;
-      background: rgba(0, 0, 0, 0.8);
+    .tool-icon {
+      /* Background, border, and backdrop-filter removed for cleaner design */
     }
 
-    .tool-card:hover {
-      border-color: var(--clr-accent);
-      background: rgba(0, 0, 0, 0.9);
+    .tool-card:hover .tool-icon {
+      /* Background and border removed for cleaner design */
     }
 
     .tool-name {
@@ -345,5 +348,15 @@ const animationClass = interactiveElements.animationType
   .tool-card {
     min-height: 44px;
     min-width: 44px;
+  }
+
+  /* Performance optimizations */
+  .tool-icon {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .tool-icon {
+    contain: layout style;
   }
 </style>

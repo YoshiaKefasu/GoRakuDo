@@ -7,6 +7,9 @@ import UnifiedSEO from '../components/UnifiedSEO.astro';
 import WaveAnimation from '../components/animations/WaveAnimation.astro';
 import ToolIdHeader from '../components/tools/Tool-IdHeader.astro';
 
+// CSSをインポート
+import "../styles/global.css";
+
 export interface Props {
   title: string;
   description: string;
@@ -53,13 +56,13 @@ const {
 <html lang={lang}>
   <head>
     <UnifiedSEO
-      title={title}
-      description={description}
+  title={title}
+  description={description}
       keywords={tags}
       lang={lang}
-      pageType="article"
+  pageType="article"
       author={author}
-      publishedDate={publishedDate}
+  publishedDate={publishedDate}
       modifiedDate={publishedDate}
     />
   </head>
@@ -87,9 +90,9 @@ const {
         showProgressBar && (
           <div class='reading-progress-container'>
             <div class='reading-progress-bar' id='reading-progress' />
-          </div>
-        )
-      }
+        </div>
+      )
+    }
 
       <!-- Enhanced Main Content Area with Navbar Spacing -->
       <main class='article-main-content' style='padding-top: 5rem;'>
@@ -109,7 +112,7 @@ const {
 
           <!-- Page Content Slot -->
           <div class='page-content'>
-            <slot />
+        <slot />
           </div>
 
           <!-- Optimized Article Footer with Enhanced Actions (only for article pages) -->
@@ -190,8 +193,8 @@ const {
           </footer>
           )}
         </div>
-      </main>
-    </div>
+    </main>
+  </div>
 
     <!-- Optimized Astro-native Scripts -->
     {showProgressBar && !tool && (

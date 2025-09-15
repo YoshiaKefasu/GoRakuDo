@@ -22,7 +22,7 @@ const toolsCount = tools.length;
 >
   <div class='tools-header-container'>
     <!-- Background Elements -->
-    <div class='tools-header-bg'></div>
+    <div class='tools-header-bg glassmorphism glassmorphism-card'></div>
 
     <!-- Main Content -->
     <div class='tools-header-content'>
@@ -81,31 +81,50 @@ const toolsCount = tools.length;
     right: 0;
     bottom: 0;
     z-index: -1;
-    background: 
-      /* Pattern overlay */
-      radial-gradient(
-        circle at 20% 20%,
-        rgba(139, 93, 255, 0.08) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 80% 80%,
-        rgba(59, 130, 246, 0.08) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 40% 60%,
-        rgba(16, 185, 129, 0.08) 0%,
-        transparent 50%
-      ),
-      /* Base gradient */
-        linear-gradient(
-          135deg,
-          rgba(139, 93, 255, 0.1) 0%,
-          rgba(59, 130, 246, 0.05) 50%,
-          rgba(16, 185, 129, 0.1) 100%
-        );
-    border-radius: 2rem;
+    /* GlassMorphism効果はグローバルクラスで適用 */
+  }
+
+  /* Mobile border adjustment - 768px以下で上と左右は境界線なし、下だけに分け目 */
+  @media (max-width: 768px) {
+    .tools-header-container {
+      /* 画面端まで拡張 */
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tools-header-bg {
+      /* 上と左右の境界線を完全に削除 */
+      border-top: none !important;
+      border-left: none !important;
+      border-right: none !important;
+      /* 下だけに分け目を追加 */
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      /* 背景を最上端まで拡張 */
+      top: -4.5rem !important; /* セクションのpadding-top分だけ上に拡張 */
+      left: -0.1rem !important;
+      right: -0.1rem !important;
+      bottom: 0;
+      /* 角丸を下だけに適用 */
+      border-radius: 0 0 var(--border-radius-card) var(--border-radius-card) !important;
+      /* グローバルglassmorphismの境界線を完全に上書き */
+      border: none !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      /* より強力な境界線制御 - 上の境界線を完全に除去 */
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1) !important;
+      /* 上の境界線の影も除去 */
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 0 0 transparent !important;
+    }
+
+    .tools-header-content {
+      /* コンテンツのパディングを調整 - 左右を半分減らす */
+      padding: 1rem 0.75rem 1.5rem 0.75rem !important;
+    }
   }
 
   /* Main Content */
@@ -114,6 +133,13 @@ const toolsCount = tools.length;
     text-align: center;
     z-index: 1;
     padding: 1rem 0.5rem;
+  }
+
+  /* デスクトップ用のパディング調整 - メディアクエリの後に配置 */
+  @media (min-width: 768px) {
+    .tools-header-content {
+      padding: 1rem 0.5rem;
+    }
   }
 
   /* Title */
@@ -267,14 +293,6 @@ const toolsCount = tools.length;
 
   /* High Contrast Mode Support */
   @media (prefers-contrast: high) {
-    .tools-header-gradient {
-      background: linear-gradient(
-        135deg,
-        rgba(0, 0, 0, 0.8) 0%,
-        rgba(0, 0, 0, 0.6) 100%
-      );
-    }
-
     .tools-title-main {
       color: #ffffff;
       -webkit-text-fill-color: #ffffff;
