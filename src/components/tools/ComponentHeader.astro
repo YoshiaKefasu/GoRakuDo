@@ -1,0 +1,105 @@
+---
+// Component Header Props Interface
+export interface Props {
+  tool: string;
+  articleCount: number;
+  title?: string;
+  description?: string;
+}
+
+// Destructure props with defaults
+const {
+  tool,
+  articleCount,
+  title = `Penjelasan ${tool.charAt(0).toUpperCase() + tool.slice(1)}`,
+  description = `Deskripsi Pendek - Comprehensive learning resources and guides for mastering ${tool}. From beginner basics to advanced techniques, everything you need to succeed.`,
+} = Astro.props;
+
+// Tool icon mapping
+const getToolIcon = (toolName: string): string => {
+  const iconMap: Record<string, string> = {
+    anki: '🧠',
+    migaku: '📚',
+    yomitan: '📖',
+  };
+  return iconMap[toolName] || '📖';
+};
+
+// Format tool name for display
+const formattedToolName = tool.charAt(0).toUpperCase() + tool.slice(1);
+---
+
+<!-- Component HEADER - Based on Wireframe Analysis -->
+<header class='component-header'>
+  <div class='header-container'>
+    <!-- Left Side: Icon/Logo Area -->
+    <div class='header-icon-section'>
+      <div class='tool-icon-container'>
+        <div class='tool-icon-large'>
+          {getToolIcon(tool)}
+        </div>
+        <div class='icon-label'>{formattedToolName}</div>
+      </div>
+    </div>
+
+    <!-- Right Side: Title and Description -->
+    <div class='header-content-section'>
+      <div class='header-text-content'>
+        <h1 class='header-title'>
+          {title}
+        </h1>
+        <p class='header-description'>
+          {description}
+        </p>
+        <div class='header-meta'>
+          <span class='meta-item'>
+            <svg
+              class='meta-icon'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+              ></path>
+            </svg>
+            {articleCount} Articles
+          </span>
+          <span class='meta-item'>
+            <svg
+              class='meta-icon'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+            </svg>
+            Free Resources
+          </span>
+          <span class='meta-item'>
+            <svg
+              class='meta-icon'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M13 10V3L4 14h7v7l9-11h-7z'></path>
+            </svg>
+            Updated 2024
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

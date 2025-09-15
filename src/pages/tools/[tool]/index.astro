@@ -1,366 +1,191 @@
 ---
-// ========== TOOL INDEX PAGE IMPLEMENTATION ==========
-// Story 2.5: Create Dynamic Tool Index Page
-// Purpose: Display all articles for a specific tool category
+// ========== OPTIMIZED TOOL INDEX PAGE ==========
+// Architect Optimization: Performance-first, Astro-native approach
+// Purpose: Display all articles for a specific tool category with optimal performance
 // File: src/pages/tools/[tool]/index.astro
 
 // Import required dependencies
 import { getCollection, type CollectionEntry } from "astro:content";
 import { readdir } from "fs/promises";
 import { join } from "path";
-import ArticleCard from "../../../components/content/ArticleCard.astro";
 import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro";
+import Breadcrumb from "../../../components/public-components/Breadcrumb.astro";
+import ComponentHeader from "../../../components/tools/ComponentHeader.astro";
 import type { ToolName } from "../../../utils/content/breadcrumb-utils";
 
-// ========== PERFORMANCE MONITORING ==========
-// Subtask 8.1: Build time measurement for index page generation
-const startTime = performance.now();
-
 // ========== STATIC PATH GENERATION ==========
-// Task 2: Implement getStaticPaths with robust error handling
+// Optimized static path generation with minimal overhead
 export async function getStaticPaths() {
   try {
-    // Subtask 2.1: Scan tool-articles directory for tool subdirectories
     const toolArticlesPath = join(process.cwd(), "src/content/tool-articles");
+    const entries = await readdir(toolArticlesPath, { withFileTypes: true });
     
-    // Validate directory exists
-    let toolDirectories: string[] = [];
-    try {
-      const entries = await readdir(toolArticlesPath, { withFileTypes: true });
-      toolDirectories = entries
-        .filter(entry => entry.isDirectory())
-        .map(entry => entry.name);
-    } catch (error) {
-      console.warn("⚠️ Warning: Could not read tool-articles directory:", error);
-      // Subtask 2.3: Fallback to empty array if directory doesn't exist
-      return [];
-    }
-
-    // Subtask 2.2: Generate static paths for each tool with validation
     const validTools = ["anki", "migaku", "yomitan"];
-    const paths = toolDirectories
-      .filter(dir => validTools.includes(dir))
-      .map(tool => ({
-        params: { tool },
-        props: { toolName: tool }
-      }));
+    const toolDirectories = entries
+      .filter(entry => entry.isDirectory() && validTools.includes(entry.name))
+      .map(entry => entry.name);
 
-    console.log("✅ Generated static paths for tools:", paths.map(p => p.params.tool));
-    return paths;
+    return toolDirectories.map(tool => ({
+      params: { tool },
+      props: { toolName: tool }
+    }));
 
   } catch (error) {
-    // Subtask 2.4: Prevent build failures with try-catch blocks
-    console.error("🚨 Critical error in getStaticPaths:", error);
-    // Return empty array to prevent build failure
-    return [];
+    // Fallback to predefined tools if directory scan fails
+    return ["anki", "migaku", "yomitan"].map(tool => ({
+      params: { tool },
+      props: { toolName: tool }
+    }));
   }
 }
 
 // ========== COMPONENT LOGIC ==========
-// Task 3: Get tool parameter from Astro.params
+// Get tool parameter with validation
 const { tool } = Astro.params as { tool: string };
 
-// Validate tool parameter
 if (!tool) {
-  console.warn("⚠️ No tool parameter provided");
   return Astro.redirect("/tools", 301);
 }
 
-// Security: Validate tool name against whitelist
 const validTools = ["anki", "migaku", "yomitan"];
 if (!validTools.includes(tool)) {
-  console.warn("🚨 Security: Invalid tool name requested:", tool);
   return Astro.redirect("/tools", 301);
 }
 
-// Construct and validate currentPath for breadcrumb
-const currentPath = `/tools/${tool}`;
-const validatedCurrentPath = currentPath.replace(/[<>\"'&]/g, "");
+// Fetch and filter articles efficiently
+const articles = await getCollection("tool-articles");
+const toolArticles = articles.filter(article => 
+  article.data.tags?.includes(tool)
+);
 
-if (validatedCurrentPath !== currentPath) {
-  console.warn("🚨 Security: XSS attempt detected in currentPath:", currentPath);
-  return Astro.redirect("/tools", 301);
-}
-
-// Task 4: Fetch all articles from the collection
-let articles: CollectionEntry<"tool-articles">[] = [];
-try {
-  articles = await getCollection("tool-articles");
-} catch (error) {
-  console.error("🚨 Error fetching tool-articles collection:", error);
-  articles = [];
-}
-
-// Task 5: Filter articles for current tool using tag-based filtering
-// REPLACE EXISTING SLUG-BASED FILTERING (lines 84-95)
-const toolArticles = articles.filter(article => {
-  try {
-    // Validate tags exist and are in correct format
-    if (!article.data.tags || !Array.isArray(article.data.tags)) {
-      console.warn("⚠️ Article missing or invalid tags:", article.id);
-      return false;
-    }
-
-    // Check if current tool is in article's tags array
-    return article.data.tags.includes(tool);
-  } catch (error) {
-    console.warn("⚠️ Error processing article tags:", article.id, error);
-    return false;
-  }
-});
-
-// Subtask 5.2: Handle case where no articles are found
 const hasArticles = toolArticles.length > 0;
 
-// ========== ENHANCED PERFORMANCE MONITORING WITH CACHING ==========
-const performanceMetrics = {
-  startTime: startTime,
-  collectionLoadTime: 0,
-  articleProcessingTime: 0,
-  cachingMetrics: {
-    cacheHits: 0,
-    cacheMisses: 0,
-    cacheEfficiency: 0,
-    cacheSize: 0
-  },
-  totalArticles: articles.length,
-  filteredArticles: toolArticles.length
-};
-
-// Initialize cache for performance monitoring
-const tagFilterCache = new Map<string, CollectionEntry<"tool-articles">[]>();
-
-// Measure collection loading time
-const collectionStartTime = performance.now();
-try {
-  // Articles already loaded above, measure the time it took
-  performanceMetrics.collectionLoadTime = collectionStartTime - startTime;
-} catch (error) {
-  console.error("🚨 Collection loading failed:", error);
-}
-
-// Measure article processing time with caching
-const processingStartTime = performance.now();
-const cacheKey = `${tool}_${articles.length}_${articles.map(a => a.id).join(',')}`;
-
-let cachedToolArticles: CollectionEntry<"tool-articles">[];
-if (tagFilterCache.has(cacheKey)) {
-  // Cache hit
-  cachedToolArticles = tagFilterCache.get(cacheKey)!;
-  performanceMetrics.cachingMetrics.cacheHits++;
-  console.log("🚀 Cache hit for tool:", tool);
-} else {
-  // Cache miss - use already filtered articles
-  cachedToolArticles = toolArticles;
-
-  // Cache the result
-  tagFilterCache.set(cacheKey, toolArticles);
-  performanceMetrics.cachingMetrics.cacheMisses++;
-  console.log("💾 Cache miss for tool:", tool, "- cached result");
-}
-
-performanceMetrics.articleProcessingTime = performance.now() - processingStartTime;
-
-// Calculate caching efficiency
-performanceMetrics.cachingMetrics.cacheEfficiency =
-  (performanceMetrics.cachingMetrics.cacheHits /
-   (performanceMetrics.cachingMetrics.cacheHits + performanceMetrics.cachingMetrics.cacheMisses)) * 100;
-performanceMetrics.cachingMetrics.cacheSize = tagFilterCache.size;
-
-// Log comprehensive performance metrics
-const totalTime = performance.now() - startTime;
-console.log("🎯 Enhanced Performance Metrics:", {
-  totalBuildTime: `${totalTime.toFixed(2)}ms`,
-  collectionLoadTime: `${performanceMetrics.collectionLoadTime.toFixed(2)}ms`,
-  articleProcessingTime: `${performanceMetrics.articleProcessingTime.toFixed(2)}ms`,
-  totalArticles: performanceMetrics.totalArticles,
-  filteredArticles: performanceMetrics.filteredArticles,
-  efficiency: `${((performanceMetrics.filteredArticles / performanceMetrics.totalArticles) * 100).toFixed(1)}%`,
-  caching: {
-    hits: performanceMetrics.cachingMetrics.cacheHits,
-    misses: performanceMetrics.cachingMetrics.cacheMisses,
-    efficiency: `${performanceMetrics.cachingMetrics.cacheEfficiency.toFixed(1)}%`,
-    cacheSize: performanceMetrics.cachingMetrics.cacheSize
-  }
-});
-
-// Enhanced performance validation with caching metrics
-if (totalTime > 2000) {
-  console.warn("⚠️ Performance: Build time exceeds 2 second target");
-}
-if (performanceMetrics.articleProcessingTime > articles.length) {
-  console.warn("⚠️ Performance: Article processing time exceeds 1ms per article target");
-}
-if (performanceMetrics.cachingMetrics.cacheEfficiency < 50) {
-  console.warn("⚠️ Caching: Cache efficiency below 50% - consider cache optimization");
-}
-if (performanceMetrics.cachingMetrics.cacheSize > 100) {
-  console.warn("⚠️ Caching: Cache size exceeds 100 entries - consider cache cleanup");
-}
 ---
 
 <ToolArticleLayout
   title={`${tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo`}
   description={`All articles and guides for ${tool} tool`}
-  lang="id"
-  showBreadcrumb={true}
-  currentPath={validatedCurrentPath}>
+  lang="id">
 
-  <!-- Page Header -->
-  <header class="tool-index-header">
-    <h1 class="tool-index-title">{tool.charAt(0).toUpperCase() + tool.slice(1)} Articles</h1>
-    <p class="tool-index-description">Browse all available documentation for {tool}</p>
-  </header>
+  <!-- Component HEADER - Based on Wireframe Analysis -->
+  <ComponentHeader 
+    tool={tool} 
+    articleCount={toolArticles.length}
+  />
 
-  <!-- Navigation -->
-  <nav>
-    <a href="/tools">← Back to Tools</a>
-  </nav>
+  <!-- Optimized Navigation -->
+  <div class="tool-navigation-wrapper">
+    <Breadcrumb
+      currentPath={`/tools/${tool}`}
+      showHome={true}
+      variant="compact"
+      theme="auto"
+      orientation="horizontal"
+      showIcons={true}
+      ariaLabel="Tool navigation breadcrumb"
+      className="tool-breadcrumb"
+    />
+  </div>
 
-  <!-- Main Content -->
-  <main>
+  <!-- Enhanced Main Content with Modern Layout -->
+  <main class="tool-main-content">
     {hasArticles ? (
-      <!-- Responsive Grid Layout for Articles -->
-      <div class="articles-grid">
-        {toolArticles.map((article, index) => {
-          // Task 7: Render article cards with comprehensive error handling
-          // Subtask 7.1: Safe data extraction with fallbacks
-          try {
-            const articleSlug = article.slug || article.id || "";
-            const articleTitle = article.data?.title || `Article ${article.id}`;
-            const articleDescription = article.data?.description || "";
-            const articleTags = Array.isArray(article.data?.tags) ? article.data.tags : [];
-
-            // Optimize first 3 articles for above-the-fold loading (Subtask 4.4: Lazy loading)
-            const isPriority = index < 3;
+      <div class="articles-section">
+        
+        <!-- Optimized Articles Grid -->
+        <div class="articles-grid-wireframe">
+          {toolArticles.map((article, index) => {
+            const articleSlug = article.slug || article.id;
+            const articleTitle = article.data.title || `Article ${article.id}`;
+            const articleDescription = article.data.description || "";
+            const articleTags = article.data.tags || [];
+            const isFeatured = index === 0;
 
             return (
-              <div class="article-grid-item">
-                <ArticleCard
-                  title={articleTitle}
-                  description={articleDescription}
-                  slug={articleSlug}
-                  tags={articleTags}
-                  tool={tool}
-                  priority={isPriority}
-                />
+              <div class={`article-card-wireframe ${isFeatured ? 'featured' : ''}`}>
+                <!-- Visual Section -->
+                <div class="card-visual-section">
+                  <div class="mobile-device-mockup">
+                    <div class="device-screen">
+                      <div class="screen-content">
+                        <div class="screen-icon">
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                          </svg>
+                        </div>
+                        <div class="screen-text">
+                          <p class="screen-title">Place your best screen here.</p>
+                          <p class="screen-subtitle">Or just leave the rest of the mobile device here.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Content Section -->
+                <div class="card-content-section">
+                  <div class="card-meta">
+                    <span class="card-date">2019 - present</span>
+                  </div>
+                  <h3 class="card-title">{articleTitle}</h3>
+                  <p class="card-description">{articleDescription}</p>
+                  <div class="card-tags">
+                    {articleTags.slice(0, 3).map((tag) => (
+                      <span class="card-tag">#{tag}</span>
+                    ))}
+                  </div>
+                  <a href={`/tools/${tool}/${articleSlug}`} class="card-cta">
+                    Try it out
+                    <svg class="cta-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                  </a>
+                </div>
+                
+                {isFeatured && (
+                  <div class="featured-badge-wireframe">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    Featured
+                  </div>
+                )}
               </div>
             );
-          } catch (error) {
-            // Subtask 7.4: Comprehensive error handling for malformed article data
-            console.warn("⚠️ Error processing article:", article.id, error);
-            return (
-              <div class="article-grid-item">
-                <ArticleCard
-                  title={`Article ${article.id}`}
-                  description="Content unavailable"
-                  slug={article.id || ""}
-                  tags={[]}
-                  tool={tool}
-                  priority={false}
-                />
-              </div>
-            );
-          }
-        })}
+          })}
+        </div>
+
       </div>
     ) : (
-      <!-- Subtask 5.2: No articles found fallback message -->
-      <div>
-        <p>No articles available for {tool} yet. Check back soon for new content!</p>
-        <p>Available tools: <a href="/tools/anki">anki</a>, <a href="/tools/migaku">migaku</a>, <a href="/tools/yomitan">yomitan</a></p>
+      <!-- Optimized Empty State -->
+      <div class="empty-state">
+        <div class="empty-state-content">
+          <div class="empty-state-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h2 class="empty-state-title">No Articles Yet</h2>
+          <p class="empty-state-description">
+            We're working on creating amazing content for {tool}. 
+            Check back soon for comprehensive guides and tutorials!
+          </p>
+          <div class="empty-state-actions">
+            <a href="/tools" class="empty-state-btn primary">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+              </svg>
+              Browse Other Tools
+            </a>
+            <a href="/contact" class="empty-state-btn secondary">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+              Request Content
+            </a>
+          </div>
+        </div>
       </div>
     )}
   </main>
-
-  <!-- Error Handling Fallback -->
-  {!hasArticles && articles.length === 0 && (
-    <div>
-      <p>Unable to load tool articles. Please try refreshing the page.</p>
-      <a href="/tools">Return to Tools Page</a>
-    </div>
-  )}
 </ToolArticleLayout>
-
-<style>
-/* ========== PAGE HEADER STYLES ========== */
-/* Using design system tokens for consistent typography and spacing */
-
-.tool-index-header {
-  text-align: center;
-  margin-bottom: var(--spacing-8);
-}
-
-.tool-index-title {
-  font-size: var(--fs-h1);
-  font-weight: 700;
-  color: var(--clr-text-primary);
-  margin: 0 0 var(--spacing-4) 0;
-  line-height: 1.2;
-}
-
-.tool-index-description {
-  font-size: var(--fs-base);
-  color: var(--clr-text-secondary);
-  max-width: 50ch;
-  margin: 0 auto;
-  line-height: 1.7;
-}
-
-/* ========== ARTICLES GRID LAYOUT ========== */
-/* Mobile-first responsive grid following design system patterns */
-
-.articles-grid {
-  --grid-gap: var(--spacing-6);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--grid-gap);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.article-grid-item {
-  display: contents; /* Allows grid item to be transparent */
-}
-
-/* ArticleCard component provides its own styling */
-
-/* ========== RESPONSIVE BREAKPOINTS ========== */
-/* Following mobile-first approach with all specified breakpoints */
-
-/* Small devices (640px) - Enhanced mobile experience */
-@media (min-width: 640px) {
-  .articles-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-6);
-  }
-}
-
-/* Tablet devices (768px) - Improved readability */
-@media (min-width: 768px) {
-  .articles-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-8);
-  }
-}
-
-/* Laptops (1024px) - Desktop optimization */
-@media (min-width: 1024px) {
-  .articles-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-8);
-  }
-}
-
-/* Large desktops (1280px+) - Enhanced spacing */
-@media (min-width: 1280px) {
-  .articles-grid {
-    gap: var(--spacing-12);
-  }
-}
-
-/* ========== ACCESSIBILITY ENHANCEMENTS ========== */
-
-/* Accessibility enhancements handled by ArticleCard component */
-</style>

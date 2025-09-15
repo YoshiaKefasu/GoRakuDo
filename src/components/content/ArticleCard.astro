@@ -4,74 +4,89 @@
 // Includes lazy loading optimization for performance
 
 export interface Props {
-  title: string
-  description?: string
-  slug: string
-  tags?: string[]
-  tool: string
-  priority?: boolean // For above-the-fold content
+  title: string;
+  description?: string;
+  slug: string;
+  tags?: string[];
+  tool: string;
+  priority?: boolean; // For above-the-fold content
 }
 
-const { title, description = "", slug, tags = [], tool, priority = false } = Astro.props
+const {
+  title,
+  description = '',
+  slug,
+  tags = [],
+  tool,
+  priority = false,
+} = Astro.props;
 
 // Generate article URL with error handling
 const generateArticleUrl = (tool: string, slug: string): string => {
   try {
     // Remove tool prefix from slug if present to avoid duplication
-    const cleanSlug = slug.replace(new RegExp(`^${tool}/`), "")
-    return `/tools/${tool}/${cleanSlug}`
+    const cleanSlug = slug.replace(new RegExp(`^${tool}/`), '');
+    return `/tools/${tool}/${cleanSlug}`;
   } catch (error) {
-    console.warn("⚠️ Error generating article URL:", error)
-    return `/tools/${tool}`
+    console.warn('⚠️ Error generating article URL:', error);
+    return `/tools/${tool}`;
   }
-}
+};
 
 // Safe data validation and fallbacks
 const safeTitle =
-  typeof title === "string" && title.trim() ? title.trim() : "Untitled Article"
-const safeDescription = typeof description === "string" ? description.trim() : ""
+  typeof title === 'string' && title.trim() ? title.trim() : 'Untitled Article';
+const safeDescription =
+  typeof description === 'string' ? description.trim() : '';
 const safeTags = Array.isArray(tags)
-  ? tags.filter((tag) => typeof tag === "string" && tag.trim())
-  : []
-const articleUrl = generateArticleUrl(tool, slug)
+  ? tags.filter(tag => typeof tag === 'string' && tag.trim())
+  : [];
+const articleUrl = generateArticleUrl(tool, slug);
 
 // Limit tags display for better UX
-const displayTags = safeTags.slice(0, 3)
-const remainingTagsCount = safeTags.length - displayTags.length
+const displayTags = safeTags.slice(0, 3);
+const remainingTagsCount = safeTags.length - displayTags.length;
 
 // Lazy loading configuration
-const loadingStrategy = priority ? "eager" : "lazy"
-const fetchPriority = priority ? "high" : "low"
+const loadingStrategy = priority ? 'eager' : 'lazy';
+const fetchPriority = priority ? 'high' : 'low';
 ---
 
 <!-- Article Card - Entire card is clickable with proper semantic structure -->
 <a
   href={articleUrl}
-  class={`article-card group block h-full text-decoration-none ${priority ? "loaded" : ""}`}
+  class={`article-card group block h-full text-decoration-none ${priority ? 'loaded' : ''}`}
   title={`Read article: ${safeTitle}`}
-  aria-label={`Read article: ${safeTitle}${safeDescription ? ` - ${safeDescription}` : ""}`}
-  data-priority={priority ? "true" : undefined}>
-  <article class="article-card-content">
+  aria-label={`Read article: ${safeTitle}${safeDescription ? ` - ${safeDescription}` : ''}`}
+  data-priority={priority ? 'true' : undefined}
+>
+  <article class='article-card-content'>
     <!-- Card Header with Title -->
-    <header class="article-card-header">
-      <h3 class="article-card-title">
+    <header class='article-card-header'>
+      <h3 class='article-card-title'>
         {safeTitle}
       </h3>
     </header>
 
     <!-- Card Body with Description -->
-    <div class="article-card-body">
-      {safeDescription && <p class="article-card-description">{safeDescription}</p>}
+    <div class='article-card-body'>
+      {
+        safeDescription && (
+          <p class='article-card-description'>{safeDescription}</p>
+        )
+      }
 
       <!-- Tags Section -->
       {
         displayTags.length > 0 && (
-          <div class="article-card-tags">
-            {displayTags.map((tag) => (
-              <span class="article-tag">#{tag}</span>
+          <div class='article-card-tags'>
+            {displayTags.map(tag => (
+              <span class='article-tag'>#{tag}</span>
             ))}
             {remainingTagsCount > 0 && (
-              <span class="article-tag article-tag-more">+{remainingTagsCount} more</span>
+              <span class='article-tag article-tag-more'>
+                +{remainingTagsCount} more
+              </span>
             )}
           </div>
         )
@@ -79,19 +94,20 @@ const fetchPriority = priority ? "high" : "low"
     </div>
 
     <!-- Card Footer with Read More Indicator -->
-    <footer class="article-card-footer">
-      <span class="article-read-more"> Read Article </span>
+    <footer class='article-card-footer'>
+      <span class='article-read-more'> Read Article </span>
       <svg
-        class="article-arrow"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true">
+        class='article-arrow'
+        fill='none'
+        stroke='currentColor'
+        viewBox='0 0 24 24'
+        aria-hidden='true'
+      >
         <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"></path>
+          stroke-linecap='round'
+          stroke-linejoin='round'
+          stroke-width='2'
+          d='M9 5l7 7-7 7'></path>
       </svg>
     </footer>
   </article>
@@ -102,54 +118,54 @@ const fetchPriority = priority ? "high" : "low"
   // Basic functionality without complex class structure to avoid TypeScript issues
 
   // Initialize when DOM is ready
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener('DOMContentLoaded', () => {
     // Find all article cards
-    const articleCards = document.querySelectorAll(".article-card")
+    const articleCards = document.querySelectorAll('.article-card');
 
-    articleCards.forEach((card) => {
+    articleCards.forEach(card => {
       // Priority content loads immediately
-      if (card.hasAttribute("data-priority")) {
-        card.classList.add("loaded")
-        return
+      if (card.hasAttribute('data-priority')) {
+        card.classList.add('loaded');
+        return;
       }
 
       // Setup basic lazy loading for non-priority content
-      if ("IntersectionObserver" in window) {
+      if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
+          entries => {
+            entries.forEach(entry => {
               if (entry.isIntersecting) {
                 // Simple loading simulation
-                card.classList.add("loading")
+                card.classList.add('loading');
                 setTimeout(
                   () => {
-                    card.classList.remove("loading")
-                    card.classList.add("loaded")
-                    observer.disconnect()
+                    card.classList.remove('loading');
+                    card.classList.add('loaded');
+                    observer.disconnect();
                   },
                   Math.random() * 100 + 50
-                )
+                );
               }
-            })
+            });
           },
           {
-            rootMargin: "50px",
+            rootMargin: '50px',
             threshold: 0.1,
           }
-        )
+        );
 
-        observer.observe(card)
+        observer.observe(card);
       } else {
         // Fallback for browsers without IntersectionObserver
-        card.classList.add("loaded")
+        card.classList.add('loaded');
       }
-    })
-  })
+    });
+  });
 </script>
 
 <style>
   /* ========== ARTICLE CARD STYLES ========== */
-  /* Using design system tokens from tools.css */
+  /* Using design system tokens from tools-index.css */
 
   .article-card {
     /* Base card styles using design tokens */
@@ -333,7 +349,7 @@ const fetchPriority = priority ? "high" : "low"
   }
 
   .article-card.loading::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: -100%;
@@ -366,7 +382,7 @@ const fetchPriority = priority ? "high" : "low"
   }
 
   .article-card.error::after {
-    content: "⚠️ Content unavailable";
+    content: '⚠️ Content unavailable';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -406,7 +422,7 @@ const fetchPriority = priority ? "high" : "low"
   }
 
   .article-card[data-priority]::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 8px;
     right: 8px;

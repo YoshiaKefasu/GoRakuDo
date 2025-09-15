@@ -1,123 +1,218 @@
 ---
-// ToolArticleLayout.astro - Performance-optimized article layout
-// Extends BaseLayout.astro while adding custom typography and responsive design
-import BaseLayout from "./BaseLayout.astro"
-import Breadcrumb from "../components/public-components/Breadcrumb.astro"
-import "../styles/global.css"
-// Import article-specific styles separately for code splitting
-import "../styles/article-specific.css"
+// ToolArticleLayout.astro - Optimized Astro-native article layout
+// Architect Optimization: Performance-first, accessibility-enhanced, Astro-native approach
+import '../styles/tools/[tool]/tool-index.css';
+import Navbar from '../components/public-components/Navbar.astro';
+import UnifiedSEO from '../components/UnifiedSEO.astro';
+import WaveAnimation from '../components/animations/WaveAnimation.astro';
 
 export interface Props {
-  title: string
-  description: string
-  publishedDate?: string
-  lang?: "id" | "ja"
-  // Breadcrumb-specific props
-  showBreadcrumb?: boolean
-  currentPath?: string
+  title: string;
+  description: string;
+  publishedDate?: string;
+  lang?: 'id' | 'ja';
+  showProgressBar?: boolean;
+  showTableOfContents?: boolean;
+  readingTime?: number;
+  author?: string;
+  tags?: string[];
 }
 
 const {
   title,
   description,
   publishedDate,
-  lang,
-  showBreadcrumb = false,
-  currentPath = "",
-} = Astro.props
-
-// Security validation for currentPath
-let validatedPath = ""
-if (showBreadcrumb && currentPath) {
-  try {
-    // Validate path format and prevent path traversal
-    if (
-      currentPath.startsWith("/") &&
-      !currentPath.includes("..") &&
-      !currentPath.includes("//") &&
-      !currentPath.includes("<") &&
-      !currentPath.includes(">") &&
-      !currentPath.includes('"') &&
-      !currentPath.includes("'") &&
-      !currentPath.includes("&")
-    ) {
-      // Additional validation for tool paths
-      const validToolPaths = ["/tools/anki", "/tools/migaku", "/tools/yomitan"]
-      if (currentPath.startsWith("/tools/")) {
-        const pathParts = currentPath.split("/")
-        if (pathParts.length >= 3 && pathParts.length <= 4) {
-          const toolName = pathParts[2]
-          if (validToolPaths.some((path) => path.includes(toolName))) {
-            validatedPath = currentPath
-          }
-        }
-      } else {
-        validatedPath = currentPath
-      }
-    }
-
-    if (!validatedPath) {
-      console.warn("🚨 Security: Invalid breadcrumb path detected:", currentPath)
-    }
-  } catch (error) {
-    console.error("🚨 Security validation error:", error)
-  }
-}
-
-// Ensure validatedPath is properly defined for script context
-const scriptValidatedPath = validatedPath || ""
+  lang = 'id',
+  showProgressBar = true,
+  showTableOfContents = false,
+  readingTime,
+  author,
+  tags = [],
+} = Astro.props;
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  pageType="article"
-  publishedDate={publishedDate}
-  lang={lang}>
-  <!-- Article Container with Responsive Design -->
-  <div class="min-h-screen bg-background">
-    <!-- Breadcrumb Navigation -->
-    {
-      showBreadcrumb && validatedPath && (
-        <div class="mx-auto max-w-4xl px-4 py-4 sm:px-6 lg:px-8 xl:px-12">
-          <Breadcrumb
-            currentPath={validatedPath}
-            showHome={true}
-            variant="compact"
-            theme="auto"
-            orientation="horizontal"
-            showIcons={false}
-            ariaLabel="Tool navigation breadcrumb"
-            className="mb-4"
-          />
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <UnifiedSEO
+      title={title}
+      description={description}
+      keywords={tags}
+      lang={lang}
+      pageType="article"
+      author={author}
+      publishedDate={publishedDate}
+      modifiedDate={publishedDate}
+    />
+  </head>
+  <body>
+    <!-- Background Wave Animation -->
+    <WaveAnimation 
+      backgroundLayer="normal"
+      enableStars={true}
+      starsCount={6}
+      starsOpacity={0.7}
+      starsAnimationDuration="4s"
+      starsColor="oklch(0.7 0.3 296.9)"
+      starsBrightness={1.3}
+      starsSize={1.1}
+      starsGlow={true}
+    />
+
+    <!-- Navigation Bar -->
+    <Navbar variant="default" theme="auto" />
+
+    <!-- Enhanced Article Container with Modern Design -->
+    <div class='article-layout-container'>
+      <!-- Reading Progress Bar -->
+      {
+        showProgressBar && (
+          <div class='reading-progress-container'>
+            <div class='reading-progress-bar' id='reading-progress' />
+          </div>
+        )
+      }
+
+      <!-- Enhanced Main Content Area with Navbar Spacing -->
+      <main class='article-main-content' style='padding-top: 5rem;'>
+        <div class='article-content-wrapper'>
+          <!-- Article Content with Enhanced Typography -->
+          <article class='article-content-enhanced'>
+            <slot />
+          </article>
+
+          <!-- Optimized Article Footer with Enhanced Actions -->
+          <footer class='article-footer' role='contentinfo'>
+            <div class='article-actions' role='group' aria-label='Article actions'>
+              <button 
+                class='action-btn share-btn' 
+                type='button'
+                aria-label='Share this article'
+                title='Share article'
+              >
+                <svg fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
+                  <path
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                    d='M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z'
+                  />
+                </svg>
+                <span>Share</span>
+              </button>
+
+              <button
+                class='action-btn bookmark-btn'
+                type='button'
+                aria-label='Bookmark this article'
+                title='Bookmark article'
+              >
+                <svg fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
+                  <path
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                    d='M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z'
+                  />
+                </svg>
+                <span>Bookmark</span>
+              </button>
+
+              <button
+                class='action-btn print-btn'
+                type='button'
+                aria-label='Print this article'
+                title='Print article'
+                onclick='window.print()'
+              >
+                <svg fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
+                  <path
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                    d='M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z'
+                  />
+                </svg>
+                <span>Print</span>
+              </button>
+            </div>
+
+            <nav class='article-navigation' aria-label='Article navigation'>
+              <a 
+                href='/tools' 
+                class='nav-link back-to-tools'
+                aria-label='Return to tools page'
+                title='Back to tools'
+              >
+                <svg fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
+                  <path
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                    d='M10 19l-7-7m0 0l7-7m-7 7h18'
+                  />
+                </svg>
+                <span>Back to Tools</span>
+              </a>
+            </nav>
+          </footer>
         </div>
-      )
-    }
+      </main>
+    </div>
 
-    <!-- Performance monitoring for breadcrumb -->
-    {
-      showBreadcrumb && scriptValidatedPath && (
-        <script define:vars={{ scriptValidatedPath }}>
-          {`
-          try {
-            console.log("✅ Breadcrumb integrated successfully");
-            console.log("📊 Current path:", scriptValidatedPath);
-          } catch (error) {
-            console.warn("⚠️ Breadcrumb logging failed:", error);
-          }
-        `}
-        </script>
-      )
-    }
-
-    <!-- Main Content Area -->
-    <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
-      <!-- Article Content with Custom Typography -->
-      <article class="article-content max-w-none">
-        <slot />
-      </article>
-    </main>
-  </div>
-</BaseLayout>
-
-<!-- Article-specific styles moved to article-specific.css for code splitting -->
+    <!-- Optimized Astro-native Scripts -->
+    {showProgressBar && (
+      <script is:inline>
+        // Optimized reading progress functionality
+        (() => {
+          const progressBar = document.getElementById('reading-progress');
+          if (!progressBar) return;
+          
+          const updateProgress = () => {
+            const article = document.querySelector('.article-content-enhanced');
+            if (!article) return;
+            
+            const scrollTop = window.pageYOffset;
+            const docHeight = article.offsetHeight;
+            const winHeight = window.innerHeight;
+            const scrollPercent = Math.min(100, Math.max(0, 
+              Math.round((scrollTop / (docHeight - winHeight)) * 100)
+            ));
+            progressBar.style.width = scrollPercent + '%';
+          };
+          
+          // Throttled scroll listener for performance
+          let ticking = false;
+          const handleScroll = () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateProgress();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          };
+          
+          window.addEventListener('scroll', handleScroll, { passive: true });
+          updateProgress();
+        })();
+      </script>
+    )}
+    
+    <!-- Enhanced accessibility script -->
+    <script is:inline>
+      // Optimized accessibility enhancements
+      (() => {
+        const actionButtons = document.querySelectorAll('.action-btn');
+        actionButtons.forEach(btn => {
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              btn.click();
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
