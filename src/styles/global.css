@@ -1112,11 +1112,12 @@
       rgba(255, 255, 255, 0.04) 50%,
       rgba(255, 255, 255, 0.06) 100%
     );
-    backdrop-filter: blur(35px) saturate(200%) brightness(110%);
-    -webkit-backdrop-filter: blur(35px) saturate(200%) brightness(110%);
+    backdrop-filter: blur(4px) saturate(110%) brightness(105%);
+    -webkit-backdrop-filter: blur(4px) saturate(110%) brightness(105%);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
+      0 4px 16px rgba(0, 0, 0, 0.05),
       inset 0 1px 0 rgba(255, 255, 255, 0.2),
       inset 0 -1px 0 rgba(255, 255, 255, 0.1);
     position: relative;
@@ -1197,8 +1198,8 @@
       rgba(255, 255, 255, 0.08) 50%,
       rgba(255, 255, 255, 0.1) 100%
     );
-    backdrop-filter: blur(40px) saturate(220%) brightness(115%);
-    -webkit-backdrop-filter: blur(40px) saturate(220%) brightness(115%);
+    backdrop-filter: blur(6px) saturate(120%) brightness(102%);
+    -webkit-backdrop-filter: blur(6px) saturate(120%) brightness(102%);
     border-color: rgba(255, 255, 255, 0.25);
     transform: translateY(-4px);
     box-shadow:
@@ -1255,8 +1256,8 @@
     .glassmorphism:hover {
       border-color: var(--clr-accent);
       background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(30px) saturate(180%) brightness(95%);
-      -webkit-backdrop-filter: blur(30px) saturate(180%) brightness(95%);
+      backdrop-filter: blur(18px) saturate(150%) brightness(100%);
+      -webkit-backdrop-filter: blur(18px) saturate(150%) brightness(100%);
     }
   }
 

@@ -1,14 +1,14 @@
 ---
 // ToolArticleLayout.astro - Optimized Astro-native article layout
 // Architect Optimization: Performance-first, accessibility-enhanced, Astro-native approach
-import '../styles/tools/[tool]/tool-index.css';
 import Navbar from '../components/public-components/Navbar.astro';
 import UnifiedSEO from '../components/UnifiedSEO.astro';
 import WaveAnimation from '../components/animations/WaveAnimation.astro';
 import ToolIdHeader from '../components/tools/Tool-IdHeader.astro';
 
-// CSSをインポート
+// Global CSS - サイト全体のスタイル
 import "../styles/global.css";
+import "../styles/tools/[tool]/tool-index.css";
 
 export interface Props {
   title: string;
@@ -16,8 +16,6 @@ export interface Props {
   publishedDate?: string;
   lang?: 'id' | 'ja';
   showProgressBar?: boolean;
-  showTableOfContents?: boolean;
-  readingTime?: number;
   author?: string;
   tags?: string[];
   // ToolIdHeader props
@@ -36,8 +34,6 @@ const {
   publishedDate,
   lang = 'id',
   showProgressBar = true,
-  showTableOfContents = false,
-  readingTime,
   author,
   tags = [],
   tool,

@@ -141,21 +141,18 @@ const finalToolDescription = toolConfig.description;
   <div class="tool-main-content">
     {hasArticles ? (
       <div class="articles-section">
-        
         <!-- Optimized Articles Grid with Enhanced Design -->
         <div class="articles-grid-wireframe">
-        {toolArticles.map((article, index) => (
-          <ArticleCard 
-            article={article} 
-            tool={tool} 
-            index={index} 
-          />
-        ))}
+          {toolArticles.map((article, index) => (
+            <ArticleCard 
+              article={article} 
+              tool={tool} 
+              index={index} 
+            />
+          ))}
         </div>
-
       </div>
     ) : (
-      <!-- Enhanced Empty State with Better UX -->
       <div class="empty-state" role="region" aria-label="No articles available">
         <div class="empty-state-content">
           <div class="empty-state-icon">
@@ -194,5 +191,5 @@ const finalToolDescription = toolConfig.description;
         </div>
       </div>
     )}
-    </div>
+  </div>
 </ToolArticleLayout>
