@@ -12,6 +12,7 @@ export interface Props {
   ariaLabel?: string;
   tooltip?: string;
   toolFilter?: string; // ツール固有の検索フィルター
+  buttonStyle?: 'circular' | 'rounded'; // ボタンスタイルの切り替え
 }
 
 // ========== PROPS DESTRUCTURING WITH VALIDATION ==========
@@ -22,6 +23,7 @@ const {
   ariaLabel = 'Open search interface',
   tooltip = 'Search',
   toolFilter = '', // ツール固有フィルター（デフォルトは空文字列）
+  buttonStyle = 'circular', // デフォルトは丸いボタン
 } = Astro.props;
 
 // ========== VALIDATION AND SANITIZATION ==========
@@ -34,32 +36,66 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
 <!-- ========== OPTIMIZED SEARCH COMPONENT ========== -->
 <div class={`search-popover-container ${className}`}>
   <!-- ========== SEARCH TOGGLE BUTTON ========== -->
-  <button
-    class='search-toggle-btn'
-    popovertarget='search-popover'
-    popovertargetaction='toggle'
-    aria-label={ariaLabel}
-    title={tooltip}
-    type='button'
-    aria-expanded='false'
-    aria-controls='search-popover'
-  >
-    <svg
-      class='search-icon'
-      fill='none'
-      stroke='currentColor'
-      viewBox='0 0 24 24'
-      aria-hidden='true'
-      focusable='false'
-    >
-      <path
-        stroke-linecap='round'
-        stroke-linejoin='round'
-        stroke-width='2'
-        d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'></path>
-    </svg>
-    <span class='sr-only'>{ariaLabel}</span>
-  </button>
+  {
+    buttonStyle === 'circular' ? (
+      <button
+        class='search-toggle-btn search-toggle-btn--circular'
+        popovertarget='search-popover'
+        popovertargetaction='toggle'
+        aria-label={ariaLabel}
+        title={tooltip}
+        type='button'
+        aria-expanded='false'
+        aria-controls='search-popover'
+      >
+        <svg
+          class='search-icon'
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'
+          aria-hidden='true'
+          focusable='false'
+        >
+          <path
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            stroke-width='2'
+            d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+          />
+        </svg>
+        <span class='sr-only'>{ariaLabel}</span>
+      </button>
+    ) : (
+      <button
+        class='search-toggle-btn search-toggle-btn--rounded'
+        popovertarget='search-popover'
+        popovertargetaction='toggle'
+        aria-label={ariaLabel}
+        title={tooltip}
+        type='button'
+        aria-expanded='false'
+        aria-controls='search-popover'
+      >
+        <svg
+          class='search-icon'
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'
+          aria-hidden='true'
+          focusable='false'
+        >
+          <path
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            stroke-width='2'
+            d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+          />
+        </svg>
+        <span class='search-text'>Search</span>
+        <span class='sr-only'>{ariaLabel}</span>
+      </button>
+    )
+  }
 
   <!-- ========== SEARCH POPOVER CONTENT ========== -->
   <div
@@ -202,32 +238,45 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     display: inline-block;
   }
 
-  /* Search Toggle Button - Enhanced Design */
+  /* Search Toggle Button - Base Styles */
   .search-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(2.5rem, 4.5vw, 3rem);
-    height: clamp(2.5rem, 4.5vw, 3rem);
+    color: rgba(255, 255, 255, 0.95);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.25);
     background: linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.12) 0%,
       rgba(255, 255, 255, 0.08) 50%,
       rgba(255, 255, 255, 0.1) 100%
     );
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    color: rgba(255, 255, 255, 0.95);
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px) saturate(180%);
-    -webkit-backdrop-filter: blur(15px) saturate(180%);
     box-shadow:
       0 4px 16px rgba(0, 0, 0, 0.1),
       0 2px 8px rgba(0, 0, 0, 0.05),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
+  }
+
+  /* Circular Button Style */
+  .search-toggle-btn--circular {
+    width: clamp(2.5rem, 4.5vw, 3rem);
+    height: clamp(2.5rem, 4.5vw, 3rem);
+    border-radius: 50%;
+  }
+
+  /* Rounded Button Style */
+  .search-toggle-btn--rounded {
+    width: auto;
+    height: clamp(2.5rem, 4.5vw, 3rem);
+    padding: 0 clamp(1rem, 2vw, 1.25rem);
+    border-radius: clamp(1rem, 2.5vw, 1.5rem);
+    gap: clamp(0.5rem, 1vw, 0.75rem);
   }
 
   .search-toggle-btn::before {
@@ -245,7 +294,14 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
     );
     opacity: 0;
     transition: opacity 0.3s ease;
+  }
+
+  .search-toggle-btn--circular::before {
     border-radius: 50%;
+  }
+
+  .search-toggle-btn--rounded::before {
+    border-radius: inherit;
   }
 
   .search-toggle-btn:hover {
@@ -297,6 +353,14 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
   .search-icon {
     width: clamp(1rem, 2vw, 1.25rem);
     height: clamp(1rem, 2vw, 1.25rem);
+    flex-shrink: 0;
+  }
+
+  .search-text {
+    font-size: clamp(0.875rem, 1.8vw, 1rem);
+    font-weight: 500;
+    white-space: nowrap;
+    color: inherit;
   }
 
   /* Search Popover - GlassMorphism Design */
@@ -522,9 +586,15 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
       height: clamp(1.25rem, 3vw, 1.5rem);
     }
 
-    .search-toggle-btn {
+    .search-toggle-btn--circular {
       width: clamp(3rem, 6.5vw, 3.5rem);
       height: clamp(3rem, 6.5vw, 3.5rem);
+    }
+
+    .search-toggle-btn--rounded {
+      height: clamp(3rem, 6.5vw, 3.5rem);
+      padding: 0 clamp(1.25rem, 3vw, 1.5rem);
+      gap: clamp(0.75rem, 2vw, 1rem);
     }
 
     .search-icon {
@@ -568,9 +638,15 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
       height: clamp(1rem, 2vw, 1.25rem);
     }
 
-    .search-toggle-btn {
+    .search-toggle-btn--circular {
       width: clamp(2.5rem, 4vw, 3rem);
       height: clamp(2.5rem, 4vw, 3rem);
+    }
+
+    .search-toggle-btn--rounded {
+      height: clamp(2.5rem, 4vw, 3rem);
+      padding: 0 clamp(1rem, 2vw, 1.25rem);
+      gap: clamp(0.5rem, 1vw, 0.75rem);
     }
 
     .search-icon {
@@ -611,9 +687,15 @@ const sanitizedPlaceholder = placeholder.trim() || 'Search...';
       height: clamp(1rem, 1.2vw, 1.2rem);
     }
 
-    .search-toggle-btn {
+    .search-toggle-btn--circular {
       width: clamp(2.4rem, 2.8vw, 2.8rem);
       height: clamp(2.4rem, 2.8vw, 2.8rem);
+    }
+
+    .search-toggle-btn--rounded {
+      height: clamp(2.4rem, 2.8vw, 2.8rem);
+      padding: 0 clamp(0.8rem, 1.2vw, 1rem);
+      gap: clamp(0.4rem, 0.8vw, 0.6rem);
     }
 
     .search-icon {

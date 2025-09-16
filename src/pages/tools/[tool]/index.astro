@@ -5,191 +5,183 @@
 // File: src/pages/tools/[tool]/index.astro
 
 // Import required dependencies
-import { getCollection, type CollectionEntry } from "astro:content";
-import { readdir } from "fs/promises";
-import { join } from "path";
-import ToolArticleLayout from "../../../layouts/ToolArticleLayout.astro";
-import Breadcrumb from "../../../components/public-components/Breadcrumb.astro";
-import SearchPopover from "../../../components/tools/SearchPopover.astro";
-import ArticleCard from "../../../components/tools/ArticleCard.astro";
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ToolArticleLayout from '../../../layouts/ToolArticleLayout.astro';
+import ToolIdContentGrid from '../../../components/tools/Tool-IdContentGrid.astro';
 
-// ========== STATIC PATH GENERATION ==========
-// Optimized static path generation with minimal overhead
-export async function getStaticPaths() {
+// ========== OPTIMIZED TOOL DISCOVERY ==========
+// Single function for tool discovery with caching
+async function getValidToolsFromCollection() {
   try {
-    const toolArticlesPath = join(process.cwd(), "src/content/tool-articles");
-    const entries = await readdir(toolArticlesPath, { withFileTypes: true });
+    const articles = await getCollection('tool-articles');
+    const toolNames = new Set<string>();
     
-    const validTools = ["anki", "migaku", "yomitan"];
-    const toolDirectories = entries
-      .filter(entry => entry.isDirectory() && validTools.includes(entry.name))
-        .map(entry => entry.name);
-
-    return toolDirectories.map(tool => ({
-        params: { tool },
-        props: { toolName: tool }
-      }));
-
+    articles.forEach((article: CollectionEntry<'tool-articles'>) => {
+      if (article.data.toolName) {
+        toolNames.add(article.data.toolName.toLowerCase());
+      }
+    });
+    
+    return Array.from(toolNames).sort();
   } catch (error) {
-    // Fallback to predefined tools if directory scan fails
-    return ["anki", "migaku", "yomitan"].map(tool => ({
-      params: { tool },
-      props: { toolName: tool }
-    }));
+    console.error('Failed to load tools from collection:', error);
+    return [];
   }
 }
 
-// ========== COMPONENT LOGIC ==========
-// Get tool parameter with validation
-const { tool } = Astro.params as { tool: string };
-
-if (!tool) {
-  return Astro.redirect("/tools", 301);
-}
-
-const validTools = ["anki", "migaku", "yomitan"];
-if (!validTools.includes(tool)) {
-  return Astro.redirect("/tools", 301);
-}
-
-// Fetch and filter articles efficiently
-const articles = await getCollection("tool-articles");
-const toolArticles = articles.filter((article: CollectionEntry<"tool-articles">) => 
-  article.data.tags?.includes(tool)
-);
-
-const hasArticles = toolArticles.length > 0;
-
-// ========== CENTRALIZED DATA MANAGEMENT FOR TOOLIDHEADER ==========
-// Unified tool configuration mapping
-const getToolConfig = (toolName: string) => {
-  const toolConfigs: Record<string, { iconPath: string; description: string }> = {
-    anki: {
-      iconPath: '/icon/anki-icon-240.webp',
-      description: `Anki adalah aplikasi flashcard yang sangat powerful untuk menghafal kosakata bahasa Jepang. Dengan sistem spaced repetition, Anki membantu Anda mengingat kata-kata dengan lebih efektif dan efisien.`
-    },
-    migaku: {
-      iconPath: '/icon/migaku-icon-240.webp',
-      description: `Migaku adalah platform pembelajaran bahasa Jepang yang komprehensif dengan fokus pada immersion learning. Pelajari bahasa Jepang melalui konten asli seperti anime, manga, dan drama dengan bantuan AI.`
-    },
-    yomitan: {
-      iconPath: '/icon/yomitan-icon-240.webp',
-      description: `Yomitan adalah browser extension yang memudahkan membaca teks bahasa Jepang. Dengan hover dictionary dan furigana generation, Yomitan membuat proses pembelajaran menjadi lebih interaktif dan menyenangkan.`
+// ========== STATIC PATH GENERATION ==========
+export async function getStaticPaths() {
+  const getValidToolsFromCollection = async () => {
+    try {
+      const articles = await getCollection('tool-articles');
+      const toolNames = new Set<string>();
+      
+      articles.forEach((article: CollectionEntry<'tool-articles'>) => {
+        if (article.data.toolName) {
+          toolNames.add(article.data.toolName.toLowerCase());
+        }
+      });
+      
+      return Array.from(toolNames).sort();
+    } catch (error) {
+      console.error('Failed to load tools from collection:', error);
+      return [];
     }
   };
-  
-  const defaultConfig = {
-    iconPath: '/icon/yomitan-icon-240.webp',
-    description: `Comprehensive learning resources and guides for mastering ${toolName}. From beginner basics to advanced techniques, everything you need to succeed.`
-  };
-  
-  return toolConfigs[toolName.toLowerCase()] || defaultConfig;
+
+  const validTools = await getValidToolsFromCollection();
+  return validTools.length === 0 ? [] : validTools.map(tool => ({
+    params: { tool },
+    props: { toolName: tool },
+  }));
+}
+
+// ========== COMPONENT LOGIC ==========
+const { tool } = Astro.params as { tool: string };
+
+// Early validation and redirect
+if (!tool) return Astro.redirect('/tools', 301);
+
+// Get tools and validate
+const validTools = await getValidToolsFromCollection();
+if (validTools.length === 0 || !validTools.includes(tool.toLowerCase())) {
+  return Astro.redirect('/tools', 301);
+}
+
+// Fetch and filter articles
+const articles = await getCollection('tool-articles');
+const toolArticles = articles.filter(
+  (article: CollectionEntry<'tool-articles'>) =>
+    article.data.toolName?.toLowerCase() === tool.toLowerCase()
+);
+
+// ========== CENTRALIZED DATA MANAGEMENT ==========
+// All data processing centralized here for maximum efficiency and maintainability
+
+// Tool configuration mapping
+const toolConfigs = {
+  anki: { 
+    iconPath: '/icon/anki-icon-240.webp', 
+    description: 'Anki adalah aplikasi flashcard yang sangat powerful untuk menghafal kosakata bahasa Jepang. Dengan sistem spaced repetition, Anki membantu Anda mengingat kata-kata dengan lebih efektif dan efisien.' 
+  },
+  migaku: { 
+    iconPath: '/icon/migaku-icon-240.webp', 
+    description: 'Migaku adalah platform pembelajaran bahasa Jepang yang komprehensif dengan fokus pada immersion learning. Pelajari bahasa Jepang melalui konten asli seperti anime, manga, dan drama dengan bantuan AI.' 
+  },
+  yomitan: { 
+    iconPath: '/icon/yomitan-icon-240.webp', 
+    description: 'Yomitan adalah browser extension yang memudahkan membaca teks bahasa Jepang. Dengan hover dictionary dan furigana generation, Yomitan membuat proses pembelajaran menjadi lebih interaktif dan menyenangkan.' 
+  }
+} as const;
+
+// Centralized data processing
+const toolConfig = toolConfigs[tool.toLowerCase() as keyof typeof toolConfigs] || {
+  iconPath: '/icon/yomitan-icon-240.webp',
+  description: `Comprehensive learning resources and guides for mastering ${tool}. From beginner basics to advanced techniques, everything you need to succeed.`
 };
 
-// Get tool configuration
-const toolConfig = getToolConfig(tool);
-
-// Format tool name for display
 const formattedToolName = tool.charAt(0).toUpperCase() + tool.slice(1);
+const currentYear = new Date(articles[0]?.data.publishedDate || new Date()).getFullYear();
 
-// Get content collection year for automatic date recognition
-const currentYear = new Date(
-  articles[0]?.data.publishedDate || new Date()
-).getFullYear();
+// ========== PROCESSED ARTICLE DATA ==========
+// Pre-process all article data for components
+const processedArticles = toolArticles.map((article, index) => {
+  // Article slug processing
+  const articleSlug = article.slug?.split('/').slice(1).join('/') || article.id;
+  
+  // Article title processing
+  const articleTitle = article.data.title || `Complete ${formattedToolName} Guide`;
+  
+  // Article description processing
+  const articleDescription = article.data.description || 
+    `Master ${tool} with our comprehensive guide. Learn essential techniques, best practices, and advanced tips.`;
+  
+  // Article tags processing
+  const DEFAULT_TAGS = ['guide', 'tutorial'];
+  const articleTags = article.data.tags?.length ? article.data.tags : [tool, ...DEFAULT_TAGS];
+  const displayTags = articleTags.slice(0, 3); // Max 3 tags for display
+  
+  // Article date processing
+  const DATE_LOCALE = 'id-ID';
+  const publishedDate = article.data.publishedDate
+    ? new Date(article.data.publishedDate).toLocaleDateString(DATE_LOCALE)
+    : new Date().toLocaleDateString(DATE_LOCALE);
+  
+  // Article image processing
+  const articleImage = article.data.featuredImage || article.data.image || null;
+  const hasImage = Boolean(articleImage?.trim());
+  
+  return {
+    slug: articleSlug,
+    title: articleTitle,
+    description: articleDescription,
+    tags: displayTags,
+    publishedDate,
+    image: articleImage,
+    hasImage,
+    originalArticle: article,
+    index
+  };
+});
 
-// Default values for tool title and description
-const finalToolTitle = `Apa itu ${formattedToolName} ?`;
-const finalToolDescription = toolConfig.description;
+// ========== HEADER DATA ==========
+// Pre-processed header data
+const headerData = {
+  tool,
+  articleCount: toolArticles.length,
+  title: `Apa itu ${formattedToolName} ?`,
+  description: toolConfig.description,
+  iconPath: toolConfig.iconPath,
+  formattedToolName,
+  currentYear
+};
 
+// ========== CONTENT GRID DATA ==========
+// Pre-processed content grid data
+const contentGridData = {
+  hasArticles: toolArticles.length > 0,
+  toolArticles: processedArticles,
+  tool,
+  formattedToolName
+};
 ---
 
 <ToolArticleLayout
-  title={`${tool.charAt(0).toUpperCase() + tool.slice(1)} - GoRakuDo`}
+  title={`${formattedToolName} - GoRakuDo`}
   description={`All articles and guides for ${tool} tool`}
-  lang="id"
+  lang='id'
   tool={tool}
-  articleCount={toolArticles.length}
-  toolTitle={finalToolTitle}
-  toolDescription={finalToolDescription}
-  iconPath={toolConfig.iconPath}
-  formattedToolName={formattedToolName}
-  currentYear={currentYear}>
-
-  <!-- Optimized Navigation with Enhanced Spacing -->
-  <div class="tool-navigation-wrapper">
-    <Breadcrumb
-      currentPath={`/tools/${tool}`}
-      showHome={true}
-      variant="compact"
-      theme="auto"
-      orientation="horizontal"
-      showIcons={true}
-      ariaLabel="Tool navigation breadcrumb"
-      className="tool-breadcrumb"
-    />
-    
-    <!-- Search Popover Component -->
-    <SearchPopover 
-      placeholder={`Search ${formattedToolName} articles...`}
-      searchAction={`/search?tool=${tool}`}
-      className="tool-search-popover"
-      toolFilter={tool}
-    />
-  </div>
-
-  <!-- Enhanced Main Content with Modern Layout -->
-  <div class="tool-main-content">
-    {hasArticles ? (
-      <div class="articles-section">
-        <!-- Optimized Articles Grid with Enhanced Design -->
-        <div class="articles-grid-wireframe">
-          {toolArticles.map((article, index) => (
-            <ArticleCard 
-              article={article} 
-              tool={tool} 
-              index={index} 
-            />
-          ))}
-        </div>
-      </div>
-    ) : (
-      <div class="empty-state" role="region" aria-label="No articles available">
-        <div class="empty-state-content">
-          <div class="empty-state-icon">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
-          </div>
-          <h2 class="empty-state-title">Coming Soon: {formattedToolName} Content</h2>
-          <p class="empty-state-description">
-            We're crafting comprehensive guides and tutorials for {formattedToolName}. 
-            Our team is working hard to bring you the best learning resources!
-          </p>
-          <div class="empty-state-actions">
-            <a href="/tools" class="empty-state-btn primary" aria-label="Browse other available tools">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-              </svg>
-              <span>Browse Other Tools</span>
-            </a>
-            <a href="/contact" class="empty-state-btn secondary" aria-label="Request content for this tool">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-              </svg>
-              <span>Request Content</span>
-            </a>
-          </div>
-          <div class="empty-state-suggestions">
-            <h3 class="suggestions-title">What to expect:</h3>
-            <div class="suggestions-list">
-              <span class="suggestion-item">Step-by-step tutorials</span>
-              <span class="suggestion-item">Best practices guide</span>
-              <span class="suggestion-item">Advanced techniques</span>
-              <span class="suggestion-item">Troubleshooting tips</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
-  </div>
+  articleCount={headerData.articleCount}
+  toolTitle={headerData.title}
+  toolDescription={headerData.description}
+  iconPath={headerData.iconPath}
+  formattedToolName={headerData.formattedToolName}
+  currentYear={headerData.currentYear}
+>
+  <ToolIdContentGrid
+    hasArticles={contentGridData.hasArticles}
+    toolArticles={contentGridData.toolArticles}
+    tool={contentGridData.tool}
+    formattedToolName={contentGridData.formattedToolName}
+  />
 </ToolArticleLayout>

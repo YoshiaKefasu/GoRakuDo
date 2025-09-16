@@ -1,67 +1,54 @@
 ---
-// ========== OPTIMIZED TYPE DEFINITIONS ==========
-interface ArticleData {
-  title?: string;
-  description?: string;
-  tags?: string[];
-  publishedDate?: string;
-  image?: string;
-  featuredImage?: string;
-}
-
-interface Article {
-  slug?: string;
-  id: string;
-  data: ArticleData;
-}
+// ========== SIMPLIFIED ARTICLE COMPONENT ==========
+// Centralized data management - this component only handles display logic
+// All data processing is done in the parent index.astro
 
 interface Props {
-  article: Article;
+  article: {
+    slug: string;
+    title: string;
+    description: string;
+    tags: string[];
+    publishedDate: string;
+    image: string | null;
+    hasImage: boolean;
+    originalArticle: any;
+    index: number;
+  };
   tool: string;
   index: number;
 }
 
-// ========== OPTIMIZED DATA PROCESSING ==========
 const { article, tool, index } = Astro.props;
 
-// ユーティリティ関数の最適化
-const formatToolName = (tool: string) =>
+// Constants for display
+const IMAGE_DIMENSIONS = { width: 280, height: 160 };
+const formatToolName = (tool: string): string =>
   tool.charAt(0).toUpperCase() + tool.slice(1);
-const formatDate = (date: string) => new Date(date).toLocaleDateString('id-ID');
-
-// データ処理の最適化
-const articleSlug = article.slug?.split('/').slice(1).join('/') || article.id;
-const articleTitle =
-  article.data.title || `Complete ${formatToolName(tool)} Guide`;
-const articleDescription =
-  article.data.description ||
-  `Master ${tool} with our comprehensive guide. Learn essential techniques, best practices, and advanced tips.`;
-const articleTags = article.data.tags || [tool, 'guide', 'tutorial'];
-const publishedDate = article.data.publishedDate
-  ? formatDate(article.data.publishedDate)
-  : formatDate(new Date().toISOString());
-const articleImage = article.data.featuredImage || article.data.image;
-const hasImage = Boolean(articleImage?.trim());
 ---
 
-<!-- ========== OPTIMIZED ARTICLE CARD MARKUP ========== -->
+<!-- ========== ENHANCED ARTICLE CARD MARKUP ========== -->
 <article
   class='article-card-optimized glassmorphism glassmorphism-card'
   data-index={index}
   data-tool={tool}
+  itemscope
+  itemtype='https://schema.org/Article'
 >
   <a
-    href={`/tools/${tool}/${articleSlug}`}
+    href={`/tools/${tool}/${article.slug}`}
     class='card-link'
-    aria-label={`Read article: ${articleTitle}`}
+    aria-label={`Read article: ${article.title}`}
+    itemprop='url'
   >
     <!-- カードヘッダー -->
     <header class='card-header'>
       <time
         class='card-date'
-        datetime={article.data.publishedDate || new Date().toISOString()}
+        datetime={article.originalArticle.data.publishedDate || new Date().toISOString()}
+        itemprop='datePublished'
       >
-        {publishedDate}
+        {article.publishedDate}
       </time>
 
       <!-- アクションインジケーター -->
@@ -71,6 +58,7 @@ const hasImage = Boolean(articleImage?.trim());
           fill='none'
           stroke='currentColor'
           viewBox='0 0 24 24'
+          aria-hidden='true'
         >
           <path
             stroke-linecap='round'
@@ -84,24 +72,27 @@ const hasImage = Boolean(articleImage?.trim());
     <!-- メインコンテンツ -->
     <div class='card-content'>
       {
-        hasImage && (
+        article.hasImage && (
           <div class='card-image-section'>
             <img
-              src={articleImage}
-              alt={`${articleTitle} - ${formatToolName(tool)} guide`}
+              src={article.image}
+              alt={`${article.title} - ${formatToolName(tool)} guide`}
               class='card-image'
               loading='lazy'
               decoding='async'
-              width='280'
-              height='160'
+              width={IMAGE_DIMENSIONS.width}
+              height={IMAGE_DIMENSIONS.height}
+              itemprop='image'
             />
           </div>
         )
       }
 
       <div class='card-text-content'>
-        <h3 class='card-title'>{articleTitle}</h3>
-        <p class='card-description'>{articleDescription}</p>
+        <h3 class='card-title' itemprop='headline'>{article.title}</h3>
+        <p class='card-description' itemprop='description'>
+          {article.description}
+        </p>
       </div>
     </div>
 
@@ -109,8 +100,8 @@ const hasImage = Boolean(articleImage?.trim());
     <footer class='card-footer'>
       <div class='card-tags' role='list' aria-label='Article tags'>
         {
-          articleTags.slice(0, 3).map((tag: string) => (
-            <span class='card-tag' role='listitem'>
+          article.tags.map((tag: string) => (
+            <span class='card-tag' role='listitem' itemprop='keywords'>
               #{tag}
             </span>
           ))
@@ -121,23 +112,30 @@ const hasImage = Boolean(articleImage?.trim());
 </article>
 
 <style>
-  /* ========== OPTIMIZED ARTICLE CARD STYLES ========== */
+  /* ========== ENHANCED ARTICLE CARD STYLES ========== */
   .article-card-optimized {
     position: relative;
     border-radius: var(--radius-xl);
     overflow: hidden;
-    transition: all var(--transition-normal);
-    will-change: transform, box-shadow;
+    transition:
+      transform var(--transition-normal),
+      box-shadow var(--transition-normal);
+    will-change: transform;
     contain: layout style paint;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    backdrop-filter: blur(20px);
   }
 
   .article-card-optimized:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
+    border-color: var(--color-border-hover);
   }
 
   .card-link {
-    display: block;
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
     color: inherit;
     height: 100%;
@@ -190,10 +188,21 @@ const hasImage = Boolean(articleImage?.trim());
     will-change: transform;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+    background: var(--color-bg-card);
   }
 
   .article-card-optimized:hover .card-image {
     transform: scale(1.02);
+  }
+
+  /* 画像読み込み最適化 */
+  .card-image[loading='lazy'] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-image[loading='lazy'].loaded {
+    opacity: 1;
   }
 
   /* ========== テキストコンテンツ ========== */
@@ -224,6 +233,7 @@ const hasImage = Boolean(articleImage?.trim());
   .card-footer {
     padding: var(--spacing-sm) clamp(var(--spacing-md), 4vw, var(--spacing-lg))
       var(--spacing-md);
+    margin-top: auto;
   }
 
   .card-tags {
@@ -286,7 +296,7 @@ const hasImage = Boolean(articleImage?.trim());
   /* ========== レスポンシブデザイン ========== */
   /* モバイル (320px+) - デフォルト */
   .article-card-optimized {
-    min-height: clamp(200px, 25vh, 240px);
+    height: fit-content;
     margin: 0 clamp(var(--spacing-xs), 2vw, var(--spacing-md));
   }
 
@@ -367,3 +377,47 @@ const hasImage = Boolean(articleImage?.trim());
     }
   }
 </style>
+
+<!-- ========== CLIENT-SIDE OPTIMIZATION ========== -->
+<script>
+  // 画像読み込み最適化
+  function optimizeImageLoading() {
+    const images = document.querySelectorAll('.card-image[loading="lazy"]');
+
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target as HTMLImageElement;
+              img.addEventListener('load', () => {
+                img.classList.add('loaded');
+              });
+              imageObserver.unobserve(img);
+            }
+          });
+        },
+        {
+          rootMargin: '50px 0px',
+          threshold: 0.1,
+        }
+      );
+
+      images.forEach(img => imageObserver.observe(img));
+    } else {
+      // フォールバック: 即座に読み込み
+      images.forEach(img => {
+        img.addEventListener('load', () => {
+          img.classList.add('loaded');
+        });
+      });
+    }
+  }
+
+  // DOM読み込み完了後に実行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', optimizeImageLoading);
+  } else {
+    optimizeImageLoading();
+  }
+</script>

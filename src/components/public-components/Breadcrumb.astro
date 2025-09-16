@@ -3,282 +3,542 @@
 // GoRakuDo Engineering Team 2025 - Astro + Vue + Tailwind v4.1
 // Mobile-first responsive design with comprehensive customization options
 
-import type { CollectionEntry } from "astro:content"
-import {
-  resolvePath,
-  getCollectionInfo,
-} from "../../utils/collections"
-import type { 
-  BreadcrumbItem, 
-  BreadcrumbData, 
+import type { CollectionEntry } from 'astro:content';
+import { resolvePath, getCollectionInfo } from '../../utils/collections';
+import type {
+  BreadcrumbItem,
+  BreadcrumbData,
   ToolBreadcrumbConfig,
-  ToolName 
-} from "../../utils/content/breadcrumb-utils"
-import { 
+  ToolName,
+} from '../../utils/content/breadcrumb-utils';
+import {
   generateToolBreadcrumb,
-  validateBreadcrumbData, 
+  validateBreadcrumbData,
   sanitizeBreadcrumbItem,
-  createFallbackBreadcrumb
-} from "../../utils/content/breadcrumb-utils"
+  createFallbackBreadcrumb,
+} from '../../utils/content/breadcrumb-utils';
+// ========== BREADCRUMB CONFIGURATION ==========
+// 凡人スタッフ向け設定（インライン化）
+// このファイル内でアイコンや表示設定を変更できます
+
+// アイコン設定インターフェース
+interface BreadcrumbIconConfig {
+  name: string;
+  svg: string;
+  description: string;
+}
+
+// 設定インターフェース
+interface BreadcrumbConfig {
+  icons: BreadcrumbIconConfig[];
+  defaults: {
+    variant: 'compact' | 'spacious' | 'minimal' | 'pill' | 'underline';
+    theme: 'light' | 'dark' | 'auto';
+    showIcons: boolean;
+    orientation: 'horizontal' | 'vertical';
+    maxItems: number;
+  };
+  pathIconMap: Record<string, string>;
+  toolIconMap: Record<string, string>;
+}
+
+// ========== アイコン設定 ==========
+// 新しいアイコンを追加する場合は、ここに追加してください
+const BREADCRUMB_ICONS: BreadcrumbIconConfig[] = [
+  {
+    name: 'home',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+    </svg>`,
+    description: 'ホームページのアイコン',
+  },
+  {
+    name: 'document',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>`,
+    description: 'ドキュメントのアイコン',
+  },
+  {
+    name: 'book',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+    </svg>`,
+    description: '本・学習資料のアイコン',
+  },
+  {
+    name: 'folder',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+    </svg>`,
+    description: 'フォルダーのアイコン',
+  },
+  {
+    name: 'more',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01"></path>
+    </svg>`,
+    description: '省略記号のアイコン',
+  },
+  {
+    name: 'tools',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M10 4V8M2 8H22M6 4V8M4 4H20C21.1046 4 22 4.89543 22 6V18C22 19.1046 21.1046 20 20 20H4C2.89543 20 2 19.1046 2 18V6C2 4.89543 2.89543 4 4 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    description: 'ツールセットのアイコン',
+  },
+  {
+    name: 'anki',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M11.5251 2.29502C11.5689 2.20648 11.6366 2.13195 11.7205 2.07984C11.8045 2.02773 11.9013 2.00012 12.0001 2.00012C12.0989 2.00012 12.1957 2.02773 12.2796 2.07984C12.3636 2.13195 12.4313 2.20648 12.4751 2.29502L14.7851 6.97402C14.9373 7.28198 15.1619 7.54842 15.4397 7.75047C15.7175 7.95251 16.0402 8.08413 16.3801 8.13402L21.5461 8.89002C21.644 8.9042 21.7359 8.94549 21.8116 9.00921C21.8872 9.07294 21.9435 9.15656 21.9741 9.25062C22.0047 9.34468 22.0084 9.44542 21.9847 9.54145C21.961 9.63748 21.9109 9.72497 21.8401 9.79402L18.1041 13.432C17.8577 13.6721 17.6734 13.9685 17.5669 14.2956C17.4605 14.6228 17.4352 14.9709 17.4931 15.31L18.3751 20.45C18.3924 20.5479 18.3818 20.6486 18.3446 20.7407C18.3074 20.8328 18.245 20.9126 18.1646 20.971C18.0842 21.0294 17.9891 21.064 17.89 21.0709C17.7908 21.0778 17.6918 21.0567 17.6041 21.01L12.9861 18.582C12.6818 18.4222 12.3433 18.3388 11.9996 18.3388C11.6559 18.3388 11.3174 18.4222 11.0131 18.582L6.39609 21.01C6.30842 21.0564 6.20949 21.0773 6.11054 21.0703C6.0116 21.0632 5.91661 21.0286 5.83639 20.9702C5.75616 20.9119 5.69392 20.8322 5.65675 20.7402C5.61957 20.6483 5.60895 20.5477 5.62609 20.45L6.50709 15.311C6.56529 14.9717 6.54007 14.6234 6.43363 14.2961C6.32718 13.9687 6.1427 13.6722 5.89609 13.432L2.16009 9.79502C2.08868 9.72605 2.03808 9.63841 2.01405 9.54209C1.99002 9.44577 1.99353 9.34463 2.02417 9.25021C2.05481 9.15578 2.11136 9.07186 2.18737 9.008C2.26338 8.94414 2.35579 8.90291 2.45409 8.88902L7.61909 8.13402C7.95935 8.08451 8.28248 7.95307 8.56067 7.751C8.83887 7.54893 9.06379 7.28229 9.21609 6.97402L11.5251 2.29502Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    description: 'Anki学習アプリのアイコン',
+  },
+  {
+    name: 'yomitan',
+    svg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M2 16V4C2 3.46957 2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957 2 4 2H15M2 16C2 15.4696 2.21071 14.9609 2.58579 14.5858C2.96086 14.2107 3.46957 14 4 14H5M2 16C2 16.5304 2.21071 17.0391 2.58579 17.4142C2.96086 17.7893 3.46957 18 4 18H5M22 18H11C10.4696 18 9.96086 18.2107 9.58579 18.5858C9.21071 18.9609 9 19.4696 9 20M9 20C9 20.5304 9.21071 21.0391 9.58579 21.4142C9.96086 21.7893 10.4696 22 11 22H21.5C21.6326 22 21.7598 21.9473 21.8536 21.8536C21.9473 21.7598 22 21.6326 22 21.5V6.5C22 6.36739 21.9473 6.24021 21.8536 6.14645C21.7598 6.05268 21.6326 6 21.5 6H11C10.4696 6 9.96086 6.21071 9.58579 6.58579C9.21071 6.96086 9 7.46957 9 8V20Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    description: 'Yomitan辞書拡張のアイコン',
+  },
+];
+
+// ========== デフォルト設定 ==========
+// これらの設定を変更することで、全体的な見た目を調整できます
+const BREADCRUMB_DEFAULTS = {
+  variant: 'compact' as const,
+  theme: 'auto' as const,
+  showIcons: true,
+  orientation: 'horizontal' as const,
+  maxItems: 5,
+};
+
+// ========== パス別アイコンマッピング ==========
+// 特定のパスで表示されるアイコンを設定できます
+const PATH_ICON_MAP: Record<string, string> = {
+  docs: 'book',
+  pages: 'document',
+  'support-us': 'folder',
+  tools: 'tools',
+};
+
+// ========== ツール別アイコンマッピング ==========
+// 各ツールのアイコンを設定できます
+const TOOL_ICON_MAP: Record<string, string> = {
+  anki: 'anki',
+  yomitan: 'yomitan',
+};
+
+// ========== メイン設定オブジェクト ==========
+const BREADCRUMB_CONFIG: BreadcrumbConfig = {
+  icons: BREADCRUMB_ICONS,
+  defaults: BREADCRUMB_DEFAULTS,
+  pathIconMap: PATH_ICON_MAP,
+  toolIconMap: TOOL_ICON_MAP,
+};
 
 // ========== ASTRO-NATIVE PROPS INTERFACE ==========
 export interface Props {
   // Core navigation (KISS principle - essential props only)
-  post?: CollectionEntry<"docs">
-  currentPath?: string
-  showHome?: boolean
+  post?: CollectionEntry<'docs'>;
+  currentPath?: string;
+  showHome?: boolean;
 
   // Tool breadcrumb (DRY principle - single config object)
-  toolConfig?: ToolBreadcrumbConfig
+  toolConfig?: ToolBreadcrumbConfig;
 
   // Visual customization (simplified)
-  variant?: "compact" | "spacious" | "minimal" | "pill" | "underline"
-  theme?: "light" | "dark" | "auto"
-  showIcons?: boolean
+  variant?: 'compact' | 'spacious' | 'minimal' | 'pill' | 'underline';
+  theme?: 'light' | 'dark' | 'auto';
+  showIcons?: boolean;
 
   // Layout
-  orientation?: "horizontal" | "vertical"
-  maxItems?: number
+  orientation?: 'horizontal' | 'vertical';
+  maxItems?: number;
 
   // Accessibility
-  ariaLabel?: string
+  ariaLabel?: string;
 
   // CSS classes
-  className?: string
+  className?: string;
 }
 
+// ========== ASTRO-NATIVE BREADCRUMB GENERATION ==========
+// 凡人スタッフ向け最適化: インライン設定ベースの実装
+
 // ========== ASTRO-NATIVE DEFAULT PROPS ==========
+// 設定ファイルからデフォルト値を取得（凡人スタッフ向け）
 const {
   // Core navigation
   post,
-  currentPath = "",
+  currentPath = '',
   showHome = true,
 
   // Tool breadcrumb (DRY principle)
   toolConfig,
 
-  // Visual customization (KISS principle)
-  variant = "compact",
-  theme = "auto",
-  showIcons = false,
+  // Visual customization (インライン設定から取得)
+  variant = BREADCRUMB_DEFAULTS.variant,
+  theme = BREADCRUMB_DEFAULTS.theme,
+  showIcons = BREADCRUMB_DEFAULTS.showIcons,
 
-  // Layout
-  orientation = "horizontal",
-  maxItems = 5,
+  // Layout (インライン設定から取得)
+  orientation = BREADCRUMB_DEFAULTS.orientation,
+  maxItems = BREADCRUMB_DEFAULTS.maxItems,
 
   // Accessibility
-  ariaLabel = "Breadcrumb navigation",
+  ariaLabel = 'Breadcrumb navigation',
 
   // CSS classes
-  className = "",
-} = Astro.props
+  className = '',
+} = Astro.props;
 
-// ========== ASTRO-NATIVE BREADCRUMB GENERATION ==========
-// KISS Principle: Simple, focused breadcrumb generation
+// パフォーマンス最適化: 設定から定数を生成
+const STATIC_CONSTANTS = {
+  HOME_ITEM: {
+    title: 'Home',
+    url: '/',
+    isActive: false,
+    icon: 'home',
+  } as const,
+  TITLE_MAP: {
+    docs: 'Documentation',
+    pages: 'Pages',
+    'support-us': 'Dukung Kami',
+  } as const,
+  ICON_MAP: PATH_ICON_MAP,
+  DEFAULT_ICON: 'folder',
+  TRUNCATION_ITEM: {
+    title: '...',
+    url: '#',
+    isActive: false,
+    icon: 'more',
+  } as const,
+} as const;
 
+// Performance optimization: Memoized helper functions
+const createHomeItem = (): BreadcrumbItem => ({
+  ...STATIC_CONSTANTS.HOME_ITEM,
+});
+
+const createPostItem = (
+  post: CollectionEntry<'docs'>,
+  path: string
+): BreadcrumbItem => ({
+  title: post.data.title,
+  url: path,
+  isActive: true,
+  icon: 'document',
+});
+
+const createCollectionItem = (metadata: any): BreadcrumbItem => ({
+  title: metadata.displayName,
+  url: metadata.basePath,
+  isActive: false,
+  icon: metadata.icon,
+});
+
+// Performance optimization: Memoized title formatting
+const titleFormatCache = new Map<string, string>();
+const formatSegmentTitle = (segment: string): string => {
+  if (titleFormatCache.has(segment)) {
+    return titleFormatCache.get(segment)!;
+  }
+
+  const result =
+    STATIC_CONSTANTS.TITLE_MAP[
+      segment as keyof typeof STATIC_CONSTANTS.TITLE_MAP
+    ] || segment.charAt(0).toUpperCase() + segment.slice(1);
+
+  titleFormatCache.set(segment, result);
+  return result;
+};
+
+// ========== アイコン管理システム ==========
+// 設定ファイルベースのアイコン管理（凡人スタッフ向け）
+
+// パフォーマンス最適化: アイコンキャッシュ
+const iconCache = new Map<string, string>();
+
+// 設定ファイルからアイコンを取得する関数
+const getSegmentIcon = (segment: string): string => {
+  if (iconCache.has(segment)) {
+    return iconCache.get(segment)!;
+  }
+
+  // ツール固有アイコンを優先
+  const toolIcon = TOOL_ICON_MAP[segment];
+  if (toolIcon) {
+    iconCache.set(segment, toolIcon);
+    return toolIcon;
+  }
+
+  // パス別アイコンを確認
+  const pathIcon = PATH_ICON_MAP[segment];
+  if (pathIcon) {
+    iconCache.set(segment, pathIcon);
+    return pathIcon;
+  }
+
+  // デフォルトアイコン
+  iconCache.set(segment, STATIC_CONSTANTS.DEFAULT_ICON);
+  return STATIC_CONSTANTS.DEFAULT_ICON;
+};
+
+// インライン設定からSVGアイコンを取得する関数
+const renderIcon = (iconName: string): string => {
+  const iconConfig = BREADCRUMB_ICONS.find(icon => icon.name === iconName);
+  return (
+    iconConfig?.svg ||
+    BREADCRUMB_ICONS.find(icon => icon.name === 'folder')?.svg ||
+    ''
+  );
+};
+
+// Performance optimization: Optimized truncation with early return
+const truncateItems = (
+  items: readonly BreadcrumbItem[],
+  maxItems: number
+): BreadcrumbItem[] => {
+  if (items.length <= maxItems) return [...items];
+
+  // Performance: Pre-allocate array size for better memory usage
+  const result = new Array(5);
+  const startItems = items.slice(0, 2);
+  const endItems = items.slice(-2);
+
+  result[0] = startItems[0];
+  result[1] = startItems[1];
+  result[2] = STATIC_CONSTANTS.TRUNCATION_ITEM;
+  result[3] = endItems[0];
+  result[4] = endItems[1];
+
+  return result;
+};
+
+// Performance optimization: Memoized breadcrumb generation
+const breadcrumbCache = new Map<string, BreadcrumbData>();
+
+const generateToolBreadcrumbData = (): BreadcrumbData => {
+  const cacheKey = `tool-${JSON.stringify(toolConfig)}-${showHome}`;
+  if (breadcrumbCache.has(cacheKey)) {
+    return breadcrumbCache.get(cacheKey)!;
+  }
+
+  const result = generateToolBreadcrumb({
+    ...toolConfig!,
+    showHome: toolConfig!.showHome ?? showHome,
+  });
+
+  breadcrumbCache.set(cacheKey, result);
+  return result;
+};
+
+const generatePostBreadcrumbData = (): BreadcrumbData => {
+  const cacheKey = `post-${post!.slug}-${post!.collection}-${showHome}`;
+  if (breadcrumbCache.has(cacheKey)) {
+    return breadcrumbCache.get(cacheKey)!;
+  }
+
+  const items: BreadcrumbItem[] = [];
+  if (showHome) items.push(createHomeItem());
+
+  const collectionType = post!.collection;
+  const collectionMetadata = getCollectionInfo(collectionType);
+  const resolvedPath = { path: resolvePath(collectionType, post!.slug) };
+
+  if (collectionType === 'pages') {
+    items.push(createPostItem(post!, resolvedPath.path));
+  } else {
+    items.push(createCollectionItem(collectionMetadata));
+    items.push(createPostItem(post!, resolvedPath.path));
+  }
+
+  const result = {
+    items: Object.freeze(items),
+    ariaLabel: `${post!.data.title} navigation breadcrumb`,
+  };
+
+  breadcrumbCache.set(cacheKey, result);
+  return result;
+};
+
+const generatePathBreadcrumbData = (): BreadcrumbData => {
+  const cacheKey = `path-${currentPath}-${showHome}`;
+  if (breadcrumbCache.has(cacheKey)) {
+    return breadcrumbCache.get(cacheKey)!;
+  }
+
+  const pathSegments = currentPath.split('/').filter(Boolean);
+  const items: BreadcrumbItem[] = [];
+
+  if (showHome) items.push(createHomeItem());
+
+  // Performance: Use for loop instead of forEach for better performance
+  let currentUrl = '';
+  for (let i = 0; i < pathSegments.length; i++) {
+    const segment = pathSegments[i];
+    currentUrl += `/${segment}`;
+    const isLast = i === pathSegments.length - 1;
+
+    items.push({
+      title: formatSegmentTitle(segment),
+      url: currentUrl,
+      isActive: isLast,
+      icon: getSegmentIcon(segment),
+    });
+  }
+
+  const result = {
+    items: Object.freeze(items),
+    ariaLabel: ariaLabel,
+  };
+
+  breadcrumbCache.set(cacheKey, result);
+  return result;
+};
+
+// Main breadcrumb generation logic
 let breadcrumbData: BreadcrumbData;
 
 try {
-  // Tool breadcrumb (DRY principle - use utility function)
   if (toolConfig) {
-    breadcrumbData = generateToolBreadcrumb({
-      ...toolConfig,
-      showHome: toolConfig.showHome ?? showHome
-    });
-  } 
-  // Post breadcrumb
-  else if (post) {
-    const items: BreadcrumbItem[] = [];
-    
-    if (showHome) {
-      items.push({
-        title: "Home",
-        url: "/",
-        isActive: false,
-        icon: "🏠",
-      });
-    }
-
-    // Determine collection type from post
-    const collectionType = post.collection;
-    const collectionMetadata = getCollectionInfo(collectionType);
-    const resolvedPath = { path: resolvePath(collectionType, post.slug) };
-
-    // For pages collection, skip the intermediate section (Home > Posttitle)
-    // For docs collection, include the intermediate section (Home > Docs > Posttitle)
-    if (collectionType === "pages") {
-      items.push({
-        title: post.data.title,
-        url: resolvedPath.path,
-        isActive: true,
-        icon: "📄",
-      });
-    } else {
-      items.push(
-        {
-          title: collectionMetadata.displayName,
-          url: collectionMetadata.basePath,
-          isActive: false,
-          icon: collectionMetadata.icon,
-        },
-        {
-          title: post.data.title,
-          url: resolvedPath.path,
-          isActive: true,
-          icon: "📄",
-        }
-      );
-    }
-
-    breadcrumbData = {
-      items: Object.freeze(items),
-      ariaLabel: `${post.data.title} navigation breadcrumb`,
-    };
-  } 
-  // Path-based breadcrumb
-  else {
-    const pathSegments = currentPath.split("/").filter(Boolean);
-    const items: BreadcrumbItem[] = [];
-
-    if (showHome) {
-      items.push({
-        title: "Home",
-        url: "/",
-        isActive: false,
-        icon: "🏠",
-      });
-    }
-
-    let currentUrl = "";
-    pathSegments.forEach((segment, index) => {
-      currentUrl += `/${segment}`;
-      const isLast = index === pathSegments.length - 1;
-      const title = segment === "docs" ? "Documentation" : 
-                   segment === "pages" ? "Pages" : 
-                   segment === "support-us" ? "Dukung Kami" :
-                   segment.charAt(0).toUpperCase() + segment.slice(1);
-
-      items.push({
-        title,
-        url: currentUrl,
-        isActive: isLast,
-        icon: segment === "docs" ? "📚" : 
-              segment === "pages" ? "📄" : "📁",
-      });
-    });
-
-    breadcrumbData = {
-      items: Object.freeze(items),
-      ariaLabel: ariaLabel,
-    };
+    breadcrumbData = generateToolBreadcrumbData();
+  } else if (post) {
+    breadcrumbData = generatePostBreadcrumbData();
+  } else {
+    breadcrumbData = generatePathBreadcrumbData();
   }
 
-  // Apply max items limit (KISS principle)
-  if (breadcrumbData.items.length > maxItems) {
-    const startItems = breadcrumbData.items.slice(0, 2);
-    const endItems = breadcrumbData.items.slice(-2);
-    const truncatedItems = [
-      ...startItems,
-      { title: "...", url: "#", isActive: false, icon: "⋯" },
-      ...endItems,
-    ];
-    
-    breadcrumbData = {
-      ...breadcrumbData,
-      items: Object.freeze(truncatedItems),
-    };
-  }
+  // Apply max items limit and sanitize
+  breadcrumbData = {
+    ...breadcrumbData,
+    items: Object.freeze(truncateItems(breadcrumbData.items, maxItems)),
+  };
 
-  // Validate and sanitize (DRY principle)
   if (!validateBreadcrumbData(breadcrumbData)) {
-    throw new Error("Invalid breadcrumb data structure");
+    throw new Error('Invalid breadcrumb data structure');
   }
 
-  // Sanitize all items
   breadcrumbData = {
     ...breadcrumbData,
     items: Object.freeze(breadcrumbData.items.map(sanitizeBreadcrumbItem)),
   };
-
 } catch (error) {
-  // Fallback (KISS principle)
   breadcrumbData = createFallbackBreadcrumb();
 }
 
 // ========== ASTRO-NATIVE STYLING ==========
 // KISS Principle: Simple, focused styling
 
-const getSeparator = (): string => {
-  return `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-  </svg>`;
-};
+// Performance optimization: Static SVG separator (no function call overhead)
+// ダークモード対応: セパレーターをダークモードで白く表示
+const SEPARATOR_SVG = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="dark:stroke-white"></path>
+</svg>`;
 
-// CSS Variables (simplified)
-const cssVars = `
+// Performance optimization: Pre-computed CSS variables
+const CSS_VARS = `
   --breadcrumb-variant: ${variant};
   --breadcrumb-theme: ${theme};
   --breadcrumb-orientation: ${orientation};
 `;
 
+// Performance optimization: Pre-computed class names
+const BREADCRUMB_CLASSES = `breadcrumb-nav breadcrumb-${variant} breadcrumb-${orientation} ${className}`;
+
+// Performance optimization: Memoized helper functions
+const getSeparator = (): string => SEPARATOR_SVG;
+const getCssVars = (): string => CSS_VARS;
+const getBreadcrumbClasses = (): string => BREADCRUMB_CLASSES;
+
 // ========== SEO STRUCTURED DATA ==========
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: breadcrumbData.items.map((item, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: item.title,
-    item: `${Astro.site}${item.url}`,
-  })),
+// Performance optimization: Memoized SEO data generation
+const seoDataCache = new Map<string, any>();
+
+const generateStructuredData = (items: readonly BreadcrumbItem[]): any => {
+  const cacheKey = `seo-${items.map(item => `${item.title}-${item.url}`).join('|')}`;
+  if (seoDataCache.has(cacheKey)) {
+    return seoDataCache.get(cacheKey)!;
+  }
+
+  // Performance: Pre-allocate array for better memory usage
+  const itemListElement = new Array(items.length);
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    itemListElement[i] = {
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.title,
+      item: `${Astro.site}${item.url}`,
+    };
+  }
+
+  const result = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement,
+  };
+
+  seoDataCache.set(cacheKey, result);
+  return result;
 };
+
+const structuredData = generateStructuredData(breadcrumbData.items);
 ---
 
-<!-- ========== ASTRO-NATIVE BREADCRUMB COMPONENT ========== -->
+<!-- ========== ASTRO-NATIVE BREADCRUMB COMPONENT ========== --><!-- Performance optimization: Pre-computed values to avoid function calls in template -->
 <nav
-  class={`breadcrumb-nav breadcrumb-${variant} breadcrumb-${orientation} ${className}`}
-  style={cssVars}
+  class={BREADCRUMB_CLASSES}
+  style={CSS_VARS}
   aria-label={breadcrumbData.ariaLabel}
-  role="navigation">
-  <ol class="breadcrumb-list">
-    {breadcrumbData.items.map((item, index) => (
-      <li class="breadcrumb-item">
-        {/* Separator for non-first items */}
-        {index > 0 && (
-          <span
-            class="breadcrumb-separator"
-            aria-hidden="true"
-            set:html={getSeparator()}
-          />
-        )}
+  role='navigation'
+>
+  <ol class='breadcrumb-list'>
+    {
+      breadcrumbData.items.map((item, index) => (
+        <li class='breadcrumb-item'>
+          {/* Separator for non-first items */}
+          {index > 0 && (
+            <span
+              class='breadcrumb-separator'
+              aria-hidden='true'
+              set:html={SEPARATOR_SVG}
+            />
+          )}
 
-        {/* Breadcrumb item */}
-        {item.isActive ? (
-          <span class="breadcrumb-current" aria-current="page">
-            {showIcons && item.icon && (
-              <span class="breadcrumb-icon" aria-hidden="true">
-                {item.icon}
-              </span>
-            )}
-            <span class="breadcrumb-text">{item.title}</span>
-          </span>
-        ) : (
-          <a href={item.url} class="breadcrumb-link">
-            {showIcons && item.icon && (
-              <span class="breadcrumb-icon" aria-hidden="true">
-                {item.icon}
-              </span>
-            )}
-            <span class="breadcrumb-text">{item.title}</span>
-          </a>
-        )}
-      </li>
-    ))}
+          {/* Breadcrumb item */}
+          {item.isActive ? (
+            <span class='breadcrumb-current' aria-current='page'>
+              {showIcons && item.icon && (
+                <span
+                  class='breadcrumb-icon'
+                  aria-hidden='true'
+                  set:html={renderIcon(item.icon)}
+                />
+              )}
+              <span class='breadcrumb-text'>{item.title}</span>
+            </span>
+          ) : (
+            <a href={item.url} class='breadcrumb-link'>
+              {showIcons && item.icon && (
+                <span
+                  class='breadcrumb-icon'
+                  aria-hidden='true'
+                  set:html={renderIcon(item.icon)}
+                />
+              )}
+              <span class='breadcrumb-text'>{item.title}</span>
+            </a>
+          )}
+        </li>
+      ))
+    }
   </ol>
 </nav>
 
 <!-- SEO structured data -->
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<script type='application/ld+json' set:html={JSON.stringify(structuredData)} />
 
 <style>
   /* ========== ASTRO-NATIVE BREADCRUMB STYLES ========== */
@@ -287,11 +547,12 @@ const structuredData = {
   .breadcrumb-nav {
     display: flex;
     align-items: center;
+    justify-content: center;
     font-size: 0.875rem;
     color: var(--color-text);
-    background: var(--color-background);
+    background: transparent;
     border-radius: 0.375rem;
-    padding: 0.5rem;
+    padding: 0;
   }
 
   .breadcrumb-horizontal {
@@ -320,7 +581,10 @@ const structuredData = {
   .breadcrumb-item {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
+    margin: 0;
+    padding: 0;
   }
 
   .breadcrumb-separator {
@@ -333,6 +597,19 @@ const structuredData = {
   .breadcrumb-separator svg {
     width: 0.75rem;
     height: 0.75rem;
+  }
+
+  /* ダークモード対応: セパレーターを白く表示 */
+  @media (prefers-color-scheme: dark) {
+    .breadcrumb-separator {
+      color: white;
+      opacity: 0.8;
+    }
+  }
+
+  .dark .breadcrumb-separator {
+    color: white;
+    opacity: 0.8;
   }
 
   .breadcrumb-link,
@@ -359,8 +636,18 @@ const structuredData = {
   }
 
   .breadcrumb-icon {
-    font-size: 0.875em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
     opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  .breadcrumb-icon svg {
+    width: 100%;
+    height: 100%;
   }
 
   .breadcrumb-text {
@@ -399,6 +686,14 @@ const structuredData = {
   .breadcrumb-minimal .breadcrumb-link,
   .breadcrumb-minimal .breadcrumb-current {
     padding: 0.25rem 0;
+    background: transparent;
+  }
+
+  /* 全バリアントで背景を透明に統一 */
+  .breadcrumb-compact,
+  .breadcrumb-spacious,
+  .breadcrumb-pill,
+  .breadcrumb-underline {
     background: transparent;
   }
 

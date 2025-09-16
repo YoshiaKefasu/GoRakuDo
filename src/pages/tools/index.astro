@@ -1,9 +1,22 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ToolsHeaderSection from '../../components/tools/ToolsHeaderSection.astro';
-import ToolsGridSection from '../../components/tools/ToolsGridSection.astro';
-import ToolCard from '../../components/tools/ToolCard.astro';
-import type { Tool } from '../../types/tool';
+import ToolsHeader from '../../components/tools/Tools-Header.astro';
+import ToolsGridSection from '../../components/tools/Tools-GridSection.astro';
+
+// ========== INLINE TYPE DEFINITIONS ==========
+interface Tool {
+  readonly id: string;
+  readonly name: string;
+  readonly description: string;
+  readonly iconUrl: string;
+  readonly color?: string;
+  readonly link: string;
+  readonly interactiveElements?: {
+    hasHoverEffect?: boolean;
+    hasClickAction?: boolean;
+    animationType?: 'scale' | 'slide' | 'fade';
+  };
+}
 
 // Import CSS
 import '../../styles/tools/tools-index.css';
@@ -86,11 +99,6 @@ const seoData = {
   <link rel='prefetch' href='/tools/anki' fetchpriority='low' />
   <link rel='prefetch' href='/tools/yomitan' fetchpriority='low' />
   <link rel='prefetch' href='/tools/migaku' fetchpriority='low' />
-  <link
-    rel='prefetch'
-    href='/docs/language-reactor-guide'
-    fetchpriority='low'
-  />
   <!-- Main Content -->
   <main
     class='main-content min-h-screen tools-layout-optimized'
@@ -99,29 +107,10 @@ const seoData = {
     aria-label='Japanese learning tools and applications'
   >
     <!-- Tools Header Section -->
-    <ToolsHeaderSection tools={tools} />
+    <ToolsHeader tools={tools} />
 
-    <!-- Tools Grid Section -->
-    <ToolsGridSection>
-      {
-        tools.map((tool, index) => (
-          <div
-            role='listitem'
-            aria-label={`Tool ${index + 1} of ${tools.length}: ${tool.name}`}
-          >
-            <ToolCard
-              id={tool.id}
-              name={tool.name}
-              description={tool.description}
-              iconUrl={tool.iconUrl}
-              color={tool.color}
-              link={tool.link}
-              interactiveElements={tool.interactiveElements}
-            />
-          </div>
-        ))
-      }
-    </ToolsGridSection>
+    <!-- Tools Grid Section - 統合されたコンポーネント -->
+    <ToolsGridSection tools={tools} />
   </main>
 </BaseLayout>
 

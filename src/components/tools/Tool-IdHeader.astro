@@ -1,5 +1,8 @@
 ---
-// Simplified Props Interface - Data managed centrally in ToolArticleLayout
+// ========== SIMPLIFIED HEADER COMPONENT ==========
+// Centralized data management - this component only handles display logic
+// All data processing is done in the parent index.astro
+
 export interface Props {
   tool: string;
   articleCount: number;
@@ -10,7 +13,6 @@ export interface Props {
   currentYear: number;
 }
 
-// Destructure props from centralized data management
 const {
   tool,
   articleCount,
@@ -20,13 +22,35 @@ const {
   formattedToolName,
   currentYear,
 } = Astro.props;
+
+// Constants for display
+const ICON_DIMENSIONS = { width: 175, height: 175 };
+const iconAlt = `${formattedToolName} tool icon`;
+
+// Meta items for display
+const META_ITEMS = [
+  {
+    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    label: articleCount === 0 ? 'No Articles' : articleCount === 1 ? '1 Article' : `${articleCount} Articles`,
+  },
+  {
+    icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+    label: 'Free Resources',
+  },
+] as const;
 ---
 
-<!-- Component HEADER - Based on Wireframe Analysis -->
-<header class='component-header'>
+<!-- ========== ENHANCED HEADER COMPONENT ========== -->
+<header
+  class='component-header'
+  role='banner'
+  itemscope
+  itemtype='https://schema.org/WebPageElement'
+>
   <div class='header-container'>
     <!-- Background Elements -->
-    <div class='header-bg glassmorphism glassmorphism-card'></div>
+    <div class='header-bg glassmorphism glassmorphism-card' aria-hidden='true'>
+    </div>
 
     <!-- Integrated Content Section with Icon and Text -->
     <div class='header-content-section'>
@@ -34,52 +58,45 @@ const {
       <div class='tool-icon-container'>
         <img
           src={iconPath}
-          alt={`${formattedToolName} icon`}
+          alt={iconAlt}
           class='tool-icon-large'
           loading='eager'
+          width={ICON_DIMENSIONS.width}
+          height={ICON_DIMENSIONS.height}
+          itemprop='image'
         />
       </div>
 
       <!-- Text Content -->
       <div class='header-text-content'>
-        <h1 class='header-title'>
+        <h1 class='header-title' itemprop='headline'>
           {title}
         </h1>
-        <p class='header-description'>
+        <p class='header-description' itemprop='description'>
           {description}
         </p>
-        <div class='header-meta'>
-          <span class='meta-item'>
-            <svg
-              class='meta-icon'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                stroke-width='2'
-                d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
-              ></path>
-            </svg>
-            {articleCount} Articles
-          </span>
-          <span class='meta-item'>
-            <svg
-              class='meta-icon'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                stroke-width='2'
-                d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'></path>
-            </svg>
-            Free Resources
-          </span>
+        <div class='header-meta' role='list' aria-label='Tool statistics'>
+          {
+            META_ITEMS.map((item, index) => (
+              <span class='meta-item' role='listitem'>
+                <svg
+                  class='meta-icon'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                  aria-hidden='true'
+                >
+                  <path
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                    d={item.icon}
+                  />
+                </svg>
+                {item.label}
+              </span>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -87,30 +104,44 @@ const {
 </header>
 
 <style>
-  /* Tool Icon Responsive Styles */
+  /* ========== ENHANCED ICON STYLES ========== */
   .tool-icon-large {
     width: clamp(75px, 7.5vw, 175px);
     height: clamp(75px, 7.5vw, 175px);
     object-fit: contain;
     border-radius: 12px;
     transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+      transform var(--transition-normal),
+      box-shadow var(--transition-normal);
     margin: 0;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
   }
 
   .tool-icon-large:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-hover);
   }
 
-  /* Mobile First - Base Styles */
+  /* 画像読み込み最適化 */
+  .tool-icon-large[loading='eager'] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .tool-icon-large[loading='eager'].loaded {
+    opacity: 1;
+  }
+
+  /* ========== ENHANCED RESPONSIVE DESIGN ========== */
+  /* Mobile First - Base Styles (320px+) */
   .header-content-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: clamp(1rem, 2vw, 1.5rem);
     width: 100%;
     position: relative;
     z-index: 1;
@@ -134,13 +165,51 @@ const {
     justify-content: center;
   }
 
+  .header-title {
+    font-size: clamp(var(--font-size-2xl), 4vw, var(--font-size-5xl));
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-md) 0;
+    line-height: 1.2;
+  }
+
+  .header-description {
+    font-size: clamp(var(--font-size-base), 2vw, var(--font-size-xl));
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-lg) 0;
+    line-height: 1.6;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+  }
+
+  .meta-icon {
+    width: var(--spacing-md);
+    height: var(--spacing-md);
+    color: var(--color-primary);
+  }
+
   /* Tablet Breakpoint (640px+) */
   @media (min-width: 640px) {
     .header-content-section {
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
+      gap: clamp(1.5rem, 3vw, 2rem);
     }
 
     .header-text-content {
@@ -148,19 +217,27 @@ const {
       flex: 1;
       justify-content: center;
     }
+
+    .header-meta {
+      justify-content: flex-start;
+    }
   }
 
   /* Desktop Breakpoint (768px+) */
   @media (min-width: 768px) {
     .header-content-section {
-      gap: 2rem;
+      gap: clamp(2rem, 4vw, 2.5rem);
+    }
+
+    .header-title {
+      font-size: clamp(var(--font-size-4xl), 5vw, var(--font-size-6xl));
     }
   }
 
   /* Large Desktop Breakpoint (1024px+) */
   @media (min-width: 1024px) {
     .header-content-section {
-      gap: 2.5rem;
+      gap: clamp(2.5rem, 5vw, 3rem);
     }
   }
 
@@ -193,4 +270,70 @@ const {
     position: relative;
     z-index: 1;
   }
+
+  /* ========== ACCESSIBILITY ENHANCEMENTS ========== */
+  @media (prefers-reduced-motion: reduce) {
+    .tool-icon-large {
+      transition: none;
+    }
+
+    .tool-icon-large:hover {
+      transform: none;
+    }
+  }
+
+  @media (prefers-contrast: high) {
+    .tool-icon-large {
+      border-width: 2px;
+    }
+
+    .header-title {
+      color: var(--color-text-primary);
+    }
+
+    .header-description {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  /* Focus management */
+  .tool-icon-large:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .header-bg {
+      display: none;
+    }
+  }
 </style>
+
+<!-- ========== CLIENT-SIDE OPTIMIZATION ========== -->
+<script>
+  // アイコン読み込み最適化
+  function optimizeIconLoading() {
+    const icons = document.querySelectorAll(
+      '.tool-icon-large[loading="eager"]'
+    );
+
+    icons.forEach(icon => {
+      icon.addEventListener('load', () => {
+        icon.classList.add('loaded');
+      });
+
+      // 既に読み込まれている場合の処理
+      if ((icon as HTMLImageElement).complete) {
+        icon.classList.add('loaded');
+      }
+    });
+  }
+
+  // DOM読み込み完了後に実行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', optimizeIconLoading);
+  } else {
+    optimizeIconLoading();
+  }
+</script>

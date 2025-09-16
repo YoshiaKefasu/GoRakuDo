@@ -1,12 +1,16 @@
 ---
-// ToolArticleLayout.astro - Optimized Astro-native article layout
-// Architect Optimization: Performance-first, accessibility-enhanced, Astro-native approach
+// ========== SIMPLIFIED LAYOUT COMPONENT ==========
+// Centralized data management - this component only handles layout structure
+// All data processing is done in the parent index.astro
+
 import Navbar from '../components/public-components/Navbar.astro';
 import UnifiedSEO from '../components/UnifiedSEO.astro';
 import WaveAnimation from '../components/animations/WaveAnimation.astro';
 import ToolIdHeader from '../components/tools/Tool-IdHeader.astro';
+import Breadcrumb from "../components/public-components/Breadcrumb.astro";
+import SearchPopover from "../components/tools/SearchPopover.astro";
 
-// Global CSS - サイト全体のスタイル
+// Global CSS
 import "../styles/global.css";
 import "../styles/tools/[tool]/tool-index.css";
 
@@ -18,7 +22,6 @@ export interface Props {
   showProgressBar?: boolean;
   author?: string;
   tags?: string[];
-  // ToolIdHeader props
   tool?: string;
   articleCount?: number;
   toolTitle?: string;
@@ -44,8 +47,6 @@ const {
   formattedToolName,
   currentYear,
 } = Astro.props;
-
-// Simplified data handling - data management moved to page level
 ---
 
 <!doctype html>
@@ -105,6 +106,31 @@ const {
               currentYear={currentYear}
             />
           )}
+
+            <!-- Optimized Navigation with Enhanced Spacing -->
+            <div class="tool-navigation-wrapper">
+              <div class="breadcrumb-section glassmorphism">
+                <Breadcrumb
+                  currentPath={`/tools/${tool}`}
+                  showHome={true}
+                  variant="compact"
+                  orientation="horizontal"
+                  showIcons={true}
+                  ariaLabel="Tool navigation breadcrumb"
+                />
+              </div>
+              
+              <div class="search-section">
+                <!-- Search Popover Component -->
+                <SearchPopover 
+                  buttonStyle="rounded"
+                  placeholder={`Search ${formattedToolName} articles...`}
+                  searchAction={`/search?tool=${tool}`}
+                  className="tool-search-popover"
+                  toolFilter={tool}
+                />
+              </div>
+            </div>
 
           <!-- Page Content Slot -->
           <div class='page-content'>
