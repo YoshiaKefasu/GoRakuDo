@@ -28,31 +28,31 @@ const seoData = {
     />
     <style>
       * {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
+        padding: 0;
+        margin: 0;
       }
 
       body {
-        font-family: "Inter", sans-serif;
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
+        min-height: 100vh;
         padding: 20px;
+        font-family: Inter, sans-serif;
         color: #333;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
       }
 
       .invitation-container {
-        background: #fdfdf6;
-        max-width: 600px;
-        width: 100%;
-        padding: 50px;
-        border-radius: 12px;
-        box-shadow: 0 20px 60px rgba(139, 93, 255, 0.2);
-        border: 1px solid rgba(139, 93, 255, 0.1);
         position: relative;
+        width: 100%;
+        max-width: 600px;
+        padding: 50px;
+        background: #fdfdf6;
+        border: 1px solid rgb(139 93 255 / 10%);
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgb(139 93 255 / 20%);
         animation: fadeIn 1s ease-out;
       }
 
@@ -61,6 +61,7 @@ const seoData = {
           opacity: 0;
           transform: translateY(30px);
         }
+
         to {
           opacity: 1;
           transform: translateY(0);
@@ -71,54 +72,54 @@ const seoData = {
         position: absolute;
         top: 20px;
         left: 20px;
-        background: none;
-        border: none;
-        font-size: 24px;
-        color: #666;
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        color: #666;
+        cursor: pointer;
+        background: none;
+        border: none;
         border-radius: 50%;
         transition: all 0.3s ease;
       }
 
       .back-button:hover {
-        background: #f0f0f0;
         color: #333;
+        background: #f0f0f0;
       }
 
       .header {
-        text-align: center;
-        border-bottom: 1px solid #e0e0e0;
         padding-bottom: 25px;
         margin-bottom: 30px;
+        text-align: center;
+        border-bottom: 1px solid #e0e0e0;
       }
 
       .japanese-title {
         font-family: "Yuji Syuku", serif;
         font-size: 4.5rem;
-        color: #333;
-        ruby-position: over;
         font-weight: 400;
         line-height: 1;
+        color: #333;
+        ruby-position: over;
       }
 
       .japanese-title rt {
-        font-family: "Inter", sans-serif;
+        font-family: Inter, sans-serif;
         font-size: 0.9rem;
-        color: #666;
         font-weight: 600;
+        color: #666;
       }
 
       .content {
-        color: #3c3c3c;
+        margin-bottom: 30px;
+        font-family: Lora, serif;
         font-size: 1.1rem;
         line-height: 1.8;
-        margin-bottom: 30px;
-        font-family: "Lora", serif;
+        color: #3c3c3c;
       }
 
       .content p {
@@ -130,64 +131,63 @@ const seoData = {
       }
 
       .member-list {
-        list-style: none;
         padding-left: 0;
         margin: 25px 0;
+        list-style: none;
       }
 
       .member-list li {
         margin-bottom: 10px;
-        font-family: "Inter", sans-serif;
+        font-family: Inter, sans-serif;
       }
 
       .final-pitch {
-        font-weight: 600;
-        text-align: center;
-        font-size: 1.15rem;
         margin-top: 30px;
+        font-size: 1.15rem;
+        font-weight: 600;
         color: #333;
+        text-align: center;
       }
 
       .discord-link {
         display: block;
-        text-decoration: none;
-        color: #333;
-        background-color: #f8f9fa;
-        border: 1px solid #eaeaea;
         padding: 20px;
-        border-radius: 8px;
         margin-top: 20px;
         margin-bottom: 40px;
-        transition: all 0.3s ease;
+        color: #333;
+        text-decoration: none;
         cursor: pointer;
+        background-color: #f8f9fa;
+        border: 1px solid #eaeaea;
+        border-radius: 8px;
+        transition: all 0.3s ease;
       }
 
       .discord-link:hover {
         border-color: #8b5dff;
-        box-shadow: 0 5px 15px rgba(139, 93, 255, 0.2);
+        box-shadow: 0 5px 15px rgb(139 93 255 / 20%);
       }
 
       .discord-header {
-        font-family: "Inter", sans-serif;
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: #666;
         margin-bottom: 8px;
+        font-family: Inter, sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
       }
 
       .discord-url {
-        font-family: "Inter", sans-serif;
-        font-weight: 600;
+        font-family: Inter, sans-serif;
         font-size: 1.1rem;
+        font-weight: 600;
         color: #8b5dff;
         overflow-wrap: break-word;
-        word-wrap: break-word;
       }
 
       .arrow {
+        display: inline-block;
         font-weight: bold;
         transition: transform 0.2s ease;
-        display: inline-block;
       }
 
       .discord-link:hover .arrow {
@@ -196,30 +196,30 @@ const seoData = {
 
       .signature {
         display: flex;
-        justify-content: space-between;
         align-items: flex-end;
+        justify-content: space-between;
         margin-top: 20px;
       }
 
       .logo {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #8b5dff 0%, #7b4def 100%);
-        border-radius: 12px;
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: center;
-        color: white;
+        width: 80px;
+        height: 80px;
         font-size: 32px;
         font-weight: bold;
-        flex-shrink: 0;
+        color: white;
+        background: linear-gradient(135deg, #8b5dff 0%, #7b4def 100%);
+        border-radius: 12px;
       }
 
       .logo-stamp {
+        flex-shrink: 0;
         width: 80px;
         height: 80px;
         opacity: 0.85; /* Memberi efek stempel */
-        flex-shrink: 0;
       }
 
       .signature-text {
@@ -227,9 +227,9 @@ const seoData = {
       }
 
       .signature-title {
-        text-align: right;
         margin-bottom: -10px;
         color: #333;
+        text-align: right;
       }
 
       .signature-name {
@@ -242,23 +242,24 @@ const seoData = {
       /* Floating animation for background elements */
       .floating-particle {
         position: fixed;
+        z-index: -1;
         pointer-events: none;
         opacity: 0.15;
-        z-index: -1;
       }
 
       @keyframes float {
         0%,
         100% {
-          transform: translateY(0px) rotate(0deg);
+          transform: translateY(0) rotate(0deg);
         }
+
         50% {
           transform: translateY(-20px) rotate(180deg);
         }
       }
 
       /* Responsive design */
-      @media (max-width: 768px) {
+      @media (width <= 768px) {
         .invitation-container {
           padding: 40px 25px;
         }
@@ -276,11 +277,11 @@ const seoData = {
         }
       }
 
-      @media (max-width: 480px) {
+      @media (width <= 480px) {
         .signature {
           flex-direction: column;
-          align-items: center;
           gap: 20px;
+          align-items: center;
         }
 
         .signature-text {
@@ -365,7 +366,7 @@ const seoData = {
     </div>
     <div
       class="floating-particle"
-      style="bottom: 30%; right: 20%; animation: float 9s ease-in-out infinite 3s;">
+      style=" right: 20%;bottom: 30%; animation: float 9s ease-in-out infinite 3s;">
       🌊
     </div>
 

@@ -29,7 +29,7 @@ const {
     id="hero-content"
     class="flex flex-col items-center justify-center min-h-screen w-full max-w-5xl z-20 
            opacity-0 translate-y-16 scale-80 blur-md transition-all duration-700 ease-out"
-    style="background: transparent !important; padding: 1em;"
+    style=" padding: 1em;background: transparent !important;"
     transition:name="hero-content">
     <div
       class="text-[var(--color-accent-purple)] font-medium italic tracking-wide leading-tight opacity-70
@@ -225,56 +225,56 @@ const {
   @layer components {
     /* ---------- Hero buttons container (base + mobile overrides) ---------- */
     .hero-buttons {
-      /* Base */
-      margin-top: 1.5rem; /* mt-6 equivalent */
       display: flex;
       flex-wrap: wrap;
+      gap: 1.25rem; /* gap-5 equivalent */
       align-items: center;
       justify-content: center;
-      gap: 1.25rem; /* gap-5 equivalent */
+
+      /* Base */
+      margin-top: 1.5rem; /* mt-6 equivalent */
 
       /* Tablet/Mobile ≤768px: make them stack & limit width */
-      @media (max-width: 768px) {
-        margin-left: auto;
-        margin-right: auto;
+      @media (width <= 768px) {
         display: flex;
-        max-width: 350px;
         flex-direction: column;
         align-items: stretch;
+        max-width: 350px;
+        margin-right: auto;
+        margin-left: auto;
       }
     }
 
     /* Center button contents on small screens */
     .primary-button,
     .secondary-button {
-      @media (max-width: 768px) {
+      @media (width <= 768px) {
         justify-content: center;
       }
     }
 
     /* ---------- Primary button (gradient pill) ---------- */
     .primary-button {
-      /* Layout */
-      padding-left: 32px !important;
-      padding-right: 32px !important;
-      padding-top: 16px !important;
-      padding-bottom: 16px !important;
       display: inline-flex;
-      cursor: pointer;
-      user-select: none;
+      gap: 0.5rem; /* gap-2 equivalent */
       align-items: center;
       justify-content: center;
-      gap: 0.5rem; /* gap-2 equivalent */
-      border: 0;
+      padding: 16px 32px !important;
+
+      /* Layout */
       font-size: 16px;
       font-weight: 500; /* font-medium equivalent */
+      color: var(--color-text-primary);
+      cursor: pointer;
+      user-select: none;
+
       /* Visuals: keep gradient via custom property for exact control */
       background-image: linear-gradient(
         135deg,
         var(--color-accent-purple) 0%,
         var(--color-accent-dark) 100%
       );
-      color: var(--color-text-primary);
+      border: 0;
       border-radius: var(--border-radius-pill);
       transition:
         box-shadow var(--animate-duration-normal) ease,
@@ -284,41 +284,38 @@ const {
 
     /* ensure svg icon size and prevent shrinking */
     .primary-button svg {
-      height: 1rem; /* h-4 equivalent */
-      width: 1rem; /* w-4 equivalent */
       flex-shrink: 0; /* flex-shrink-0 equivalent */
+      width: 1rem; /* w-4 equivalent */
+      height: 1rem; /* h-4 equivalent */
     }
 
     .primary-button:hover {
       box-shadow: 0 12px 35px var(--color-accent-shadow);
       transform: translateY(-1px);
     }
+
     .primary-button:active {
-      transform: translateY(0);
       opacity: 0.98;
+      transform: translateY(0);
     }
 
     /* ---------- Secondary button (outlined pill) ---------- */
     .secondary-button {
-      padding-left: 32px !important;
-      padding-right: 32px !important;
-      padding-top: 14px !important;
-      padding-bottom: 14px !important;
-      border-width: 3px !important;
       display: inline-flex;
-      cursor: pointer;
-      user-select: none;
+      gap: 0.75rem; /* gap-2 equivalent */
       align-items: center;
       justify-content: center;
-      gap: 0.75rem; /* gap-2 equivalent */
-      border-radius: 9999px; /* rounded-full equivalent */
-      background: transparent;
+      padding: 14px 32px !important;
       font-size: 16px;
       font-weight: 500; /* font-medium equivalent */
+      color: var(--color-gold-dark);
+      cursor: pointer;
+      user-select: none;
       background: transparent;
       border: 2px solid var(--color-gold-dark-transparent);
+      border-width: 3px !important;
+      border-radius: 9999px; /* rounded-full equivalent */
       border-radius: var(--border-radius-pill);
-      color: var(--color-gold-dark);
       transition:
         background-color var(--animate-duration-fast) ease,
         border-color var(--animate-duration-fast) ease,
@@ -328,22 +325,23 @@ const {
 
     /* Icon styling for secondary button */
     .secondary-button .btn-icon {
+      flex-shrink: 0;
       width: 1rem; /* 16px */
       height: 1rem; /* 16px */
-      flex-shrink: 0;
       color: inherit; /* Inherits the button's text color */
       transition: color var(--animate-duration-fast) ease;
     }
 
     .secondary-button:hover {
-      border-color: var(--color-gold-dark);
       background: var(--color-accent-glow-medium);
+      border-color: var(--color-gold-dark);
     }
 
     /* ---------- Focus / accessibility ---------- */
     .primary-button:focus-visible,
     .secondary-button:focus-visible {
       outline: none; /* outline-none equivalent */
+
       /* keep the two-layer shadow you had */
       box-shadow:
         0 0 0 4px var(--color-accent-purple-glow-medium),
@@ -351,19 +349,14 @@ const {
     }
 
     /* ---------- Small-screen adjustments (optional) ---------- */
-    @media (max-width: 480px) {
+    @media (width <= 480px) {
       .primary-button {
-        padding-left: 24px;
-        padding-right: 24px;
-        padding-top: 12px;
-        padding-bottom: 12px;
+        padding: 12px 24px;
         font-size: 0.875rem; /* text-sm equivalent */
       }
+
       .secondary-button {
-        padding-left: 24px;
-        padding-right: 24px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding: 10px 24px;
         font-size: 0.875rem; /* text-sm equivalent */
       }
     }
@@ -372,42 +365,43 @@ const {
     .mission-section,
     .features-section,
     .docs-preview-section {
-      @media (max-width: 768px) {
-        padding-left: 20px;
+      @media (width <= 768px) {
         padding-right: 20px;
+        padding-left: 20px;
       }
     }
 
     /* Make mobile override explicit — use only if you want smaller mobile buttons */
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       .hero-buttons .primary-button,
       .hero-buttons .btn-primary {
+        min-width: auto;
         padding: 14px 28px;
         font-size: 15px;
-        min-width: auto;
       }
     }
   }
 
   @layer utilities {
     .gold-marker {
-      margin-bottom: 0.5rem; /* mb-2 equivalent */
       display: block;
+      margin-bottom: 0.5rem; /* mb-2 equivalent */
       color: var(--color-gold-dark);
-      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+      text-shadow: 1px 1px 5px rgb(0 0 0 / 10%);
       background-image: linear-gradient(
         135deg,
         var(--color-gold-light) 0%,
         var(--color-gold-dark) 70%
-      );
+      ); /* modern */
+
+      background-clip: text; /* legacy Safari still honors bg-clip via webkit */
       -webkit-text-fill-color: transparent;
-      background-clip: text; /* modern */
-      -webkit-background-clip: text; /* legacy Safari still honors bg-clip via webkit */
     }
+
     @supports (background-clip: text) {
       .gold-marker {
-        background-clip: text; /* bg-clip-text equivalent */
         color: transparent; /* text-transparent equivalent */
+        background-clip: text; /* bg-clip-text equivalent */
       }
     }
   }

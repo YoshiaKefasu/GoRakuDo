@@ -49,34 +49,34 @@ const maxCount = Math.max(...tags.map(t => t.count));
   .tag-cloud {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 0.5rem;
-    margin: 2rem 0;
+    justify-content: center;
     padding: 1rem;
+    margin: 2rem 0;
   }
   
   .tag-item {
     text-decoration: none;
-    transition: all 0.2s ease;
     border: 1px solid transparent;
+    transition: all 0.2s ease;
   }
   
   .tag-item:hover {
+    border-color: currentcolor;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
     transform: translateY(-1px) scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: currentColor;
   }
   
   /* レスポンシブ調整 */
-  @media (max-width: 640px) {
+  @media (width <= 640px) {
     .tag-cloud {
       gap: 0.25rem;
       padding: 0.5rem;
     }
     
     .tag-item {
-      margin: 0.125rem;
       padding: 0.25rem 0.5rem;
+      margin: 0.125rem;
     }
   }
 </style>

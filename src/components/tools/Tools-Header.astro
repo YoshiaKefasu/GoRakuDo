@@ -143,11 +143,11 @@ const statsData = getStatsData(toolsCount);
   .tools-header-section {
     /* Color Variables - OKLCHカラースペースで最適化 */
     --header-bg-primary: transparent;
-    --header-text-primary: oklch(1 0 0); /* 純白 */
-    --header-text-secondary: oklch(0.9 0 0 / 0.8); /* 明度90%の白、80%透明度 */
-    --header-text-muted: oklch(0.85 0 0 / 0.7); /* 明度85%の白、70%透明度 */
-    --header-border-subtle: oklch(0.95 0 0 / 0.1); /* 明度95%の白、10%透明度 */
-    --header-border-divider: oklch(0.9 0 0 / 0.2); /* 明度90%の白、20%透明度 */
+    --header-text-primary: oklch(100% 0 0deg); /* 純白 */
+    --header-text-secondary: oklch(90% 0 0deg / 80%); /* 明度90%の白、80%透明度 */
+    --header-text-muted: oklch(85% 0 0deg / 70%); /* 明度85%の白、70%透明度 */
+    --header-border-subtle: oklch(95% 0 0deg / 10%); /* 明度95%の白、10%透明度 */
+    --header-border-divider: oklch(90% 0 0deg / 20%); /* 明度90%の白、20%透明度 */
 
     /* Spacing Variables - tools-index.cssの変数と競合を避けるため独自変数を使用 */
     --header-padding-mobile: 4.5rem 0 1rem;
@@ -192,23 +192,21 @@ const statsData = getStatsData(toolsCount);
   .tools-header-container {
     position: relative;
     max-width: var(--header-container-max-width);
-    margin: 0 auto;
     padding: var(--header-container-padding);
+    margin: 0 auto;
   }
 
   /* ========== BACKGROUND ELEMENTS ========== */
   .tools-header-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     z-index: -1;
+
     /* GlassMorphism効果はグローバルクラスで適用 */
   }
 
   /* ========== MOBILE OPTIMIZATIONS ========== */
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .tools-header-section {
       padding: var(--header-padding-mobile);
     }
@@ -216,37 +214,36 @@ const statsData = getStatsData(toolsCount);
     .tools-header-container {
       /* モバイル用の左右マージン追加 */
       max-width: none;
-      margin: 0 0.5rem;
       padding: 0;
+      margin: 0 0.5rem;
     }
 
     .tools-header-bg {
       /* モバイル用の背景最適化 */
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      /* グローバルGlassMorphismクラスを上書きしてモバイル用に調整 */
-      border-radius: var(--border-radius-card, 1rem) !important;
+      inset: 0;
+
       /* グローバルクラスのborderを保持しつつ、下のborderを強調 */
       border-bottom: 1px solid var(--header-border-subtle) !important;
+
+      /* グローバルGlassMorphismクラスを上書きしてモバイル用に調整 */
+      border-radius: var(--border-radius-card, 1rem) !important;
       box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 8px 32px rgb(0 0 0 / 10%),
         inset 0 -1px 0 var(--header-border-subtle) !important;
     }
 
     .tools-header-content {
       /* コンテンツのパディングを調整 - 左右にもパディングを追加 */
-      padding: 1rem 1rem 1.5rem 1rem !important;
+      padding: 1rem 1rem 1.5rem !important;
     }
   }
 
   /* ========== MAIN CONTENT ========== */
   .tools-header-content {
     position: relative;
-    text-align: center;
     z-index: 1;
     padding: var(--header-content-padding);
+    text-align: center;
   }
 
   .tools-header-main {
@@ -267,27 +264,25 @@ const statsData = getStatsData(toolsCount);
     background: linear-gradient(
       135deg,
       var(--header-text-primary) 0%,
-      oklch(0.9 0.02 240) 100% /* 明度90%、彩度2%、色相240度（青系） */
+      oklch(90% 0.02 240deg) 100% /* 明度90%、彩度2%、色相240度（青系） */
     );
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .tools-title-accent {
     display: block;
+    margin-top: 0.5rem;
     font-size: var(--header-accent-mobile);
     font-weight: 500;
-    margin-top: 0.5rem;
     background: linear-gradient(
       135deg,
-      oklch(0.65 0.25 280) 0%,
-      /* 紫系 */ oklch(0.6 0.2 250) 50%,
-      /* 青系 */ oklch(0.7 0.15 160) 100% /* 緑系 */
+      oklch(65% 0.25 280deg) 0%,
+      /* 紫系 */ oklch(60% 0.2 250deg) 50%,
+      /* 青系 */ oklch(70% 0.15 160deg) 100% /* 緑系 */
     );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   /* ========== DESCRIPTION ========== */
@@ -302,17 +297,17 @@ const statsData = getStatsData(toolsCount);
   /* ========== STATS SECTION ========== */
   .tools-header-stats {
     display: flex;
+    flex-wrap: wrap;
+    gap: var(--header-stats-gap-mobile);
     align-items: center;
     justify-content: center;
-    gap: var(--header-stats-gap-mobile);
-    flex-wrap: wrap;
   }
 
   .tools-stat-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 0.25rem;
+    align-items: center;
     transition: transform var(--header-transition-fast);
   }
 
@@ -323,14 +318,14 @@ const statsData = getStatsData(toolsCount);
   .tools-stat-number {
     font-size: var(--header-stat-number-mobile);
     font-weight: 700;
-    color: var(--header-text-primary);
     line-height: 1;
+    color: var(--header-text-primary);
   }
 
   .tools-stat-label {
     font-size: var(--header-stat-label);
-    color: var(--header-text-muted);
     font-weight: 500;
+    color: var(--header-text-muted);
   }
 
   .tools-stat-divider {
@@ -340,7 +335,7 @@ const statsData = getStatsData(toolsCount);
   }
 
   /* ========== RESPONSIVE DESIGN ========== */
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .tools-header-section {
       padding: var(--header-padding-tablet);
     }
@@ -370,7 +365,7 @@ const statsData = getStatsData(toolsCount);
     }
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .tools-header-section {
       padding: var(--header-padding-desktop);
     }
@@ -396,7 +391,7 @@ const statsData = getStatsData(toolsCount);
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     .tools-header-content {
       padding: 1.75rem 1.25rem;
     }
@@ -410,7 +405,7 @@ const statsData = getStatsData(toolsCount);
     }
   }
 
-  @media (min-width: 1280px) {
+  @media (width >= 1280px) {
     .tools-header-content {
       padding: 2rem 1.5rem;
     }
@@ -424,8 +419,8 @@ const statsData = getStatsData(toolsCount);
     }
 
     .tools-title-accent {
-      color: oklch(0.65 0.25 280); /* 高コントラスト用の紫 */
-      -webkit-text-fill-color: oklch(0.65 0.25 280);
+      color: oklch(65% 0.25 280deg); /* 高コントラスト用の紫 */
+      -webkit-text-fill-color: oklch(65% 0.25 280deg);
     }
 
     .tools-stat-number {
@@ -461,14 +456,14 @@ const statsData = getStatsData(toolsCount);
     }
 
     .tools-header-section {
-      background: oklch(1 0 0); /* 純白 */
-      color: oklch(0 0 0); /* 純黒 */
+      color: oklch(0% 0 0deg); /* 純黒 */
+      background: oklch(100% 0 0deg); /* 純白 */
     }
 
     .tools-title-main,
     .tools-title-accent {
-      color: oklch(0 0 0); /* 純黒 */
-      -webkit-text-fill-color: oklch(0 0 0);
+      color: oklch(0% 0 0deg); /* 純黒 */
+      -webkit-text-fill-color: oklch(0% 0 0deg);
     }
   }
 </style>

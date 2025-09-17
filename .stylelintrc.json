@@ -1,0 +1,85 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-recess-order",
+    "stylelint-config-html",
+    "stylelint-config-tailwindcss"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.scss", "*.scss"],
+      "customSyntax": "postcss-scss"
+    },
+    {
+      "files": ["**/*.astro"],
+      "customSyntax": "postcss-html"
+    },
+    {
+      "files": ["**/*.css"],
+      "rules": {
+        "import-notation": null,
+        "at-rule-no-unknown": null,
+        "function-no-unknown": null
+      }
+    }
+  ],
+  "rules": {
+    "selector-max-type": 2,
+    "declaration-no-important": null,
+    "selector-class-pattern": "^[a-z][a-zA-Z0-9-:\\\\]+$",
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global", "not-sr-only"]
+      }
+    ],
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["tailwind", "apply", "screen", "theme"]
+      }
+    ],
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignore": ["consecutive-duplicates-with-different-values"]
+      }
+    ],
+    "max-nesting-depth": 3,
+    "selector-max-specificity": "0,4,0",
+    "custom-property-pattern": "^[a-z_][a-zA-Z0-9-_]*$",
+    "property-no-vendor-prefix": true,
+    "keyframes-name-pattern": "^[a-z][a-zA-Z0-9-]+$",
+    "selector-id-pattern": "^[a-z][a-zA-Z0-9-]+$",
+    "property-no-deprecated": [
+      true,
+      {
+        "ignoreProperties": []
+      }
+    ],
+    "declaration-property-value-keyword-no-deprecated": true,
+    "declaration-property-value-no-unknown": [
+      true,
+      {
+        "ignoreProperties": {
+          "background": ["/^var\\(--/", "/\\s+var\\(--/"],
+          "border": ["/^var\\(--/", "/\\s+var\\(--/"],
+          "border-color": ["/^var\\(--/", "/\\s+var\\(--/"],
+          "box-shadow": ["/^var\\(--/", "/\\s+var\\(--/"],
+          "border-bottom": ["/^var\\(--/", "/\\s+var\\(--/"]
+        }
+      }
+    ],
+    "rule-empty-line-before": [
+      "always",
+      {
+        "except": ["first-nested"],
+        "ignore": ["after-comment", "first-nested"]
+      }
+    ],
+    "no-duplicate-selectors": true,
+    "no-descending-specificity": true,
+    "declaration-block-single-line-max-declarations": 1,
+    "media-feature-name-value-no-unknown": null
+  }
+}

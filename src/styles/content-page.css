@@ -1,5 +1,7 @@
 /* CONTENT PAGE STYLES - Generalized version */
+
 /* Custom styles that cannot be handled by Tailwind Typography */
+
 /* Replaces [slug].css with more generalized content page styling */
 
 @import './global.css';
@@ -8,16 +10,16 @@
 /* ========== TAILWIND V5 THEME INTEGRATION ========== */
 @theme {
   /* Content page design tokens */
-  --color-content-background: rgba(15, 15, 25, 0.95);
-  --color-content-title: rgba(255, 255, 255, 0.95);
-  --color-content-text: rgba(255, 255, 255, 0.85);
-  --color-content-meta: rgba(255, 255, 255, 0.7);
-  --color-content-border: rgba(139, 93, 255, 0.15);
+  --color-content-background: rgb(15 15 25 / 95%);
+  --color-content-title: rgb(255 255 255 / 95%);
+  --color-content-text: rgb(255 255 255 / 85%);
+  --color-content-meta: rgb(255 255 255 / 70%);
+  --color-content-border: rgb(139 93 255 / 15%);
   --color-content-accent: var(--color-accent-purple);
 
   /* Shadows */
-  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --shadow-card-hover: 0 8px 30px rgba(139, 93, 255, 0.2);
+  --shadow-card: 0 4px 20px rgb(0 0 0 / 30%);
+  --shadow-card-hover: 0 8px 30px rgb(139 93 255 / 20%);
 
   /* Z-index system */
   --z-content-background: -10;
@@ -63,6 +65,7 @@
 }
 
 /* ========== BREADCRUMB ========== */
+
 /* These styles are needed for the breadcrumb component */
 .breadcrumb-nav {
   @apply !bg-transparent !backdrop-filter-none !border-none !shadow-none;
@@ -93,6 +96,7 @@
 }
 
 /* ========== BUTTONS ========== */
+
 /* Shared styles for navigation and share buttons */
 .back-to-content,
 .back-to-docs,
@@ -175,6 +179,7 @@
 }
 
 /* ========== DIFFICULTY BADGE ========== */
+
 /* This is a custom component that cannot be handled by Tailwind Typography */
 .content-tags {
   @apply flex items-center justify-center gap-3;
@@ -202,6 +207,7 @@
 }
 
 /* ========== CONTENT MAIN ========== */
+
 /* Typography plugin has priority - only essential layout styles */
 .content-main {
   @apply p-6 px-4 max-w-none bg-transparent rounded-lg w-full relative block;
@@ -235,18 +241,18 @@
 }
 
 .content-main.prose h2::before {
-  content: '';
   position: absolute;
-  left: -1rem;
   top: 55%;
+  left: -1rem;
   width: 4px;
   height: 1.25rem;
-  border-radius: 2px;
+  content: '';
   background: linear-gradient(
     135deg,
     var(--color-primary),
     var(--color-primary-dark)
   );
+  border-radius: 2px;
   transform: translateY(-50%);
 }
 
@@ -264,10 +270,16 @@
 
 .content-main.prose ul {
   @apply my-2;
+
+  padding-left: 1.5rem;
+  list-style-type: disc;
 }
 
 .content-main.prose ol {
   @apply my-2;
+
+  padding-left: 1.5rem;
+  list-style-type: decimal;
 }
 
 .content-main.prose hr {
@@ -276,11 +288,13 @@
 
 .content-main.prose ul li {
   @apply relative pl-6;
+
   list-style-type: disc;
 }
 
 .content-main.prose ol li {
   @apply relative pl-6;
+
   list-style-type: decimal;
 }
 
@@ -289,16 +303,7 @@
   display: none; /* Disable custom bullet to show default disc */
 }
 
-/* Ensure proper list styling for both ul and ol */
-.content-main.prose ul {
-  list-style-type: disc;
-  padding-left: 1.5rem;
-}
-
-.content-main.prose ol {
-  list-style-type: decimal;
-  padding-left: 1.5rem;
-}
+/* List styling moved to main selectors above */
 
 /* Legacy support for existing post-content selector */
 .post-content {
@@ -345,6 +350,7 @@
 .reading-progress {
   @apply fixed top-0 left-0 w-0 h-[3px] z-[var(--z-content-progress)];
   @apply transition-[width] duration-100 ease-linear;
+
   background: linear-gradient(
     90deg,
     var(--color-primary),
@@ -384,12 +390,12 @@
 
   .content-main :where(h1, h2, h3, h4, h5),
   .post-content :where(h1, h2, h3, h4, h5) {
-    color: rgba(255, 255, 255, 1);
+    color: rgb(255 255 255 / 100%);
   }
 
   .content-main :where(p, li, blockquote),
   .post-content :where(p, li, blockquote) {
-    color: rgba(255, 255, 255, 1);
+    color: rgb(255 255 255 / 100%);
   }
 
   .content-meta,
@@ -400,23 +406,24 @@
   .post-date,
   .post-author,
   .post-read-time {
-    color: rgba(255, 255, 255, 0.95);
+    color: rgb(255 255 255 / 95%);
   }
 }
 
 /* content-page.css では html と body の基本設定は global.css に委譲 */
+
 /* 重複する設定を削除してダブルスクロールバーを防止 */
 
 code {
-  background: none !important;
   padding: 0 !important;
+  background: none !important;
 }
 
 pre {
-  background: none !important;
   padding: 1rem !important;
   margin: 1rem 0 !important;
+  background: none !important;
+  border: 1px solid rgb(139 93 255 / 15%) !important;
   border-radius: 0.5rem !important;
-  border: 1px solid rgba(139, 93, 255, 0.15) !important;
   box-shadow: var(--shadow-card) !important;
 }

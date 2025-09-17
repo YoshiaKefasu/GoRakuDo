@@ -92,102 +92,103 @@ const { headings = [] } = Astro.props
   .toc-container {
     position: sticky;
     top: 100px;
+    z-index: 10;
     width: 18rem;
     height: fit-content;
     max-height: calc(100vh - 120px);
-    background: rgba(15, 15, 15, 0.95);
-    border: 1px solid rgba(139, 93, 255, 0.2);
-    border-radius: 12px;
     padding: 10px 20px;
-    backdrop-filter: blur(10px);
-    z-index: 10;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     overflow-x: hidden;
+    background: rgb(15 15 15 / 95%);
+    border: 1px solid rgb(139 93 255 / 20%);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 30%);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
   }
 
   .toc-container::before {
-    content: '';
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
+    left: 0;
     height: 2px;
+    content: '';
+
     /* background: linear-gradient(90deg, transparent, #8b5dff, transparent); */
     border-radius: 12px 12px 0 0;
     opacity: 0.6;
   }
 
   .toc-header {
+    position: relative;
     display: flex;
-    width: 100%;
     align-items: center;
     justify-content: space-between;
-    position: relative;
+    width: 100%;
     margin: 10px 0;
   }
 
   .toc-header::after {
-    content: '';
     position: absolute;
     bottom: -1px;
     left: 0;
+    width: 0%;
     height: 2px;
+    content: '';
     background: #8b5dff;
     border-radius: 1px;
-    width: 0%;
     transition: width 0.3s ease;
   }
 
 
   .toc-title {
     display: flex;
-    align-items: center;
     gap: 8px;
+    align-items: center;
+    margin: 0;
     font-size: 16px;
     font-weight: 600;
     color: #8b5dff;
-    margin: 0;
   }
 
   .toc-toggle {
-    background: none;
-    border: none;
-    color: #e5e7eb;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 32px;
     min-height: 32px;
-    position: relative;
+    padding: 8px;
+    color: #e5e7eb;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
   }
 
   .toc-toggle:hover {
-    background: rgba(139, 93, 255, 0.1);
     color: #8b5dff;
+    background: rgb(139 93 255 / 10%);
   }
 
   /* Tooltip for toggle */
   .toc-toggle::after {
-    content: attr(aria-label);
     position: absolute;
     bottom: -35px;
     left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
     z-index: 1000;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: white;
+    white-space: nowrap;
+    pointer-events: none;
+    content: attr(aria-label);
+    background: rgb(0 0 0 / 90%);
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity 0.2s ease;
   }
 
   .toc-toggle:hover::after {
@@ -216,15 +217,6 @@ const { headings = [] } = Astro.props
     transition: transform 0.2s ease;
   }
 
-  /* When collapsed, show the expand icon (show-icon) and hide the collapse icon (hide-icon) */
-  .toc-container.toc-collapsed .toc-toggle .toc-hide-icon {
-    display: none !important;
-  }
-
-  .toc-container.toc-collapsed .toc-toggle .toc-show-icon {
-    display: block !important;
-  }
-
   /* Also handle aria-expanded attribute for redundancy */
   .toc-toggle[aria-expanded="false"] .toc-hide-icon {
     display: none !important;
@@ -237,6 +229,15 @@ const { headings = [] } = Astro.props
   .toc-toggle:hover .toc-hide-icon,
   .toc-toggle:hover .toc-show-icon {
     transform: scale(1.1);
+  }
+
+  /* When collapsed, show the expand icon (show-icon) and hide the collapse icon (hide-icon) */
+  .toc-container.toc-collapsed .toc-toggle .toc-hide-icon {
+    display: none !important;
+  }
+
+  .toc-container.toc-collapsed .toc-toggle .toc-show-icon {
+    display: block !important;
   }
 
   /* Floating toggle button - hidden since we only collapse now */
@@ -256,19 +257,18 @@ const { headings = [] } = Astro.props
   }
 
   .toc-nav {
-    overflow-y: auto;
-    overflow-x: hidden;
     max-height: calc(100vh - 200px);
+    overflow: hidden auto;
+    scrollbar-color: rgb(139 93 255 / 30%) transparent;
     scrollbar-width: thin;
-    scrollbar-color: rgba(139, 93, 255, 0.3) transparent;
-    transition: opacity 0.3s ease, max-height 0.3s ease;
     opacity: 1;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
   }
 
   .toc-container.toc-collapsed .toc-nav {
-    opacity: 0;
     max-height: 0;
     overflow: hidden;
+    opacity: 0;
   }
 
   .toc-nav::-webkit-scrollbar {
@@ -280,18 +280,18 @@ const { headings = [] } = Astro.props
   }
 
   .toc-nav::-webkit-scrollbar-thumb {
-    background: rgba(139, 93, 255, 0.3);
+    background: rgb(139 93 255 / 30%);
     border-radius: 2px;
   }
 
   .toc-nav::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 93, 255, 0.5);
+    background: rgb(139 93 255 / 50%);
   }
 
   .toc-list {
-    list-style: none;
     padding: 0;
     margin: 0;
+    list-style: none;
   }
 
   .toc-item {
@@ -299,78 +299,80 @@ const { headings = [] } = Astro.props
   }
 
   .toc-link {
+    position: relative;
     display: block;
     padding: 8px 10px;
-    color: #e5e7eb;
-    text-decoration: none;
-    border-radius: 6px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
     font-size: 14px;
     line-height: 1.4;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-left: 3px solid transparent;
-    position: relative;
-    transform: translateX(0);
-    overflow-x: hidden;
+    color: #e5e7eb;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    border-radius: 6px;
+    transform: translateX(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .toc-link:hover {
-    background: rgba(139, 93, 255, 0.1);
     color: #8b5dff;
+    background: rgb(139 93 255 / 10%);
     transform: translateX(4px);
   }
 
   /* Active link highlighting */
   .toc-link.active {
-    background: rgba(139, 93, 255, 0.15);
-    color: #8b5dff;
-    border-left: 3px solid #8b5dff;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(139, 93, 255, 0.2);
+    color: #8b5dff;
+    background: rgb(139 93 255 / 15%);
+    border-left: 3px solid #8b5dff;
+    box-shadow: 0 2px 8px rgb(139 93 255 / 20%);
     animation: activeGlow 0.3s ease-in-out;
   }
 
   .toc-link.active::before {
-    content: '';
     position: absolute;
-    left: 0;
     top: 0;
     bottom: 0;
+    left: 0;
     width: 3px;
+    content: '';
     background: linear-gradient(180deg, #8b5dff, #a855f7);
     border-radius: 0 2px 2px 0;
   }
 
   .toc-link.active::after {
-    content: '';
     position: absolute;
-    right: 8px;
     top: 50%;
-    transform: translateY(-50%);
+    right: 8px;
     width: 6px;
     height: 6px;
+    content: '';
     background: #8b5dff;
     border-radius: 50%;
+    transform: translateY(-50%);
     animation: pulse 2s infinite;
   }
 
   .toc-link.active:hover {
-    background: rgba(139, 93, 255, 0.2);
+    background: rgb(139 93 255 / 20%);
     transform: translateX(2px);
   }
 
   @keyframes activeGlow {
     0% {
-      background: rgba(139, 93, 255, 0.05);
+      background: rgb(139 93 255 / 5%);
       transform: translateX(0);
     }
+
     50% {
-      background: rgba(139, 93, 255, 0.2);
+      background: rgb(139 93 255 / 20%);
       transform: translateX(4px);
     }
+
     100% {
-      background: rgba(139, 93, 255, 0.15);
+      background: rgb(139 93 255 / 15%);
       transform: translateX(0);
     }
   }
@@ -380,6 +382,7 @@ const { headings = [] } = Astro.props
       opacity: 1;
       transform: translateY(-50%) scale(1);
     }
+
     50% {
       opacity: 0.6;
       transform: translateY(-50%) scale(1.2);
@@ -413,9 +416,9 @@ const { headings = [] } = Astro.props
 
   /* Legacy collapsed class support */
   .toc-container.collapsed .toc-nav {
-    opacity: 0;
     max-height: 0;
     overflow: hidden;
+    opacity: 0;
   }
 
   .toc-container.collapsed {
@@ -424,34 +427,34 @@ const { headings = [] } = Astro.props
   }
 
   /* Mobile responsiveness */
-  @media (max-width: 1200px) {
+  @media (width <= 1200px) {
     .toc-container {
       display: none;
     }
   }
 
   /* Hide toggle button on desktop - only allow collapse on mobile */
-  @media (min-width: 1201px) {
+  @media (width >= 1201px) {
     .toc-toggle {
       display: none !important;
     }
   }
 
   /* Mobile TOC - show as collapsible at top on mobile */
-  @media (max-width: 1200px) {
+  @media (width <= 1200px) {
     .toc-container.mobile-toc {
-      display: block;
       position: relative;
+      top: 0;
+      display: block;
       width: 100%;
       max-width: 100%;
-      top: 0;
-      margin-bottom: 24px;
       max-height: none;
-      background: rgba(15, 15, 15, 0.98);
-      border: 1px solid rgba(139, 93, 255, 0.3);
-      touch-action: manipulation;
       padding: 8px 16px;
+      margin-bottom: 24px;
       overflow-x: hidden;
+      touch-action: manipulation;
+      background: rgb(15 15 15 / 98%);
+      border: 1px solid rgb(139 93 255 / 30%);
     }
 
     .toc-container.mobile-toc .toc-title {
@@ -468,15 +471,15 @@ const { headings = [] } = Astro.props
     }
     
     .toc-container.mobile-toc.toc-collapsed .toc-nav {
-      opacity: 0;
       max-height: 0;
       overflow: hidden;
+      opacity: 0;
     }
 
     .toc-container.mobile-toc .toc-toggle {
+      color: #e5e7eb;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-      color: #e5e7eb;
     }
 
     .toc-container.mobile-toc .toc-toggle:hover {
@@ -484,17 +487,17 @@ const { headings = [] } = Astro.props
     }
 
     .toc-container.mobile-toc .toc-link {
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
       padding: 10px 12px;
       font-size: 14px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* Mobile indentation levels with smaller fonts */
     .toc-container.mobile-toc .toc-level-1 .toc-link {
       padding-left: 12px;
-      font-weight: 600;
       font-size: 14px;
+      font-weight: 600;
     }
 
     .toc-container.mobile-toc .toc-level-2 .toc-link {
@@ -517,56 +520,58 @@ const { headings = [] } = Astro.props
     }
 
     .toc-container.mobile-toc .toc-link.active {
-      background: rgba(139, 93, 255, 0.2);
-      color: #8b5dff;
-      border-left: 4px solid #8b5dff;
-      font-weight: 600;
       position: relative;
+      font-weight: 600;
+      color: #8b5dff;
+      background: rgb(139 93 255 / 20%);
+      border-left: 4px solid #8b5dff;
       animation: mobileActiveGlow 0.3s ease-in-out;
     }
 
-    .toc-container.mobile-toc .toc-link.active::before {
-      content: '';
+    .toc-mobile-active::before {
       position: absolute;
-      left: 0;
       top: 0;
       bottom: 0;
+      left: 0;
       width: 4px;
+      content: '';
       background: linear-gradient(180deg, #8b5dff, #a855f7);
       border-radius: 0 2px 2px 0;
     }
 
-    .toc-container.mobile-toc .toc-link.active::after {
-      content: '●';
+    .toc-mobile-active::after {
       position: absolute;
-      right: 12px;
       top: 50%;
-      transform: translateY(-50%);
-      color: #8b5dff;
+      right: 12px;
       font-size: 8px;
+      color: #8b5dff;
+      content: '●';
+      transform: translateY(-50%);
       animation: pulse 2s infinite;
     }
 
     @keyframes mobileActiveGlow {
       0% {
-        background: rgba(139, 93, 255, 0.1);
+        background: rgb(139 93 255 / 10%);
       }
+
       50% {
-        background: rgba(139, 93, 255, 0.25);
+        background: rgb(139 93 255 / 25%);
       }
+
       100% {
-        background: rgba(139, 93, 255, 0.2);
+        background: rgb(139 93 255 / 20%);
       }
     }
   }
 
   /* Improved mobile styling */
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .toc-container.mobile-toc {
-      margin: 16px -20px 24px -0px;
-      border-radius: 10px;
-      border-left: none;
+      margin: 16px -20px 24px -0;
       border-right: none;
+      border-left: none;
+      border-radius: 10px;
     }
   }
 </style>

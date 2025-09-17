@@ -6,33 +6,34 @@
   /* Responsive container */
   width: 100%;
   max-width: 64rem; /* max-w-4xl */
+
   /* Optimize touch handling */
   touch-action: manipulation;
 }
 
 /* Mobile - 480px and below */
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .slideshow-container {
     margin: 0 1rem;
   }
 
   /* Navigation dots above slideshow for mobile */
   .dot {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Stronger shadow for visibility */
     min-width: 0.75rem; /* Touch-friendly size */
     min-height: 0.75rem;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 40%); /* Stronger shadow for visibility */
   }
 }
 
 /* Tablet - 768px */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .slideshow-container {
     margin: 0 1.5rem;
   }
 }
 
 /* Desktop - 1024px and up */
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
   .slideshow-container {
     max-width: 72rem; /* max-w-5xl */
   }
@@ -45,17 +46,20 @@
 
 /* ========== PROGRESS BAR - ALWAYS VISIBLE ========== */
 .progress-bar {
+  height: 100% !important;
+  background-color: var(--color-accent-purple) !important;
+  border-radius: 0 !important;
+
   /* FIXED: Always visible with smooth animation */
   opacity: 1 !important; /* Always visible */
-  transition: width 0.1s linear;
-  background-color: var(--color-accent-purple) !important;
-  height: 100% !important;
-  border-radius: 0 !important;
   transform-origin: left center;
+  transition: width 0.1s linear;
 }
 
 /* Enhanced progress bar container */
 .slideshow-container .progress-bar {
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgb(139 93 255 / 30%);
   opacity: 0.8; /* Slightly transparent but always visible */
   transition:
     opacity 0.3s ease,
@@ -78,16 +82,17 @@
 
 /* Base dot styles */
 .dot {
-  transition: all 0.3s ease;
-  opacity: 1 !important; /* Ensure dots are always visible */
-  background-color: rgba(
-    139,
-    93,
-    255,
-    0.4
+  background-color: rgb(
+    139
+    93
+    255 /
+    40%
   ) !important; /* Semi-transparent purple for inactive dots */
-  transform: scale(0.5); /* Default scale */
+
   border: none !important; /* Remove white border */
+  opacity: 1 !important; /* Ensure dots are always visible */
+  transform: scale(0.5); /* Default scale */
+  transition: all 0.3s ease;
 }
 
 /* Active dot styles - matches the 'active-dot' class from Astro */
@@ -95,8 +100,9 @@
   background-color: var(
     --color-accent-purple
   ) !important; /* Active dot uses bright purple */
-  box-shadow: 0 4px 12px var(--color-accent-shadow);
+
   border: none !important; /* Remove white border */
+  box-shadow: 0 4px 12px var(--color-accent-shadow);
   transform: scale(1.1); /* Active dot is larger */
 }
 
@@ -113,12 +119,13 @@
 @keyframes pulse-gentle {
   0%,
   100% {
-    transform: scale(1);
     opacity: 0.9;
+    transform: scale(1);
   }
+
   50% {
-    transform: scale(1.05);
     opacity: 1;
+    transform: scale(1.05);
   }
 }
 
@@ -126,9 +133,6 @@
 @media (hover: none) and (pointer: coarse) {
   .slideshow-container {
     /* Prevent text selection during long-press */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 
     /* Prevent context menu on long-press */
@@ -139,30 +143,30 @@
   .slide {
     /* Ensure touch events work properly */
     touch-action: manipulation;
+
     /* Prevent text selection during touch */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
   }
 
   .dot {
     min-width: 0.75rem;
     min-height: 0.75rem;
-    opacity: 1 !important;
+
     /* Larger touch target for dots */
     padding: 0.25rem;
+    opacity: 1 !important;
   }
 }
 
 /* Hover effects - only on desktop */
 @media (hover: hover) {
   .dot:hover {
-    transform: scale(1.15);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     background-color: var(
       --color-accent-purple
     ) !important; /* Hover shows bright purple */
+
+    box-shadow: 0 4px 12px rgb(0 0 0 / 60%);
+    transform: scale(1.15);
   }
 
   /* Active dot hover effect */
@@ -170,16 +174,17 @@
     background-color: var(
       --color-accent-purple
     ) !important; /* Active dot stays bright purple */
+
     box-shadow: 0 6px 16px var(--color-accent-shadow);
     transform: scale(1.1); /* Slightly larger on hover */
   }
 }
 
 /* Fallback for browsers that don't support @media (hover: hover) */
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
   .dot:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 60%);
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   }
 
   .dot.active-dot:hover {
@@ -200,17 +205,14 @@
 
 /* ========== ADDITIONAL VISUAL ENHANCEMENTS ========== */
 
-/* Progress bar container styling */
-.slideshow-container .progress-bar {
-  box-shadow: 0 0 8px rgba(139, 93, 255, 0.3);
-  border-radius: 0 2px 2px 0;
-}
+/* Progress bar container styling - merged above */
 
 /* Smooth animation for progress bar */
 @keyframes progressAnimation {
   from {
     width: 0%;
   }
+
   to {
     width: 100%;
   }

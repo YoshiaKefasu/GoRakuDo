@@ -59,36 +59,29 @@ const config = { ...defaultConfig, ...Astro.props };
   .transparent-layer {
     --_bg-layer-normal: linear-gradient(
       180deg,
-      oklch(0.01 0.01 280 / 0.75) 0%,
-      oklch(0.015 0.01 285 / 0.5) 30%,
-      oklch(0.02 0.01 290 / 0.4) 60%,
-      oklch(0.025 0.01 295 / 0.3) 100%
+      oklch(1% 0.01 280deg / 75%) 0%,
+      oklch(1.5% 0.01 285deg / 50%) 30%,
+      oklch(2% 0.01 290deg / 40%) 60%,
+      oklch(2.5% 0.01 295deg / 30%) 100%
     );
     --_bg-layer-darker: linear-gradient(
       180deg,
-      oklch(0.025 0.01 295 / 0.35) 0%,
-      oklch(0.015 0.01 285 / 0.75) 60%,
-      oklch(0.01 0.01 280 / 0.9) 100%
+      oklch(2.5% 0.01 295deg / 35%) 0%,
+      oklch(1.5% 0.01 285deg / 75%) 60%,
+      oklch(1% 0.01 280deg / 90%) 100%
     );
 
     position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0; /* 四方を固定 */
-    bottom: 0; /* 四方を固定 */
+    inset: 0; /* 四方を固定 */ /* 四方を固定 */
+    z-index: -50;
     width: 100vw;
     width: 100lvw;
     height: 100vh;
     height: 100lvh;
     overflow: hidden; /* 念のため、はみ出しをクリップ */
-    z-index: -50;
     pointer-events: none;
-    mix-blend-mode: multiply;
-  }
-
-  /* Default background (normal) */
-  .transparent-layer {
     background: var(--_bg-layer-normal);
+    mix-blend-mode: multiply;
   }
 
   /* Darker background when backgroundLayer="darker" */
@@ -98,29 +91,23 @@ const config = { ...defaultConfig, ...Astro.props };
 
   .wave-animation-container {
     position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0; /* 四方を固定 */
-    bottom: 0; /* 四方を固定 */
+    inset: 0; /* 四方を固定 */ /* 四方を固定 */
+    z-index: -75;
     width: 100vw; /* 明示的にビューポート幅を指定 */
     height: 100vh; /* 明示的にビューポート高を指定 */
     height: 100lvh; /* 明示的にビューポート高を指定 */
     overflow: hidden;
-    z-index: -75;
     pointer-events: none;
   }
 
   .wave-canvas {
     position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0; /* 四方を固定 */
-    bottom: 0; /* 四方を固定 */
+    inset: 0; /* 四方を固定 */ /* 四方を固定 */
+    z-index: -60;
     width: 100vw; /* 明示的にビューポート幅を指定 */
     height: 100vh; /* 明示的にビューポート高を指定 */
     height: 100lvh; /* 明示的にビューポート高を指定 */
     overflow: hidden;
-    z-index: -60;
     pointer-events: none;
   }
 </style>

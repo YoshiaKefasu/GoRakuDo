@@ -45,7 +45,8 @@ const formatToolName = (tool: string): string =>
     <header class='card-header'>
       <time
         class='card-date'
-        datetime={article.originalArticle.data.publishedDate || new Date().toISOString()}
+        datetime={article.originalArticle.data.publishedDate ||
+          new Date().toISOString()}
         itemprop='datePublished'
       >
         {article.publishedDate}
@@ -115,64 +116,63 @@ const formatToolName = (tool: string): string =>
   /* ========== ENHANCED ARTICLE CARD STYLES ========== */
   .article-card-optimized {
     position: relative;
-    border-radius: var(--radius-xl);
+    height: fit-content;
+    margin: 0 clamp(var(--spacing-xs), 2vw, var(--spacing-md));
+    contain: layout style paint;
     overflow: hidden;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(20px);
     transition:
       transform var(--transition-normal),
       box-shadow var(--transition-normal);
     will-change: transform;
-    contain: layout style paint;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    backdrop-filter: blur(20px);
   }
 
   .article-card-optimized:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
     border-color: var(--color-border-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
   }
 
   .card-link {
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: inherit;
-    height: 100%;
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
   }
 
   .card-link::before {
-    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     z-index: -1;
+    content: '';
   }
 
   /* ========== カードヘッダー ========== */
   .card-header {
     display: flex;
-    justify-content: space-between;
+    gap: var(--spacing-sm);
     align-items: center;
+    justify-content: space-between;
     padding: clamp(var(--spacing-sm), 2vw, var(--spacing-md))
       clamp(var(--spacing-md), 4vw, var(--spacing-lg)) var(--spacing-sm);
-    gap: var(--spacing-sm);
   }
 
   .card-date {
     font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
     font-weight: 500;
+    color: var(--color-text-muted);
   }
 
   /* ========== メインコンテンツ ========== */
   .card-content {
-    padding: var(--spacing-sm) clamp(var(--spacing-md), 4vw, var(--spacing-lg));
     flex: 1;
+    padding: var(--spacing-sm) clamp(var(--spacing-md), 4vw, var(--spacing-lg));
   }
 
   .card-image-section {
@@ -181,14 +181,15 @@ const formatToolName = (tool: string): string =>
 
   .card-image {
     width: 100%;
-    height: 120px;
+    height: clamp(100px, 15vh, 160px);
     object-fit: cover;
-    border-radius: var(--radius-md);
-    transition: transform var(--transition-normal);
-    will-change: transform;
+    object-position: center;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     background: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-normal);
+    will-change: transform;
   }
 
   .article-card-optimized:hover .card-image {
@@ -207,26 +208,26 @@ const formatToolName = (tool: string): string =>
 
   /* ========== テキストコンテンツ ========== */
   .card-title {
+    display: -webkit-box;
+    margin: 0 0 var(--spacing-sm) 0;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
     font-size: clamp(var(--font-size-md), 2vw, var(--font-size-2xl));
     font-weight: 600;
-    color: var(--color-text-primary);
     line-height: 1.4;
-    margin: 0 0 var(--spacing-sm) 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
+    color: var(--color-text-primary);
     -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 
   .card-description {
-    font-size: clamp(var(--font-size-xs), 1.5vw, var(--font-size-sm));
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-    margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    margin: 0;
     overflow: hidden;
+    -webkit-line-clamp: 3;
+    font-size: clamp(var(--font-size-xs), 1.5vw, var(--font-size-sm));
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    -webkit-box-orient: vertical;
   }
 
   /* ========== カードフッター ========== */
@@ -238,42 +239,43 @@ const formatToolName = (tool: string): string =>
 
   .card-tags {
     display: flex;
-    gap: var(--spacing-sm);
     flex-wrap: wrap;
+    gap: var(--spacing-sm);
   }
 
   .card-tag {
-    background: var(--color-primary / 0.15);
-    color: var(--color-primary);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-sm);
+    padding: clamp(var(--spacing-xs), 1vw, var(--spacing-sm))
+      clamp(var(--spacing-sm), 2vw, var(--spacing-md));
+    font-size: clamp(var(--font-size-xs), 1vw, var(--font-size-sm));
     font-weight: 600;
-    border: 1px solid var(--color-primary / 0.2);
-    transition: all var(--transition-fast);
+    color: var(--color-primary);
     cursor: pointer;
     user-select: none;
+    background: var(--color-primary / 0.15);
+    border: 1px solid var(--color-primary / 0.2);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
   }
 
   .card-tag:hover {
     background: var(--color-primary / 0.2);
     border-color: var(--color-primary / 0.4);
-    transform: translateY(-1px);
     box-shadow: 0 2px 8px var(--color-primary / 0.2);
+    transform: translateY(-1px);
   }
 
   /* ========== アクションインジケーター ========== */
   .card-action-indicator {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: var(--color-primary / 0.1);
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--color-primary / 0.1);
+    border-radius: 50%;
     opacity: 1;
     transition: all var(--transition-normal);
-    flex-shrink: 0;
   }
 
   .arrow-icon {
@@ -283,7 +285,7 @@ const formatToolName = (tool: string): string =>
   }
 
   /* デスクトップ表示ではホバー時にのみ表示 */
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .card-action-indicator {
       opacity: 0;
     }
@@ -294,17 +296,16 @@ const formatToolName = (tool: string): string =>
   }
 
   /* ========== レスポンシブデザイン ========== */
+
   /* モバイル (320px+) - デフォルト */
-  .article-card-optimized {
-    height: fit-content;
-    margin: 0 clamp(var(--spacing-xs), 2vw, var(--spacing-md));
-  }
+
+  /* article-card-optimized styles moved to main selector above */
 
   /* デスクトップ表示ではコンテンツに合わせて高さを調整 */
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .article-card-optimized {
-      min-height: auto;
       height: fit-content;
+      min-height: auto;
     }
 
     .card-footer {
@@ -313,16 +314,9 @@ const formatToolName = (tool: string): string =>
     }
   }
 
-  .card-image {
-    height: clamp(100px, 15vh, 160px);
-    object-position: center;
-  }
+  /* card-image styles moved to main selector above */
 
-  .card-tag {
-    font-size: clamp(var(--font-size-xs), 1vw, var(--font-size-sm));
-    padding: clamp(var(--spacing-xs), 1vw, var(--spacing-sm))
-      clamp(var(--spacing-sm), 2vw, var(--spacing-md));
-  }
+  /* card-tag styles moved to main selector above */
 
   /* ========== アクセシビリティ ========== */
   @media (prefers-contrast: high) {
@@ -335,10 +329,10 @@ const formatToolName = (tool: string): string =>
     }
 
     .card-tag {
-      border-width: 2px;
-      background: var(--color-primary / 0.3);
-      color: var(--color-text-primary);
       font-weight: 700;
+      color: var(--color-text-primary);
+      background: var(--color-primary / 0.3);
+      border-width: 2px;
     }
   }
 
