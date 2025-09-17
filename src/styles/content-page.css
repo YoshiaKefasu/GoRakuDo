@@ -266,21 +266,38 @@
   @apply my-2;
 }
 
+.content-main.prose ol {
+  @apply my-2;
+}
+
 .content-main.prose hr {
   @apply my-4;
 }
 
 .content-main.prose ul li {
-  @apply relative pl-6 list-none;
+  @apply relative pl-6;
+  list-style-type: disc;
 }
 
+.content-main.prose ol li {
+  @apply relative pl-6;
+  list-style-type: decimal;
+}
+
+/* Custom bullet for unordered lists - only apply to specific content if needed */
 .content-main.prose ul li::before {
-  content: '〆';
-  color: var(--color-primary);
-  font-weight: 900;
-  position: absolute;
-  left: 0;
-  top: 0.2rem;
+  display: none; /* Disable custom bullet to show default disc */
+}
+
+/* Ensure proper list styling for both ul and ol */
+.content-main.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.content-main.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
 }
 
 /* Legacy support for existing post-content selector */
@@ -387,19 +404,8 @@
   }
 }
 
-html {
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
-}
-
-body {
-  background: #1e1e28;
-  width: 100%;
-  padding: 0px;
-  margin: 0px;
-  min-width: 100%;
-  max-width: 100%;
-}
+/* content-page.css では html と body の基本設定は global.css に委譲 */
+/* 重複する設定を削除してダブルスクロールバーを防止 */
 
 code {
   background: none !important;

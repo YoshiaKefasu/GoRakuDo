@@ -22,25 +22,28 @@
   --clr-accent-fallback: #8b5dff;
 
   /* ===== LEGACY COLOR MAPPING - COMPATIBILITY LAYER ===== */
-  /* Legacy color mapping converted to OKLCH system */
-  --color-accent-dark: oklch(0.6 0.25 280); /* Converted to OKLCH */
-  --color-text-primary: oklch(1 0 0); /* Maps to --color-foreground */
-  --color-accent-purple: oklch(0.65 0.25 280); /* Maps to --color-primary */
-  --color-gold-dark: oklch(0.75 0.12 85); /* Maps to --color-secondary */
-  --color-text-secondary: oklch(0.8 0 0); /* Maps to --color-muted-foreground */
-  --color-text-muted: oklch(0.67 0 0);
-  --color-gold-light: oklch(0.95 0.08 85);
+  /* Legacy variables now reference the primary color system */
+  --color-accent-dark: var(--clr-accent-dark);
+  --color-text-primary: var(--clr-text-primary);
+  --color-accent-purple: var(--clr-accent);
+  --color-gold-dark: var(--clr-gold-dark);
+  --color-text-secondary: var(--clr-text-secondary);
+  --color-text-muted: var(--clr-text-muted);
+  --color-gold-light: var(--clr-gold-light);
 
   /* Complex rgba values converted to OKLCH */
   --color-accent-purple-rgb:
     139, 93, 255; /* Keep RGB for legacy compatibility */
-  --color-accent-purple-glow-faint: oklch(0.65 0.25 280 / 0.05);
-  --color-accent-purple-glow-medium: oklch(0.65 0.25 280 / 0.25);
-  --color-accent-purple-glow-strong: oklch(0.65 0.25 280 / 0.5);
+  /* Unified glow effects - using consistent values */
   --color-accent-glow-faint: oklch(0.65 0.25 280 / 0.05);
   --color-accent-glow-medium: oklch(0.65 0.25 280 / 0.1);
   --color-accent-glow-strong: oklch(0.65 0.25 280 / 0.2);
   --color-accent-shadow: oklch(0.65 0.25 280 / 0.4);
+  
+  /* Legacy compatibility - now using unified values */
+  --color-accent-purple-glow-faint: var(--color-accent-glow-faint);
+  --color-accent-purple-glow-medium: var(--color-accent-glow-medium);
+  --color-accent-purple-glow-strong: var(--color-accent-glow-strong);
   --color-gold-dark-transparent: oklch(0.75 0.12 85 / 0.25);
 
   /* ===== PAPER THEME - OKLCH ===== */
@@ -58,24 +61,14 @@
   --color-paper-lines: oklch(0.88 0.01 60);
 
   /* ===== TYPOGRAPHY SYSTEM ===== */
-  --font-primary: 'Inter', sans-serif;
-  --font-serif: 'Lora', serif;
-  --font-jp: 'Yuji Syuku', serif;
-  --font-cursive: 'Cedarville Cursive', cursive;
-
-  /* Font family for legacy compatibility with fallbacks */
-  --font-family-base:
-    'Inter', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui,
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-  /* Font family variables with immediate fallbacks (overriding previous definitions) */
-  --font-primary:
-    'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
-  --font-jp:
-    'Yuji Syuku', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', serif;
+  /* Primary font with comprehensive fallbacks */
+  --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'Lora', 'Times New Roman', Times, serif;
+  --font-jp: 'Yuji Syuku', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', serif;
   --font-cursive: 'Cedarville Cursive', cursive;
+
+  /* Legacy compatibility - now references primary font system */
+  --font-family-base: var(--font-primary);
 
   /* ===== SPACING & BORDERS ===== */
   --section-padding-y: clamp(80px, 10vw, 120px);
@@ -110,41 +103,6 @@
 }
 
 /* ========== CRITICAL CSS LAYER - LOADS FIRST FOR PERFORMANCE ========== */
-@layer critical {
-  html {
-    /* REASONING: Legacy used 16px, keeping it for compatibility but with modern optimizations */
-    font-size: 1rem; /* Base font size (Respecting the user's font size preference) for REM calculations */
-    font-display: swap; /* Prevent layout shift during font loading */
-    scroll-behavior: smooth !important;
-    scrollbar-gutter: stable !important; /* Prevent content shifting when scrollbar appears */
-    text-rendering: optimizeSpeed !important;
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
-  }
-
-  body {
-    /* REASONING: Optimized font stack with Inter as primary to prevent layout shift */
-    font-family: var(--font-primary);
-    color: var(--clr-text-primary, var(--clr-text-primary-fallback));
-    background-color: var(--clr-background, var(--clr-background-fallback));
-    font-size: 1rem; /* 16px base - matches legacy */
-    font-weight: 400;
-    line-height: 1.5; /* Preserved from legacy */
-    letter-spacing: -0.01em; /* Slightly tighter for modern feel */
-    flex-direction: column;
-  }
-
-  /* REASONING: Preserving legacy layout structure */
-  #root,
-  #app,
-  main {
-    min-height: 100vh;
-    min-height: 100svh; /* Modern viewport units for mobile */
-    min-height: 100dvh; /* Dynamic viewport height for mobile */
-    display: flex;
-    flex-direction: column;
-  }
-}
 
 /* ========== FONT AND EMOJI UTILITIES ========== */
 /* Enhanced font support for Japanese and emoji */
@@ -499,7 +457,7 @@
 
   /* Base colors - matching legacy #0a0a0a and #ffffff */
   --color-background: oklch(4% 0.005 270); /* Equivalent to legacy #0a0a0a */
-  --color-foreground: oklch(98% 0.002 270); /* Equivalent to legacy #ffffff */
+  --color-foreground: var(--clr-text-primary);
 
   /* Surface colors - enhanced from legacy */
   --color-card: oklch(8% 0.008 270); /* Slightly lighter than background */
@@ -507,13 +465,9 @@
   --color-popover: oklch(6% 0.006 270);
   --color-popover-foreground: oklch(98% 0.002 270);
 
-  /* Primary purple - exact match to legacy #8b5dff */
-  --color-primary: oklch(
-    65% 0.18 280
-  ); /* Legacy --color-accent-purple #8b5dff */
-  --color-primary-dark: oklch(
-    55% 0.16 280
-  ); /* Legacy --color-accent-purple-dark #7b4def */
+  /* Primary purple - now references the primary color system */
+  --color-primary: var(--clr-accent);
+  --color-primary-dark: var(--clr-accent-dark);
   --color-primary-foreground: oklch(98% 0.002 270);
 
   /* Secondary gold - exact match to legacy #e4b43b */
@@ -522,14 +476,10 @@
 
   /* Muted colors - mapped from legacy text colors */
   --color-muted: oklch(20% 0.01 270);
-  --color-muted-foreground: oklch(
-    65% 0.008 270
-  ); /* Legacy --color-text-secondary #cccccc */
+  --color-muted-foreground: var(--clr-text-secondary);
 
-  /* Accent colors - Fixed to use brand purple for consistency */
-  --color-accent: oklch(
-    65% 0.18 280
-  ); /* Maps to --color-primary for brand consistency */
+  /* Accent colors - now references the primary color system */
+  --color-accent: var(--clr-accent);
   --color-accent-foreground: oklch(98% 0.002 270);
 
   /* Semantic colors - enhanced from legacy */
@@ -543,7 +493,7 @@
   /* Border and input colors */
   --color-border: oklch(25% 0.015 270);
   --color-input: oklch(15% 0.008 270);
-  --color-ring: oklch(65% 0.18 280);
+  --color-ring: var(--clr-accent);
 
   /* Extended neutral palette - preserved from legacy */
   --color-neutral-50: oklch(98% 0.005 254.624);
@@ -649,12 +599,56 @@
   --animate-twinkle: twinkle 3s infinite;
 }
 
+/* ========== LAYER STRUCTURE ========== */
+/* 
+ * Layer order (from lowest to highest priority):
+ * 1. base: Reset styles, base typography, fundamental styles
+ * 2. components: Reusable component styles
+ * 3. utilities: Utility classes and overrides
+ */
+
 /* ========== BASE LAYER - FOUNDATIONAL STYLES ========== */
 @layer base {
   /* 
    * REASONING: Enhanced base styles while preserving legacy component compatibility
    * CHANGE: Added modern features while maintaining legacy layout patterns
+   * CRITICAL: Critical styles moved from @layer critical for Tailwind compatibility
    */
+
+  /* Critical styles - moved from @layer critical */
+  html {
+    /* REASONING: Legacy used 16px, keeping it for compatibility but with modern optimizations */
+    font-size: 1rem; /* Base font size (Respecting the user's font size preference) for REM calculations */
+    font-display: swap; /* Prevent layout shift during font loading */
+    scroll-behavior: smooth !important;
+    scrollbar-gutter: stable !important; /* Prevent content shifting when scrollbar appears */
+    text-rendering: optimizeSpeed !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+
+  body {
+    /* REASONING: Optimized font stack with Inter as primary to prevent layout shift */
+    font-family: var(--font-primary);
+    color: var(--clr-text-primary, var(--clr-text-primary-fallback));
+    background-color: var(--clr-background, var(--clr-background-fallback));
+    font-size: 1rem; /* 16px base - matches legacy */
+    font-weight: 400;
+    line-height: 1.5; /* Preserved from legacy */
+    letter-spacing: -0.01em; /* Slightly tighter for modern feel */
+    flex-direction: column;
+  }
+
+  /* REASONING: Preserving legacy layout structure */
+  #root,
+  #app,
+  main {
+    min-height: 100vh;
+    min-height: 100svh; /* Modern viewport units for mobile */
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
+    display: flex;
+    flex-direction: column;
+  }
 
   /* Main content structure - preserved from legacy */
   .main-content {
@@ -879,12 +873,41 @@
     background: var(--color-accent);
   }
 
-  /* Legacy responsive styles - preserved */
+  /* Responsive styles - mobile (768px and below) */
   @media (max-width: 768px) {
+    /* Button responsive styles */
     .cta-button,
     .docs-button {
       padding: 14px 28px;
       font-size: 15px;
+    }
+    
+    /* Article content responsive styles */
+    .article-content ul,
+    .article-content ol {
+      margin: 0.75rem 0; /* Smaller margins on mobile */
+    }
+
+    .article-content ul li,
+    .article-content ol li {
+      padding-left: 0.75rem; /* Reduced padding on mobile */
+      margin-bottom: 0.375rem; /* Smaller spacing on mobile */
+      font-size: 0.875rem; /* Slightly smaller font on mobile */
+    }
+
+    .article-content ul li::before {
+      font-size: 0.875rem; /* Smaller bullet on mobile */
+    }
+
+    .article-content ul ul li::before {
+      font-size: 0.75rem; /* Even smaller nested bullet on mobile */
+    }
+
+    .article-content ul ul,
+    .article-content ol ol,
+    .article-content ul ol,
+    .article-content ol ul {
+      padding-left: 0.75rem; /* Less indentation on mobile */
     }
   }
 }
@@ -1311,20 +1334,6 @@
     color: var(--color-accent);
   }
 
-  /* ===== LEGACY ANIMATION UTILITIES - PRESERVED ===== */
-  .animate-fade-in {
-    animation: fade-in var(--animate-duration-normal) ease-out;
-  }
-  .animate-slide-up {
-    animation: slide-up var(--animate-duration-normal) ease-out;
-  }
-  .animate-scale-in {
-    animation: scale-in var(--animate-duration-fast) ease-out;
-  }
-  .animate-bounce-subtle {
-    animation: bounce-subtle var(--animate-duration-slow) ease-in-out infinite;
-  }
-
   /* ===== LEGACY GRID UTILITIES - PRESERVED ===== */
   .grid-auto-fit {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1489,6 +1498,7 @@
 
 /* Print styles - enhanced from legacy */
 @media print {
+  /* Button and component print styles */
   .btn-primary,
   .btn-secondary,
   .primary-button,
@@ -1503,6 +1513,19 @@
     background: white !important;
     border: 1px solid black !important;
   }
+  
+  /* Article content print styles */
+  .article-content ul,
+  .article-content ol {
+    margin: 0.5rem 0 0.5rem 1rem; /* Reduced margins for print */
+    page-break-inside: avoid; /* Prevent list breaking across pages */
+  }
+
+  .article-content li {
+    page-break-inside: avoid; /* Prevent item breaking across pages */
+    orphans: 2; /* Minimum 2 lines before page break */
+    widows: 2; /* Minimum 2 lines after page break */
+  }
 }
 
 /* ========== LIST STYLING - GLOBAL CONSISTENCY ========== */
@@ -1513,14 +1536,14 @@
  */
 
 /* ===== GLOBAL LISTS - W3SCHOOLS STANDARD WITH CUSTOM BULLETS ===== */
-ul {
+.article-content ul {
   /* REASONING: W3Schools standard list styling with custom bullet */
   list-style: none; /* Remove default bullets for custom styling */
   margin: 1rem 0; /* Standard top/bottom margin */
   padding-left: 0; /* Remove default padding for custom positioning */
 }
 
-ul li {
+.article-content ul li {
   /* REASONING: Custom bullet with responsive positioning */
   position: relative;
   padding-left: 1rem; /* Space for custom bullet - shorter */
@@ -1528,7 +1551,7 @@ ul li {
   line-height: 1.6; /* Standard line height for readability */
 }
 
-ul li::before {
+.article-content ul li::before {
   /* REASONING: Custom bullet "〆" with primary purple color */
   content: '〆';
   position: absolute;
@@ -1540,45 +1563,45 @@ ul li::before {
 }
 
 /* ===== GLOBAL ORDERED LISTS - W3SCHOOLS STANDARD ===== */
-ol {
+.article-content ol {
   /* REASONING: W3Schools standard ordered list styling */
   list-style: decimal; /* Standard decimal numbers */
   margin: 1rem 0; /* Standard top/bottom margin */
   padding-left: 1rem; /* Standard left padding for numbers - shorter */
 }
 
-ol li {
+.article-content ol li {
   /* REASONING: W3Schools standard list item styling */
   margin-bottom: 0.5rem; /* Standard spacing between items */
   line-height: 1.6; /* Standard line height for readability */
 }
 
 /* ===== MARKER PSEUDO-ELEMENT STYLING ===== */
-ol li::marker {
+.article-content ol li::marker {
   /* REASONING: Style the ::marker pseudo-element to fix browser console issues */
   color: var(--color-primary); /* Primary purple color for numbers */
   font-weight: 700; /* Bold weight for visibility */
 }
 
 /* ===== GLOBAL NESTED LISTS - W3SCHOOLS STANDARD ===== */
-ul ul,
-ol ol,
-ul ol,
-ol ul {
+.article-content ul ul,
+.article-content ol ol,
+.article-content ul ol,
+.article-content ol ul {
   /* REASONING: W3Schools standard nested list styling */
   margin: 0.5rem 0; /* Standard spacing for nested lists */
   padding-left: 0; /* Standard indentation for nesting - shorter */
 }
 
-ul {
+.article-content ul {
   padding-left: 1rem; /* Standard left padding for bullets - shorter */
 }
 
-ul ul {
+.article-content ul ul {
   list-style: none; /* Remove default for nested custom bullets */
 }
 
-ul ul li::before {
+.article-content ul ul li::before {
   /* REASONING: Nested custom bullet with smaller size */
   content: '〆';
   position: absolute;
@@ -1589,63 +1612,69 @@ ul ul li::before {
   font-size: 0.875rem; /* Smaller size for nesting */
 }
 
-ol ol {
+.article-content ol ol {
   list-style: lower-alpha; /* Nested ordered lists use lowercase letters */
 }
 
-/* ===== GLOBAL LIST RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-  ul,
-  ol {
-    /* REASONING: Responsive margins for mobile */
-    margin: 0.75rem 0; /* Smaller margins on mobile */
-  }
+/* ========== ANIMATION SYSTEM - OPTIMIZED ========== */
+/* All animations consolidated for better performance and maintainability */
 
-  ul li,
-  ol li {
-    /* REASONING: Responsive spacing for mobile */
-    padding-left: 0.75rem; /* Reduced padding on mobile - shorter */
-    margin-bottom: 0.375rem; /* Smaller spacing on mobile */
-    font-size: 0.875rem; /* Slightly smaller font on mobile */
-  }
-
-  ul li::before {
-    /* REASONING: Responsive custom bullet for mobile */
-    font-size: 0.875rem; /* Smaller bullet on mobile */
-  }
-
-  ul ul li::before {
-    /* REASONING: Responsive nested bullet for mobile */
-    font-size: 0.75rem; /* Even smaller nested bullet on mobile */
-  }
-
-  ul ul,
-  ol ol,
-  ul ol,
-  ol ul {
-    /* REASONING: Responsive nesting indentation for mobile */
-    padding-left: 0.75rem; /* Less indentation on mobile - shorter */
-  }
+/* Core animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* ===== GLOBAL LIST PRINT STYLES ===== */
-@media print {
-  ul,
-  ol {
-    /* REASONING: Ensure lists print correctly */
-    margin: 0.5rem 0 0.5rem 1rem; /* Reduced margins for print */
-    page-break-inside: avoid; /* Prevent list breaking across pages */
-  }
-
-  li {
-    /* REASONING: Ensure list items print clearly */
-    page-break-inside: avoid; /* Prevent item breaking across pages */
-    orphans: 2; /* Minimum 2 lines before page break */
-    widows: 2; /* Minimum 2 lines after page break */
-  }
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== BUTTERY SMOOTH WAVE ANIMATIONS ===== */
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes slide-from-right {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-from-bottom {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(1); filter: brightness(1); }
+  25% { opacity: 0.6; transform: scale(1.1); filter: brightness(1.2); }
+  50% { opacity: 0.8; transform: scale(1.3); filter: brightness(1.5); }
+  75% { opacity: 0.7; transform: scale(1.15); filter: brightness(1.3); }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fade-in var(--animate-duration-normal) ease-out;
+}
+.animate-slide-up {
+  animation: slide-up var(--animate-duration-normal) ease-out;
+}
+.animate-scale-in {
+  animation: scale-in var(--animate-duration-fast) ease-out;
+}
+.animate-bounce-subtle {
+  animation: bounce-subtle var(--animate-duration-slow) ease-in-out infinite;
+}
+.animate-twinkle {
+  animation: twinkle 3s infinite;
+}
+
+/* Specialized animations */
 @keyframes buttery-wave-float {
   0%,
   100% {
@@ -1752,96 +1781,3 @@ ol ol {
   animation: buttery-wave-float 8s ease-in-out infinite;
 }
 */
-
-/* ========== GLOBAL ANIMATIONS - PRESERVED FROM LEGACY ========== */
-/* 
- * REASONING: These animations are used throughout the existing codebase
- * CHANGE: Kept all original keyframes but optimized timing functions
- */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes bounce-subtle {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-@keyframes slide-from-right {
-  from {
-    transform: translateX(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-from-bottom {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Balanced star twinkle animation */
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  25% {
-    opacity: 0.6;
-    transform: scale(1.1);
-    filter: brightness(1.2);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.3);
-    filter: brightness(1.5);
-  }
-  75% {
-    opacity: 0.7;
-    transform: scale(1.15);
-    filter: brightness(1.3);
-  }
-}
