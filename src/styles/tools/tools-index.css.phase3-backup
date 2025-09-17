@@ -658,6 +658,15 @@
   opacity: 1;
 }
 
+/* @keyframes loading-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+} */
 
 /* Astro Native Scroll Reveal (0 JavaScript) */
 @supports (animation-timeline: view()) {
@@ -697,6 +706,11 @@
   }
 }
 
+/* Enhanced loading states with CSS-only approach - DISABLED */
+.loading-pulse {
+  /* animation: loading-pulse 2s ease-in-out infinite; */
+  opacity: 1;
+}
 
 .loaded {
   opacity: 1 !important;

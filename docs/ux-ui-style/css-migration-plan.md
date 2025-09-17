@@ -1,219 +1,318 @@
-# CSS移行計画: tools-index.css統合
+# CSS移行計画: tools-index.css → global.css 統合
 
 ## 概要
-`tools-index.css`と`global.css`の競合を解消し、統一されたデザインシステムを構築するための段階的移行計画です。
+
+このドキュメントは、`tools-index.css`と`global.css`の競合を解決し、統一されたデザインシステムを構築するための段階的移行計画です。
 
 ## 移行戦略
 
 ### 基本方針
-1. **既存スタイルの保護**: 既存の見た目を壊さない
-2. **段階的実行**: リスクを最小化した段階的アプローチ
-3. **テスト駆動**: 各段階で十分なテストを実施
-4. **ロールバック可能**: 問題発生時の迅速な復旧
+1. **既存スタイルを壊さない** - 段階的な移行でリスクを最小化
+2. **global.cssを基準とする** - より包括的なデザインシステムを採用
+3. **OKLCHカラーシステムを統一** - モダンなカラー管理を実現
+4. **後方互換性を維持** - 既存コンポーネントの動作を保証
 
-## Phase 1: 緊急競合解消 (即座実行)
+## Phase 1: 緊急修正 (1-2日)
 
-### 1.1 変数名の競合解消
-**目標**: CSS変数の重複定義を解消
+### 1.1 CSS変数の重複削除
 
 #### 実行内容
-```css
-/* tools-index.css内の変数名を変更 */
-:root {
-  /* 変更前 */
-  --clr-accent: #8b5cf6;
-  --clr-accent-dark: #7b4def;
-  --clr-accent-glow-faint: rgba(139, 92, 246, 0.05);
-  --clr-accent-glow-medium: rgba(139, 92, 246, 0.35);
-  --clr-accent-glow-strong: rgba(139, 92, 246, 0.7);
-  --clr-text-primary: #e5e5e5;
-  --clr-text-secondary: #a3a3a3;
-  --clr-text-muted: #b0b0b0;
-  --clr-bg: #111111;
+- `tools-index.css`の重複CSS変数を削除
+- `global.css`のOKLCHカラーシステムを採用
+- 変数名のマッピングを作成
 
-  /* 変更後 */
-  --tools-clr-accent: #8b5cf6;
-  --tools-clr-accent-dark: #7b4def;
-  --tools-clr-accent-glow-faint: rgba(139, 92, 246, 0.05);
-  --tools-clr-accent-glow-medium: rgba(139, 92, 246, 0.35);
-  --tools-clr-accent-glow-strong: rgba(139, 92, 246, 0.7);
-  --tools-clr-text-primary: #e5e5e5;
-  --tools-clr-text-secondary: #a3a3a3;
-  --tools-clr-text-muted: #b0b0b0;
-  --tools-clr-bg: #111111;
+#### 具体的な変更
+
+**削除する変数 (tools-index.css)**
+```css
+/* 削除対象 */
+--clr-bg: #111111;
+--clr-text-primary: #e5e5e5;
+--clr-text-secondary: #a3a3a3;
+--clr-text-muted: #b0b0b0;
+--clr-accent: #8b5cf6;
+--clr-accent-dark: #7b4def;
+--clr-accent-glow-faint: rgba(139, 92, 246, 0.05);
+--clr-accent-glow-medium: rgba(139, 92, 246, 0.35);
+--clr-accent-glow-strong: rgba(139, 92, 246, 0.7);
+```
+
+**マッピング表**
+| tools-index.css | global.css | 備考 |
+|----------------|------------|------|
+| `--clr-bg` | `--clr-background` | OKLCHに変換 |
+| `--clr-text-primary` | `--clr-text-primary` | OKLCHに変換 |
+| `--clr-text-secondary` | `--clr-text-secondary` | OKLCHに変換 |
+| `--clr-text-muted` | `--clr-text-muted` | OKLCHに変換 |
+| `--clr-accent` | `--clr-accent` | OKLCHに変換 |
+| `--clr-accent-dark` | `--clr-accent-dark` | OKLCHに変換 |
+| `--clr-accent-glow-faint` | `--clr-accent-glow-faint` | OKLCHに変換 |
+| `--clr-accent-glow-medium` | `--clr-accent-glow-medium` | OKLCHに変換 |
+| `--clr-accent-glow-strong` | `--clr-accent-glow-strong` | OKLCHに変換 |
+
+#### 実装手順
+1. `tools-index.css`の`:root`セクションから重複変数を削除
+2. 既存のクラスで使用されている変数名を更新
+3. テスト環境で動作確認
+
+### 1.2 body要素のスタイル統合
+
+#### 実行内容
+- `tools-index.css`のbodyスタイルを削除
+- `global.css`のbodyスタイルを基準とする
+
+#### 削除するスタイル (tools-index.css)
+```css
+/* 削除対象 */
+body {
+  background-color: var(--clr-bg);
+  color: var(--clr-text-primary);
+  font-family: var(--font-family-sans);
 }
 ```
 
-#### 使用箇所の更新
+#### 実装手順
+1. `tools-index.css`のbodyスタイルを削除
+2. 必要に応じて`global.css`のbodyスタイルを調整
+3. ツールページでの表示確認
+
+### 1.3 フォントファミリーの統一
+
+#### 実行内容
+- `--font-family-sans`の参照を`--font-primary`に変更
+
+#### 変更箇所
 ```css
-/* 全ての使用箇所を更新 */
-.tool-card {
-  background: var(--tools-clr-accent-glow-faint);
-  border: 1px solid var(--tools-clr-accent-glow-medium);
-  /* ... */
-}
+/* 変更前 */
+font-family: var(--font-family-sans);
+
+/* 変更後 */
+font-family: var(--font-primary);
 ```
 
-### 1.2 フォールバック値の追加
-**目標**: 既存スタイルの保護
+## Phase 2: 中程度の修正 (3-5日)
 
+### 2.1 アニメーション変数の統一
+
+#### 実行内容
+- `global.css`のアニメーション変数を基準とする
+- `tools-index.css`の重複変数を削除
+
+#### 削除する変数 (tools-index.css)
 ```css
-/* グローバル変数をフォールバックとして使用 */
-.tool-card {
-  background: var(--tools-clr-accent-glow-faint, var(--clr-accent-glow-faint));
-  border: 1px solid var(--tools-clr-accent-glow-medium, var(--clr-accent-glow-medium));
-  /* ... */
-}
+/* 削除対象 */
+--transition-speed: 200ms;
+--transition-ease: ease-out;
+--animate-duration-normal: 0.4s;
+--animate-duration-fast: 0.2s;
+--animate-duration-slow: 0.6s;
 ```
 
-### 1.3 テスト項目
+#### マッピング表
+| tools-index.css | global.css | 備考 |
+|----------------|------------|------|
+| `--transition-speed` | `--transition-speed` | 値の統一 |
+| `--animate-duration-normal` | `--animate-duration-normal` | 値の統一 |
+| `--animate-duration-fast` | `--animate-duration-fast` | 値の統一 |
+| `--animate-duration-slow` | `--animate-duration-slow` | 値の統一 |
+
+### 2.2 ボーダーラディウスの統一
+
+#### 実行内容
+- `global.css`のボーダーラディウスを基準とする
+- `tools-index.css`の重複変数を削除
+
+#### 削除する変数 (tools-index.css)
+```css
+/* 削除対象 */
+--border-radius-card: 1rem; /* 16px */
+--border-radius-pill: 9999px;
+```
+
+#### マッピング表
+| tools-index.css | global.css | 備考 |
+|----------------|------------|------|
+| `--border-radius-card` | `--border-radius-card` | 値の統一 |
+| `--border-radius-pill` | `--border-radius-pill` | 値の統一 |
+
+### 2.3 スペーシングシステムの統合
+
+#### 実行内容
+- `global.css`のスペーシングシステムを基準とする
+- `tools-index.css`の重複変数を削除
+
+#### 削除する変数 (tools-index.css)
+```css
+/* 削除対象 */
+--spacing-1: 0.25rem; /* 4px */
+--spacing-2: 0.5rem; /* 8px */
+--spacing-3: 0.75rem; /* 12px */
+--spacing-4: 1rem; /* 16px */
+--spacing-6: 1.5rem; /* 24px */
+--spacing-8: 2rem; /* 32px */
+--spacing-12: 3rem; /* 48px */
+--spacing-16: 4rem; /* 64px */
+```
+
+#### マッピング表
+| tools-index.css | global.css | 備考 |
+|----------------|------------|------|
+| `--spacing-1` | `--spacing-xs` | 変数名変更 |
+| `--spacing-2` | `--spacing-sm` | 変数名変更 |
+| `--spacing-3` | `--spacing-sm` | 値の統一 |
+| `--spacing-4` | `--spacing-md` | 変数名変更 |
+| `--spacing-6` | `--spacing-lg` | 変数名変更 |
+| `--spacing-8` | `--spacing-xl` | 変数名変更 |
+| `--spacing-12` | `--spacing-2xl` | 変数名変更 |
+| `--spacing-16` | `--spacing-3xl` | 変数名変更 |
+
+## Phase 3: 最終整理 (1週間)
+
+### 3.1 ユーティリティクラスの整理
+
+#### 実行内容
+- 重複するユーティリティクラスを統合
+- `global.css`のクラスを基準とする
+
+#### 統合対象クラス
+- `.loading`
+- `.sr-only`
+- `.scroll-reveal`
+- `.page-load-fade-in`
+- `.page-load-slide-up`
+
+### 3.2 重複キーフレームの削除
+
+#### 実行内容
+- `tools-index.css`の重複キーフレームを削除
+- `global.css`のキーフレームを基準とする
+
+#### 削除対象キーフレーム
+```css
+/* 削除対象 */
+@keyframes safe-fade-in
+@keyframes safe-slide-up
+@keyframes safe-scale-in
+@keyframes page-load-fade-in
+@keyframes page-load-slide-up
+@keyframes stagger-fade-in
+@keyframes loading-spinner
+```
+
+### 3.3 パフォーマンス最適化
+
+#### 実行内容
+- 不要なCSSの削除
+- 重複コードの統合
+- ファイルサイズの最適化
+
+## 実装チェックリスト
+
+### Phase 1 チェックリスト
+- [ ] CSS変数の重複削除完了
+- [ ] body要素のスタイル統合完了
+- [ ] フォントファミリーの統一完了
 - [ ] ツールページの表示確認
-- [ ] 他のページへの影響なし
+- [ ] 他のページへの影響確認
+
+### Phase 2 チェックリスト
+- [ ] アニメーション変数の統一完了
+- [ ] ボーダーラディウスの統一完了
+- [ ] スペーシングシステムの統合完了
+- [ ] アニメーションの動作確認
 - [ ] レスポンシブデザインの確認
 
-## Phase 2: デザインシステム統一 (1週間後)
+### Phase 3 チェックリスト
+- [ ] ユーティリティクラスの整理完了
+- [ ] 重複キーフレームの削除完了
+- [ ] パフォーマンス最適化完了
+- [ ] 全体的な動作確認
+- [ ] アクセシビリティの確認
 
-### 2.1 色空間の統一
-**目標**: OKLCH色空間への統一
+## テスト計画
 
-#### 実行内容
-```css
-/* tools-index.cssの色をOKLCHに変換 */
-:root {
-  --tools-clr-accent: oklch(0.65 0.25 280);
-  --tools-clr-accent-dark: oklch(0.6 0.25 280);
-  --tools-clr-accent-glow-faint: oklch(0.65 0.25 280 / 0.05);
-  --tools-clr-accent-glow-medium: oklch(0.65 0.25 280 / 0.1);
-  --tools-clr-accent-glow-strong: oklch(0.65 0.25 280 / 0.2);
-  --tools-clr-text-primary: oklch(0.9 0 0);
-  --tools-clr-text-secondary: oklch(0.65 0 0);
-  --tools-clr-text-muted: oklch(0.7 0 0);
-  --tools-clr-bg: oklch(0.07 0 0);
-}
-```
+### 視覚的回帰テスト
+1. **ツールページ**
+   - カードレイアウトの表示確認
+   - アニメーションの動作確認
+   - レスポンシブデザインの確認
 
-### 2.2 スペーシングシステムの統一
-**目標**: global.cssのスペーシングシステムを使用
+2. **他のページ**
+   - ホームページの表示確認
+   - 記事ページの表示確認
+   - ナビゲーションの表示確認
 
-```css
-/* global.cssのスペーシング変数を参照 */
-:root {
-  --tools-spacing-1: var(--spacing-xs);
-  --tools-spacing-2: var(--spacing-sm);
-  --tools-spacing-3: var(--spacing-md);
-  --tools-spacing-4: var(--spacing-lg);
-  --tools-spacing-6: var(--spacing-xl);
-  --tools-spacing-8: var(--spacing-2xl);
-  --tools-spacing-12: var(--spacing-3xl);
-  --tools-spacing-16: var(--spacing-4xl);
-}
-```
+### 機能テスト
+1. **インタラクション**
+   - ホバーエフェクトの確認
+   - フォーカス状態の確認
+   - アニメーションの確認
 
-### 2.3 テスト項目
-- [ ] 色の一貫性確認
-- [ ] スペーシングの統一確認
-- [ ] パフォーマンステスト
-
-## Phase 3: 完全統合 (2週間後)
-
-### 3.1 変数の完全統合
-**目標**: 独自変数の削除とグローバル変数の直接使用
-
-#### 実行内容
-```css
-/* tools-index.cssから独自変数を削除 */
-/* グローバル変数を直接使用 */
-.tool-card {
-  background: var(--clr-accent-glow-faint);
-  border: 1px solid var(--clr-accent-glow-medium);
-  /* ... */
-}
-```
-
-### 3.2 不要コードの削除
-**目標**: コードの最適化
-
-- 重複するアニメーション定義の削除
-- 未使用のユーティリティクラスの削除
-- コメントの整理
-
-### 3.3 テスト項目
-- [ ] 全ページの表示確認
-- [ ] パフォーマンステスト
-- [ ] アクセシビリティテスト
-
-## 実行スケジュール
-
-### Week 1: Phase 1実行
-- **Day 1-2**: 変数名変更の実装
-- **Day 3-4**: テストとデバッグ
-- **Day 5**: 本番環境へのデプロイ
-
-### Week 2: Phase 2実行
-- **Day 1-2**: 色空間統一の実装
-- **Day 3-4**: スペーシング統一の実装
-- **Day 5**: テストとデバッグ
-
-### Week 3: Phase 3実行
-- **Day 1-2**: 完全統合の実装
-- **Day 3-4**: 最適化とクリーンアップ
-- **Day 5**: 最終テストとデプロイ
+2. **アクセシビリティ**
+   - キーボードナビゲーションの確認
+   - スクリーンリーダーの確認
+   - コントラスト比の確認
 
 ## リスク管理
 
-### 4.1 ロールバック計画
-```bash
-# Gitを使用したロールバック
-git tag css-migration-phase1
-git tag css-migration-phase2
-git tag css-migration-phase3
+### 高リスク項目
+1. **カラーテーマの変更**
+   - 事前にカラーパレットの確認
+   - 段階的な適用でリスクを軽減
 
-# 問題発生時のロールバック
-git checkout css-migration-phase1
-```
+2. **グローバルスタイルの変更**
+   - 他のページへの影響を事前確認
+   - ロールバック計画の準備
 
-### 4.2 監視項目
-- **視覚的回帰**: スクリーンショット比較
-- **パフォーマンス**: Core Web Vitals
-- **エラー率**: コンソールエラーの監視
+### 中リスク項目
+1. **アニメーション速度の変更**
+   - ユーザーエクスペリエンスへの影響を考慮
+   - 必要に応じて調整
 
-### 4.3 緊急時対応
-1. **即座のロールバック**: 問題発生時の迅速な復旧
-2. **部分的な修正**: 問題箇所のみの修正
-3. **段階的な復旧**: 段階を戻しての再実行
+2. **既存コンポーネントの表示崩れ**
+   - 各コンポーネントの個別確認
+   - 必要に応じて個別調整
 
-## 成功指標
+## ロールバック計画
 
-### 5.1 技術指標
-- [ ] CSS変数の競合解消: 0件
-- [ ] パフォーマンス向上: 10%以上
-- [ ] コードサイズ削減: 15%以上
+### 緊急時の対応
+1. **即座にロールバック**
+   - 変更前のファイルを復元
+   - 問題の特定と分析
 
-### 5.2 品質指標
-- [ ] 視覚的回帰: 0件
-- [ ] アクセシビリティスコア: 維持以上
-- [ ] クロスブラウザ互換性: 100%
+2. **段階的な修正**
+   - 問題箇所の特定
+   - 最小限の修正で対応
 
-### 5.3 メンテナンス性指標
-- [ ] デザインシステムの統一: 100%
-- [ ] ドキュメント化: 完了
-- [ ] テストカバレッジ: 90%以上
+### 予防策
+1. **バックアップの作成**
+   - 変更前のファイルをバックアップ
+   - バージョン管理の活用
 
-## 次のアクション
+2. **段階的な適用**
+   - 一度に大量の変更を行わない
+   - 各段階での動作確認
 
-### 即座に実行
-1. **Phase 1の実装開始**: 変数名の競合解消
-2. **テスト環境の準備**: 視覚的回帰テストの設定
-3. **監視体制の構築**: パフォーマンス監視の設定
+## 完了後の確認事項
 
-### 1週間以内
-1. **Phase 2の準備**: 色空間変換の準備
-2. **チーム内レビュー**: 変更内容の確認
-3. **ステークホルダーへの報告**: 進捗状況の共有
+### 技術的な確認
+- [ ] CSSファイルサイズの最適化
+- [ ] 重複コードの完全削除
+- [ ] パフォーマンスの向上
+
+### デザイン的な確認
+- [ ] デザインシステムの統一
+- [ ] ブランド一貫性の確保
+- [ ] ユーザーエクスペリエンスの向上
+
+### メンテナンス性の確認
+- [ ] コードの可読性向上
+- [ ] デバッグの容易さ
+- [ ] 今後の拡張性
 
 ---
 
-**作成日**: 2024年12月19日  
-**作成者**: Sally (UX Expert)  
-**承認者**: 要確認  
-**次回更新**: Phase 1完了後
+**注意事項:**
+- この移行計画は2024年12月19日時点のファイル内容に基づいています
+- 実装中に新たな問題が発見された場合は、計画を調整してください
+- 各段階での動作確認を必ず行ってください

@@ -141,59 +141,59 @@ const statsData = getStatsData(toolsCount);
 <style>
   /* ========== CSS VARIABLES & DESIGN TOKENS ========== */
   .tools-header-section {
-    /* Color Variables */
-    --tools-bg-primary: transparent;
-    --tools-text-primary: #ffffff;
-    --tools-text-secondary: rgba(255, 255, 255, 0.8);
-    --tools-text-muted: rgba(255, 255, 255, 0.7);
-    --tools-border-subtle: rgba(255, 255, 255, 0.1);
-    --tools-border-divider: rgba(255, 255, 255, 0.2);
+    /* Color Variables - OKLCHカラースペースで最適化 */
+    --header-bg-primary: transparent;
+    --header-text-primary: oklch(1 0 0); /* 純白 */
+    --header-text-secondary: oklch(0.9 0 0 / 0.8); /* 明度90%の白、80%透明度 */
+    --header-text-muted: oklch(0.85 0 0 / 0.7); /* 明度85%の白、70%透明度 */
+    --header-border-subtle: oklch(0.95 0 0 / 0.1); /* 明度95%の白、10%透明度 */
+    --header-border-divider: oklch(0.9 0 0 / 0.2); /* 明度90%の白、20%透明度 */
 
-    /* Spacing Variables */
-    --tools-padding-mobile: 4.5rem 0 1rem;
-    --tools-padding-tablet: 4rem 0 1rem;
-    --tools-padding-desktop: 5rem 0 2rem;
-    --tools-container-padding: 0 1rem;
-    --tools-content-padding: 1rem 0;
+    /* Spacing Variables - tools-index.cssの変数と競合を避けるため独自変数を使用 */
+    --header-padding-mobile: 4.5rem 0 1rem;
+    --header-padding-tablet: 4rem 0 1rem;
+    --header-padding-desktop: 5rem 0 2rem;
+    --header-container-padding: 0 1rem;
+    --header-content-padding: 1rem 0;
 
-    /* Typography Variables */
-    --tools-title-mobile: 2.5rem;
-    --tools-title-tablet: 3rem;
-    --tools-title-desktop: 3.5rem;
-    --tools-title-large: 4rem;
-    --tools-accent-mobile: 1.5rem;
-    --tools-accent-tablet: 1.75rem;
-    --tools-accent-desktop: 2rem;
-    --tools-accent-large: 2.25rem;
-    --tools-description-mobile: 1.125rem;
-    --tools-description-tablet: 1.25rem;
-    --tools-stat-number-mobile: 1.5rem;
-    --tools-stat-number-tablet: 1.75rem;
-    --tools-stat-number-desktop: 2rem;
-    --tools-stat-label: 0.875rem;
+    /* Typography Variables - tools-index.cssの変数と競合を避けるため独自変数を使用 */
+    --header-title-mobile: 2.5rem;
+    --header-title-tablet: 3rem;
+    --header-title-desktop: 3.5rem;
+    --header-title-large: 4rem;
+    --header-accent-mobile: 1.5rem;
+    --header-accent-tablet: 1.75rem;
+    --header-accent-desktop: 2rem;
+    --header-accent-large: 2.25rem;
+    --header-description-mobile: 1.125rem;
+    --header-description-tablet: 1.25rem;
+    --header-stat-number-mobile: 1.5rem;
+    --header-stat-number-tablet: 1.75rem;
+    --header-stat-number-desktop: 2rem;
+    --header-stat-label: 0.875rem;
 
-    /* Layout Variables */
-    --tools-container-max-width: 1200px;
-    --tools-stats-gap-mobile: 2rem;
-    --tools-stats-gap-desktop: 3rem;
-    --tools-divider-height: 2rem;
+    /* Layout Variables - tools-index.cssの変数と競合を避けるため独自変数を使用 */
+    --header-container-max-width: 1200px;
+    --header-stats-gap-mobile: 2rem;
+    --header-stats-gap-desktop: 3rem;
+    --header-divider-height: 2rem;
 
-    /* Animation Variables */
-    --tools-transition-fast: 0.2s ease;
-    --tools-transition-normal: 0.3s ease;
+    /* Animation Variables - tools-index.cssの変数と競合を避けるため独自変数を使用 */
+    --header-transition-fast: 0.2s ease;
+    --header-transition-normal: 0.3s ease;
 
     /* Apply base styles */
     position: relative;
-    padding: var(--tools-padding-mobile);
+    padding: var(--header-padding-mobile);
     overflow: hidden;
-    background: var(--tools-bg-primary);
+    background: var(--header-bg-primary);
   }
 
   .tools-header-container {
     position: relative;
-    max-width: var(--tools-container-max-width);
+    max-width: var(--header-container-max-width);
     margin: 0 auto;
-    padding: var(--tools-container-padding);
+    padding: var(--header-container-padding);
   }
 
   /* ========== BACKGROUND ELEMENTS ========== */
@@ -210,47 +210,34 @@ const statsData = getStatsData(toolsCount);
   /* ========== MOBILE OPTIMIZATIONS ========== */
   @media (max-width: 768px) {
     .tools-header-section {
-      padding: var(--tools-padding-mobile);
+      padding: var(--header-padding-mobile);
     }
 
     .tools-header-container {
-      /* 画面端まで拡張 */
+      /* モバイル用の左右マージン追加 */
       max-width: none;
-      margin: 0;
+      margin: 0 0.5rem;
       padding: 0;
     }
 
     .tools-header-bg {
-      /* 上と左右の境界線を完全に削除 */
-      border-top: none !important;
-      border-left: none !important;
-      border-right: none !important;
-      /* 下だけに分け目を追加 */
-      border-bottom: 1px solid var(--tools-border-subtle) !important;
-      /* 背景を最上端まで拡張 */
-      top: -4.5rem !important; /* セクションのpadding-top分だけ上に拡張 */
-      left: -0.1rem !important;
-      right: -0.1rem !important;
+      /* モバイル用の背景最適化 */
+      top: 0;
+      left: 0;
+      right: 0;
       bottom: 0;
-      /* 角丸を下だけに適用 */
-      border-radius: 0 0 var(--border-radius-card) var(--border-radius-card) !important;
-      /* グローバルglassmorphismの境界線を完全に上書き */
-      border: none !important;
-      border-bottom: 1px solid var(--tools-border-subtle) !important;
-      /* より強力な境界線制御 - 上の境界線を完全に除去 */
+      /* グローバルGlassMorphismクラスを上書きしてモバイル用に調整 */
+      border-radius: var(--border-radius-card, 1rem) !important;
+      /* グローバルクラスのborderを保持しつつ、下のborderを強調 */
+      border-bottom: 1px solid var(--header-border-subtle) !important;
       box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 -1px 0 var(--tools-border-subtle) !important;
-      /* 上の境界線の影も除去 */
-      box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 -1px 0 var(--tools-border-subtle),
-        inset 0 0 0 transparent !important;
+        inset 0 -1px 0 var(--header-border-subtle) !important;
     }
 
     .tools-header-content {
-      /* コンテンツのパディングを調整 - 左右を0に設定 */
-      padding: 1rem 0 1.5rem 0 !important;
+      /* コンテンツのパディングを調整 - 左右にもパディングを追加 */
+      padding: 1rem 1rem 1.5rem 1rem !important;
     }
   }
 
@@ -259,7 +246,7 @@ const statsData = getStatsData(toolsCount);
     position: relative;
     text-align: center;
     z-index: 1;
-    padding: var(--tools-content-padding);
+    padding: var(--header-content-padding);
   }
 
   .tools-header-main {
@@ -269,18 +256,18 @@ const statsData = getStatsData(toolsCount);
   /* ========== TYPOGRAPHY ========== */
   .tools-header-title {
     margin: 0 0 1.5rem;
-    font-size: var(--tools-title-mobile);
+    font-size: var(--header-title-mobile);
     font-weight: 700;
     line-height: 1.2;
-    color: var(--tools-text-primary);
+    color: var(--header-text-primary);
   }
 
   .tools-title-main {
     display: block;
     background: linear-gradient(
       135deg,
-      var(--tools-text-primary) 0%,
-      #e2e8f0 100%
+      var(--header-text-primary) 0%,
+      oklch(0.9 0.02 240) 100% /* 明度90%、彩度2%、色相240度（青系） */
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -289,10 +276,15 @@ const statsData = getStatsData(toolsCount);
 
   .tools-title-accent {
     display: block;
-    font-size: var(--tools-accent-mobile);
+    font-size: var(--header-accent-mobile);
     font-weight: 500;
     margin-top: 0.5rem;
-    background: linear-gradient(135deg, #8b5dff 0%, #3b82f6 50%, #10b981 100%);
+    background: linear-gradient(
+      135deg,
+      oklch(0.65 0.25 280) 0%,
+      /* 紫系 */ oklch(0.6 0.2 250) 50%,
+      /* 青系 */ oklch(0.7 0.15 160) 100% /* 緑系 */
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -302,9 +294,9 @@ const statsData = getStatsData(toolsCount);
   .tools-header-description {
     max-width: 600px;
     margin: 0 auto;
-    font-size: var(--tools-description-mobile);
+    font-size: var(--header-description-mobile);
     line-height: 1.7;
-    color: var(--tools-text-secondary);
+    color: var(--header-text-secondary);
   }
 
   /* ========== STATS SECTION ========== */
@@ -312,7 +304,7 @@ const statsData = getStatsData(toolsCount);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--tools-stats-gap-mobile);
+    gap: var(--header-stats-gap-mobile);
     flex-wrap: wrap;
   }
 
@@ -321,7 +313,7 @@ const statsData = getStatsData(toolsCount);
     flex-direction: column;
     align-items: center;
     gap: 0.25rem;
-    transition: transform var(--tools-transition-fast);
+    transition: transform var(--header-transition-fast);
   }
 
   .tools-stat-item:hover {
@@ -329,28 +321,28 @@ const statsData = getStatsData(toolsCount);
   }
 
   .tools-stat-number {
-    font-size: var(--tools-stat-number-mobile);
+    font-size: var(--header-stat-number-mobile);
     font-weight: 700;
-    color: var(--tools-text-primary);
+    color: var(--header-text-primary);
     line-height: 1;
   }
 
   .tools-stat-label {
-    font-size: var(--tools-stat-label);
-    color: var(--tools-text-muted);
+    font-size: var(--header-stat-label);
+    color: var(--header-text-muted);
     font-weight: 500;
   }
 
   .tools-stat-divider {
     width: 1px;
-    height: var(--tools-divider-height);
-    background: var(--tools-border-divider);
+    height: var(--header-divider-height);
+    background: var(--header-border-divider);
   }
 
   /* ========== RESPONSIVE DESIGN ========== */
   @media (min-width: 640px) {
     .tools-header-section {
-      padding: var(--tools-padding-tablet);
+      padding: var(--header-padding-tablet);
     }
 
     .tools-header-container {
@@ -362,25 +354,25 @@ const statsData = getStatsData(toolsCount);
     }
 
     .tools-header-title {
-      font-size: var(--tools-title-tablet);
+      font-size: var(--header-title-tablet);
     }
 
     .tools-title-accent {
-      font-size: var(--tools-accent-tablet);
+      font-size: var(--header-accent-tablet);
     }
 
     .tools-header-description {
-      font-size: var(--tools-description-tablet);
+      font-size: var(--header-description-tablet);
     }
 
     .tools-stat-number {
-      font-size: var(--tools-stat-number-tablet);
+      font-size: var(--header-stat-number-tablet);
     }
   }
 
   @media (min-width: 768px) {
     .tools-header-section {
-      padding: var(--tools-padding-desktop);
+      padding: var(--header-padding-desktop);
     }
 
     .tools-header-content {
@@ -388,19 +380,19 @@ const statsData = getStatsData(toolsCount);
     }
 
     .tools-header-title {
-      font-size: var(--tools-title-desktop);
+      font-size: var(--header-title-desktop);
     }
 
     .tools-title-accent {
-      font-size: var(--tools-accent-desktop);
+      font-size: var(--header-accent-desktop);
     }
 
     .tools-header-stats {
-      gap: var(--tools-stats-gap-desktop);
+      gap: var(--header-stats-gap-desktop);
     }
 
     .tools-stat-number {
-      font-size: var(--tools-stat-number-desktop);
+      font-size: var(--header-stat-number-desktop);
     }
   }
 
@@ -410,11 +402,11 @@ const statsData = getStatsData(toolsCount);
     }
 
     .tools-header-title {
-      font-size: var(--tools-title-large);
+      font-size: var(--header-title-large);
     }
 
     .tools-title-accent {
-      font-size: var(--tools-accent-large);
+      font-size: var(--header-accent-large);
     }
   }
 
@@ -427,21 +419,21 @@ const statsData = getStatsData(toolsCount);
   /* ========== ACCESSIBILITY & PERFORMANCE ========== */
   @media (prefers-contrast: high) {
     .tools-title-main {
-      color: var(--tools-text-primary);
-      -webkit-text-fill-color: var(--tools-text-primary);
+      color: var(--header-text-primary);
+      -webkit-text-fill-color: var(--header-text-primary);
     }
 
     .tools-title-accent {
-      color: #8b5dff;
-      -webkit-text-fill-color: #8b5dff;
+      color: oklch(0.65 0.25 280); /* 高コントラスト用の紫 */
+      -webkit-text-fill-color: oklch(0.65 0.25 280);
     }
 
     .tools-stat-number {
-      color: var(--tools-text-primary);
+      color: var(--header-text-primary);
     }
 
     .tools-stat-label {
-      color: var(--tools-text-secondary);
+      color: var(--header-text-secondary);
     }
   }
 
@@ -458,7 +450,7 @@ const statsData = getStatsData(toolsCount);
 
   /* Focus management */
   .tools-header-section:focus-visible {
-    outline: 2px solid var(--tools-text-primary);
+    outline: 2px solid var(--header-text-primary);
     outline-offset: 2px;
   }
 
@@ -469,14 +461,14 @@ const statsData = getStatsData(toolsCount);
     }
 
     .tools-header-section {
-      background: white;
-      color: black;
+      background: oklch(1 0 0); /* 純白 */
+      color: oklch(0 0 0); /* 純黒 */
     }
 
     .tools-title-main,
     .tools-title-accent {
-      color: black;
-      -webkit-text-fill-color: black;
+      color: oklch(0 0 0); /* 純黒 */
+      -webkit-text-fill-color: oklch(0 0 0);
     }
   }
 </style>
