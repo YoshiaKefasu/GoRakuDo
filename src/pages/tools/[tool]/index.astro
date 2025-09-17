@@ -15,13 +15,13 @@ async function getValidToolsFromCollection() {
   try {
     const articles = await getCollection('tool-articles');
     const toolNames = new Set<string>();
-    
+
     articles.forEach((article: CollectionEntry<'tool-articles'>) => {
       if (article.data.toolName) {
         toolNames.add(article.data.toolName.toLowerCase());
       }
     });
-    
+
     return Array.from(toolNames).sort();
   } catch (error) {
     console.error('Failed to load tools from collection:', error);
@@ -35,13 +35,13 @@ export async function getStaticPaths() {
     try {
       const articles = await getCollection('tool-articles');
       const toolNames = new Set<string>();
-      
+
       articles.forEach((article: CollectionEntry<'tool-articles'>) => {
         if (article.data.toolName) {
           toolNames.add(article.data.toolName.toLowerCase());
         }
       });
-      
+
       return Array.from(toolNames).sort();
     } catch (error) {
       console.error('Failed to load tools from collection:', error);
@@ -50,10 +50,12 @@ export async function getStaticPaths() {
   };
 
   const validTools = await getValidToolsFromCollection();
-  return validTools.length === 0 ? [] : validTools.map(tool => ({
-    params: { tool },
-    props: { toolName: tool },
-  }));
+  return validTools.length === 0
+    ? []
+    : validTools.map(tool => ({
+        params: { tool },
+        props: { toolName: tool },
+      }));
 }
 
 // ========== COMPONENT LOGIC ==========
@@ -80,69 +82,84 @@ const toolArticles = articles.filter(
 
 // Tool configuration mapping
 const toolConfigs = {
-  anki: { 
-    iconPath: '/icon/anki-icon-240.webp', 
-    description: 'Anki adalah aplikasi flashcard yang sangat powerful untuk menghafal kosakata bahasa Jepang. Dengan sistem spaced repetition, Anki membantu Anda mengingat kata-kata dengan lebih efektif dan efisien.' 
+  anki: {
+    iconPath: '/icon/anki-icon-240.webp',
+    description:
+      'Anki adalah aplikasi flashcard yang sangat powerful untuk menghafal kosakata bahasa Jepang. Dengan sistem spaced repetition, Anki membantu Anda mengingat kata-kata dengan lebih efektif dan efisien.',
   },
-  migaku: { 
-    iconPath: '/icon/migaku-icon-240.webp', 
-    description: 'Migaku adalah platform pembelajaran bahasa Jepang yang komprehensif dengan fokus pada immersion learning. Pelajari bahasa Jepang melalui konten asli seperti anime, manga, dan drama dengan bantuan AI.' 
+  migaku: {
+    iconPath: '/icon/migaku-icon-240.webp',
+    description:
+      'Migaku adalah platform pembelajaran bahasa Jepang yang komprehensif dengan fokus pada immersion learning. Pelajari bahasa Jepang melalui konten asli seperti anime, manga, dan drama dengan bantuan AI.',
   },
-  yomitan: { 
-    iconPath: '/icon/yomitan-icon-240.webp', 
-    description: 'Yomitan adalah browser extension yang memudahkan membaca teks bahasa Jepang. Dengan hover dictionary dan furigana generation, Yomitan membuat proses pembelajaran menjadi lebih interaktif dan menyenangkan.' 
-  }
+  yomitan: {
+    iconPath: '/icon/yomitan-icon-240.webp',
+    description:
+      'Yomitan adalah browser extension yang memudahkan membaca teks bahasa Jepang. Dengan hover dictionary dan furigana generation, Yomitan membuat proses pembelajaran menjadi lebih interaktif dan menyenangkan.',
+  },
 } as const;
 
 // Centralized data processing
-const toolConfig = toolConfigs[tool.toLowerCase() as keyof typeof toolConfigs] || {
+const toolConfig = toolConfigs[
+  tool.toLowerCase() as keyof typeof toolConfigs
+] || {
   iconPath: '/icon/yomitan-icon-240.webp',
-  description: `Comprehensive learning resources and guides for mastering ${tool}. From beginner basics to advanced techniques, everything you need to succeed.`
+  description: `Comprehensive learning resources and guides for mastering ${tool}. From beginner basics to advanced techniques, everything you need to succeed.`,
 };
 
 const formattedToolName = tool.charAt(0).toUpperCase() + tool.slice(1);
-const currentYear = new Date(articles[0]?.data.publishedDate || new Date()).getFullYear();
+const currentYear = new Date(
+  articles[0]?.data.publishedDate || new Date()
+).getFullYear();
 
 // ========== PROCESSED ARTICLE DATA ==========
 // Pre-process all article data for components
-const processedArticles = toolArticles.map((article, index) => {
-  // Article slug processing
-  const articleSlug = article.slug?.split('/').slice(1).join('/') || article.id;
-  
-  // Article title processing
-  const articleTitle = article.data.title || `Complete ${formattedToolName} Guide`;
-  
-  // Article description processing
-  const articleDescription = article.data.description || 
-    `Master ${tool} with our comprehensive guide. Learn essential techniques, best practices, and advanced tips.`;
-  
-  // Article tags processing
-  const DEFAULT_TAGS = ['guide', 'tutorial'];
-  const articleTags = article.data.tags?.length ? article.data.tags : [tool, ...DEFAULT_TAGS];
-  const displayTags = articleTags.slice(0, 3); // Max 3 tags for display
-  
-  // Article date processing
-  const DATE_LOCALE = 'id-ID';
-  const publishedDate = article.data.publishedDate
-    ? new Date(article.data.publishedDate).toLocaleDateString(DATE_LOCALE)
-    : new Date().toLocaleDateString(DATE_LOCALE);
-  
-  // Article image processing
-  const articleImage = article.data.featuredImage || article.data.image || null;
-  const hasImage = Boolean(articleImage?.trim());
-  
-  return {
-    slug: articleSlug,
-    title: articleTitle,
-    description: articleDescription,
-    tags: displayTags,
-    publishedDate,
-    image: articleImage,
-    hasImage,
-    originalArticle: article,
-    index
-  };
-});
+const processedArticles = toolArticles.map(
+  (article: CollectionEntry<'tool-articles'>, index: number) => {
+    // Article slug processing
+    const articleSlug =
+      article.slug?.split('/').slice(1).join('/') || article.id;
+
+    // Article title processing
+    const articleTitle =
+      article.data.title || `Complete ${formattedToolName} Guide`;
+
+    // Article description processing
+    const articleDescription =
+      article.data.description ||
+      `Master ${tool} with our comprehensive guide. Learn essential techniques, best practices, and advanced tips.`;
+
+    // Article tags processing
+    const DEFAULT_TAGS = ['guide', 'tutorial'];
+    const articleTags = article.data.tags?.length
+      ? article.data.tags
+      : [tool, ...DEFAULT_TAGS];
+    const displayTags = articleTags.slice(0, 3); // Max 3 tags for display
+
+    // Article date processing
+    const DATE_LOCALE = 'id-ID';
+    const publishedDate = article.data.publishedDate
+      ? new Date(article.data.publishedDate).toLocaleDateString(DATE_LOCALE)
+      : new Date().toLocaleDateString(DATE_LOCALE);
+
+    // Article image processing
+    const articleImage =
+      article.data.featuredImage || article.data.image || null;
+    const hasImage = Boolean(articleImage?.trim());
+
+    return {
+      slug: articleSlug,
+      title: articleTitle,
+      description: articleDescription,
+      tags: displayTags,
+      publishedDate,
+      image: articleImage,
+      hasImage,
+      originalArticle: article,
+      index,
+    };
+  }
+);
 
 // ========== HEADER DATA ==========
 // Pre-processed header data
@@ -153,7 +170,7 @@ const headerData = {
   description: toolConfig.description,
   iconPath: toolConfig.iconPath,
   formattedToolName,
-  currentYear
+  currentYear,
 };
 
 // ========== CONTENT GRID DATA ==========
@@ -162,7 +179,7 @@ const contentGridData = {
   hasArticles: toolArticles.length > 0,
   toolArticles: processedArticles,
   tool,
-  formattedToolName
+  formattedToolName,
 };
 ---
 
