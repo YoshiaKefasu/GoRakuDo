@@ -3,16 +3,16 @@
 
 /* ========== DESIGN TOKENS & DESIGN SYSTEM ========== */
 :root {
-  /* Colors (WCAG AA Compliant) */
-  --clr-bg: #111111;
-  --clr-text-primary: #e5e5e5;
-  --clr-text-secondary: #a3a3a3;
-  --clr-text-muted: #b0b0b0;
-  --clr-accent: #8b5cf6;
-  --clr-accent-dark: #7b4def;
-  --clr-accent-glow-faint: rgba(139, 92, 246, 0.05);
-  --clr-accent-glow-medium: rgba(139, 92, 246, 0.35);
-  --clr-accent-glow-strong: rgba(139, 92, 246, 0.7);
+  /* Colors (WCAG AA Compliant) - Tools Specific */
+  --tools-clr-bg: var(--clr-background, #111111);
+  --tools-clr-text-primary: var(--clr-text-primary, #e5e5e5);
+  --tools-clr-text-secondary: var(--clr-text-secondary, #a3a3a3);
+  --tools-clr-text-muted: var(--clr-text-muted, #b0b0b0);
+  --tools-clr-accent: var(--clr-accent, #8b5cf6);
+  --tools-clr-accent-dark: var(--clr-accent-dark, #7b4def);
+  --tools-clr-accent-glow-faint: var(--clr-accent-glow-faint, rgba(139, 92, 246, 0.05));
+  --tools-clr-accent-glow-medium: var(--clr-accent-glow-medium, rgba(139, 92, 246, 0.35));
+  --tools-clr-accent-glow-strong: var(--clr-accent-glow-strong, rgba(139, 92, 246, 0.7));
 
   /* Typography */
   --fs-h1: clamp(2.25rem, 5vw, 3rem);
@@ -49,8 +49,8 @@
 
 /* ========== BASE & LAYOUT ========== */
 body {
-  background-color: var(--clr-bg);
-  color: var(--clr-text-primary);
+  background-color: var(--tools-clr-bg);
+  color: var(--tools-clr-text-primary);
   font-family: var(--font-family-sans);
 }
 
@@ -78,7 +78,7 @@ body {
 
 .tools-description {
   font-size: var(--fs-base);
-  color: var(--clr-text-secondary);
+  color: var(--tools-clr-text-secondary);
   max-width: 50ch;
   margin-inline: auto;
   line-height: 1.7;
@@ -100,8 +100,8 @@ body {
 
 /* ========== TOOL CARD ========== */
 .tool-card {
-  background: var(--clr-accent-glow-faint);
-  border: 1px solid var(--clr-accent-glow-medium);
+  background: var(--tools-clr-accent-glow-faint);
+  border: 1px solid var(--tools-clr-accent-glow-medium);
   border-radius: var(--border-radius-card);
   padding: var(--spacing-6);
   display: block;
@@ -165,7 +165,7 @@ body {
 
 .tool-category {
   background-color: #2a2a2e;
-  color: var(--clr-text-secondary);
+  color: var(--tools-clr-text-secondary);
   border: 1px solid #4a4a50;
 }
 
@@ -177,11 +177,11 @@ body {
   font-size: var(--fs-h3);
   font-weight: 600;
   margin-bottom: var(--spacing-3);
-  color: var(--clr-text-primary);
+  color: var(--tools-clr-text-primary);
 }
 
 .tool-description-card {
-  color: var(--clr-text-muted);
+  color: var(--tools-clr-text-muted);
   line-height: 1.6;
   font-size: var(--fs-sm);
 }
@@ -191,7 +191,7 @@ body {
   align-items: center;
   gap: var(--spacing-2);
   margin-top: var(--spacing-6);
-  color: var(--clr-text-muted);
+  color: var(--tools-clr-text-muted);
   font-size: var(--fs-sm);
   font-weight: 500;
   transition: color var(--transition-speed) var(--transition-ease);
@@ -204,12 +204,12 @@ body {
 /* --- Interaction States --- */
 .tool-card:hover {
   transform: translateY(-1px);
-  border-color: var(--clr-accent-glow-strong);
+  border-color: var(--tools-clr-accent-glow-strong);
   box-shadow: var(--shadow-lg-accent);
 }
 
 .tool-card:hover .tool-card-footer {
-  color: var(--clr-accent);
+  color: var(--tools-clr-accent);
 }
 
 .tool-card:hover .tool-arrow {
@@ -220,10 +220,10 @@ body {
 .tool-card:focus-visible {
   outline: none;
   transform: translateY(-1px);
-  border-color: var(--clr-accent-glow-strong);
+  border-color: var(--tools-clr-accent-glow-strong);
   box-shadow:
-    0 0 0 3px var(--clr-bg),
-    0 0 0 5px var(--clr-accent);
+    0 0 0 3px var(--tools-clr-bg),
+    0 0 0 5px var(--tools-clr-accent);
 }
 
 /* ========== RESPONSIVE DESIGN (AC 6: Mobile-First with all Breakpoints) ========== */
@@ -557,7 +557,7 @@ body {
 }
 
 .focus-enhanced:focus-visible {
-  box-shadow: 0 0 0 3px var(--clr-accent-glow-strong);
+  box-shadow: 0 0 0 3px var(--tools-clr-accent-glow-strong);
   transform: scale(1.01);
 }
 
@@ -633,15 +633,15 @@ body {
   height: 100%;
   padding: clamp(1.25rem, 4vw, 2rem);
   border-radius: clamp(0.75rem, 2vw, 1rem);
-  background: var(--clr-accent-glow-faint);
-  border: 1px solid var(--clr-accent-glow-medium);
+  background: var(--tools-clr-accent-glow-faint);
+  border: 1px solid var(--tools-clr-accent-glow-medium);
   transition: all 0.2s ease-out;
 }
 
 .tools-card-optimized:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg-accent);
-  border-color: var(--clr-accent-glow-strong);
+  border-color: var(--tools-clr-accent-glow-strong);
 }
 
 /* Enhanced Typography with Tailwind Patterns */
@@ -660,12 +660,12 @@ body {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: var(--clr-text-primary);
+  color: var(--tools-clr-text-primary);
 }
 
 .tools-body-optimized {
   line-height: 1.6;
-  color: var(--clr-text-secondary);
+  color: var(--tools-clr-text-secondary);
   font-weight: 400;
 }
 
@@ -698,7 +698,7 @@ body {
 
 .tools-interactive-optimized:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--clr-accent-glow-strong);
+  box-shadow: 0 0 0 3px var(--tools-clr-accent-glow-strong);
   transform: scale(1.01);
 }
 
@@ -741,7 +741,7 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--clr-accent-glow-medium),
+    var(--tools-clr-accent-glow-medium),
     transparent
   );
   animation: loading-shimmer 1.5s infinite;
@@ -878,13 +878,13 @@ body {
 
 /* Tool Icon Colors - Replace Inline Styles */
 .tool-icon-anki {
-  background-color: var(--clr-accent);
+  background-color: var(--tools-clr-accent);
 }
 
 .tool-icon-yomichan {
-  background-color: var(--clr-accent-dark);
+  background-color: var(--tools-clr-accent-dark);
 }
 
 .tool-icon-migaku {
-  background-color: var(--clr-accent-glow-strong);
+  background-color: var(--tools-clr-accent-glow-strong);
 }
