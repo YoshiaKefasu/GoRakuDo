@@ -368,8 +368,8 @@ function animateContent(): void {
   width: 100%;
   height: 100%;
   padding: 20px;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-  color: #333;
+  background: linear-gradient(135deg, oklch(4% 0 0deg) 0%, oklch(10% 0 0deg) 100%);
+  color: oklch(25% 0 0deg);
   -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
   scroll-behavior: smooth; /* Modern browsers */
 }
@@ -385,12 +385,12 @@ function animateContent(): void {
   min-height: fit-content;
   margin: auto;
   padding: 50px;
-  border: 1px solid #e0dcd8;
-  border-radius: 12px;
-  background-color: #fdfdf6;
+  border: 1px solid var(--clr-paper-border);
+  border-radius: var(--border-radius-card);
+  background-color: var(--clr-paper-bg);
   background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"%3E%3Cg fill="none" stroke="%23DCD9D5" stroke-width="1"%3E%3Cpath d="M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30S1000 75 1000 75"/%3E%3Cpath d="M-500 125c0 0 125-30 250-30S0 125 0 125s125 30 250 30s250-30 250-30s125-30 250-30S1000 125 1000 125"/%3E%3Cpath d="M-500 175c0 0 125-30 250-30S0 175 0 175s125 30 250 30s250-30 250-30s125-30 250-30S1000 175 1000 175"/%3E%3Cpath d="M-500 225c0 0 125-30 250-30S0 225 0 225s125 30 250 30s250-30 250-30s125-30 250-30S1000 225 1000 225"/%3E%3Cpath d="M-500 275c0 0 125-30 250-30S0 275 0 275s125 30 250 30s250-30 250-30s125-30 250-30S1000 275 1000 275"/%3E%3Cpath d="M-500 325c0 0 125-30 250-30S0 325 0 325s125 30 250 30s250-30 250-30s125-30 250-30S1000 325 1000 325"/%3E%3Cpath d="M-500 375c0 0 125-30 250-30S0 375 0 375s125 30 250 30s250-30 250-30s125-30 250-30S1000 375 1000 375"/%3E%3Cpath d="M-500 425c0 0 125-30 250-30S0 425 0 425s125 30 250 30s250-30 250-30s125-30 250-30S1000 425 1000 425"/%3E%3Cpath d="M-500 475c0 0 125-30 250-30S0 475 0 475s125 30 250 30s250-30 250-30s125-30 250-30S1000 475 1000 475"/%3E%3Cpath d="M-500 525c0 0 125-30 250-30S0 525 0 525s125 30 250 30s250-30 250-30s125-30 250-30S1000 525 1000 525"/%3E%3Cpath d="M-500 575c0 0 125-30 250-30S0 575 0 575s125 30 250 30s250-30 250-30s125-30 250-30S1000 575 1000 575"/%3E%3Cpath d="M-500 625c0 0 125-30 250-30S0 625 0 625s125 30 250 30s250-30 250-30s125-30 250-30S1000 625 1000 625"/%3E%3Cpath d="M-500 675c0 0 125-30 250-30S0 675 0 675s125 30 250 30s250-30 250-30s125-30 250-30S1000 675 1000 675"/%3E%3Cpath d="M-500 725c0 0 125-30 250-30S0 725 0 725s125 30 250 30s250-30 250-30s125-30 250-30S1000 725 1000 725"/%3E%3Cpath d="M-500 775c0 0 125-30 250-30S0 775 0 775s125 30 250 30s250-30 250-30s125-30 250-30S1000 775 1000 775"/%3E%3C/g%3E%3C/svg%3E');
   animation: fadeIn 1s ease-out;
-  box-shadow: 0 20px 60px rgb(139 93 255 / 0.2);
+  box-shadow: 0 20px 60px oklch(65% 0.25 280deg / 0.2);
 }
 
 /* Fade-in animation matching discord.astro */
@@ -420,29 +420,29 @@ function animateContent(): void {
   border: none;
   border-radius: 50%;
   background: none;
-  color: #666;
+  color: oklch(45% 0 0deg);
   font-size: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .back-button:hover {
-  background: #f0f0f0;
-  color: #333;
+  background: oklch(95% 0 0deg);
+  color: oklch(25% 0 0deg);
 }
 
 /* Header section */
 .header {
   margin-bottom: 30px;
   padding-bottom: 25px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--clr-paper-border);
   text-align: center;
 }
 
 /* Japanese title - responsive typography */
 .japanese-title {
-  color: #2a2a2a;
-  font-family: Yuji Syuku, serif;
+  color: oklch(20% 0 0deg);
+  font-family: var(--font-jp);
   font-size: 4.5rem;
   font-weight: 400;
   line-height: 1;
@@ -450,8 +450,8 @@ function animateContent(): void {
 }
 
 .japanese-title rt {
-  color: #555;
-  font-family: Inter, sans-serif;
+  color: oklch(40% 0 0deg);
+  font-family: var(--font-primary);
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -459,8 +459,8 @@ function animateContent(): void {
 /* Content styling - responsive typography */
 .content {
   margin-bottom: 30px;
-  color: #3c3c3c;
-  font-family: Lora, serif;
+  color: var(--clr-paper-text-primary);
+  font-family: var(--font-serif);
   font-size: 1.1rem;
   line-height: 1.8;
 }
@@ -470,7 +470,7 @@ function animateContent(): void {
 }
 
 .content strong {
-  color: #333;
+  color: oklch(25% 0 0deg);
 }
 
 /* Member list styling */
@@ -488,7 +488,7 @@ function animateContent(): void {
 /* Final pitch styling */
 .final-pitch {
   margin-top: 30px;
-  color: #333;
+  color: oklch(25% 0 0deg);
   font-size: 1.15rem;
   font-weight: 600;
   text-align: center;
@@ -499,32 +499,32 @@ function animateContent(): void {
   display: block;
   margin: 20px 2.5px 40px;
   padding: 20px;
-  border: 1px solid #eaeaea;
+  border: 1px solid oklch(92% 0.01 60deg);
   border-radius: 8px;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: oklch(97% 0.01 60deg);
+  color: oklch(25% 0 0deg);
   text-decoration: none;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .discord-link:hover {
-  border-color: #8b5dff;
-  box-shadow: 0 5px 15px rgb(139 93 255 / 0.2);
+  border-color: var(--clr-accent);
+  box-shadow: 0 5px 15px oklch(65% 0.25 280deg / 0.2);
   transform: scale(1.02);
 }
 
 .discord-header {
   margin-bottom: 8px;
-  color: #666;
-  font-family: Inter, sans-serif;
+  color: oklch(45% 0 0deg);
+  font-family: var(--font-primary);
   font-size: 0.9rem;
   font-weight: 600;
 }
 
 .discord-url {
-  color: #8b5dff;
-  font-family: Inter, sans-serif;
+  color: var(--clr-accent);
+  font-family: var(--font-primary);
   font-size: 1.1rem;
   font-weight: 600;
   overflow-wrap: break-word;
@@ -561,13 +561,13 @@ function animateContent(): void {
 
 .signature-title {
   margin-bottom: -10px;
-  color: #333;
+  color: oklch(25% 0 0deg);
   text-align: right;
 }
 
 .signature-name {
-  color: #333;
-  font-family: Cedarville cursive, cursive;
+  color: oklch(25% 0 0deg);
+  font-family: var(--font-cursive);
   font-size: 1.9rem;
   text-align: right;
 }
@@ -646,7 +646,7 @@ function animateContent(): void {
 
   .japanese-title {
     margin-bottom: 25px; /* Increased spacing */
-    color: #2a2a2a; /* Slightly darker for better contrast */
+    color: oklch(20% 0 0deg); /* Slightly darker for better contrast */
     font-size: clamp(3.2rem, 12vw, 4.2rem); /* Increased from 2.2rem-2.8rem */
     font-weight: 500; /* Slightly bolder for better visibility */
     line-height: 1.1;
@@ -658,7 +658,7 @@ function animateContent(): void {
     font-feature-settings:
       "liga" 1,
       "kern" 1;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.05); /* Subtle shadow */
+    text-shadow: 0 1px 2px oklch(0% 0 0deg / 0.05); /* Subtle shadow */
   }
 
   .japanese-title rt {
@@ -724,7 +724,7 @@ function animateContent(): void {
     width: 40px;
     height: 4px;
     border-radius: 2px;
-    background: rgb(139 93 255 / 0.3);
+    background: oklch(65% 0.25 280deg / 0.3);
     opacity: 0.6;
     transform: translateX(-50%);
     content: "";
@@ -745,8 +745,8 @@ function animateContent(): void {
     left: 10px;
     width: 48px; /* Larger touch target */
     height: 48px;
-    border: 1px solid rgb(139 93 255 / 0.1);
-    background: rgb(255 255 255 / 0.9);
+    border: 1px solid oklch(65% 0.25 280deg / 0.1);
+    background: oklch(100% 0 0deg / 0.9);
     font-size: 22px;
     backdrop-filter: blur(10px);
   }
@@ -767,12 +767,12 @@ function animateContent(): void {
   }
 
   .content strong {
-    color: #2a2a2a;
+    color: oklch(20% 0 0deg);
     font-weight: 700; /* Bolder emphasis */
   }
 
   .member-list li strong {
-    color: #333;
+    color: oklch(25% 0 0deg);
     font-weight: 600;
   }
 
@@ -1025,7 +1025,7 @@ function animateContent(): void {
 
     /* Smooth scrolling for overflow content */
     scrollbar-width: thin;
-    scrollbar-color: rgb(139 93 255 / 0.3) transparent;
+    scrollbar-color: oklch(65% 0.25 280deg / 0.3) transparent;
   }
 
   /* Custom scrollbar styling for webkit browsers */
@@ -1039,11 +1039,11 @@ function animateContent(): void {
 
   .invitation-container::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    background: rgb(139 93 255 / 0.3);
+    background: oklch(65% 0.25 280deg / 0.3);
   }
 
   .invitation-container::-webkit-scrollbar-thumb:hover {
-    background: rgb(139 93 255 / 0.5);
+    background: oklch(65% 0.25 280deg / 0.5);
   }
 
   .modal-overlay {

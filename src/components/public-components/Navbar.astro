@@ -302,7 +302,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   .nav-svg-icon:focus {
-    outline: 2px solid var(--color-ring);
+    outline: 2px solid var(--clr-accent);
     outline-offset: 2px;
     border-radius: 0.125rem;
   }
@@ -337,7 +337,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     min-height: var(--touch-target-min);
     padding: var(--touch-target-padding) 0.75rem;
     border-radius: 0.375rem;
-    color: var(--color-muted-foreground);
+    color: var(--clr-text-secondary);
     font-size: var(--navbar-item-size);
 
     /* REASONING: Touch-optimized accessible interactive elements */
@@ -358,12 +358,12 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
   .nav-item:hover {
     background-color: var(--interactive-hover);
-    color: var(--color-primary);
+    color: var(--clr-primary);
     transform: translateZ(0) translateY(-1px);
   }
 
   .nav-item:focus {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--clr-primary);
     outline-offset: 2px;
     background-color: var(--interactive-focus);
   }
@@ -389,8 +389,8 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     padding: var(--touch-target-padding) 1rem;
     border: none;
     border-radius: 1.25rem;
-    background-color: var(--color-primary);
-    color: var(--color-primary-foreground);
+    background-color: var(--clr-primary);
+    color: var(--clr-text-primary);
 
     /* REASONING: Typography with accessibility scaling */
     font-size: 0.875rem;
@@ -416,7 +416,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   .mobile-menu-btn:hover {
-    background-color: var(--color-primary-dark);
+    background-color: var(--clr-primary-dark);
     box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
     transform: translateZ(0) translateY(-1px);
   }
@@ -428,7 +428,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
   /* ---------- Logo Component - Brand Identity ---------- */
   .logo-japanese {
-    color: var(--color-foreground);
+    color: var(--clr-text-primary);
     font-family: var(--font-jp);
     font-size: var(--navbar-logo-size);
     line-height: 1;
@@ -455,7 +455,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   .logo-japanese:hover {
-    color: var(--color-primary);
+    color: var(--clr-primary);
     text-shadow:
       0 0 8px var(--brand-glow),
       0 0 16px var(--brand-glow),
@@ -503,8 +503,8 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     padding: var(--touch-target-padding) 1.15rem;
     border: none;
     border-radius: var(--border-radius-btn-small);
-    background-color: var(--color-primary);
-    color: var(--color-primary-foreground);
+    background-color: var(--clr-primary);
+    color: var(--clr-text-primary);
 
     /* REASONING: Touch-optimized button styling with accessibility */
     font-size: 0.875rem;
@@ -529,7 +529,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   .get-started-btn:hover {
-    background-color: var(--color-primary-dark);
+    background-color: var(--clr-primary-dark);
     box-shadow:
       0 8px 25px rgb(0 0 0 / 0.2),
       0 4px 12px rgb(0 0 0 / 0.15);

@@ -48,7 +48,7 @@
 .progress-bar {
   height: 100%;
   border-radius: 0;
-  background-color: var(--color-accent-purple);
+  background-color: var(--clr-accent);
 
   /* FIXED: Always visible with smooth animation */
   opacity: 1; /* Always visible */
@@ -99,11 +99,11 @@
 .dot.active-dot {
   border: none; /* Remove white border */
   background-color: var(
-    --color-accent-purple
+    --clr-accent
   ); /* Active dot uses bright purple */
 
   transform: scale(1.1); /* Active dot is larger */
-  box-shadow: 0 4px 12px var(--color-accent-shadow);
+  box-shadow: 0 4px 12px var(--clr-accent-shadow);
 }
 
 /* Long-press indicator styles */
@@ -162,7 +162,7 @@
 @media (hover: hover) {
   .dot:hover {
     background-color: var(
-      --color-accent-purple
+      --clr-accent
     ) ; /* Hover shows bright purple */
 
     box-shadow: 0 4px 12px rgb(0 0 0 / 0.6);
@@ -172,10 +172,10 @@
   /* Active dot hover effect */
   .dot.active-dot:hover {
     background-color: var(
-      --color-accent-purple
+      --clr-accent
     ) ; /* Active dot stays bright purple */
 
-    box-shadow: 0 6px 16px var(--color-accent-shadow);
+    box-shadow: 0 6px 16px var(--clr-accent-shadow);
     transform: scale(1.1); /* Slightly larger on hover */
   }
 }
@@ -188,8 +188,8 @@
   }
 
   .dot.active-dot:hover {
-    background-color: var(--color-accent-purple) ;
-    box-shadow: 0 6px 16px var(--color-accent-shadow);
+    background-color: var(--clr-accent) ;
+    box-shadow: 0 6px 16px var(--clr-accent-shadow);
     transform: scale(1.1);
   }
 }

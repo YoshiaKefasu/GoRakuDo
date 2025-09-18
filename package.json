@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run lint && astro check && astro build && npm run stylelint",
+    "build": "npm run stylelint && npm run lint && astro check && astro build",
     "build:quality": "npm run quality && astro build",
     "preview": "astro preview",
     "astro": "astro",

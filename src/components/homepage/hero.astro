@@ -33,7 +33,7 @@ const {
     transition:name='hero-content'
   >
     <div
-      class='hero-kicker text-[var(--color-accent-purple)] font-medium italic tracking-wide leading-tight opacity-70'
+      class='hero-kicker text-[var(--clr-accent)] font-medium italic tracking-wide leading-tight opacity-70'
       transition:name='hero-kicker'
     >
       {kicker}
@@ -60,7 +60,7 @@ const {
     </h1>
 
     <p
-      class='hero-description max-w-xl italic mx-auto mt-4 leading-relaxed text-[var(--color-text-muted)]'
+      class='hero-description max-w-xl italic mx-auto mt-4 leading-relaxed text-[var(--clr-text-muted)]'
       style='margin-bottom: 1.5rem;'
       transition:name='hero-description'
     >
@@ -267,8 +267,8 @@ const {
       z-index: 1000;
       padding: 8px;
       border-radius: 4px;
-      background: var(--color-accent-purple);
-      color: var(--color-text-primary);
+      background: var(--clr-accent);
+      color: var(--clr-text-primary);
       text-decoration: none;
     }
 
@@ -374,10 +374,10 @@ const {
       /* Visuals: keep gradient via custom property for exact control */
       background-image: linear-gradient(
         135deg,
-        var(--color-accent-purple) 0%,
-        var(--color-accent-dark) 100%
+        var(--clr-accent) 0%,
+        var(--clr-accent-dark) 100%
       );
-      color: var(--color-text-primary);
+      color: var(--clr-text-primary);
 
       /* Layout */
       font-weight: 500; /* font-medium equivalent */
@@ -417,7 +417,7 @@ const {
       border: 0.1875rem solid var(--color-gold-dark-transparent); /* 3px converted to rem */
       border-radius: var(--border-radius-pill);
       background: transparent;
-      color: var(--color-gold-dark);
+      color: var(--clr-gold-dark);
       font-weight: 500; /* font-medium equivalent */
       cursor: pointer;
       user-select: none;
@@ -447,24 +447,24 @@ const {
 
       /* WCAG 2.1 AA: フォーカスインジケーターは2px以上 */
       box-shadow:
-        0 0 0 3px var(--color-accent-purple-glow-medium),
+        0 0 0 3px var(--clr-accent-glow-medium),
         0 0 0 5px oklch(100% 0 0deg / 0.3),
-        0 12px 35px var(--color-accent-shadow);
+        0 12px 35px var(--clr-accent-shadow);
       transform: translateY(-1px);
     }
 
     /* WCAG 2.1: キーボードナビゲーション対応 */
     section .primary-button:focus,
     section .secondary-button:focus {
-      outline: 2px solid var(--color-accent-purple);
+      outline: 2px solid var(--clr-accent);
       outline-offset: 2px;
     }
 
     .hero-buttons .primary-button:hover {
       background-image: linear-gradient(
         135deg,
-        var(--color-accent-dark) 0%,
-        var(--color-primary-dark) 100%
+        var(--clr-accent-dark) 0%,
+        var(--clr-primary-dark) 100%
       );
       box-shadow: var(--shadow-hover);
       transform: var(--hover-lift-enhanced);
@@ -498,8 +498,8 @@ const {
     }
 
     .hero-buttons .secondary-button:hover {
-      background: var(--color-accent-glow-medium);
-      border-color: var(--color-gold-dark);
+      background: var(--clr-accent-glow-medium);
+      border-color: var(--clr-gold-dark);
       box-shadow: var(--shadow-hover);
       transform: var(--hover-lift-enhanced);
 
@@ -543,7 +543,7 @@ const {
       section .primary-button:hover,
       section .secondary-button:hover {
         transform: none;
-        box-shadow: 0 4px 12px var(--color-accent-shadow);
+        box-shadow: 0 4px 12px var(--clr-accent-shadow);
       }
 
       section .primary-button::before,
@@ -555,16 +555,16 @@ const {
     /* WCAG 2.1: High contrast mode support */
     @media (prefers-contrast: high) {
       section .primary-button {
-        border: 3px solid var(--color-text-primary);
-        background: var(--color-text-primary);
-        color: var(--color-bg-primary);
+        border: 3px solid var(--clr-text-primary);
+        background: var(--clr-text-primary);
+        color: var(--clr-background);
       }
 
       section .secondary-button {
         border-width: 3px;
-        background: var(--color-text-primary);
-        color: var(--color-bg-primary);
-        border-color: var(--color-text-primary);
+        background: var(--clr-text-primary);
+        color: var(--clr-background);
+        border-color: var(--clr-text-primary);
       }
     }
 
@@ -585,7 +585,7 @@ const {
 
     /* WCAG 2.1: フォーカストラップ対応 */
     section .hero-buttons:focus-within {
-      outline: 2px solid var(--color-accent-purple);
+      outline: 2px solid var(--clr-accent);
       outline-offset: 4px;
       border-radius: 8px;
     }
@@ -707,11 +707,11 @@ const {
       margin-bottom: 0.5rem; /* 0.5rem for consistent spacing */
       background-image: linear-gradient(
         135deg,
-        var(--color-gold-light) 0%,
-        var(--color-gold-dark) 70%
+        var(--clr-gold-light) 0%,
+        var(--clr-gold-dark) 70%
       ); /* modern */
 
-      color: var(--color-gold-dark);
+      color: var(--clr-gold-dark);
       text-shadow: 0.0625rem 0.0625rem 0.3125rem oklch(0% 0 0deg / 0.1); /* 1px 1px 5px converted to rem */
       background-clip: text; /* legacy Safari still honors bg-clip via webkit */
       -webkit-text-fill-color: transparent;

@@ -2,6 +2,21 @@
 
 /* Custom styles for content pages that cannot be handled by Tailwind Typography */
 
+/* 
+ * VARIABLE ORGANIZATION:
+ * - High-frequency variables (3+ uses): Moved to global.css for better maintainability
+ * - Low-frequency variables (1-2 uses): Kept local for component-specific styling
+ * 
+ * High-frequency variables in global.css:
+ * - --clr-content-border (4 uses)
+ * - --clr-content-background-card (3 uses) 
+ * - --shadow-content-card (4 uses)
+ * - --clr-content-meta (4 uses)
+ * - --clr-accent-glow-medium (3 uses)
+ * - --clr-primary (3 uses)
+ * - --clr-primary-dark (3 uses)
+ */
+
 @import './global.css';
 
 /* ========== CONTENT PAGE LAYOUT ========== */
@@ -15,38 +30,38 @@
 }
 
 .content-container {
-  @apply !max-w-4xl !pt-8 !px-0 !pb-0 !box-border;
-  @apply md:!pt-6 md:!px-0;
-  @apply max-sm:!pt-4 max-sm:!px-0;
+  @apply max-w-4xl pt-8 px-0 pb-0 box-border;
+  @apply md:pt-6;
+  @apply max-sm:pt-4;
   @apply w-dvw max-w-full;
 }
 
 /* ========== LAYOUT SUPPORT ========== */
 .content-wrapper {
-  @apply flex gap-0 px-0 !max-w-full;
-  @apply sm:gap-4 sm:px-0;
-  @apply md:gap-5 md:px-0;
-  @apply lg:gap-6 lg:px-0;
-  @apply xl:!gap-8 xl:!px-0;
-  @apply 2xl:!gap-8 2xl:!px-0;
+  @apply flex gap-0 px-0 max-w-full;
+  @apply sm:gap-4;
+  @apply md:gap-5;
+  @apply lg:gap-6;
+  @apply xl:gap-8;
+  @apply 2xl:gap-8;
 }
 
 .content-wrapper .content-container {
-  @apply !flex-1 !min-w-0 !max-w-full !p-3;
-  @apply sm:!p-4;
-  @apply md:!p-6;
-  @apply lg:!p-7;
-  @apply xl:!p-8;
-  @apply 2xl:!p-10 2xl:!max-w-4xl;
+  @apply flex-1 min-w-0 max-w-full p-3;
+  @apply sm:p-4;
+  @apply md:p-6;
+  @apply lg:p-7;
+  @apply xl:p-8;
+  @apply 2xl:p-10 2xl:max-w-4xl;
 }
 
 /* ========== BREADCRUMB ========== */
 .breadcrumb-nav {
-  @apply !bg-transparent !backdrop-filter-none !border-none !shadow-none;
+  @apply bg-transparent backdrop-filter-none border-none shadow-none;
 }
 
 .content-container .modern-breadcrumb-nav {
-  @apply !w-full max-w-full m-0 p-0 overflow-hidden;
+  @apply w-full max-w-full m-0 p-0 overflow-hidden;
 }
 
 .content-container .breadcrumb-container {
@@ -70,6 +85,8 @@
 }
 
 /* ========== BUTTONS ========== */
+
+/* Using high-frequency variables from global.css: --clr-primary, --clr-accent-glow-medium */
 .back-to-content,
 .back-to-docs,
 .back-to-tools,
@@ -84,10 +101,14 @@
   @apply hover:shadow-[0_4px_12px_var(--clr-accent-glow-medium)];
   @apply focus-visible:outline-2 focus-visible:outline-[var(--clr-accent)] focus-visible:outline-offset-2;
   @apply focus-visible:shadow-[0_0_0_2px_var(--clr-accent-glow-medium)];
+  @apply active:scale-95 active:transition-transform;
   @apply max-[480px]:px-3 max-[480px]:py-1.5 max-[480px]:text-[0.8rem] max-[480px]:h-9;
+  @apply min-h-[44px] min-w-[44px]; /* Touch target accessibility */
 }
 
 /* ========== CONTENT HEADER ========== */
+
+/* Using high-frequency variables from global.css: --clr-content-border, --clr-content-background-card, --shadow-content-card */
 .content-header {
   @apply text-center mx-2 my-8 p-6 rounded-2xl min-h-60;
   @apply border border-[var(--clr-content-border)];
@@ -102,8 +123,11 @@
   @apply text-3xl font-bold mb-4 text-white leading-tight;
   @apply md:text-2xl;
   @apply max-sm:text-xl max-sm:mb-3;
+  @apply focus:outline-none focus:ring-2 focus:ring-[var(--clr-accent)] focus:ring-offset-2;
+  @apply focus:ring-offset-[var(--clr-content-background-card)];
 }
 
+/* Using high-frequency variable from global.css: --clr-content-meta */
 .content-meta {
   @apply flex items-center justify-center gap-5 mb-3 text-sm flex-wrap;
   @apply text-[var(--clr-content-meta)];
@@ -117,6 +141,8 @@
 }
 
 /* ========== LEGACY SUPPORT ========== */
+
+/* Consolidated legacy selectors for backward compatibility */
 .post-header {
   @apply text-center mx-2 my-8 p-6 rounded-2xl min-h-60;
   @apply border border-[var(--clr-content-border)];
@@ -135,15 +161,13 @@
 
 .post-date,
 .post-author,
-.post-read-time {
-  @apply text-[var(--clr-content-meta)];
-}
+.post-read-time { @apply text-[var(--clr-content-meta)]; }
 
-.post-title {
-  @apply text-inherit;
-}
+.post-title { @apply text-inherit; }
 
 /* ========== DIFFICULTY BADGES ========== */
+
+/* Low-frequency variables (1-2 uses) - kept local for component-specific styling */
 .content-tags {
   @apply flex items-center justify-center gap-3;
 }
@@ -197,18 +221,20 @@
 
 .content-main.prose h2::before {
   position: absolute;
-  top: 55%;
-  left: -1rem;
+  top: 50%;
+  left: -1.25rem;
   width: 4px;
-  height: 1.25rem;
+  height: 1.5rem;
   border-radius: 2px;
   background: linear-gradient(
     135deg,
     var(--clr-primary),
     var(--clr-primary-dark)
   );
+  opacity: 0.8;
   transform: translateY(-50%);
   content: '';
+  transition: opacity 0.2s ease;
 }
 
 .content-main.prose h3 {
@@ -224,14 +250,14 @@
 }
 
 .content-main.prose ul {
-  @apply my-2;
+  @apply my-4;
 
   padding-left: 1.5rem;
   list-style-type: disc;
 }
 
 .content-main.prose ol {
-  @apply my-2;
+  @apply my-4;
 
   padding-left: 1.5rem;
   list-style-type: decimal;
@@ -242,13 +268,13 @@
 }
 
 .content-main.prose ul li {
-  @apply relative pl-6;
+  @apply relative pl-2 mb-2;
 
   list-style-type: disc;
 }
 
 .content-main.prose ol li {
-  @apply relative pl-6;
+  @apply relative pl-2 mb-2;
 
   list-style-type: decimal;
 }
@@ -265,6 +291,8 @@
 }
 
 /* ========== ACTION BUTTONS ========== */
+
+/* Using high-frequency variables from global.css: --clr-content-border, --clr-content-background-card-hover, --shadow-content-card */
 .content-actions {
   @apply flex flex-col justify-between items-center gap-4 p-6 my-8 rounded-2xl;
   @apply border border-[var(--clr-content-border)];
@@ -368,10 +396,7 @@ code {
 }
 
 pre {
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid var(--clr-accent-glow-faint);
-  border-radius: 0.5rem;
-  background: none;
-  box-shadow: var(--shadow-card);
+  @apply my-4 p-4 border border-[var(--clr-accent-glow-faint)] rounded-lg;
+  @apply bg-none shadow-[var(--shadow-content-card)];
+  @apply overflow-x-auto;
 }

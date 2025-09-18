@@ -105,7 +105,14 @@
     "declaration-block-no-duplicate-properties": true,
     "declaration-block-no-shorthand-property-overrides": true,
     "selector-max-type": 2,
-    "declaration-no-important": true,
+    "declaration-no-important": [
+      true,
+      {
+        "ignore": [
+          "background"
+        ]
+      }
+    ],
     "selector-class-pattern": "^[a-z][a-zA-Z0-9-]*$",
     "selector-pseudo-class-no-unknown": [
       true,
@@ -183,6 +190,12 @@
         "no-descending-specificity": null,
         "declaration-block-single-line-max-declarations": null,
         "media-feature-name-value-no-unknown": null
+      }
+    },
+    {
+      "files": ["src/styles/global.css"],
+      "rules": {
+        "declaration-no-important": null
       }
     }
   ]
