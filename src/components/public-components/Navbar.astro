@@ -164,11 +164,12 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
     /* REASONING: Safe area considerations using global variables */
     padding-left: var(--safe-area-left);
-    overflow-x: hidden;
-  }
 
-  /* ---------- Integrated Design System Variables - Global Consistency ---------- */
-  .navbar-wrapper {
+    /* REASONING: Container query setup for responsive design */
+    container-name: navbar;
+    container-type: inline-size;
+    overflow-x: hidden;
+
     /* REASONING: Integrated glass morphism using global design system */
     --glass-bg: oklch(6% 0.008 270deg / 12%);
     --glass-border: oklch(25% 0.015 270deg / 15%);
@@ -184,21 +185,34 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     --brand-ruby: oklch(65% 0.008 270deg);
     --brand-ruby-hover: oklch(70% 0.12 280deg);
     --navbar-opacity: 1;
+
+    /* REASONING: Mobile-first responsive values as CSS custom properties */
+    --navbar-padding-y: 0.75rem;
+    --navbar-padding-x: 0;
+    --navbar-gap-left: 0.75rem;
+    --navbar-gap-right: 0.5rem;
+    --navbar-item-size: 0.75rem;
+    --navbar-logo-size: 1.5rem;
+    --navbar-nav-display: none;
+    --navbar-mobile-display: flex;
+
+    /* REASONING: Safe viewport units - using stable 100vw/100vh */
+    --navbar-width: 100vw;
+    --navbar-height: 100vh;
   }
 
   /* ---------- Main Navbar Container - Fixed Positioning with CSS Scroll Animation ---------- */
   .navbar {
     /* REASONING: Fixed positioning for persistent navigation */
     position: fixed;
-    top: 0; /* Fallback for browsers without safe-area support */
-    top: env(safe-area-inset-top, 0);
-    right: 0;
-    left: 0;
+    top: var(--safe-area-top);
+    right: var(--safe-area-right);
+    left: var(--safe-area-left);
     z-index: 1000;
 
-    /* REASONING: Responsive padding using REM units with safe area consideration */
-    padding: 0.75rem 0; /* Fallback for browsers without safe-area support */
-    padding-top: calc(0.75rem + env(safe-area-inset-top, 0));
+    /* REASONING: Apply safe viewport width to navbar */
+    width: var(--navbar-width);
+    padding: var(--navbar-padding-y);
 
     /* REASONING: Optimized single glass morphism background */
     background:
@@ -215,8 +229,6 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     border-radius: 0.75rem;
 
     /* REASONING: Enhanced backdrop filters for glass effect */
-    backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
-      contrast(1.02);
     backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
     transform: translateZ(0);
 
@@ -243,8 +255,9 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     justify-content: space-between;
     max-width: 75rem;
 
-    /* REASONING: Responsive padding using REM units */
-    padding: 0;
+    /* REASONING: Safe area padding using global variables */
+    padding: 0 calc(var(--navbar-padding-x) + var(--safe-area-right)) 0
+      calc(var(--navbar-padding-x) + var(--safe-area-left));
 
     /* REASONING: Centered container with responsive max-width */
     margin: 0 auto;
@@ -291,24 +304,24 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   .nav-svg-icon:focus {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 0.125rem;
   }
 
   /* ---------- Navigation Sections - Mobile First ---------- */
   .nav-left,
   .nav-right {
     /* REASONING: Hidden on mobile, shown on desktop */
-    display: none;
+    display: var(--navbar-nav-display);
     flex: 1 1 0%;
     align-items: center;
   }
 
   .nav-left {
-    gap: 0.75rem;
+    gap: var(--navbar-gap-left);
   }
 
   .nav-right {
-    gap: 0.5rem;
+    gap: var(--navbar-gap-right);
     justify-content: flex-end;
   }
 
@@ -386,7 +399,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     cursor: pointer;
     background-color: var(--color-primary);
     border: none;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     transform: translateZ(0);
 
     /* REASONING: Unified transition system with GPU acceleration */
@@ -416,7 +429,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   /* ---------- Logo Component - Brand Identity ---------- */
   .logo-japanese {
     font-family: var(--font-jp);
-    font-size: 1.5rem;
+    font-size: var(--navbar-logo-size);
     line-height: 1;
     color: var(--color-foreground);
     text-decoration: none;
@@ -528,28 +541,6 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     transform: translateZ(0) translateY(0);
   }
 
-  /* ---------- Safe CSS Viewport Units - Stable Implementation ---------- */
-  .navbar-wrapper {
-    /* REASONING: Mobile-first responsive values as CSS custom properties */
-    --navbar-padding-y: 0.75rem;
-    --navbar-padding-x: 0;
-    --navbar-gap-left: 0.75rem;
-    --navbar-gap-right: 0.5rem;
-    --navbar-item-size: 0.75rem;
-    --navbar-logo-size: 1.5rem;
-    --navbar-nav-display: none;
-    --navbar-mobile-display: flex;
-
-    /* REASONING: Safe viewport units - using stable 100vw/100vh */
-    --navbar-width: 100vw;
-    --navbar-height: 100vh;
-
-    container-name: navbar;
-
-    /* REASONING: Container query setup for responsive design */
-    container-type: inline-size;
-  }
-
   /* ---------- Tablet Breakpoint (768px+) - Enhanced Mobile Experience ---------- */
   @media (width >= 768px) {
     .navbar-wrapper {
@@ -601,52 +592,6 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     }
   }
 
-  /* ---------- Apply Safe Responsive Variables ---------- */
-  .navbar {
-    /* REASONING: Safe area positioning using global variables */
-    top: var(--safe-area-top);
-    right: var(--safe-area-right);
-    left: var(--safe-area-left);
-
-    /* REASONING: Apply safe viewport width to navbar */
-    width: var(--navbar-width);
-    padding: var(--navbar-padding-y);
-  }
-
-  .nav-container {
-    padding: 0 calc(var(--navbar-padding-x) + var(--safe-area-right)) 0 calc(var(--navbar-padding-x) + var(--safe-area-left));
-
-    /* REASONING: Safe area padding using global variables */
-  }
-
-  .nav-left,
-  .nav-right {
-    display: var(--navbar-nav-display);
-    flex: 1 1 0%;
-    align-items: center;
-  }
-
-  .nav-left {
-    gap: var(--navbar-gap-left);
-  }
-
-  .nav-right {
-    gap: var(--navbar-gap-right);
-    justify-content: flex-end;
-  }
-
-  .nav-item {
-    font-size: var(--navbar-item-size);
-  }
-
-  .logo-japanese {
-    font-size: var(--navbar-logo-size);
-  }
-
-  .mobile-menu-btn {
-    display: var(--navbar-mobile-display);
-  }
-
   /* ---------- Container Query Support - Modern Responsive Design ---------- */
   @supports (container-type: inline-size) {
     .navbar-wrapper {
@@ -672,8 +617,6 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
           transparent 60%
         );
       border-color: oklch(25% 0.015 270deg / 0%);
-      backdrop-filter: blur(0) saturate(100%) brightness(1)
-        contrast(1);
       backdrop-filter: blur(0) saturate(100%) brightness(1) contrast(1);
     }
 
@@ -692,8 +635,6 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
           transparent 60%
         );
       border-color: var(--glass-border);
-      backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
-        contrast(1.02);
       backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
     }
   }
@@ -822,7 +763,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   /**
    * Keyboard navigation support
    */
-  function handleNavbarKeydown(event) {
+  function handleNavbarKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleNavbarClick(event);
