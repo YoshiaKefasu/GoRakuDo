@@ -825,26 +825,6 @@ body.modal-open {
     animation-timing-function: ease-in-out;
   }
 
-  /* Hero section transitions */
-  ::view-transition-old(hero-section),
-  ::view-transition-new(hero-section),
-  ::view-transition-old(hero-content),
-  ::view-transition-new(hero-content) {
-    animation-duration: 0.4s;
-    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  ::view-transition-old(hero-title),
-  ::view-transition-new(hero-title) {
-    animation-duration: 0.35s;
-    animation-timing-function: ease-out;
-  }
-
-  ::view-transition-old(hero-buttons),
-  ::view-transition-new(hero-buttons) {
-    animation-duration: 0.3s;
-    animation-delay: 0.1s;
-  }
 
   /* Section transitions */
   ::view-transition-old(mission-section),
@@ -906,13 +886,6 @@ body.modal-open {
 /* ===== OPTIMIZED STANDARD BREAKPOINTS ===== */
 
 /* Mobile First - Base styles (320px+) */
-.hero-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  max-width: 24rem;
-  margin: 0 auto;
-}
 
 /* Responsive font size for modal japanese title */
 @media (max-width: 768px) {
@@ -999,14 +972,6 @@ body.modal-open {
 
 /* Tablet (768px+) */
 @media (min-width: 768px) {
-  .hero-buttons {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    max-width: none;
-    margin: 0;
-  }
-
   .primary-button,
   .secondary-button {
     justify-content: center;
@@ -1062,14 +1027,8 @@ body.modal-open {
 /* ===== OPTIMIZED FALLBACK ANIMATIONS ===== */
 @supports not (view-transition-name: none) {
   /* Main content animations */
-  .main-content,
-  .hero-content {
+  .main-content {
     animation: fadeIn 0.6s ease-out;
-  }
-
-  /* Hero button animations */
-  .hero-buttons {
-    animation: slideFromBottom 0.6s ease-out 0.3s both;
   }
 
   /* Feature card staggered animations */

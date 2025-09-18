@@ -6,7 +6,7 @@ const {
   marker = '#Go-IMMERSE',
   titleLine1 = 'Belajar Secara Alami,',
   titleLine2 = 'Kuasai Layaknya Penutur Asli.',
-  description = 'Dimana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi dipahami secara instan seperti bahasa ibu🔥',
+  description = 'Dimana bahasa Jepang tidak lagi diterjemahkan di kepala, tetapi dipahami seperti bahasa ibu🔥',
   ctaPrimary = 'Mulai Perjalananmu',
   ctaSecondary = 'Gabung Komunitas',
   missionId = 'mission',
@@ -17,8 +17,7 @@ const {
 
 <section
   class='relative flex flex-col items-center justify-center text-center min-h-screen
-         bg-gradient-to-b from-indigo-950 via-indigo-900 to-indigo-800
-         px-4 sm:px-6 md:px-8'
+         bg-gradient-to-b from-indigo-950 via-indigo-900 to-indigo-800'
   style='background: transparent;'
   aria-labelledby='hero-title'
   data-mission-id={missionId}
@@ -30,12 +29,11 @@ const {
     id='hero-content'
     class='flex flex-col items-center justify-center min-h-screen w-full max-w-5xl z-20
            opacity-0 translate-y-16 scale-80 blur-md transition-all duration-700 ease-out'
-    style=' padding: 1em;background: transparent;'
+    style='background: transparent;'
     transition:name='hero-content'
   >
     <div
-      class='text-[var(--color-accent-purple)] font-medium italic tracking-wide leading-tight opacity-70
-             text-base sm:text-lg md:text-xl'
+      class='hero-kicker text-[var(--color-accent-purple)] font-medium italic tracking-wide leading-tight opacity-70'
       transition:name='hero-kicker'
     >
       {kicker}
@@ -43,12 +41,12 @@ const {
 
     <h1
       id='hero-title'
-      class='w-full font-bold leading-tight max-w-4xl mx-auto mt-4 text-2xl md:text-5xl'
-      style='margin-bottom: 1.5rem;'
+      class='hero-title w-full font-bold leading-tight max-w-4xl mx-auto'
       transition:name='hero-title'
     >
       <span
-        class='gold-marker block text-4xl sm:text-5xl md:6xl mb-2'
+        class='hero-marker gold-marker block mb-2'
+        style='margin-bottom: 0.5rem;'
         transition:name='hero-marker'>{marker}</span
       >
       <span
@@ -62,8 +60,7 @@ const {
     </h1>
 
     <p
-      class='max-w-xl italic mx-auto mt-4
-             text-xs sm:text-base md:text-lg lg:text-xl leading-relaxed text-[var(--color-text-muted)]'
+      class='hero-description max-w-xl italic mx-auto mt-4 leading-relaxed text-[var(--color-text-muted)]'
       style='margin-bottom: 1.5rem;'
       transition:name='hero-description'
     >
@@ -71,17 +68,20 @@ const {
     </p>
 
     <div
-      class='hero-buttons flex flex-col md:flex-row gap-4 mt-6 md:mt-8'
+      class='hero-buttons'
+      role='group'
+      aria-label='メインアクションボタン'
       transition:name='hero-buttons'
     >
       <button
         type='button'
         class='primary-button'
         data-action='scroll-to-mission'
-        aria-label='Mulai perjalanan belajar immersion'
+        aria-label='学習の旅を始める - メインアクション'
+        aria-describedby='primary-button-description'
         transition:name='hero-primary-button'
       >
-        {ctaPrimary}
+        <span class='button-text'>{ctaPrimary}</span>
         <svg
           width='16'
           height='16'
@@ -92,32 +92,42 @@ const {
           stroke-linecap='round'
           stroke-linejoin='round'
           aria-hidden='true'
+          focusable='false'
+          style='width: 16px; height: 16px;'
         >
           <path d='M5 12h14M12 5l7 7-7 7'></path>
         </svg>
       </button>
+      <div id='primary-button-description' class='sr-only'>
+        日本語学習の旅を始めるためのメインボタンです。クリックすると学習セクションに移動します。
+      </div>
 
       <button
         type='button'
         class='secondary-button'
         data-action='open-invitation'
-        aria-label='Bergabung dengan komunitas Discord'
+        aria-label='Discordコミュニティに参加する'
+        aria-describedby='secondary-button-description'
         transition:name='hero-secondary-button'
       >
-        {ctaSecondary}
+        <span class='button-text'>{ctaSecondary}</span>
         <svg
           class='btn-icon'
           role='img'
           viewBox='0 0 24 24'
           xmlns='http://www.w3.org/2000/svg'
-          aria-hidden='true'
+          aria-label='Discordアイコン'
+          focusable='false'
+          style='width: 16px; height: 16px;'
         >
-          <title>Discord</title>
           <path
             d='M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z'
             fill='currentColor'></path>
         </svg>
       </button>
+      <div id='secondary-button-description' class='sr-only'>
+        Discordコミュニティに参加して、他の学習者と交流できます。
+      </div>
     </div>
   </div>
 </section>
@@ -235,46 +245,129 @@ const {
       min-height: 100vh;
       padding: 0 15px;
     }
+
+    /* Screen reader only content */
+    .sr-only {
+      position: absolute;
+      overflow: hidden;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    /* Skip link for keyboard navigation */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      z-index: 1000;
+      padding: 8px;
+      border-radius: 4px;
+      background: var(--color-accent-purple);
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+
+    .skip-link:focus {
+      top: 6px;
+    }
   }
 
   @layer components {
-    /* ---------- Hero buttons container (base + mobile overrides) ---------- */
-    .hero-buttons {
+    /* ---------- Hero buttons container (optimized UX design) ---------- */
+    section .hero-buttons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 1.25rem; /* gap-5 equivalent */
+      gap: 1rem;
+      width: 100%;
+      max-width: 100%;
+      margin-top: 2rem; /* より目立つスペーシング */
 
-      /* Base */
-      margin-top: 1.5rem; /* mt-6 equivalent */
-
-      /* Tablet/Mobile ≤768px: make them stack & limit width */
-      @media (max-width: 768px) {
-        display: flex;
+      /* Mobile: 320px+ - タッチフレンドリー */
+      @media (min-width: 320px) {
         flex-direction: column;
         align-items: stretch;
-        max-width: 350px;
-        margin-right: auto;
-        margin-left: auto;
+        gap: 1rem; /* ボタン間のスペースを広げる */
+        max-width: 28rem; /* より広い最大幅 */
+        padding: 0 2rem; /* 左右のパディングで余白確保 (1rem * 1.5 = 0.5倍増加) */
       }
-    }
 
-    /* Center button contents on small screens */
-    .primary-button,
-    .secondary-button {
-      @media (max-width: 768px) {
+      /* Tablet: 768px+ - バランスの取れたレイアウト */
+      @media (min-width: 768px) {
+        flex-direction: row;
         justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        max-width: 40rem;
+        padding: 0 2rem;
+      }
+
+      /* Desktop: 1280px+ - 広々としたレイアウト */
+      @media (min-width: 1280px) {
+        gap: 2rem;
+        max-width: 50rem;
+        padding: 0 3rem;
       }
     }
 
-    /* ---------- Primary button (gradient pill) ---------- */
-    .primary-button {
+    /* ---------- WCAG 2.1 Compliant Button Styling ---------- */
+    section .primary-button,
+    section .secondary-button {
+      position: relative;
+      overflow: hidden;
+      min-width: 44px;
+      min-height: 44px;
+      cursor: pointer;
+      transform: translateZ(0); /* ハードウェアアクセラレーション */
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* ボタンテキストのスタイリング */
+      .button-text {
+        display: inline-block;
+        font-weight: inherit;
+      }
+
+      /* Mobile: 320px+ - タッチフレンドリーサイズ */
+      @media (min-width: 320px) {
+        justify-content: center;
+        min-height: 3rem; /* 48px - WCAG AA準拠 */
+        padding: 1rem 2rem; /* より大きなタッチエリア */
+        border-radius: 0.75rem; /* より丸みを帯びたデザイン */
+        font-size: 1rem;
+        line-height: 1.5; /* 読みやすさ向上 */
+      }
+
+      /* Tablet: 768px+ - バランスの取れたサイズ */
+      @media (min-width: 768px) {
+        min-height: 3.25rem; /* 52px */
+        padding: 1.125rem 2.5rem;
+        border-radius: 0.875rem;
+        font-size: 1.125rem;
+        line-height: 1.4;
+      }
+
+      /* Desktop: 1280px+ - プレミアムサイズ */
+      @media (min-width: 1280px) {
+        min-height: 3.5rem; /* 56px */
+        padding: 1.25rem 3rem;
+        border-radius: 1rem;
+        font-size: 1.25rem;
+        line-height: 1.3;
+      }
+    }
+
+    /* ---------- Primary button (WCAG 2.1 compliant gradient pill) ---------- */
+    section .primary-button {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      gap: 0.5rem; /* gap-2 equivalent */
-      padding: 16px 32px;
+      gap: 0.5rem; /* 0.5rem for consistent spacing */
       border: 0;
       border-radius: var(--border-radius-pill);
 
@@ -287,111 +380,323 @@ const {
       color: var(--color-text-primary);
 
       /* Layout */
-      font-size: 16px;
       font-weight: 500; /* font-medium equivalent */
       cursor: pointer;
       user-select: none;
+      transform: translateZ(0);
+
+      /* REASONING: Individual property transitions for fine control */
       transition:
-        box-shadow var(--animate-duration-normal) ease,
-        transform var(--animate-duration-fast) ease,
-        opacity var(--animate-duration-fast) ease;
+        background-image var(--transition-bg),
+        box-shadow var(--transition-shadow),
+        transform var(--transition-transform),
+        opacity var(--transition-opacity);
+      touch-action: manipulation;
+      box-shadow: 0 2px 8px oklch(0% 0 0deg / 0.1);
+
+      /* REASONING: GPU acceleration for get started buttons */
+      will-change: transform, background-color, box-shadow;
+
+      /* REASONING: Touch-specific enhancements */
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* ensure svg icon size and prevent shrinking */
-    .primary-button svg {
+    section .primary-button svg {
       flex-shrink: 0; /* flex-shrink-0 equivalent */
-      width: 1rem; /* w-4 equivalent */
-      height: 1rem; /* h-4 equivalent */
+      width: 1rem; /* 1rem for consistent icon size */
+      height: 1rem; /* 1rem for consistent icon size */
     }
 
-    .primary-button:hover {
-      box-shadow: 0 12px 35px var(--color-accent-shadow);
-      transform: translateY(-1px);
-    }
-
-    .primary-button:active {
-      opacity: 0.98;
-      transform: translateY(0);
-    }
-
-    /* ---------- Secondary button (outlined pill) ---------- */
-    .secondary-button {
+    /* ---------- Secondary button (WCAG 2.1 compliant outlined pill) ---------- */
+    section .secondary-button {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      gap: 0.75rem; /* gap-2 equivalent */
-      padding: 14px 32px;
-      border: 2px solid var(--color-gold-dark-transparent); /* rounded-full equivalent */
+      gap: 0.75rem; /* 0.75rem for consistent spacing */
+      border: 0.1875rem solid var(--color-gold-dark-transparent); /* 3px converted to rem */
       border-radius: var(--border-radius-pill);
       background: transparent;
       color: var(--color-gold-dark);
-      font-size: 16px;
       font-weight: 500; /* font-medium equivalent */
       cursor: pointer;
       user-select: none;
+      transform: translateZ(0);
+
+      /* REASONING: Individual property transitions for fine control */
       transition:
-        background-color var(--animate-duration-fast) ease,
-        border-color var(--animate-duration-fast) ease,
-        color var(--animate-duration-fast) ease,
-        transform var(--animate-duration-fast) ease;
-      border-width: 3px;
+        background-color var(--transition-bg),
+        border-color var(--transition-border),
+        box-shadow var(--transition-shadow),
+        transform var(--transition-transform),
+        opacity var(--transition-opacity);
+      touch-action: manipulation;
+      box-shadow: 0 2px 8px oklch(0% 0 0deg / 0.1);
+
+      /* REASONING: GPU acceleration for get started buttons */
+      will-change: transform, background-color, box-shadow;
+
+      /* REASONING: Touch-specific enhancements */
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ---------- WCAG 2.1 Enhanced Focus / Accessibility ---------- */
+    section .primary-button:focus-visible,
+    section .secondary-button:focus-visible {
+      outline: none;
+
+      /* WCAG 2.1 AA: フォーカスインジケーターは2px以上 */
+      box-shadow:
+        0 0 0 3px var(--color-accent-purple-glow-medium),
+        0 0 0 5px oklch(100% 0 0deg / 0.3),
+        0 12px 35px var(--color-accent-shadow);
+      transform: translateY(-1px);
+    }
+
+    /* WCAG 2.1: キーボードナビゲーション対応 */
+    section .primary-button:focus,
+    section .secondary-button:focus {
+      outline: 2px solid var(--color-accent-purple);
+      outline-offset: 2px;
+    }
+
+    .hero-buttons .primary-button:hover {
+      background-image: linear-gradient(
+        135deg,
+        var(--color-accent-dark) 0%,
+        var(--color-primary-dark) 100%
+      );
+      box-shadow: var(--shadow-hover);
+      transform: var(--hover-lift-enhanced);
+
+      /* Individual hover transitions for smooth animation */
+      transition:
+        background-image var(--transition-bg),
+        box-shadow var(--transition-shadow),
+        transform var(--transition-transform);
+    }
+
+    .hero-buttons .primary-button:active {
+      opacity: 0.95;
+      transform: translateZ(0) translateY(0);
+      box-shadow: 0 1px 4px oklch(0% 0 0deg / 0.2);
+
+      /* Smooth active state transition */
+      transition:
+        opacity var(--transition-opacity),
+        transform var(--transition-transform),
+        box-shadow var(--transition-shadow);
     }
 
     /* Icon styling for secondary button */
-    .secondary-button .btn-icon {
+    section .secondary-button .btn-icon {
       flex-shrink: 0;
-      width: 1rem; /* 16px */
-      height: 1rem; /* 16px */
+      width: 1rem; /* 1rem for consistent icon size */
+      height: 1rem; /* 1rem for consistent icon size */
       color: inherit; /* Inherits the button's text color */
-      transition: color var(--animate-duration-fast) ease;
+      transition: color var(--transition-fast) ease;
     }
 
-    .secondary-button:hover {
+    .hero-buttons .secondary-button:hover {
       background: var(--color-accent-glow-medium);
       border-color: var(--color-gold-dark);
+      box-shadow: var(--shadow-hover);
+      transform: var(--hover-lift-enhanced);
+
+      /* Individual hover transitions for smooth animation */
+      transition:
+        background-color var(--transition-bg),
+        border-color var(--transition-border),
+        box-shadow var(--transition-shadow),
+        transform var(--transition-transform);
     }
 
-    /* ---------- Focus / accessibility ---------- */
-    .primary-button:focus-visible,
-    .secondary-button:focus-visible {
-      outline: none; /* outline-none equivalent */
+    .hero-buttons .secondary-button:active {
+      opacity: 0.95;
+      transform: translateZ(0) translateY(0);
+      box-shadow: 0 1px 4px oklch(0% 0 0deg / 0.2);
 
-      /* keep the two-layer shadow you had */
-      box-shadow:
-        0 0 0 4px var(--color-accent-purple-glow-medium),
-        0 12px 35px var(--color-accent-shadow);
+      /* Smooth active state transition */
+      transition:
+        opacity var(--transition-opacity),
+        transform var(--transition-transform),
+        box-shadow var(--transition-shadow);
     }
 
-    /* ---------- Small-screen adjustments (optional) ---------- */
-    @media (max-width: 480px) {
-      .primary-button {
-        padding: 12px 24px;
-        font-size: 0.875rem; /* text-sm equivalent */
+    /* WCAG 2.1: タッチデバイスでのホバー無効化 */
+    @media (hover: none) and (pointer: coarse) {
+      section .primary-button:hover,
+      section .secondary-button:hover {
+        transform: none;
+      }
+    }
+
+    /* WCAG 2.1: Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      section .primary-button,
+      section .secondary-button {
+        transform: none;
+        transition: none;
+        animation: none;
       }
 
-      .secondary-button {
-        padding: 10px 24px;
-        font-size: 0.875rem; /* text-sm equivalent */
+      section .primary-button:hover,
+      section .secondary-button:hover {
+        transform: none;
+        box-shadow: 0 4px 12px var(--color-accent-shadow);
+      }
+
+      section .primary-button::before,
+      section .secondary-button::after {
+        display: none;
       }
     }
 
-    /* ---------- Section paddings (your snippet) ---------- */
+    /* WCAG 2.1: High contrast mode support */
+    @media (prefers-contrast: high) {
+      section .primary-button {
+        border: 3px solid var(--color-text-primary);
+        background: var(--color-text-primary);
+        color: var(--color-bg-primary);
+      }
+
+      section .secondary-button {
+        border-width: 3px;
+        background: var(--color-text-primary);
+        color: var(--color-bg-primary);
+        border-color: var(--color-text-primary);
+      }
+    }
+
+    /* WCAG 2.1: カラーコントラスト強化 */
+    @media (prefers-contrast: more) {
+      section .primary-button {
+        border: 2px solid oklch(100% 0 0deg);
+        background: oklch(0% 0 0deg);
+        color: oklch(100% 0 0deg);
+      }
+
+      section .secondary-button {
+        border: 2px solid oklch(0% 0 0deg);
+        background: oklch(100% 0 0deg);
+        color: oklch(0% 0 0deg);
+      }
+    }
+
+    /* WCAG 2.1: フォーカストラップ対応 */
+    section .hero-buttons:focus-within {
+      outline: 2px solid var(--color-accent-purple);
+      outline-offset: 4px;
+      border-radius: 8px;
+    }
+
+    /* ---------- Responsive typography ---------- */
+    section .hero-kicker {
+      /* Mobile: 320px+ */
+      @media (min-width: 320px) {
+        font-size: 0.875rem;
+      }
+
+      /* Tablet: 768px+ */
+      @media (min-width: 768px) {
+        font-size: 1rem;
+      }
+
+      /* Desktop: 1280px+ */
+      @media (min-width: 1280px) {
+        font-size: 1.125rem;
+      }
+    }
+
+    section .hero-title {
+      /* Mobile: 320px+ */
+      @media (min-width: 320px) {
+        font-size: 1.5rem;
+      }
+
+      /* Tablet: 768px+ */
+      @media (min-width: 768px) {
+        font-size: 1.875rem; /* 2.5rem * 0.75 = 0.25倍小さく */
+      }
+
+      /* Desktop: 1280px+ */
+      @media (min-width: 1280px) {
+        font-size: 2.625rem; /* 3.5rem * 0.75 = 0.25倍小さく */
+      }
+    }
+
+    section .hero-marker {
+      /* Mobile: 320px+ */
+      @media (min-width: 320px) {
+        font-size: 2rem;
+      }
+
+      /* Tablet: 768px+ */
+      @media (min-width: 768px) {
+        font-size: 2.25rem; /* 3rem * 0.75 = 0.25倍小さく */
+      }
+
+      /* Desktop: 1280px+ */
+      @media (min-width: 1280px) {
+        font-size: 3rem; /* 4rem * 0.75 = 0.25倍小さく */
+      }
+    }
+
+    section .hero-description {
+      /* Mobile: 320px+ */
+      @media (min-width: 320px) {
+        font-size: 0.875rem;
+      }
+
+      /* Tablet: 768px+ */
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
+      }
+
+      /* Desktop: 1280px+ */
+      @media (min-width: 1280px) {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* ---------- Responsive section paddings ---------- */
     .mission-section,
     .features-section,
     .docs-preview-section {
-      @media (max-width: 768px) {
-        padding-right: 20px;
-        padding-left: 20px;
+      /* Mobile: 320px+ */
+      @media (min-width: 320px) {
+        padding-right: 1rem; /* 16px */
+        padding-left: 1rem; /* 16px */
+      }
+
+      /* Tablet: 768px+ */
+      @media (min-width: 768px) {
+        padding-right: 1.5rem; /* 24px */
+        padding-left: 1.5rem; /* 24px */
+      }
+
+      /* Desktop: 1280px+ */
+      @media (min-width: 1280px) {
+        padding-right: 2rem; /* 32px */
+        padding-left: 2rem; /* 32px */
       }
     }
 
-    /* Make mobile override explicit — use only if you want smaller mobile buttons */
-    @media (max-width: 768px) {
-      .hero-buttons .primary-button,
-      .hero-buttons .btn-primary {
-        min-width: auto;
-        padding: 14px 28px;
-        font-size: 15px;
+    /* ---------- Responsive hero section padding ---------- */
+    .hero-section {
+      /* Mobile: 320px+ */
+      @media (min-width: 320px) {
+        padding: 0 1rem; /* 16px */
+      }
+
+      /* Tablet: 768px+ */
+      @media (min-width: 768px) {
+        padding: 0 1.5rem; /* 24px */
+      }
+
+      /* Desktop: 1280px+ */
+      @media (min-width: 1280px) {
+        padding: 0 2rem; /* 32px */
       }
     }
   }
@@ -399,7 +704,7 @@ const {
   @layer utilities {
     .gold-marker {
       display: block;
-      margin-bottom: 0.5rem; /* mb-2 equivalent */
+      margin-bottom: 0.5rem; /* 0.5rem for consistent spacing */
       background-image: linear-gradient(
         135deg,
         var(--color-gold-light) 0%,
@@ -407,7 +712,7 @@ const {
       ); /* modern */
 
       color: var(--color-gold-dark);
-      text-shadow: 1px 1px 5px rgb(0 0 0 / 0.1);
+      text-shadow: 0.0625rem 0.0625rem 0.3125rem oklch(0% 0 0deg / 0.1); /* 1px 1px 5px converted to rem */
       background-clip: text; /* legacy Safari still honors bg-clip via webkit */
       -webkit-text-fill-color: transparent;
     }
@@ -422,7 +727,40 @@ const {
 
   @layer base {
     .hero-section {
-      padding: 0 20px;
+      /* Base styles are now handled in components layer with responsive design */
+    }
+  }
+
+  @layer animations {
+    /* Hero section transitions */
+    ::view-transition-old(hero-section),
+    ::view-transition-new(hero-section),
+    ::view-transition-old(hero-content),
+    ::view-transition-new(hero-content) {
+      animation-duration: 0.4s;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    ::view-transition-old(hero-title),
+    ::view-transition-new(hero-title) {
+      animation-duration: 0.35s;
+      animation-timing-function: ease-out;
+    }
+
+    ::view-transition-old(hero-buttons),
+    ::view-transition-new(hero-buttons) {
+      animation-duration: 0.3s;
+      animation-delay: 0.1s;
+    }
+
+    /* Hero content animations */
+    .hero-content {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    /* Hero button animations */
+    .hero-buttons {
+      animation: slideFromBottom 0.6s ease-out 0.3s both;
     }
   }
 </style>

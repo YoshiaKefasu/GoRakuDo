@@ -22,6 +22,36 @@
   --clr-text-primary-fallback: #fff;
   --clr-accent-fallback: #8b5dff;
 
+  /* ===== ANIMATION SYSTEM - REUSABLE TRANSITIONS ===== */
+  
+  /* Smooth hover transitions - Material Design inspired */
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Individual property transitions for fine control */
+  --transition-bg: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-shadow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-transform: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-opacity: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-border: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Hover effects */
+  --hover-lift: translateY(-2px);
+  --hover-lift-small: translateY(-1px);
+  --hover-scale: scale(1.02);
+  
+  /* Shadow effects */
+  --shadow-hover: 
+    0 8px 25px oklch(0% 0 0deg / 0.2),
+    0 4px 12px oklch(0% 0 0deg / 0.15);
+  --shadow-base: 0 2px 8px oklch(0% 0 0deg / 0.1);
+  --shadow-active: 0 1px 4px oklch(0% 0 0deg / 0.2);
+  
+  /* Enhanced hover effects */
+  --hover-lift-enhanced: translateY(-3px);
+  --hover-scale-enhanced: scale(1.02);
+
   /* ===== LEGACY COLOR MAPPING - COMPATIBILITY LAYER ===== */
 
   /* Legacy variables now reference the primary color system */
@@ -1912,3 +1942,68 @@
   animation: butteryWaveFloat 8s ease-in-out infinite;
 }
 */
+
+/* ===== REUSABLE ANIMATION UTILITIES ===== */
+
+/* Smooth hover effect utility classes */
+.hover-smooth {
+  transition: 
+    background-color var(--transition-smooth),
+    border-color var(--transition-smooth),
+    box-shadow var(--transition-smooth),
+    transform var(--transition-smooth),
+    opacity var(--transition-fast);
+  will-change: transform, background-color, box-shadow;
+}
+
+.hover-lift {
+  transform: var(--hover-lift);
+}
+
+.hover-lift-small {
+  transform: var(--hover-lift-small);
+}
+
+.hover-scale {
+  transform: var(--hover-scale);
+}
+
+.hover-shadow {
+  box-shadow: var(--shadow-hover);
+}
+
+.hover-base-shadow {
+  box-shadow: var(--shadow-base);
+}
+
+/* Button hover effects */
+.btn-hover-primary:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-hover);
+  transform: var(--hover-lift);
+}
+
+.btn-hover-secondary:hover {
+  background: var(--color-accent-glow-medium);
+  border-color: var(--color-gold-dark);
+  box-shadow: var(--shadow-hover);
+  transform: var(--hover-lift);
+}
+
+/* Card hover effects */
+.card-hover:hover {
+  box-shadow: var(--shadow-hover);
+  transform: var(--hover-lift);
+}
+
+/* Link hover effects */
+.link-hover:hover {
+  transform: var(--hover-lift-small);
+  transition: transform var(--transition-smooth);
+}
+
+/* Icon hover effects */
+.icon-hover:hover {
+  transform: var(--hover-scale);
+  transition: transform var(--transition-smooth);
+}
