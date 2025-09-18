@@ -163,6 +163,7 @@ const statsData = getStatsData(toolsCount);
     --header-padding-desktop: 5rem 0 2rem;
     --header-container-padding: 0 1rem;
     --header-content-padding: 1rem 0;
+    --header-content-padding-mobile: 1rem 0.75rem 1.5rem;
 
     /* Typography Variables - tools-index.cssの変数と競合を避けるため独自変数を使用 */
     --header-title-mobile: 2.5rem;
@@ -240,9 +241,9 @@ const statsData = getStatsData(toolsCount);
         inset 0 -1px 0 var(--header-border-subtle);
     }
 
-    .tools-header-content {
-      /* コンテンツのパディングを調整 - 左右にもパディングを追加 */
-      padding: 1rem 1rem 1.5rem;
+    .tools-header-section .tools-header-content {
+      /* コンテンツのパディングを調整 - スマホ用に左右パディングを増加 */
+      padding: var(--header-content-padding-mobile);
     }
   }
 

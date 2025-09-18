@@ -5,7 +5,6 @@
 /* Replaces [slug].css with more generalized content page styling */
 
 @import './global.css';
-@import './docs/word-internal-links.css';
 
 /* ========== TAILWIND V5 THEME INTEGRATION ========== */
 @theme {

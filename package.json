@@ -16,11 +16,11 @@
     "format": "prettier --write src/**/*.{ts,tsx,js,jsx,json,css,md}",
     "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,json,css,md}",
     "quality": "npm run lint && npm run format:check && npm run type-check",
-    "stylelint": "stylelint \"src/**/*.{css,scss,astro}\" --ignore-pattern \"src/styles/docs/docs.css\"",
-    "stylelint:fix": "stylelint \"**/*.{css,scss,astro}\" --fix",
+    "stylelint": "stylelint \"src/**/*.{css,scss,vue,astro}\" --ignore-pattern \"src/styles/docs/docs.css\"",
+    "stylelint:fix": "stylelint \"**/*.{css,scss,vue,astro}\" --fix",
     "stylelint:file": "stylelint",
-    "stylelint:all": "stylelint \"src/**/*.{css,scss,astro,ts,tsx,js,jsx}\" --ignore-pattern \"src/styles/docs/docs.css\"",
-    "stylelint:css-only": "stylelint \"src/**/*.{css,scss,astro}\" --ignore-pattern \"src/styles/docs/docs.css\"",
+    "stylelint:all": "stylelint \"src/**/*.{css,scss,vue,astro,ts,tsx,js,jsx}\" --ignore-pattern \"src/styles/docs/docs.css\"",
+    "stylelint:css-only": "stylelint \"src/**/*.{css,scss,vue,astro}\" --ignore-pattern \"src/styles/docs/docs.css\"",
     "stylelint:ts-css": "stylelint \"src/**/*.{ts,tsx,js,jsx}\" --ignore-pattern \"src/styles/docs/docs.css\""
   },
   "dependencies": {

@@ -111,22 +111,25 @@ const META_ITEMS = [
 <style>
   /* ========== ENHANCED ICON STYLES ========== */
   .tool-icon-large {
-    width: clamp(75px, 7.5vw, 175px);
-    height: clamp(75px, 7.5vw, 175px);
+    width: clamp(100px, 12.5vw, 170px);
+    height: clamp(100px, 12.5vw, 170px);
     margin: 0;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    background: var(--color-bg-card);
+    border: none;
+    border-radius: 16px;
+    background: transparent;
     transition:
       transform var(--transition-normal),
       box-shadow var(--transition-normal);
     object-fit: contain;
+    filter: drop-shadow(0 4px 8px oklch(0% 0 0deg / 0.3));
   }
 
   .tool-icon-large:hover {
-    border-color: var(--color-border-hover);
-    box-shadow: var(--shadow-md);
-    transform: scale(1.05);
+    border: none;
+    background: transparent;
+    filter: drop-shadow(0 6px 12px oklch(0% 0 0deg / 0.4));
+    transform: scale(1.05) translateY(-2px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* 画像読み込み最適化 */
@@ -153,14 +156,53 @@ const META_ITEMS = [
     width: 100%;
   }
 
-  .tool-icon-container {
+  .header-content-section .tool-icon-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: clamp(80px, 8vw, 160px);
-    height: clamp(80px, 8vw, 160px);
+    width: clamp(100px, 12.5vw, 170px);
+    height: clamp(100px, 12.5vw, 170px);
+    border: none;
+    border-radius: 16px;
+    background: transparent;
     text-align: center;
     flex-shrink: 0;
+    cursor: pointer;
+    filter: drop-shadow(0 4px 8px oklch(0% 0 0deg / 0.3));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .tool-icon-container:hover {
+    transform: scale(1.02) translateY(-1px);
+    filter: drop-shadow(0 6px 12px oklch(0% 0 0deg / 0.4));
+  }
+
+  /* より詳細度の高いセレクターで確実に適用 */
+  .component-header .header-content-section .tool-icon-container {
+    width: clamp(100px, 12.5vw, 170px);
+    height: clamp(100px, 12.5vw, 170px);
+    border: none;
+    border-radius: 16px;
+    background: transparent;
+    cursor: pointer;
+    filter: drop-shadow(0 4px 8px oklch(0% 0 0deg / 0.3));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* デスクトップ用の詳細度の高いセレクター */
+  @media (min-width: 768px) {
+    .tool-icon-container:hover {
+      transform: scale(1.02) translateY(-1px);
+      filter: drop-shadow(0 6px 12px oklch(0% 0 0deg / 0.4));
+    }
+
+    .component-header .header-content-section .tool-icon-container {
+      width: clamp(85px, 8.5vw, 145px);
+      height: clamp(85px, 8.5vw, 145px);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   }
 
   .header-text-content {
@@ -233,6 +275,17 @@ const META_ITEMS = [
   @media (min-width: 768px) {
     .header-content-section {
       gap: clamp(2rem, 4vw, 2.5rem);
+    }
+
+    .header-content-section .tool-icon-container {
+      width: clamp(85px, 8.5vw, 145px);
+      height: clamp(85px, 8.5vw, 145px);
+    }
+
+    .tool-icon-large {
+      width: clamp(85px, 8.5vw, 145px);
+      height: clamp(85px, 8.5vw, 145px);
+      border-radius: 16px;
     }
 
     .header-title {
