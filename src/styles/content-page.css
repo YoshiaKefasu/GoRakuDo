@@ -1,37 +1,14 @@
-/* CONTENT PAGE STYLES - Generalized version */
+/* ========== CONTENT PAGE STYLES ========== */
 
-/* Custom styles that cannot be handled by Tailwind Typography */
-
-/* Replaces [slug].css with more generalized content page styling */
+/* Custom styles for content pages that cannot be handled by Tailwind Typography */
 
 @import './global.css';
-
-/* ========== TAILWIND V5 THEME INTEGRATION ========== */
-@theme {
-  /* Content page design tokens */
-  --color-content-background: rgb(15 15 25 / 0.95);
-  --color-content-title: rgb(255 255 255 / 0.95);
-  --color-content-text: rgb(255 255 255 / 0.85);
-  --color-content-meta: rgb(255 255 255 / 0.7);
-  --color-content-border: rgb(139 93 255 / 0.15);
-  --color-content-accent: var(--color-accent-purple);
-
-  /* Shadows */
-  --shadow-card: 0 4px 20px rgb(0 0 0 / 0.3);
-  --shadow-card-hover: 0 8px 30px rgb(139 93 255 / 0.2);
-
-  /* Z-index system */
-  --z-content-background: -10;
-  --z-content-main: 1;
-  --z-content-progress: 50;
-  --z-content-modal: 100;
-}
 
 /* ========== CONTENT PAGE LAYOUT ========== */
 
 .content-page {
   @apply min-h-screen w-full relative z-[var(--z-content-main)] m-0;
-  @apply bg-[rgba(15,15,25,0.5)] bg-[length:30px_30px];
+  @apply bg-[var(--clr-content-background-light)] bg-[length:30px_30px];
   @apply pt-20 pb-8 backdrop-blur-[1px];
   @apply md:pt-16 md:pb-6;
   @apply max-sm:pt-12 max-sm:pb-4;
@@ -44,7 +21,7 @@
   @apply w-dvw max-w-full;
 }
 
-/* ========== TOC LAYOUT SUPPORT ========== */
+/* ========== LAYOUT SUPPORT ========== */
 .content-wrapper {
   @apply flex gap-0 px-0 !max-w-full;
   @apply sm:gap-4 sm:px-0;
@@ -64,8 +41,6 @@
 }
 
 /* ========== BREADCRUMB ========== */
-
-/* These styles are needed for the breadcrumb component */
 .breadcrumb-nav {
   @apply !bg-transparent !backdrop-filter-none !border-none !shadow-none;
 }
@@ -95,31 +70,29 @@
 }
 
 /* ========== BUTTONS ========== */
-
-/* Shared styles for navigation and share buttons */
 .back-to-content,
 .back-to-docs,
 .back-to-tools,
 .share-btn {
   @apply inline-flex items-center gap-2 no-underline mb-0 outline-none h-10 box-border whitespace-nowrap;
-  @apply text-sm font-medium text-[var(--color-primary)];
-  @apply bg-[rgba(139,93,255,0.1)] px-4 py-2 rounded-lg;
-  @apply border border-[rgba(139,93,255,0.2)];
+  @apply text-sm font-medium text-[var(--clr-primary)];
+  @apply bg-[var(--clr-accent-glow-faint)] px-4 py-2 rounded-lg;
+  @apply border border-[var(--clr-accent-glow-medium)];
   @apply transition-all duration-300 ease-in-out;
-  @apply hover:text-[var(--color-accent-purple-dark)] hover:bg-[rgba(139,93,255,0.15)];
-  @apply hover:border-[rgba(139,93,255,0.3)] hover:-translate-y-px;
-  @apply hover:shadow-[0_4px_12px_rgba(139,93,255,0.2)];
-  @apply focus-visible:outline-2 focus-visible:outline-[#8b5dff] focus-visible:outline-offset-2;
-  @apply focus-visible:shadow-[0_0_0_2px_rgba(139,93,255,0.3)];
+  @apply hover:text-[var(--clr-accent-dark)] hover:bg-[var(--clr-accent-glow-medium)];
+  @apply hover:border-[var(--clr-accent-glow-strong)] hover:-translate-y-px;
+  @apply hover:shadow-[0_4px_12px_var(--clr-accent-glow-medium)];
+  @apply focus-visible:outline-2 focus-visible:outline-[var(--clr-accent)] focus-visible:outline-offset-2;
+  @apply focus-visible:shadow-[0_0_0_2px_var(--clr-accent-glow-medium)];
   @apply max-[480px]:px-3 max-[480px]:py-1.5 max-[480px]:text-[0.8rem] max-[480px]:h-9;
 }
 
 /* ========== CONTENT HEADER ========== */
 .content-header {
   @apply text-center mx-2 my-8 p-6 rounded-2xl min-h-60;
-  @apply border border-[var(--color-content-border)];
-  @apply bg-[rgba(30,30,40,0.1)] backdrop-blur-[5px];
-  @apply shadow-[var(--shadow-card)];
+  @apply border border-[var(--clr-content-border)];
+  @apply bg-[var(--clr-content-background-card)] backdrop-blur-[5px];
+  @apply shadow-[var(--shadow-content-card)];
   @apply flex flex-col justify-center items-center;
   @apply md:mx-1 md:my-6 md:p-5 md:min-h-50;
   @apply max-sm:mx-0 max-sm:my-4 max-sm:p-4 max-sm:min-h-40;
@@ -131,25 +104,24 @@
   @apply max-sm:text-xl max-sm:mb-3;
 }
 
-/* Content Meta */
 .content-meta {
   @apply flex items-center justify-center gap-5 mb-3 text-sm flex-wrap;
-  @apply text-[var(--color-content-meta)];
+  @apply text-[var(--clr-content-meta)];
   @apply max-sm:gap-3 max-sm:text-[0.8rem];
 }
 
 .content-date,
 .content-author,
 .content-read-time {
-  @apply text-[var(--color-content-meta)];
+  @apply text-[var(--clr-content-meta)];
 }
 
-/* Legacy support for existing selectors */
+/* ========== LEGACY SUPPORT ========== */
 .post-header {
   @apply text-center mx-2 my-8 p-6 rounded-2xl min-h-60;
-  @apply border border-[var(--color-content-border)];
-  @apply bg-[rgba(30,30,40,0.1)] backdrop-blur-[5px];
-  @apply shadow-[var(--shadow-card)];
+  @apply border border-[var(--clr-content-border)];
+  @apply bg-[var(--clr-content-background-card)] backdrop-blur-[5px];
+  @apply shadow-[var(--shadow-content-card)];
   @apply flex flex-col justify-center items-center;
   @apply md:mx-1 md:my-6 md:p-5 md:min-h-50;
   @apply max-sm:mx-0 max-sm:my-4 max-sm:p-4 max-sm:min-h-40;
@@ -157,29 +129,21 @@
 
 .post-meta {
   @apply flex items-center justify-center gap-5 mb-3 text-sm flex-wrap;
-  @apply text-[var(--color-content-meta)];
+  @apply text-[var(--clr-content-meta)];
   @apply max-sm:gap-3 max-sm:text-[0.8rem];
 }
 
-.post-date {
-  @apply text-[var(--color-content-meta)];
-}
-
-.post-author {
-  @apply text-[var(--color-content-meta)];
-}
-
+.post-date,
+.post-author,
 .post-read-time {
-  @apply text-[var(--color-content-meta)];
+  @apply text-[var(--clr-content-meta)];
 }
 
 .post-title {
   @apply text-inherit;
 }
 
-/* ========== DIFFICULTY BADGE ========== */
-
-/* This is a custom component that cannot be handled by Tailwind Typography */
+/* ========== DIFFICULTY BADGES ========== */
 .content-tags {
   @apply flex items-center justify-center gap-3;
 }
@@ -189,34 +153,28 @@
 }
 
 .difficulty-badge.difficulty-beginner {
-  @apply bg-[rgba(34,197,94,0.2)] text-green-300 border border-[rgba(34,197,94,0.3)];
+  @apply bg-[oklch(60%_0.15_145deg/0.2)] text-green-300 border border-[oklch(60%_0.15_145deg/0.3)];
 }
 
 .difficulty-badge.difficulty-intermediate {
-  @apply bg-[rgba(234,179,8,0.2)] text-yellow-300 border border-[rgba(234,179,8,0.3)];
+  @apply bg-[oklch(70%_0.15_85deg/0.2)] text-yellow-300 border border-[oklch(70%_0.15_85deg/0.3)];
 }
 
 .difficulty-badge.difficulty-advanced {
-  @apply bg-[rgba(239,68,68,0.2)] text-red-300 border border-[rgba(239,68,68,0.3)];
+  @apply bg-[oklch(60%_0.15_25deg/0.2)] text-red-300 border border-[oklch(60%_0.15_25deg/0.3)];
 }
 
-/* Legacy support */
 .post-tags {
   @apply flex items-center justify-center gap-3;
 }
 
-/* ========== CONTENT MAIN ========== */
-
-/* Typography plugin has priority - only essential layout styles */
+/* ========== CONTENT TYPOGRAPHY ========== */
 .content-main {
   @apply p-6 px-4 max-w-none bg-transparent rounded-lg w-full relative block;
   @apply md:p-5 md:px-3;
   @apply max-sm:p-4 max-sm:px-2;
 }
 
-/* Typography plugin handles all text/paragraph styling automatically */
-
-/* Additional paragraph spacing improvements for better readability */
 .content-main.prose p {
   @apply mb-8 leading-relaxed; /* 32px bottom margin + relaxed line height */
 }
@@ -225,12 +183,10 @@
   @apply mb-0; /* Remove bottom margin from last paragraph */
 }
 
-/* Custom enhancements applied after prose (higher specificity) */
 .content-main.prose :where(h1, h2, h3, h4, h5) {
   @apply scroll-mt-8;
 }
 
-/* Enhanced heading spacing for better readability */
 .content-main.prose h1 {
   @apply mb-6 mt-8 leading-tight; /* 24px bottom, 32px top margin */
 }
@@ -248,8 +204,8 @@
   border-radius: 2px;
   background: linear-gradient(
     135deg,
-    var(--color-primary),
-    var(--color-primary-dark)
+    var(--clr-primary),
+    var(--clr-primary-dark)
   );
   transform: translateY(-50%);
   content: '';
@@ -297,27 +253,23 @@
   list-style-type: decimal;
 }
 
-/* Custom bullet for unordered lists - only apply to specific content if needed */
 .content-main.prose ul li::before {
   display: none; /* Disable custom bullet to show default disc */
 }
 
-/* List styling moved to main selectors above */
-
-/* Legacy support for existing post-content selector */
 .post-content {
   @apply p-6 px-4 max-w-none bg-transparent rounded-lg w-full relative block;
-  @apply text-[var(--color-content-text)];
+  @apply text-[var(--clr-content-text)];
   @apply md:p-5 md:px-3;
   @apply max-sm:p-4 max-sm:px-2;
 }
 
-/* ========== CONTENT ACTIONS ========== */
+/* ========== ACTION BUTTONS ========== */
 .content-actions {
   @apply flex flex-col justify-between items-center gap-4 p-6 my-8 rounded-2xl;
-  @apply border border-[var(--color-content-border)];
-  @apply bg-[rgba(30,30,40,0.2)] backdrop-blur-[2px];
-  @apply shadow-[var(--shadow-card)];
+  @apply border border-[var(--clr-content-border)];
+  @apply bg-[var(--clr-content-background-card-hover)] backdrop-blur-[2px];
+  @apply shadow-[var(--shadow-content-card)];
   @apply sm:flex-row;
   @apply md:my-6 md:p-5;
   @apply max-sm:my-4 max-sm:p-4 max-sm:gap-3;
@@ -334,12 +286,11 @@
   @apply max-[480px]:gap-2;
 }
 
-/* Legacy support */
 .post-actions {
   @apply flex flex-col justify-between items-center gap-4 p-6 my-8 rounded-2xl;
-  @apply border border-[var(--color-content-border)];
-  @apply bg-[rgba(30,30,40,0.2)] backdrop-blur-[2px];
-  @apply shadow-[var(--shadow-card)];
+  @apply border border-[var(--clr-content-border)];
+  @apply bg-[var(--clr-content-background-card-hover)] backdrop-blur-[2px];
+  @apply shadow-[var(--shadow-content-card)];
   @apply sm:flex-row;
   @apply md:my-6 md:p-5;
   @apply max-sm:my-4 max-sm:p-4 max-sm:gap-3;
@@ -352,12 +303,12 @@
 
   background: linear-gradient(
     90deg,
-    var(--color-primary),
-    var(--color-primary-dark)
+    var(--clr-primary),
+    var(--clr-primary-dark)
   );
 }
 
-/* ========== ACCESSIBILITY ========== */
+/* ========== ACCESSIBILITY & RESPONSIVE ========== */
 @media (prefers-reduced-motion: reduce) {
   .back-to-content,
   .back-to-docs,
@@ -377,24 +328,24 @@
   .content-actions,
   .post-header,
   .post-actions {
-    border: 2px solid #6b7280;
+    border: 2px solid oklch(50% 0.01 270deg);
   }
 
   .back-to-content,
   .back-to-docs,
   .back-to-tools,
   .share-btn {
-    border: 2px solid var(--color-primary);
+    border: 2px solid var(--clr-primary);
   }
 
   .content-main :where(h1, h2, h3, h4, h5),
   .post-content :where(h1, h2, h3, h4, h5) {
-    color: rgb(255 255 255 / 1);
+    color: oklch(100% 0 0deg);
   }
 
   .content-main :where(p, li, blockquote),
   .post-content :where(p, li, blockquote) {
-    color: rgb(255 255 255 / 1);
+    color: oklch(100% 0 0deg);
   }
 
   .content-meta,
@@ -405,24 +356,22 @@
   .post-date,
   .post-author,
   .post-read-time {
-    color: rgb(255 255 255 / 0.95);
+    color: oklch(100% 0 0deg / 0.95);
   }
 }
 
-/* content-page.css では html と body の基本設定は global.css に委譲 */
-
-/* 重複する設定を削除してダブルスクロールバーを防止 */
+/* ========== CODE BLOCKS ========== */
 
 code {
-  padding: 0 ;
-  background: none ;
+  padding: 0;
+  background: none;
 }
 
 pre {
-  margin: 1rem 0 ;
-  padding: 1rem ;
-  border: 1px solid rgb(139 93 255 / 0.15) ;
-  border-radius: 0.5rem ;
-  background: none ;
-  box-shadow: var(--shadow-card) ;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--clr-accent-glow-faint);
+  border-radius: 0.5rem;
+  background: none;
+  box-shadow: var(--shadow-card);
 }
