@@ -1,44 +1,56 @@
 ---
 // SEO data - Astroネイティブアプローチ（設定ファイル不要）
-import UnifiedSEO from "../components/UnifiedSEO.astro"
+import UnifiedSEO from '../components/UnifiedSEO.astro';
 
 const seoData = {
-  title: "404 Error - Halaman Tidak Ditemukan | GoRakuDo",
-  description: "Maaf, halaman yang Anda cari tidak ditemukan. Kembali ke GoRakuDo untuk sumber daya pembelajaran bahasa Jepang efektif dan dukungan komunitas",
-  keywords: ["404", "error", "halaman", "tidak", "ditemukan", "bahasa", "jepang", "belajar", "pembelajaran", "learning"],
-  pageType: "website" as const
-}
+  title: '404 Error - Halaman Tidak Ditemukan | GoRakuDo',
+  description:
+    'Maaf, halaman yang Anda cari tidak ditemukan. Kembali ke GoRakuDo untuk sumber daya pembelajaran bahasa Jepang efektif dan dukungan komunitas',
+  keywords: [
+    '404',
+    'error',
+    'halaman',
+    'tidak',
+    'ditemukan',
+    'bahasa',
+    'jepang',
+    'belajar',
+    'pembelajaran',
+    'learning',
+  ],
+  pageType: 'website' as const,
+};
 
 // Redirect mapping for old URLs with dynamic path support
-import { getCollectionInfo } from "../utils/collections"
+import { getCollectionInfo } from '../utils/collections';
 
-const collectionMetadata = getCollectionInfo("docs")
-const defaultPath = collectionMetadata.basePath
+const collectionMetadata = getCollectionInfo('docs');
+const defaultPath = collectionMetadata.basePath;
 
 const redirectMap = {
-  "/docs/posts": defaultPath,
-  "/docs/post": defaultPath,
-  "/posts": defaultPath,
-  "/post": defaultPath,
-  "/blog": defaultPath,
-  "/articles": defaultPath,
-  "/guide": defaultPath,
-  "/guides": defaultPath,
-  "/tutorial": defaultPath,
-  "/tutorials": defaultPath,
-}
+  '/docs/posts': defaultPath,
+  '/docs/post': defaultPath,
+  '/posts': defaultPath,
+  '/post': defaultPath,
+  '/blog': defaultPath,
+  '/articles': defaultPath,
+  '/guide': defaultPath,
+  '/guides': defaultPath,
+  '/tutorial': defaultPath,
+  '/tutorials': defaultPath,
+};
 
 // Get current path for potential redirect
-const currentPath = Astro.url.pathname
-const redirectTarget = redirectMap[currentPath]
+const currentPath = Astro.url.pathname;
+const redirectTarget = redirectMap[currentPath];
 
 // If we have a redirect target, perform the redirect
 if (redirectTarget) {
-  return Astro.redirect(redirectTarget, 301) // Permanent redirect
+  return Astro.redirect(redirectTarget, 301); // Permanent redirect
 }
 ---
 
-<html lang="ja">
+<html lang='ja'>
   <head>
     <!-- UnifiedSEO - Astroネイティブアプローチ（設定ファイル不要） -->
     <UnifiedSEO
@@ -46,21 +58,21 @@ if (redirectTarget) {
       description={seoData.description}
       keywords={seoData.keywords}
       pageType={seoData.pageType}
-      lang="id"
+      lang='id'
       gtag={import.meta.env.PUBLIC_GA_ID}
       noindex={true}
     />
-    <link rel="stylesheet" href="/css/post-styles.css" />
+    <link rel='stylesheet' href='/css/post-styles.css' />
     <style>
       /* 404 Page Specific Styles */
       .error-container {
         position: relative;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        overflow: hidden;
         min-height: 100vh;
         padding: 20px;
-        overflow: hidden;
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
       }
 
@@ -69,9 +81,21 @@ if (redirectTarget) {
         inset: 0;
         z-index: 1;
         background:
-          radial-gradient(circle at 20% 80%, rgb(139 93 255 / 10%) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, rgb(228 180 59 / 10%) 0%, transparent 50%),
-          radial-gradient(circle at 40% 40%, rgb(139 93 255 / 5%) 0%, transparent 50%);
+          radial-gradient(
+            circle at 20% 80%,
+            rgb(139 93 255 / 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgb(228 180 59 / 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgb(139 93 255 / 0.05) 0%,
+            transparent 50%
+          );
       }
 
       .error-content {
@@ -79,10 +103,10 @@ if (redirectTarget) {
         z-index: 2;
         max-width: 600px;
         padding: 60px 40px;
-        text-align: center;
-        background: rgb(255 255 255 / 3%);
-        border: 1px solid rgb(139 93 255 / 10%);
+        border: 1px solid rgb(139 93 255 / 0.1);
         border-radius: 20px;
+        background: rgb(255 255 255 / 0.03);
+        text-align: center;
         backdrop-filter: blur(10px);
       }
 
@@ -94,89 +118,89 @@ if (redirectTarget) {
 
       .error-title {
         margin-bottom: 20px;
+        background: linear-gradient(135deg, #8b5dff 0%, #e4b43b 100%);
+        color: var(--color-text-primary);
         font-size: 48px;
         font-weight: 700;
-        color: var(--color-text-primary);
-        background: linear-gradient(135deg, #8b5dff 0%, #e4b43b 100%);
         background-clip: text;
         -webkit-text-fill-color: transparent;
       }
 
       .error-subtitle {
         margin-bottom: 30px;
+        color: var(--color-text-secondary);
         font-size: 20px;
         line-height: 1.6;
-        color: var(--color-text-secondary);
       }
 
       .error-description {
         margin-bottom: 40px;
+        color: var(--color-text-muted);
         font-size: 16px;
         line-height: 1.6;
-        color: var(--color-text-muted);
       }
 
       .error-actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 20px;
         justify-content: center;
+        gap: 20px;
         margin-bottom: 40px;
       }
 
       .error-btn {
         display: inline-flex;
-        gap: 10px;
         align-items: center;
+        gap: 10px;
         padding: 15px 30px;
+        border: none;
+        border-radius: 12px;
         font-size: 16px;
         font-weight: 600;
         text-decoration: none;
         cursor: pointer;
-        border: none;
-        border-radius: 12px;
         transition: all 0.3s ease;
       }
 
       .error-btn.primary {
-        color: white;
         background: linear-gradient(135deg, #8b5dff 0%, #7b4def 100%);
+        color: white;
       }
 
       .error-btn.primary:hover {
-        box-shadow: 0 8px 25px rgb(139 93 255 / 30%);
+        box-shadow: 0 8px 25px rgb(139 93 255 / 0.3);
         transform: translateY(-2px);
       }
 
       .error-btn.secondary {
+        border: 1px solid rgb(139 93 255 / 0.2);
+        background: rgb(139 93 255 / 0.1);
         color: var(--color-text-primary);
-        background: rgb(139 93 255 / 10%);
-        border: 1px solid rgb(139 93 255 / 20%);
       }
 
       .error-btn.secondary:hover {
-        background: rgb(139 93 255 / 20%);
+        background: rgb(139 93 255 / 0.2);
         border-color: var(--color-accent-purple);
       }
 
       .error-suggestions {
-        padding: 30px;
         margin-top: 40px;
-        background: rgb(139 93 255 / 5%);
-        border: 1px solid rgb(139 93 255 / 10%);
+        padding: 30px;
+        border: 1px solid rgb(139 93 255 / 0.1);
         border-radius: 12px;
+        background: rgb(139 93 255 / 0.05);
       }
 
       .suggestions-title {
         margin-bottom: 20px;
+        color: var(--color-text-primary);
         font-size: 18px;
         font-weight: 600;
-        color: var(--color-text-primary);
       }
 
       .suggestions-list {
-        padding: 0;
         margin: 0;
+        padding: 0;
         list-style: none;
       }
 
@@ -187,19 +211,19 @@ if (redirectTarget) {
 
       .suggestions-list li::before {
         margin-right: 10px;
-        content: "🔍 ";
+        content: '🔍 ';
       }
 
       .error-path {
-        padding: 10px 15px;
         margin: 20px 0;
+        padding: 10px 15px;
+        border: 1px solid rgb(139 93 255 / 0.2);
+        border-radius: 8px;
+        background: rgb(139 93 255 / 0.1);
+        color: var(--color-text-secondary);
         font-family: monospace;
         font-size: 14px;
-        color: var(--color-text-secondary);
         word-break: break-all;
-        background: rgb(139 93 255 / 10%);
-        border: 1px solid rgb(139 93 255 / 20%);
-        border-radius: 8px;
       }
 
       @keyframes float {
@@ -214,7 +238,7 @@ if (redirectTarget) {
       }
 
       /* Responsive Design */
-      @media (width <= 768px) {
+      @media (max-width: 768px) {
         .error-content {
           padding: 40px 20px;
         }
@@ -241,30 +265,32 @@ if (redirectTarget) {
     </style>
   </head>
   <body>
-    <div class="error-container">
-      <div class="error-background"></div>
-      <div class="error-content">
-        <div class="error-icon">🚀</div>
-        <h1 class="error-title">404</h1>
-        <h2 class="error-subtitle">Halaman Tidak Ditemukan</h2>
-        <p class="error-description">
-          Maaf, halaman yang Anda cari tidak ditemukan. Mungkin halaman tersebut telah
-          dipindahkan atau dihapus.
+    <div class='error-container'>
+      <div class='error-background'></div>
+      <div class='error-content'>
+        <div class='error-icon'>🚀</div>
+        <h1 class='error-title'>404</h1>
+        <h2 class='error-subtitle'>Halaman Tidak Ditemukan</h2>
+        <p class='error-description'>
+          Maaf, halaman yang Anda cari tidak ditemukan. Mungkin halaman tersebut
+          telah dipindahkan atau dihapus.
         </p>
 
-        <div class="error-path">
+        <div class='error-path'>
           Path yang diminta: <strong>{currentPath}</strong>
         </div>
 
-        <div class="error-actions">
-          <a href="/" class="error-btn primary"> 🏠 Kembali ke Beranda </a>
-          <a href="/docs" class="error-btn secondary"> 📚 Lihat Dokumentasi </a>
-          <button onclick="goBack()" class="error-btn secondary"> ⬅️ Kembali </button>
+        <div class='error-actions'>
+          <a href='/' class='error-btn primary'> 🏠 Kembali ke Beranda </a>
+          <a href='/docs' class='error-btn secondary'> 📚 Lihat Dokumentasi </a>
+          <button onclick='goBack()' class='error-btn secondary'>
+            ⬅️ Kembali
+          </button>
         </div>
 
-        <div class="error-suggestions">
-          <h3 class="suggestions-title">💡 Saran Pencarian</h3>
-          <ul class="suggestions-list">
+        <div class='error-suggestions'>
+          <h3 class='suggestions-title'>💡 Saran Pencarian</h3>
+          <ul class='suggestions-list'>
             <li>Periksa URL yang Anda ketik</li>
             <li>Gunakan fitur pencarian di halaman dokumentasi</li>
             <li>Kunjungi halaman beranda untuk navigasi</li>
@@ -277,72 +303,74 @@ if (redirectTarget) {
     <script>
       // Navigation functions
       function goHome() {
-        window.location.href = "/"
+        window.location.href = '/';
       }
 
       function goToDocs() {
-        window.location.href = "/docs"
+        window.location.href = '/docs';
       }
 
       function goBack() {
         if (window.history.length > 1) {
-          window.history.back()
+          window.history.back();
         } else {
-          window.location.href = "/"
+          window.location.href = '/';
         }
       }
 
       // Auto-redirect for common old URLs (client-side fallback)
-      const currentPath = window.location.pathname
+      const currentPath = window.location.pathname;
       const redirectMap = {
-        "/docs/posts": "/docs",
-        "/docs/post": "/docs",
-        "/posts": "/docs",
-        "/post": "/docs",
-        "/blog": "/docs",
-        "/articles": "/docs",
-        "/guide": "/docs",
-        "/guides": "/docs",
-        "/tutorial": "/docs",
-        "/tutorials": "/docs",
-      }
+        '/docs/posts': '/docs',
+        '/docs/post': '/docs',
+        '/posts': '/docs',
+        '/post': '/docs',
+        '/blog': '/docs',
+        '/articles': '/docs',
+        '/guide': '/docs',
+        '/guides': '/docs',
+        '/tutorial': '/docs',
+        '/tutorials': '/docs',
+      };
 
       if (redirectMap[currentPath]) {
-        console.log(`🔄 Redirecting ${currentPath} to ${redirectMap[currentPath]}`)
-        window.location.href = redirectMap[currentPath]
+        console.log(
+          `🔄 Redirecting ${currentPath} to ${redirectMap[currentPath]}`
+        );
+        window.location.href = redirectMap[currentPath];
       }
 
       // Add some interactive elements
-      document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener('DOMContentLoaded', function () {
         // Add click handlers for buttons
-        const primaryBtn = document.querySelector(".error-btn.primary")
-        const secondaryBtns = document.querySelectorAll(".error-btn.secondary")
+        const primaryBtn = document.querySelector('.error-btn.primary');
+        const secondaryBtns = document.querySelectorAll('.error-btn.secondary');
 
         if (primaryBtn) {
-          primaryBtn.addEventListener("click", goHome)
+          primaryBtn.addEventListener('click', goHome);
         }
 
-        secondaryBtns.forEach((btn) => {
-          const btnText = btn.textContent || ""
-          if (btnText.includes("Dokumentasi")) {
-            btn.addEventListener("click", goToDocs)
-          } else if (btnText.includes("Kembali")) {
-            btn.addEventListener("click", goBack)
+        secondaryBtns.forEach(btn => {
+          const btnText = btn.textContent || '';
+          if (btnText.includes('Dokumentasi')) {
+            btn.addEventListener('click', goToDocs);
+          } else if (btnText.includes('Kembali')) {
+            btn.addEventListener('click', goBack);
           }
-        })
+        });
 
         // Add some subtle animations
-        const errorIcon = document.querySelector(".error-icon")
+        const errorIcon = document.querySelector('.error-icon');
         if (errorIcon) {
-          errorIcon.addEventListener("mouseenter", function () {
-            this.style.transform = "scale(1.1) rotate(5deg)"
-          })
+          errorIcon.addEventListener('mouseenter', function () {
+            this.style.transform = 'scale(1.1) rotate(5deg)';
+          });
 
-          errorIcon.addEventListener("mouseleave", function () {
-            this.style.transform = "scale(1) rotate(0deg)"
-          })
+          errorIcon.addEventListener('mouseleave', function () {
+            this.style.transform = 'scale(1) rotate(0deg)';
+          });
         }
-      })
+      });
     </script>
   </body>
 </html>

@@ -116,17 +116,17 @@ const formatToolName = (tool: string): string =>
   /* ========== ENHANCED ARTICLE CARD STYLES ========== */
   .article-card-optimized {
     position: relative;
+    overflow: hidden;
     height: fit-content;
     margin: 0 clamp(var(--spacing-xs), 2vw, var(--spacing-md));
-    contain: layout style paint;
-    overflow: hidden;
-    background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
-    backdrop-filter: blur(20px);
+    background: var(--color-bg-card);
     transition:
       transform var(--transition-normal),
       box-shadow var(--transition-normal);
+    contain: layout style paint;
+    backdrop-filter: blur(20px);
     will-change: transform;
   }
 
@@ -156,17 +156,17 @@ const formatToolName = (tool: string): string =>
   /* ========== カードヘッダー ========== */
   .card-header {
     display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
     padding: clamp(var(--spacing-sm), 2vw, var(--spacing-md))
       clamp(var(--spacing-md), 4vw, var(--spacing-lg)) var(--spacing-sm);
   }
 
   .card-date {
+    color: var(--color-text-muted);
     font-size: var(--font-size-xs);
     font-weight: 500;
-    color: var(--color-text-muted);
   }
 
   /* ========== メインコンテンツ ========== */
@@ -182,13 +182,12 @@ const formatToolName = (tool: string): string =>
   .card-image {
     width: 100%;
     height: clamp(100px, 15vh, 160px);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-card);
+    transition: transform var(--transition-normal);
     object-fit: cover;
     object-position: center;
-    image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
-    background: var(--color-bg-card);
-    border-radius: var(--radius-md);
-    transition: transform var(--transition-normal);
     will-change: transform;
   }
 
@@ -209,32 +208,32 @@ const formatToolName = (tool: string): string =>
   /* ========== テキストコンテンツ ========== */
   .card-title {
     display: -webkit-box;
-    margin: 0 0 var(--spacing-sm) 0;
     overflow: hidden;
-    -webkit-line-clamp: 2;
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
     font-size: clamp(var(--font-size-md), 2vw, var(--font-size-2xl));
     font-weight: 600;
     line-height: 1.4;
-    color: var(--color-text-primary);
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
 
   .card-description {
     display: -webkit-box;
-    margin: 0;
     overflow: hidden;
-    -webkit-line-clamp: 3;
+    margin: 0;
+    color: var(--color-text-secondary);
     font-size: clamp(var(--font-size-xs), 1.5vw, var(--font-size-sm));
     line-height: 1.5;
-    color: var(--color-text-secondary);
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
 
   /* ========== カードフッター ========== */
   .card-footer {
+    margin-top: auto;
     padding: var(--spacing-sm) clamp(var(--spacing-md), 4vw, var(--spacing-lg))
       var(--spacing-md);
-    margin-top: auto;
   }
 
   .card-tags {
@@ -246,36 +245,36 @@ const formatToolName = (tool: string): string =>
   .card-tag {
     padding: clamp(var(--spacing-xs), 1vw, var(--spacing-sm))
       clamp(var(--spacing-sm), 2vw, var(--spacing-md));
+    border: 1px solid oklch(from var(--color-primary) l c h / 0.2);
+    border-radius: var(--radius-md);
+    background: oklch(from var(--color-primary) l c h / 0.15);
+    color: var(--color-primary);
     font-size: clamp(var(--font-size-xs), 1vw, var(--font-size-sm));
     font-weight: 600;
-    color: var(--color-primary);
     cursor: pointer;
     user-select: none;
-    background: var(--color-primary / 0.15);
-    border: 1px solid var(--color-primary / 0.2);
-    border-radius: var(--radius-md);
     transition: all var(--transition-fast);
   }
 
   .card-tag:hover {
-    background: var(--color-primary / 0.2);
-    border-color: var(--color-primary / 0.4);
-    box-shadow: 0 2px 8px var(--color-primary / 0.2);
+    background: oklch(from var(--color-primary) l c h / 0.2);
+    border-color: oklch(from var(--color-primary) l c h / 0.4);
+    box-shadow: 0 2px 8px oklch(from var(--color-primary) l c h / 0.2);
     transform: translateY(-1px);
   }
 
   /* ========== アクションインジケーター ========== */
   .card-action-indicator {
     display: flex;
-    flex-shrink: 0;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 2rem;
     height: 2rem;
-    background: var(--color-primary / 0.1);
     border-radius: 50%;
+    background: oklch(from var(--color-primary) l c h / 0.1);
     opacity: 1;
     transition: all var(--transition-normal);
+    flex-shrink: 0;
   }
 
   .arrow-icon {
@@ -285,7 +284,7 @@ const formatToolName = (tool: string): string =>
   }
 
   /* デスクトップ表示ではホバー時にのみ表示 */
-  @media (width >= 768px) {
+  @media (min-width: 768px) {
     .card-action-indicator {
       opacity: 0;
     }
@@ -302,7 +301,7 @@ const formatToolName = (tool: string): string =>
   /* article-card-optimized styles moved to main selector above */
 
   /* デスクトップ表示ではコンテンツに合わせて高さを調整 */
-  @media (width >= 768px) {
+  @media (min-width: 768px) {
     .article-card-optimized {
       height: fit-content;
       min-height: auto;
@@ -329,9 +328,9 @@ const formatToolName = (tool: string): string =>
     }
 
     .card-tag {
-      font-weight: 700;
+      background: oklch(from var(--color-primary) l c h / 0.3);
       color: var(--color-text-primary);
-      background: var(--color-primary / 0.3);
+      font-weight: 700;
       border-width: 2px;
     }
   }

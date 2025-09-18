@@ -9,12 +9,12 @@
 
 /* ===== GLOBAL STYLES ===== */
 body {
-  padding: 0 !important;
   overflow-x: hidden;
+  padding: 0 ;
+  background: var(--clr-background);
+  color: var(--clr-text-primary);
   font-family: var(--font-primary);
   line-height: 1.6;
-  color: var(--clr-text-primary);
-  background: var(--clr-background);
 }
 
 body.modal-open {
@@ -35,18 +35,18 @@ body.modal-open {
 /* ===== GRADIENT TEXT EFFECTS ===== */
 .white-gradient-text {
   display: block;
-  color: var(--clr-text-primary); /* Fallback */
   background: linear-gradient(
     135deg,
     var(--clr-text-primary) 0%,
     var(--clr-text-secondary) 100%
   );
+  color: var(--clr-text-primary); /* Fallback */
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* ===== OPTIMIZED ANIMATIONS ===== */
-@keyframes fade-in {
+@keyframes fadeIn {
   from {
     opacity: 0;
   }
@@ -56,7 +56,7 @@ body.modal-open {
   }
 }
 
-@keyframes slide-from-right {
+@keyframes slideFromRight {
   from {
     opacity: 0;
     transform: translateX(30px);
@@ -68,7 +68,7 @@ body.modal-open {
   }
 }
 
-@keyframes slide-from-bottom {
+@keyframes slideFromBottom {
   from {
     opacity: 0;
     transform: translateY(30px);
@@ -80,7 +80,7 @@ body.modal-open {
   }
 }
 
-@keyframes buttery-wave-float {
+@keyframes butteryWaveFloat {
   0%,
   100% {
     opacity: 0.8;
@@ -149,7 +149,7 @@ body.modal-open {
   }
 }
 
-@keyframes float-2 {
+@keyframes float2 {
   0%,
   100% {
     transform: translateY(0) translateX(0);
@@ -164,7 +164,7 @@ body.modal-open {
   }
 }
 
-@keyframes float-3 {
+@keyframes float3 {
   0%,
   100% {
     transform: translateY(0) translateX(0);
@@ -180,25 +180,25 @@ body.modal-open {
   padding: 3rem 1rem;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .section-base {
     padding: 4rem 1.5rem;
   }
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .section-base {
     padding: 5rem 2rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .section-base {
     padding: 6rem 3rem;
   }
 }
 
-@media (width >= 1280px) {
+@media (min-width: 1280px) {
   .section-base {
     padding: 8rem 4rem;
   }
@@ -216,13 +216,13 @@ body.modal-open {
   font-weight: 600;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .section-title {
     font-size: 3rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .section-title {
     font-size: 3.75rem;
   }
@@ -235,11 +235,11 @@ body.modal-open {
 
 .section-text p {
   margin-bottom: 1.5rem;
-  line-height: 1.625;
   color: var(--clr-text-secondary);
+  line-height: 1.625;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .section-text p {
     font-size: 1.125rem;
   }
@@ -251,37 +251,37 @@ body.modal-open {
   background:
     linear-gradient(
       180deg,
-      rgb(10 10 10 / 5%) 0%,
-      rgb(10 10 10 / 15%) 50%,
-      rgb(10 10 10 / 25%) 100%
+      rgb(10 10 10 / 0.05) 0%,
+      rgb(10 10 10 / 0.15) 50%,
+      rgb(10 10 10 / 0.25) 100%
     ),
     radial-gradient(
       ellipse at 50% 80%,
-      rgb(139 93 255 / 2%) 0%,
+      rgb(139 93 255 / 0.02) 0%,
       transparent 60%
     );
   transition: background 0.6s ease-out;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .mission-section {
     padding: 4rem 1.5rem;
   }
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .mission-section {
     padding: 5rem 2rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .mission-section {
     padding: 6rem 3rem;
   }
 }
 
-@media (width >= 1280px) {
+@media (min-width: 1280px) {
   .mission-section {
     padding: 8rem 4rem;
   }
@@ -299,13 +299,13 @@ body.modal-open {
   font-weight: 600;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .mission-title {
     font-size: 3rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .mission-title {
     font-size: 3.75rem;
   }
@@ -318,11 +318,11 @@ body.modal-open {
 
 .mission-text p {
   margin-bottom: 1.5rem;
-  line-height: 1.625;
   color: var(--clr-text-secondary);
+  line-height: 1.625;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .mission-text p {
     font-size: 1.125rem;
   }
@@ -337,32 +337,32 @@ body.modal-open {
   padding: 3rem 1rem;
   background: radial-gradient(
     ellipse at 50% 100%,
-    rgb(139 93 255 / 8%) 0%,
-    rgb(139 93 255 / 4%) 40%,
+    rgb(139 93 255 / 0.08) 0%,
+    rgb(139 93 255 / 0.04) 40%,
     transparent 70%
   );
   transition: background 0.6s ease-out;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .features-section {
     padding: 4rem 1.5rem;
   }
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .features-section {
     padding: 5rem 2rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .features-section {
     padding: 6rem 3rem;
   }
 }
 
-@media (width >= 1280px) {
+@media (min-width: 1280px) {
   .features-section {
     padding: 8rem 4rem;
   }
@@ -380,13 +380,13 @@ body.modal-open {
   font-weight: 600;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .features-title {
     font-size: 3rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .features-title {
     font-size: 3.75rem;
   }
@@ -394,17 +394,17 @@ body.modal-open {
 
 .features-grid {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 2.5rem;
+  grid-template-columns: 1fr;
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (width >= 1280px) {
+@media (min-width: 1280px) {
   .features-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -412,10 +412,10 @@ body.modal-open {
 
 .feature-card {
   padding: 2rem;
-  text-align: center;
-  background: var(--clr-accent-glow-faint);
   border: 1px solid var(--clr-accent-glow-medium);
   border-radius: var(--border-radius-card);
+  background: var(--clr-accent-glow-faint);
+  text-align: center;
 }
 
 .feature-icon {
@@ -423,7 +423,7 @@ body.modal-open {
   font-size: 3rem;
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .feature-icon {
     font-size: 3.75rem;
   }
@@ -431,25 +431,24 @@ body.modal-open {
 
 .feature-card h3 {
   margin-bottom: 1rem;
+  color: var(--clr-text-primary);
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--clr-text-primary);
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .feature-card h3 {
     font-size: 1.5rem;
   }
 }
 
 .feature-card p {
+  color: #9ca3af;
   font-size: 0.875rem;
   line-height: 1.625;
-  color: var(--clr-text-muted);
-  color: #9ca3af;
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .feature-card p {
     font-size: 1rem;
   }
@@ -460,32 +459,32 @@ body.modal-open {
   padding: 3rem 1rem;
   background: linear-gradient(
     180deg,
-    rgb(10 10 10 / 30%) 0%,
-    rgb(10 10 10 / 10%) 50%,
-    rgb(10 10 10 / 5%) 100%
+    rgb(10 10 10 / 0.3) 0%,
+    rgb(10 10 10 / 0.1) 50%,
+    rgb(10 10 10 / 0.05) 100%
   );
   transition: background 0.6s ease-out;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .docs-preview-section {
     padding: 4rem 1.5rem;
   }
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .docs-preview-section {
     padding: 5rem 2rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .docs-preview-section {
     padding: 6rem 3rem;
   }
 }
 
-@media (width >= 1280px) {
+@media (min-width: 1280px) {
   .docs-preview-section {
     padding: 8rem 4rem;
   }
@@ -503,13 +502,13 @@ body.modal-open {
   font-weight: 600;
 }
 
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .docs-title {
     font-size: 3rem;
   }
 }
 
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .docs-title {
     font-size: 3.75rem;
   }
@@ -517,11 +516,11 @@ body.modal-open {
 
 .docs-description {
   max-width: 600px;
-  margin-inline: auto;
   margin-bottom: 50px;
+  color: var(--clr-text-secondary);
   font-size: 18px;
   line-height: 1.7;
-  color: var(--clr-text-secondary);
+  margin-inline: auto;
 }
 
 .docs-cta {
@@ -532,26 +531,26 @@ body.modal-open {
 .cta-button,
 .docs-button {
   display: inline-flex;
-  gap: 0.75rem;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
   min-height: 44px;
   padding: 1rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius-pill);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  border: none;
-  border-radius: var(--border-radius-pill);
   transition: all 0.3s;
 }
 
 .cta-button {
-  color: var(--clr-text-primary);
   background: linear-gradient(
     135deg,
     var(--clr-accent) 0%,
     var(--clr-accent-dark) 100%
   );
+  color: var(--clr-text-primary);
 }
 
 .cta-button:hover {
@@ -559,9 +558,9 @@ body.modal-open {
 }
 
 .docs-button {
-  color: var(--clr-text-primary);
-  background: transparent;
   border: 2px solid var(--clr-accent-glow-strong);
+  background: transparent;
+  color: var(--clr-text-primary);
 }
 
 .docs-button:hover {
@@ -573,30 +572,29 @@ body.modal-open {
 /* ===== MODAL COMPONENT ===== */
 .modal-overlay {
   position: fixed;
-  inset: 0;
   z-index: 10000;
   display: flex;
-  align-items: center;
-  align-items: flex-start;
   justify-content: center;
+  align-items: flex-start;
   padding: 20px;
-  background: rgb(0 0 0 / 70%);
+  background: rgb(0 0 0 / 0.7);
+  inset: 0;
   backdrop-filter: blur(5px);
 }
 
 .modal-content {
   position: relative;
+  overflow-y: auto;
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
-  padding: 1.5rem;
   margin: 1rem;
-  overflow-y: auto;
-  background-color: var(--clr-paper-bg);
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"%3E%3Cg fill="none" stroke="%23DCD9D5" stroke-width="1"%3E%3Cpath d="M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30S1000 75 1000 75"/%3E%3Cpath d="M-500 125c0 0 125-30 250-30S0 125 0 125s125 30 250 30s250-30 250-30s125-30 250-30S1000 125 1000 125"/%3E%3Cpath d="M-500 175c0 0 125-30 250-30S0 175 0 175s125 30 250 30s250-30 250-30s125-30 250-30S1000 175 1000 175"/%3E%3Cpath d="M-500 225c0 0 125-30 250-30S0 225 0 225s125 30 250 30s250-30 250-30s125-30 250-30S1000 225 1000 225"/%3E%3Cpath d="M-500 275c0 0 125-30 250-30S0 275 0 275s125 30 250 30s250-30 250-30s125-30 250-30S1000 275 1000 275"/%3E%3Cpath d="M-500 325c0 0 125-30 250-30S0 325 0 325s125 30 250 30s250-30 250-30s125-30 250-30S1000 325 1000 325"/%3E%3Cpath d="M-500 375c0 0 125-30 250-30S0 375 0 375s125 30 250 30s250-30 250-30s125-30 250-30S1000 375 1000 375"/%3E%3Cpath d="M-500 425c0 0 125-30 250-30S0 425 0 425s125 30 250 30s250-30 250-30s125-30 250-30S1000 425 1000 425"/%3E%3Cpath d="M-500 475c0 0 125-30 250-30S0 475 0 475s125 30 250 30s250-30 250-30s125-30 250-30S1000 475 1000 475"/%3E%3Cpath d="M-500 525c0 0 125-30 250-30S0 525 0 525s125 30 250 30s250-30 250-30s125-30 250-30S1000 525 1000 525"/%3E%3Cpath d="M-500 575c0 0 125-30 250-30S0 575 0 575s125 30 250 30s250-30 250-30s125-30 250-30S1000 575 1000 575"/%3E%3Cpath d="M-500 625c0 0 125-30 250-30S0 625 0 625s125 30 250 30s250-30 250-30s125-30 250-30S1000 625 1000 625"/%3E%3Cpath d="M-500 675c0 0 125-30 250-30S0 675 0 675s125 30 250 30s250-30 250-30s125-30 250-30S1000 675 1000 675"/%3E%3Cpath d="M-500 725c0 0 125-30 250-30S0 725 0 725s125 30 250 30s250-30 250-30s125-30 250-30S1000 725 1000 725"/%3E%3Cpath d="M-500 775c0 0 125-30 250-30S0 775 0 775s125 30 250 30s250-30 250-30s125-30 250-30S1000 775 1000 775"/%3E%3C/g%3E%3C/svg%3E');
+  padding: 1.5rem;
   border: 1px solid var(--clr-paper-border);
   border-radius: var(--border-radius-card);
-  box-shadow: 0 20px 60px rgb(0 0 0 / 30%);
+  background-color: var(--clr-paper-bg);
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"%3E%3Cg fill="none" stroke="%23DCD9D5" stroke-width="1"%3E%3Cpath d="M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30S1000 75 1000 75"/%3E%3Cpath d="M-500 125c0 0 125-30 250-30S0 125 0 125s125 30 250 30s250-30 250-30s125-30 250-30S1000 125 1000 125"/%3E%3Cpath d="M-500 175c0 0 125-30 250-30S0 175 0 175s125 30 250 30s250-30 250-30s125-30 250-30S1000 175 1000 175"/%3E%3Cpath d="M-500 225c0 0 125-30 250-30S0 225 0 225s125 30 250 30s250-30 250-30s125-30 250-30S1000 225 1000 225"/%3E%3Cpath d="M-500 275c0 0 125-30 250-30S0 275 0 275s125 30 250 30s250-30 250-30s125-30 250-30S1000 275 1000 275"/%3E%3Cpath d="M-500 325c0 0 125-30 250-30S0 325 0 325s125 30 250 30s250-30 250-30s125-30 250-30S1000 325 1000 325"/%3E%3Cpath d="M-500 375c0 0 125-30 250-30S0 375 0 375s125 30 250 30s250-30 250-30s125-30 250-30S1000 375 1000 375"/%3E%3Cpath d="M-500 425c0 0 125-30 250-30S0 425 0 425s125 30 250 30s250-30 250-30s125-30 250-30S1000 425 1000 425"/%3E%3Cpath d="M-500 475c0 0 125-30 250-30S0 475 0 475s125 30 250 30s250-30 250-30s125-30 250-30S1000 475 1000 475"/%3E%3Cpath d="M-500 525c0 0 125-30 250-30S0 525 0 525s125 30 250 30s250-30 250-30s125-30 250-30S1000 525 1000 525"/%3E%3Cpath d="M-500 575c0 0 125-30 250-30S0 575 0 575s125 30 250 30s250-30 250-30s125-30 250-30S1000 575 1000 575"/%3E%3Cpath d="M-500 625c0 0 125-30 250-30S0 625 0 625s125 30 250 30s250-30 250-30s125-30 250-30S1000 625 1000 625"/%3E%3Cpath d="M-500 675c0 0 125-30 250-30S0 675 0 675s125 30 250 30s250-30 250-30s125-30 250-30S1000 675 1000 675"/%3E%3Cpath d="M-500 725c0 0 125-30 250-30S0 725 0 725s125 30 250 30s250-30 250-30s125-30 250-30S1000 725 1000 725"/%3E%3Cpath d="M-500 775c0 0 125-30 250-30S0 775 0 775s125 30 250 30s250-30 250-30s125-30 250-30S1000 775 1000 775"/%3E%3C/g%3E%3C/svg%3E');
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.3);
 }
 
 .modal-close {
@@ -604,53 +602,53 @@ body.modal-open {
   top: 15px;
   right: 15px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   width: 40px;
   height: 40px;
-  font-size: 28px;
-  color: #999;
-  cursor: pointer;
-  background: none;
   border: none;
   border-radius: 50%;
+  background: none;
+  color: #999;
+  font-size: 28px;
+  cursor: pointer;
   transition: all var(--transition-speed) ease;
 }
 
 .modal-close:hover {
-  color: #333;
   background: #eae6e2;
+  color: #333;
 }
 
 .modal-header {
-  padding-bottom: 25px;
   margin-bottom: 30px;
-  text-align: center;
+  padding-bottom: 25px;
   border-bottom: 1px solid var(--clr-paper-border);
+  text-align: center;
 }
 
 .modal-japanese-title {
+  color: #333;
   font-family: var(--font-jp);
   font-size: 4.5rem;
   font-weight: 400;
   line-height: 1;
-  color: #333;
   ruby-position: over;
 }
 
 .modal-japanese-title rt {
+  color: #666;
   font-family: var(--font-primary);
   font-size: 0.9rem;
   font-weight: 600;
-  color: #666;
 }
 
 .modal-body {
   margin-bottom: 30px;
+  color: var(--clr-paper-text-primary);
   font-family: var(--font-serif);
   font-size: 1.1rem;
   line-height: 1.8;
-  color: var(--clr-paper-text-primary);
 }
 
 .modal-body p {
@@ -660,20 +658,20 @@ body.modal-open {
 .modal-list,
 .member-list {
   position: relative;
-  padding: 0;
   margin: 1rem 0 1rem 1rem;
+  padding: 0;
   list-style: none;
 }
 
 .modal-list li,
 .member-list li {
   position: relative;
-  padding-left: 1.5rem;
   margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  color: var(--clr-paper-text-primary);
   font-family: var(--font-primary);
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--clr-paper-text-primary);
 }
 
 .modal-list li::before,
@@ -683,28 +681,28 @@ body.modal-open {
   left: 0;
   width: 0.375rem;
   height: 0.375rem;
-  content: '';
-  background-color: var(--clr-accent);
   border-radius: 50%;
+  background-color: var(--clr-accent);
   transform: translateY(-50%);
+  content: '';
 }
 
 .modal-final-pitch {
   margin-top: 30px;
+  color: #333;
   font-size: 1.15rem;
   font-weight: 600;
-  color: #333;
   text-align: center;
 }
 
 .discord-link {
   display: block;
-  padding: 20px;
   margin: 30px 0;
-  text-decoration: none;
-  background-color: #f8f9fa;
+  padding: 20px;
   border: 1px solid #eaeaea;
   border-radius: 8px;
+  background-color: #f8f9fa;
+  text-decoration: none;
 }
 
 .discord-link:hover {
@@ -714,17 +712,17 @@ body.modal-open {
 
 .discord-header {
   margin-bottom: 8px;
-  font-size: 14px;
   color: #666;
+  font-size: 14px;
 }
 
 .discord-url {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  color: var(--clr-accent);
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--clr-accent);
 }
 
 .arrow {
@@ -737,10 +735,10 @@ body.modal-open {
 
 .modal-signature {
   display: flex;
-  align-items: flex-end;
   justify-content: space-between;
-  padding-top: 25px;
+  align-items: flex-end;
   margin-top: 40px;
+  padding-top: 25px;
   border-top: 1px solid var(--clr-paper-border);
 }
 
@@ -757,15 +755,15 @@ body.modal-open {
 
 .signature-title {
   margin-bottom: 0;
-  font-size: 14px;
   color: var(--clr-paper-text-secondary);
+  font-size: 14px;
 }
 
 .signature-name {
   margin: 0;
+  color: #333;
   font-family: var(--font-cursive);
   font-size: 1.9rem;
-  color: #333;
 }
 
 /* ===== MOBILE-FRIENDLY SECTION BACKGROUNDS ===== */
@@ -783,18 +781,18 @@ body.modal-open {
 /* Mobile optimization - simplified background for mobile */
 
 /* タブレット以上で背景エフェクトを有効化 */
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .mission-section {
     background:
       linear-gradient(
         180deg,
-        rgb(10 10 10 / 5%) 0%,
-        rgb(10 10 10 / 15%) 50%,
-        rgb(10 10 10 / 25%) 100%
+        rgb(10 10 10 / 0.05) 0%,
+        rgb(10 10 10 / 0.15) 50%,
+        rgb(10 10 10 / 0.25) 100%
       ),
       radial-gradient(
         ellipse at 50% 80%,
-        rgb(139 93 255 / 2%) 0%,
+        rgb(139 93 255 / 0.02) 0%,
         transparent 60%
       );
   }
@@ -802,8 +800,8 @@ body.modal-open {
   .features-section {
     background: radial-gradient(
       ellipse at 50% 100%,
-      rgb(139 93 255 / 8%) 0%,
-      rgb(139 93 255 / 4%) 40%,
+      rgb(139 93 255 / 0.08) 0%,
+      rgb(139 93 255 / 0.04) 40%,
       transparent 70%
     );
   }
@@ -811,9 +809,9 @@ body.modal-open {
   .docs-preview-section {
     background: linear-gradient(
       180deg,
-      rgb(10 10 10 / 30%) 0%,
-      rgb(10 10 10 / 10%) 50%,
-      rgb(10 10 10 / 5%) 100%
+      rgb(10 10 10 / 0.3) 0%,
+      rgb(10 10 10 / 0.1) 50%,
+      rgb(10 10 10 / 0.05) 100%
     );
   }
 }
@@ -917,7 +915,7 @@ body.modal-open {
 }
 
 /* Responsive font size for modal japanese title */
-@media (width <= 768px) {
+@media (max-width: 768px) {
   .modal-japanese-title {
     font-size: 1.875rem;
   }
@@ -946,7 +944,7 @@ body.modal-open {
 /* Modal styles - responsive overrides moved to media queries */
 
 /* Small Mobile (640px+) */
-@media (width >= 640px) {
+@media (min-width: 640px) {
   .primary-button,
   .secondary-button {
     padding: 1rem 1.5rem;
@@ -970,8 +968,8 @@ body.modal-open {
 
   .modal-content {
     max-height: 90%;
-    padding: 2rem;
     margin: 2rem auto;
+    padding: 2rem;
   }
 
   .modal-japanese-title {
@@ -989,8 +987,8 @@ body.modal-open {
   .modal-signature {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
     justify-content: space-between;
+    align-items: flex-end;
     text-align: left;
   }
 
@@ -1000,7 +998,7 @@ body.modal-open {
 }
 
 /* Tablet (768px+) */
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .hero-buttons {
     display: flex;
     flex-direction: row;
@@ -1033,7 +1031,7 @@ body.modal-open {
 }
 
 /* Desktop (1024px+) */
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .mission-section,
   .features-section,
   .docs-preview-section,
@@ -1044,13 +1042,13 @@ body.modal-open {
   }
 
   .modal-content {
-    max-height: none;
     overflow-y: visible;
+    max-height: none;
   }
 }
 
 /* Large Desktop (1280px+) */
-@media (width >= 1280px) {
+@media (min-width: 1280px) {
   .mission-section,
   .features-section,
   .docs-preview-section,
@@ -1066,17 +1064,17 @@ body.modal-open {
   /* Main content animations */
   .main-content,
   .hero-content {
-    animation: fade-in 0.6s ease-out;
+    animation: fadeIn 0.6s ease-out;
   }
 
   /* Hero button animations */
   .hero-buttons {
-    animation: slide-from-bottom 0.6s ease-out 0.3s both;
+    animation: slideFromBottom 0.6s ease-out 0.3s both;
   }
 
   /* Feature card staggered animations */
   .feature-card {
-    animation: slide-from-bottom 0.6s ease-out;
+    animation: slideFromBottom 0.6s ease-out;
   }
 
   .feature-card:nth-child(1) {
@@ -1098,13 +1096,13 @@ body.modal-open {
   /* Button animations */
   .cta-button,
   .docs-button {
-    animation: slide-from-right 0.5s ease-out;
+    animation: slideFromRight 0.5s ease-out;
   }
 
   /* Section loading animations */
   .mission-section.loaded,
   .features-section.loaded,
   .docs-preview-section.loaded {
-    animation: slide-from-bottom 0.6s ease-out;
+    animation: slideFromBottom 0.6s ease-out;
   }
 }

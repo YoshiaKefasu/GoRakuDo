@@ -7,36 +7,30 @@ export interface Props {
 
 const { currentPage = 1, postsPerPage = 12 } = Astro.props;
 
-// Import separated modules (relative paths preferred)
-// Note: ContentProcessor and SearchDataGenerator are imported dynamically in client-side scripts
-
+// Core imports
 import { getCollection, type CollectionEntry } from 'astro:content';
 import UnifiedSEO from '../../components/UnifiedSEO.astro';
 import Breadcrumb from '../../components/public-components/Breadcrumb.astro';
 import Navbar from '../../components/public-components/Navbar.astro';
-import '../../styles/docs/docs.css';
 import { resolvePath, getCollectionInfo } from '../../utils/collections';
-// AI content utilities removed - functionality no longer needed
-// ContentConfigUtils removed - using direct content access
-
 import { logger, ConsoleLogger } from '../../utils/logging/console-logger';
 
+// Style imports
+import '../../styles/docs/docs.css';
 import '../../styles/global.css';
 import '../../styles/homepage/index.css';
 
-// Set global build mode to suppress console output during build
+// Configure logging for production build
 ConsoleLogger.setGlobalBuildMode(true);
-// Set critical errors only mode - only show critical errors
 ConsoleLogger.setGlobalCriticalErrorsOnly(true);
 
-// Astro 5.0 Content Layer Optimization - Build-time processing
+// Content processing and optimization
 let posts: CollectionEntry<'docs'>[] = [];
 let error: string | null = null;
 
 try {
-  // Phase 1: Content Layer - Build-time filtering and validation
+  // Build-time content filtering and validation
   posts = await getCollection('docs', ({ data }) => {
-    // Simplified validation - let Astro handle type safety
     return (
       data.status === 'published' &&
       data.publishedDate &&
@@ -44,14 +38,14 @@ try {
     );
   });
 
-  // Phase 1: Build-time sorting optimization
+  // Sort posts by publication date (newest first)
   posts.sort(
     (a, b) =>
       new Date(b.data.publishedDate).getTime() -
       new Date(a.data.publishedDate).getTime()
   );
 
-  // Phase 2: 0-Script最適化 - サーバーサイドで検索データを完全生成
+  // Generate search data for client-side functionality
   const searchData = posts.map(post => ({
     slug: post.slug,
     title: post.data.title,
@@ -60,38 +54,32 @@ try {
     categories: post.data.categories || ['general'],
     publishedDate: post.data.publishedDate,
     lastModified: post.data.lastModified || post.data.publishedDate,
-    content: post.body.slice(0, 200), // 検索用の短縮コンテンツ
+    content: post.body.slice(0, 200), // Truncated content for search
   }));
 
   logger.log(
-    `Content Layer: ${posts.length} posts loaded and sorted at build time`,
+    `${posts.length} posts loaded and sorted at build time`,
     'success'
   );
-  logger.log(
-    `0-Script Optimization: Search data generated for ${searchData.length} posts`,
-    'success'
-  );
+  logger.log(`Search data generated for ${searchData.length} posts`, 'success');
 } catch (err: any) {
-  logger.log(`Content Layer error: ${err.message}`, 'error');
+  logger.log(`Content processing error: ${err.message}`, 'error');
   error = err.message;
   posts = [];
 }
 
-// Posts are already sorted at build time - no runtime processing needed
+// Posts are already sorted at build time
 const sortedPosts = posts;
 
 // Pagination configuration
 const totalPosts = sortedPosts.length;
-
-// Calculate pagination info
 const startIndex = 0;
 const endIndex = Math.min(postsPerPage, totalPosts);
 const currentPosts = sortedPosts.slice(startIndex, endIndex);
 
-// Clean pagination logging
 logger.logPaginationInfo(totalPosts, postsPerPage, currentPage);
 
-// Phase 2: Content Layer - Build-time categorization optimization
+// Content categorization for filtering
 const contentCategories = {
   beginner: sortedPosts.filter(post => false),
   tools: sortedPosts.filter(post => {
@@ -106,14 +94,14 @@ const contentCategories = {
   recommended: sortedPosts.slice(0, 3),
 };
 
-logger.log(`Content Layer: Categories pre-computed at build time`, 'success');
+logger.log(`Categories pre-computed at build time`, 'success');
 
 // Extract categorized content for backward compatibility
 const beginnerContent = contentCategories.beginner;
 const toolContent = contentCategories.tools;
 const finalRecommendations = contentCategories.recommended;
 
-// Dynamic content path resolution for all posts
+// Resolve dynamic paths for all posts
 const postsWithDynamicPaths = sortedPosts.map(post => {
   const resolvedPath = { path: resolvePath('docs', post.slug) };
   return {
@@ -123,7 +111,7 @@ const postsWithDynamicPaths = sortedPosts.map(post => {
   };
 });
 
-// AstroネイティブMarkdown処理最適化 - サーバーサイドで既にHTML変換済み
+// Process article content for search and display
 function processArticleContent(content: string) {
   if (!content)
     return {
@@ -133,7 +121,7 @@ function processArticleContent(content: string) {
       hasSections: false,
     };
 
-  // HTML形式のコンテンツからテキストを抽出（Astroネイティブ処理済み）
+  // Extract text from HTML content (already processed by Astro)
   const cleanedText = content
     .replace(/<[^>]*>/g, ' ') // Remove HTML tags
     .replace(/&[^;]+;/g, ' ') // Remove HTML entities
@@ -143,18 +131,17 @@ function processArticleContent(content: string) {
 
   return {
     cleanedText,
-    hasCode: /<pre|<code/.test(content), // HTML形式のコードブロック検出
+    hasCode: /<pre|<code/.test(content), // Detect code blocks
     hasImages: /!\[.*?\]\(.*?\)/.test(content),
     hasSections: /^#{1,6}\s+/.test(content),
   };
 }
 
-// Phase 3: Content Layer - Optimized search data generation
+// Generate optimized search data
 const searchDataItems = sortedPosts.map(post => {
   const fullContent = post.body || '';
   const processedContent = processArticleContent(fullContent);
 
-  // Content Layer optimized data structure
   return {
     // Core identifiers
     slug: post.slug,
@@ -168,7 +155,7 @@ const searchDataItems = sortedPosts.map(post => {
     contentLength: fullContent.length,
     fullContent: fullContent,
 
-    // Content Layer optimized search data
+    // Search-optimized data
     searchableText: [
       post.data.title,
       post.data.description,
@@ -193,14 +180,14 @@ const searchDataItems = sortedPosts.map(post => {
 });
 
 logger.log(
-  `Content Layer: Search data optimized for ${searchDataItems.length} posts`,
+  `Search data optimized for ${searchDataItems.length} posts`,
   'success'
 );
 
-// Phase 4: Content Layer - Final search data optimization
+// Final search data optimization
 const optimizedSearchData = searchDataItems.map(item => ({
   ...item,
-  // Content Layer optimized search index
+  // Optimized search index
   searchIndex: item.searchableText
     .split(' ')
     .filter(word => word.length > 2)
@@ -208,7 +195,7 @@ const optimizedSearchData = searchDataItems.map(item => ({
     .filter((word, index, arr) => arr.indexOf(word) === index),
   // Build-time relevance scoring
   relevanceScore: calculateRelevanceScore(item),
-  // Optimized search metadata
+  // Search metadata
   searchMetadata: {
     hasCode: item.hasCodeBlocks,
     hasImages: item.hasImages,
@@ -217,13 +204,13 @@ const optimizedSearchData = searchDataItems.map(item => ({
   },
 }));
 
-logger.log(`Content Layer: Final search optimization completed`, 'success');
+logger.log(`Final search optimization completed`, 'success');
 
-// Phase 5: Content Layer - Optimized relevance scoring
+// Calculate relevance score for search ranking
 function calculateRelevanceScore(item: any): number {
   let score = 0;
 
-  // Content Layer optimized scoring
+  // Basic scoring
   if (item.title) score += 15;
   if (item.description) score += 8;
   score += item.tags.length * 3;
@@ -243,9 +230,7 @@ function calculateRelevanceScore(item: any): number {
   return Math.min(score, 100);
 }
 
-// AI processing removed - using simplified content system instead
-
-// SEO data - Astroネイティブアプローチ（設定ファイル不要）
+// SEO data configuration
 const seoData = {
   title: 'Dokumentasi & Panduan',
   description:
@@ -262,7 +247,7 @@ const seoData = {
   author: 'Tim GoRakuDo',
 };
 
-// Helper function to format numbers with K, M, B suffixes
+// Format numbers with K, M, B suffixes
 function formatNumber(num: number): string {
   if (num >= 1000000000) {
     return (num / 1000000000).toFixed(1) + 'B';
@@ -274,6 +259,7 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
+// Format date for display
 function formatDate(dateString: string): string {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -281,7 +267,6 @@ function formatDate(dateString: string): string {
     day: 'numeric',
   };
 
-  // Validate input
   if (!dateString || typeof dateString !== 'string') {
     logger.log(`Invalid date string provided: ${dateString}`, 'warning');
     return 'Invalid Date';
@@ -305,7 +290,7 @@ function formatDate(dateString: string): string {
 <!doctype html>
 <html lang='id'>
   <head>
-    <!-- UnifiedSEO - Astroネイティブアプローチ（設定ファイル不要） -->
+    <!-- SEO Configuration -->
     <UnifiedSEO
       title={seoData.title}
       description={seoData.description}
@@ -317,14 +302,13 @@ function formatDate(dateString: string): string {
       gtag={import.meta.env.PUBLIC_GA_ID}
     />
 
-    <link rel='stylesheet' href='' />
     <link
       href='https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap'
       rel='stylesheet'
     />
   </head>
   <body>
-    <!-- Server Islands optimization - Navigation with defer loading -->
+    <!-- Navigation -->
     <Navbar />
 
     <!-- Main Content -->
@@ -385,16 +369,14 @@ function formatDate(dateString: string): string {
                 disabled
               />
               <div class='search-loading-indicator' id='searchLoadingIndicator'>
-                <!-- Compact Google 2025 Loading Spinner -->
+                <!-- Loading Spinner -->
                 <div
                   class='relative inline-flex items-center justify-center size-2.5'
                 >
-                  <!-- Outer ring with subtle gradient -->
                   <div
                     class='absolute inset-0 rounded-full border border-primary-200/20'
                   >
                   </div>
-                  <!-- Spinning inner ring -->
                   <div
                     class='absolute inset-0 rounded-full border border-transparent border-t-primary-500 animate-spin'
                   >
@@ -404,13 +386,13 @@ function formatDate(dateString: string): string {
             </div>
 
             <div class='search-filters'>
-              {/* "Semua" button - always present */}
+              {/* All posts filter */}
               <button
                 class='filter-button filter-button-loading active'
                 data-filter='all'>Semua ({formatNumber(totalPosts)})</button
               >
 
-              {/* Simplified filter buttons - using direct content access */}
+              {/* Category filters */}
               <button
                 class='filter-button filter-button-loading'
                 data-filter='getting-started'
@@ -446,13 +428,13 @@ function formatDate(dateString: string): string {
             </div>
           </div>
 
-          <!-- Search Results - Moved to appear immediately after search input -->
+          <!-- Search Results -->
           <div id='searchResults' class='search-results hidden'>
             <div class='search-stats' id='searchStats'></div>
             <div id='searchResultsContent'></div>
           </div>
 
-          <!-- Content State -->
+          <!-- Content Display -->
           <div id='contentState' class='posts-grid'>
             {
               error ? (
@@ -554,7 +536,7 @@ function formatDate(dateString: string): string {
 
           <!-- Pagination Controls -->
           <div id='paginationControls' class='pagination-container'>
-            <!-- ページネーションコントロールが動的に生成される -->
+            <!-- Pagination controls will be dynamically generated -->
           </div>
           <!-- Call to Action -->
           <div class='features-cta'>
@@ -589,18 +571,18 @@ function formatDate(dateString: string): string {
     </main>
 
     <script>
-      // Server Islands optimization - deferred initialization
+      // Initialize page functionality
       document.addEventListener('DOMContentLoaded', async function () {
         const startTime = performance.now();
 
         try {
-          // Optimized server-side data retrieval
+          // Get container and data
           const container = document.getElementById('postsContainer');
           if (!container) {
             throw new Error('Posts container not found');
           }
 
-          // Essential data attributes only
+          // Parse data attributes
           const currentPage = parseInt(container.dataset.currentPage || '1');
           const postsPerPage = parseInt(container.dataset.postsPerPage || '12');
           const totalPosts = parseInt(container.dataset.totalPosts || '0');
@@ -611,30 +593,28 @@ function formatDate(dateString: string): string {
             ? JSON.parse(container.dataset.fuseConfig)
             : {};
 
-          // 0-Script最適化: グローバル変数に検索データを設定
+          // Set global search data
           window.searchData = searchData;
 
-          // 既存の検索システムを優先し、0-Script最適化は段階的に実装
-          // Content Layer optimized search system initialization
+          // Initialize search system
           try {
             const { SearchLoadingManager } = await import(
               '../../scripts/type-scripts/docs/index/search/search-loading-manager'
             );
             const searchLoadingManager = new SearchLoadingManager();
-            // Content Layer: Optimized initialization timing
             setTimeout(() => {
               searchLoadingManager.initializeSearchSystem();
-            }, 50); // Reduced delay for better UX
+            }, 50);
           } catch (error) {
             if (window.clientLogger && window.clientLogger.log) {
               window.clientLogger.log(
-                `Content Layer: Search system initialization failed: ${error}`,
+                `Search system initialization failed: ${error}`,
                 'error'
               );
             }
           }
 
-          // Deferred tag popup initialization
+          // Initialize tag popups
           try {
             const { SimpleTagPopup } = await import(
               '../../scripts/type-scripts/docs/index/ui/simple-tag-popup'
@@ -645,26 +625,25 @@ function formatDate(dateString: string): string {
 
             if (window.clientLogger && window.clientLogger.log) {
               window.clientLogger.log(
-                'Simple tag popups initialized for docs page',
+                'Tag popups initialized for docs page',
                 'success'
               );
             }
           } catch (error) {
             if (window.clientLogger && window.clientLogger.log) {
               window.clientLogger.log(
-                `Simple tag popups failed for docs page: ${error}`,
+                `Tag popups initialization failed: ${error}`,
                 'error'
               );
             }
           }
 
-          // Content Layer optimized content system initialization
+          // Initialize content system
           try {
             const { ContentProcessor } = await import(
               '../../scripts/type-scripts/docs/index/content/content-processor'
             );
 
-            // Content Layer: Server-side data directly set for optimal performance
             const contentProcessor = new ContentProcessor(
               currentPage,
               postsPerPage
@@ -675,59 +654,55 @@ function formatDate(dateString: string): string {
 
             if (window.clientLogger && window.clientLogger.log) {
               window.clientLogger.log(
-                'Content Layer: Content system initialized successfully',
+                'Content system initialized successfully',
                 'success'
               );
             }
           } catch (error) {
             if (window.clientLogger && window.clientLogger.log) {
               window.clientLogger.log(
-                `Content Layer: Content system initialization failed: ${error}`,
+                `Content system initialization failed: ${error}`,
                 'error'
               );
             }
             throw error;
           }
 
-          // 初期化完了
+          // Initialization complete
         } catch (error) {
-          // Content Layer optimized error handling
+          // Error handling
           if (window.clientLogger && window.clientLogger.log) {
             window.clientLogger.log(
-              `Content Layer: Docs Page Loading Failed: ${error}`,
+              `Docs Page Loading Failed: ${error}`,
               'error'
             );
           }
 
-          // Enhanced error handling
           handleInitializationError(error);
         }
 
         if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log(
-            'Content Layer: Docs Page Loaded Successfully!',
-            'success'
-          );
+          window.clientLogger.log('Docs Page Loaded Successfully!', 'success');
         }
       });
 
-      // Content Layer optimized error handling
+      // Error handling function
       function handleInitializationError(error: Error) {
         try {
-          // Enhanced error redirection
+          // Redirect to error page
           const errorMessage = encodeURIComponent(error.message);
           window.location.href = `/error?type=content-layer&message=${errorMessage}`;
         } catch (redirectError) {
-          // Content Layer fallback error display
+          // Fallback error display
           if (window.clientLogger && window.clientLogger.log) {
             window.clientLogger.log(
-              `Content Layer: Failed to redirect to error page: ${redirectError}`,
+              `Failed to redirect to error page: ${redirectError}`,
               'error'
             );
           }
           document.body.innerHTML = `
             <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-              <h1>Content Layer Error</h1>
+              <h1>Page Loading Error</h1>
               <p>ページの読み込み中にエラーが発生しました。しばらく時間をおいてから再度お試しください。</p>
               <button onclick="window.location.reload()" style="padding: 10px 20px; margin-top: 20px;">
                 ページを再読み込み
@@ -740,7 +715,7 @@ function formatDate(dateString: string): string {
 
     <!-- Global Client Logger -->
     <script>
-      // Client-side logger for consistent console output - available globally
+      // Client-side logger for consistent console output
       window.clientLogger = {
         log: (message, level = 'info') => {
           const emoji = {

@@ -123,9 +123,9 @@ onMounted(() => {
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background: white;
   border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: white;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
 }
 
 .search-input-group {
@@ -145,23 +145,23 @@ onMounted(() => {
 
 .search-input:focus {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgb(59 130 246 / 0.1);
 }
 
 .search-clear-btn {
   position: absolute;
   right: 0.5rem;
   padding: 0.25rem;
-  color: #9ca3af;
+  border: none;
   border-radius: 0.25rem;
   background: none;
-  border: none;
+  color: #9ca3af;
   cursor: pointer;
 }
 
 .search-clear-btn:hover {
-  color: #4b5563;
   background: #f3f4f6;
+  color: #4b5563;
 }
 
 .search-filters {
@@ -172,11 +172,11 @@ onMounted(() => {
 
 .filter-btn {
   padding: 0.25rem 0.75rem;
-  font-size: 0.875rem;
-  background: #f3f4f6;
-  color: #374151;
   border: none;
   border-radius: 0.25rem;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -191,7 +191,7 @@ onMounted(() => {
 }
 
 .results-count {
-  font-size: 0.875rem;
   color: #6b7280;
+  font-size: 0.875rem;
 }
 </style>

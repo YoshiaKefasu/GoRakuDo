@@ -442,6 +442,7 @@ const CSS_VARS = `
   --breadcrumb-variant: ${variant};
   --breadcrumb-theme: ${theme};
   --breadcrumb-orientation: ${orientation};
+  --breadcrumb-hover-color: var(--color-primary);
 `;
 
 // Performance optimization: Pre-computed class names
@@ -547,13 +548,13 @@ const structuredData = generateStructuredData(breadcrumbData.items);
 
   .breadcrumb-nav {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     padding: 0;
-    font-size: 0.875rem;
-    color: var(--color-text);
-    background: transparent;
     border-radius: 0.375rem;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 0.875rem;
   }
 
   .breadcrumb-horizontal {
@@ -567,10 +568,10 @@ const structuredData = generateStructuredData(breadcrumbData.items);
 
   .breadcrumb-list {
     display: flex;
-    gap: 0.5rem;
     align-items: center;
-    padding: 0;
+    gap: 0.5rem;
     margin: 0;
+    padding: 0;
     list-style: none;
   }
 
@@ -581,11 +582,11 @@ const structuredData = generateStructuredData(breadcrumbData.items);
 
   .breadcrumb-item {
     display: flex;
-    gap: 0.5rem;
-    align-items: center;
     justify-content: center;
-    padding: 0;
+    align-items: center;
+    gap: 0.5rem;
     margin: 0;
+    padding: 0;
   }
 
   .breadcrumb-separator {
@@ -601,6 +602,7 @@ const structuredData = generateStructuredData(breadcrumbData.items);
   }
 
   /* ダークモード対応: セパレーターを白く表示 */
+
   @media (prefers-color-scheme: dark) {
     .breadcrumb-separator {
       color: white;
@@ -613,37 +615,43 @@ const structuredData = generateStructuredData(breadcrumbData.items);
     opacity: 0.8;
   }
 
-  .breadcrumb-link,
-  .breadcrumb-current {
+  .breadcrumb-link {
     display: flex;
-    gap: 0.375rem;
     align-items: center;
+    gap: 0.375rem;
     padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
     color: var(--color-text);
     text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
     border-radius: 0.25rem;
+    background: var(--color-primary);
+    color: var(--color-background);
+    font-weight: 600;
+    text-decoration: none;
     transition: all 0.2s ease;
   }
 
   .breadcrumb-link:hover {
-    color: var(--color-background);
     background: var(--color-primary);
-  }
-
-  .breadcrumb-current {
-    font-weight: 600;
     color: var(--color-background);
-    background: var(--color-primary);
   }
 
   .breadcrumb-icon {
     display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 1rem;
     height: 1rem;
     opacity: 0.8;
+    flex-shrink: 0;
   }
 
   .breadcrumb-icon svg {
@@ -652,18 +660,23 @@ const structuredData = generateStructuredData(breadcrumbData.items);
   }
 
   .breadcrumb-text {
-    max-width: 8rem;
     overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 8rem;
     white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   /* Variant styles */
   .breadcrumb-compact {
     padding: 0.25rem 0.5rem;
+    background: transparent;
   }
 
-  .breadcrumb-compact .breadcrumb-link,
+  .breadcrumb-compact .breadcrumb-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
   .breadcrumb-compact .breadcrumb-current {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
@@ -671,9 +684,14 @@ const structuredData = generateStructuredData(breadcrumbData.items);
 
   .breadcrumb-spacious {
     padding: 0.75rem 1rem;
+    background: transparent;
   }
 
-  .breadcrumb-spacious .breadcrumb-link,
+  .breadcrumb-spacious .breadcrumb-link {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+
   .breadcrumb-spacious .breadcrumb-current {
     padding: 0.5rem 1rem;
     font-size: 1rem;
@@ -684,21 +702,23 @@ const structuredData = generateStructuredData(breadcrumbData.items);
     background: transparent;
   }
 
-  .breadcrumb-minimal .breadcrumb-link,
+  .breadcrumb-minimal .breadcrumb-link {
+    padding: 0.25rem 0;
+    background: transparent;
+  }
+
   .breadcrumb-minimal .breadcrumb-current {
     padding: 0.25rem 0;
     background: transparent;
   }
 
   /* 全バリアントで背景を透明に統一 */
-  .breadcrumb-compact,
-  .breadcrumb-spacious,
-  .breadcrumb-pill,
-  .breadcrumb-underline {
-    background: transparent;
+
+  .breadcrumb-pill .breadcrumb-link {
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
   }
 
-  .breadcrumb-pill .breadcrumb-link,
   .breadcrumb-pill .breadcrumb-current {
     border: 1px solid var(--color-border);
     border-radius: 9999px;
@@ -707,37 +727,40 @@ const structuredData = generateStructuredData(breadcrumbData.items);
   .breadcrumb-underline .breadcrumb-link {
     padding-bottom: 0.125rem;
     border-bottom: 2px solid transparent;
+    transition: border-bottom-color 0.2s ease;
   }
 
   .breadcrumb-underline .breadcrumb-link:hover {
-    border-bottom-color: var(--color-primary);
+    border-bottom-color: var(--breadcrumb-hover-color);
   }
 
   .breadcrumb-underline .breadcrumb-current {
     padding-bottom: 0.125rem;
-    border-bottom: 2px solid var(--color-primary);
+    border-bottom: 2px solid var(--breadcrumb-hover-color);
   }
 
   /* Responsive design */
-  @media (width >= 640px) {
+
+  @media (min-width: 640px) {
     .breadcrumb-text {
       max-width: 10rem;
     }
   }
 
-  @media (width >= 768px) {
+  @media (min-width: 768px) {
     .breadcrumb-text {
       max-width: 12rem;
     }
   }
 
-  @media (width >= 1024px) {
+  @media (min-width: 1024px) {
     .breadcrumb-text {
       max-width: 16rem;
     }
   }
 
   /* Accessibility */
+
   @media (prefers-reduced-motion: reduce) {
     .breadcrumb-link,
     .breadcrumb-current {
@@ -748,8 +771,8 @@ const structuredData = generateStructuredData(breadcrumbData.items);
   @media (prefers-contrast: high) {
     .breadcrumb-link:hover,
     .breadcrumb-current {
-      color: var(--color-background);
       background: var(--color-primary);
+      color: var(--color-background);
     }
   }
 </style>

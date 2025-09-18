@@ -12,7 +12,7 @@
 }
 
 /* Mobile - 480px and below */
-@media (width <= 480px) {
+@media (max-width: 480px) {
   .slideshow-container {
     margin: 0 1rem;
   }
@@ -21,19 +21,19 @@
   .dot {
     min-width: 0.75rem; /* Touch-friendly size */
     min-height: 0.75rem;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 40%); /* Stronger shadow for visibility */
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.4); /* Stronger shadow for visibility */
   }
 }
 
 /* Tablet - 768px */
-@media (width <= 768px) {
+@media (max-width: 768px) {
   .slideshow-container {
     margin: 0 1.5rem;
   }
 }
 
 /* Desktop - 1024px and up */
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .slideshow-container {
     max-width: 72rem; /* max-w-5xl */
   }
@@ -46,20 +46,20 @@
 
 /* ========== PROGRESS BAR - ALWAYS VISIBLE ========== */
 .progress-bar {
-  height: 100% !important;
-  background-color: var(--color-accent-purple) !important;
-  border-radius: 0 !important;
+  height: 100%;
+  border-radius: 0;
+  background-color: var(--color-accent-purple);
 
   /* FIXED: Always visible with smooth animation */
-  opacity: 1 !important; /* Always visible */
-  transform-origin: left center;
+  opacity: 1; /* Always visible */
   transition: width 0.1s linear;
+  transform-origin: left center;
 }
 
 /* Enhanced progress bar container */
 .slideshow-container .progress-bar {
   border-radius: 0 2px 2px 0;
-  box-shadow: 0 0 8px rgb(139 93 255 / 30%);
+  box-shadow: 0 0 8px rgb(139 93 255 / 0.3);
   opacity: 0.8; /* Slightly transparent but always visible */
   transition:
     opacity 0.3s ease,
@@ -76,34 +76,34 @@
 /* Mobile progress bar - always fully visible */
 @media (hover: none) and (pointer: coarse) {
   .slideshow-container .progress-bar {
-    opacity: 1 !important; /* Always fully visible on mobile */
+    opacity: 1; /* Always fully visible on mobile */
   }
 }
 
 /* Base dot styles */
 .dot {
+  border: none; /* Remove white border */
   background-color: rgb(
     139
     93
     255 /
-    40%
-  ) !important; /* Semi-transparent purple for inactive dots */
+    0.4
+  ); /* Semi-transparent purple for inactive dots */
 
-  border: none !important; /* Remove white border */
-  opacity: 1 !important; /* Ensure dots are always visible */
+  opacity: 1; /* Ensure dots are always visible */
   transform: scale(0.5); /* Default scale */
   transition: all 0.3s ease;
 }
 
 /* Active dot styles - matches the 'active-dot' class from Astro */
 .dot.active-dot {
+  border: none; /* Remove white border */
   background-color: var(
     --color-accent-purple
-  ) !important; /* Active dot uses bright purple */
+  ); /* Active dot uses bright purple */
 
-  border: none !important; /* Remove white border */
-  box-shadow: 0 4px 12px var(--color-accent-shadow);
   transform: scale(1.1); /* Active dot is larger */
+  box-shadow: 0 4px 12px var(--color-accent-shadow);
 }
 
 /* Long-press indicator styles */
@@ -113,10 +113,10 @@
 }
 
 .long-press-indicator > div {
-  animation: pulse-gentle 2s ease-in-out infinite;
+  animation: pulseGentle 2s ease-in-out infinite;
 }
 
-@keyframes pulse-gentle {
+@keyframes pulseGentle {
   0%,
   100% {
     opacity: 0.9;
@@ -154,7 +154,7 @@
 
     /* Larger touch target for dots */
     padding: 0.25rem;
-    opacity: 1 !important;
+    opacity: 1 ;
   }
 }
 
@@ -163,9 +163,9 @@
   .dot:hover {
     background-color: var(
       --color-accent-purple
-    ) !important; /* Hover shows bright purple */
+    ) ; /* Hover shows bright purple */
 
-    box-shadow: 0 4px 12px rgb(0 0 0 / 60%);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.6);
     transform: scale(1.15);
   }
 
@@ -173,7 +173,7 @@
   .dot.active-dot:hover {
     background-color: var(
       --color-accent-purple
-    ) !important; /* Active dot stays bright purple */
+    ) ; /* Active dot stays bright purple */
 
     box-shadow: 0 6px 16px var(--color-accent-shadow);
     transform: scale(1.1); /* Slightly larger on hover */
@@ -181,14 +181,14 @@
 }
 
 /* Fallback for browsers that don't support @media (hover: hover) */
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .dot:hover {
-    box-shadow: 0 4px 12px rgb(0 0 0 / 60%);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.6);
     transform: scale(1.1);
   }
 
   .dot.active-dot:hover {
-    background-color: var(--color-accent-purple) !important;
+    background-color: var(--color-accent-purple) ;
     box-shadow: 0 6px 16px var(--color-accent-shadow);
     transform: scale(1.1);
   }
@@ -199,7 +199,7 @@
   .dot {
     min-width: 0.75rem;
     min-height: 0.75rem;
-    opacity: 1 !important;
+    opacity: 1 ;
   }
 }
 

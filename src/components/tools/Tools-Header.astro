@@ -144,10 +144,18 @@ const statsData = getStatsData(toolsCount);
     /* Color Variables - OKLCHカラースペースで最適化 */
     --header-bg-primary: transparent;
     --header-text-primary: oklch(100% 0 0deg); /* 純白 */
-    --header-text-secondary: oklch(90% 0 0deg / 80%); /* 明度90%の白、80%透明度 */
-    --header-text-muted: oklch(85% 0 0deg / 70%); /* 明度85%の白、70%透明度 */
-    --header-border-subtle: oklch(95% 0 0deg / 10%); /* 明度95%の白、10%透明度 */
-    --header-border-divider: oklch(90% 0 0deg / 20%); /* 明度90%の白、20%透明度 */
+    --header-text-secondary: oklch(
+      90% 0 0deg / 0.8
+    ); /* 明度90%の白、80%透明度 */
+
+    --header-text-muted: oklch(85% 0 0deg / 0.7); /* 明度85%の白、70%透明度 */
+    --header-border-subtle: oklch(
+      95% 0 0deg / 0.1
+    ); /* 明度95%の白、10%透明度 */
+
+    --header-border-divider: oklch(
+      90% 0 0deg / 0.2
+    ); /* 明度90%の白、20%透明度 */
 
     /* Spacing Variables - tools-index.cssの変数と競合を避けるため独自変数を使用 */
     --header-padding-mobile: 4.5rem 0 1rem;
@@ -184,16 +192,16 @@ const statsData = getStatsData(toolsCount);
 
     /* Apply base styles */
     position: relative;
-    padding: var(--header-padding-mobile);
     overflow: hidden;
+    padding: var(--header-padding-mobile);
     background: var(--header-bg-primary);
   }
 
   .tools-header-container {
     position: relative;
     max-width: var(--header-container-max-width);
-    padding: var(--header-container-padding);
     margin: 0 auto;
+    padding: var(--header-container-padding);
   }
 
   /* ========== BACKGROUND ELEMENTS ========== */
@@ -206,7 +214,7 @@ const statsData = getStatsData(toolsCount);
   }
 
   /* ========== MOBILE OPTIMIZATIONS ========== */
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     .tools-header-section {
       padding: var(--header-padding-mobile);
     }
@@ -214,8 +222,8 @@ const statsData = getStatsData(toolsCount);
     .tools-header-container {
       /* モバイル用の左右マージン追加 */
       max-width: none;
-      padding: 0;
       margin: 0 0.5rem;
+      padding: 0;
     }
 
     .tools-header-bg {
@@ -223,18 +231,18 @@ const statsData = getStatsData(toolsCount);
       inset: 0;
 
       /* グローバルクラスのborderを保持しつつ、下のborderを強調 */
-      border-bottom: 1px solid var(--header-border-subtle) !important;
+      border-bottom: 1px solid var(--header-border-subtle);
 
       /* グローバルGlassMorphismクラスを上書きしてモバイル用に調整 */
-      border-radius: var(--border-radius-card, 1rem) !important;
+      border-radius: var(--border-radius-card, 1rem);
       box-shadow:
-        0 8px 32px rgb(0 0 0 / 10%),
-        inset 0 -1px 0 var(--header-border-subtle) !important;
+        0 8px 32px rgb(0 0 0 / 0.1),
+        inset 0 -1px 0 var(--header-border-subtle);
     }
 
     .tools-header-content {
       /* コンテンツのパディングを調整 - 左右にもパディングを追加 */
-      padding: 1rem 1rem 1.5rem !important;
+      padding: 1rem 1rem 1.5rem;
     }
   }
 
@@ -253,10 +261,10 @@ const statsData = getStatsData(toolsCount);
   /* ========== TYPOGRAPHY ========== */
   .tools-header-title {
     margin: 0 0 1.5rem;
+    color: var(--header-text-primary);
     font-size: var(--header-title-mobile);
     font-weight: 700;
     line-height: 1.2;
-    color: var(--header-text-primary);
   }
 
   .tools-title-main {
@@ -273,14 +281,14 @@ const statsData = getStatsData(toolsCount);
   .tools-title-accent {
     display: block;
     margin-top: 0.5rem;
-    font-size: var(--header-accent-mobile);
-    font-weight: 500;
     background: linear-gradient(
       135deg,
       oklch(65% 0.25 280deg) 0%,
       /* 紫系 */ oklch(60% 0.2 250deg) 50%,
       /* 青系 */ oklch(70% 0.15 160deg) 100% /* 緑系 */
     );
+    font-size: var(--header-accent-mobile);
+    font-weight: 500;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -289,25 +297,25 @@ const statsData = getStatsData(toolsCount);
   .tools-header-description {
     max-width: 600px;
     margin: 0 auto;
+    color: var(--header-text-secondary);
     font-size: var(--header-description-mobile);
     line-height: 1.7;
-    color: var(--header-text-secondary);
   }
 
   /* ========== STATS SECTION ========== */
   .tools-header-stats {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--header-stats-gap-mobile);
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    gap: var(--header-stats-gap-mobile);
   }
 
   .tools-stat-item {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
     align-items: center;
+    gap: 0.25rem;
     transition: transform var(--header-transition-fast);
   }
 
@@ -316,16 +324,16 @@ const statsData = getStatsData(toolsCount);
   }
 
   .tools-stat-number {
+    color: var(--header-text-primary);
     font-size: var(--header-stat-number-mobile);
     font-weight: 700;
     line-height: 1;
-    color: var(--header-text-primary);
   }
 
   .tools-stat-label {
+    color: var(--header-text-muted);
     font-size: var(--header-stat-label);
     font-weight: 500;
-    color: var(--header-text-muted);
   }
 
   .tools-stat-divider {
@@ -335,7 +343,7 @@ const statsData = getStatsData(toolsCount);
   }
 
   /* ========== RESPONSIVE DESIGN ========== */
-  @media (width >= 640px) {
+  @media (min-width: 640px) {
     .tools-header-section {
       padding: var(--header-padding-tablet);
     }
@@ -365,7 +373,7 @@ const statsData = getStatsData(toolsCount);
     }
   }
 
-  @media (width >= 768px) {
+  @media (min-width: 768px) {
     .tools-header-section {
       padding: var(--header-padding-desktop);
     }
@@ -391,7 +399,7 @@ const statsData = getStatsData(toolsCount);
     }
   }
 
-  @media (width >= 1024px) {
+  @media (min-width: 1024px) {
     .tools-header-content {
       padding: 1.75rem 1.25rem;
     }
@@ -405,7 +413,7 @@ const statsData = getStatsData(toolsCount);
     }
   }
 
-  @media (width >= 1280px) {
+  @media (min-width: 1280px) {
     .tools-header-content {
       padding: 2rem 1.5rem;
     }
@@ -456,8 +464,8 @@ const statsData = getStatsData(toolsCount);
     }
 
     .tools-header-section {
-      color: oklch(0% 0 0deg); /* 純黒 */
       background: oklch(100% 0 0deg); /* 純白 */
+      color: oklch(0% 0 0deg); /* 純黒 */
     }
 
     .tools-title-main,

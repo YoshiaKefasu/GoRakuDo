@@ -3,83 +3,187 @@
     "stylelint-config-standard",
     "stylelint-config-recess-order",
     "stylelint-config-html",
-    "stylelint-config-tailwindcss"
-  ],
-  "overrides": [
-    {
-      "files": ["**/*.scss", "*.scss"],
-      "customSyntax": "postcss-scss"
-    },
-    {
-      "files": ["**/*.astro"],
-      "customSyntax": "postcss-html"
-    },
-    {
-      "files": ["**/*.css"],
-      "rules": {
-        "import-notation": null,
-        "at-rule-no-unknown": null,
-        "function-no-unknown": null
-      }
-    }
-  ],
+    "stylelint-config-tailwindcss"],
+  "plugins": ["stylelint-order"],
   "rules": {
-    "selector-max-type": 2,
-    "declaration-no-important": null,
-    "selector-class-pattern": "^[a-z][a-zA-Z0-9-:\\\\]+$",
-    "selector-pseudo-class-no-unknown": [
-      true,
-      {
-        "ignorePseudoClasses": ["global", "not-sr-only"]
-      }
-    ],
-    "at-rule-no-unknown": [
-      true,
-      {
-        "ignoreAtRules": ["tailwind", "apply", "screen", "theme"]
-      }
-    ],
-    "declaration-block-no-duplicate-properties": [
-      true,
-      {
-        "ignore": ["consecutive-duplicates-with-different-values"]
-      }
-    ],
-    "max-nesting-depth": 3,
-    "selector-max-specificity": "0,4,0",
-    "custom-property-pattern": "^[a-z_][a-zA-Z0-9-_]*$",
-    "property-no-vendor-prefix": true,
-    "keyframes-name-pattern": "^[a-z][a-zA-Z0-9-]+$",
-    "selector-id-pattern": "^[a-z][a-zA-Z0-9-]+$",
-    "property-no-deprecated": [
-      true,
-      {
-        "ignoreProperties": []
-      }
-    ],
-    "declaration-property-value-keyword-no-deprecated": true,
-    "declaration-property-value-no-unknown": [
-      true,
-      {
-        "ignoreProperties": {
-          "background": ["/^var\\(--/", "/\\s+var\\(--/"],
-          "border": ["/^var\\(--/", "/\\s+var\\(--/"],
-          "border-color": ["/^var\\(--/", "/\\s+var\\(--/"],
-          "box-shadow": ["/^var\\(--/", "/\\s+var\\(--/"],
-          "border-bottom": ["/^var\\(--/", "/\\s+var\\(--/"]
-        }
-      }
+    "order/properties-order": [
+      "position",
+      "top",
+      "right",
+      "bottom",
+      "left",
+      "z-index",
+      "display",
+      "flex",
+      "flex-direction",
+      "flex-wrap",
+      "justify-content",
+      "align-items",
+      "align-content",
+      "gap",
+      "grid",
+      "grid-template",
+      "grid-template-areas",
+      "grid-template-columns",
+      "grid-template-rows",
+      "grid-area",
+      "grid-column",
+      "grid-row",
+      "float",
+      "clear",
+      "overflow",
+      "overflow-x",
+      "overflow-y",
+      "width",
+      "min-width",
+      "max-width",
+      "height",
+      "min-height",
+      "max-height",
+      "margin",
+      "margin-top",
+      "margin-right",
+      "margin-bottom",
+      "margin-left",
+      "padding",
+      "padding-top",
+      "padding-right",
+      "padding-bottom",
+      "padding-left",
+      "border",
+      "border-top",
+      "border-right",
+      "border-bottom",
+      "border-left",
+      "border-radius",
+      "background",
+      "background-color",
+      "background-image",
+      "background-position",
+      "background-size",
+      "background-repeat",
+      "color",
+      "font",
+      "font-family",
+      "font-size",
+      "font-weight",
+      "font-style",
+      "line-height",
+      "text-align",
+      "text-decoration",
+      "text-transform",
+      "letter-spacing",
+      "word-spacing",
+      "white-space",
+      "opacity",
+      "visibility",
+      "cursor",
+      "user-select",
+      "pointer-events",
+      "transform",
+      "transition",
+      "animation"
     ],
     "rule-empty-line-before": [
       "always",
       {
         "except": ["first-nested"],
-        "ignore": ["after-comment", "first-nested"]
+        "ignore": ["after-comment"]
       }
     ],
     "no-duplicate-selectors": true,
     "no-descending-specificity": true,
     "declaration-block-single-line-max-declarations": 1,
-    "media-feature-name-value-no-unknown": null
-  }
+    "property-no-vendor-prefix": true,
+    "media-feature-range-notation": "prefix",
+    "selector-pseudo-element-colon-notation": "double",
+    "hue-degree-notation": "angle",
+    "alpha-value-notation": "number",
+    "font-family-name-quotes": "always-where-required",
+    "value-keyword-case": "lower",
+    "declaration-block-no-redundant-longhand-properties": true,
+    "declaration-block-no-duplicate-properties": true,
+    "declaration-block-no-shorthand-property-overrides": true,
+    "selector-max-type": 2,
+    "declaration-no-important": true,
+    "selector-class-pattern": "^[a-z][a-zA-Z0-9-]*$",
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global", "local", "not-sr-only"]
+      }
+    ],
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen", "layer", "theme"]
+      }
+    ],
+    "max-nesting-depth": 3,
+    "selector-max-specificity": "0,3,0",
+    "custom-property-pattern": "^[a-z_][a-zA-Z0-9-_]*$",
+    "keyframes-name-pattern": "^[a-z][a-zA-Z0-9]*$",
+    "selector-id-pattern": "^[a-z][a-zA-Z0-9]*$",
+    "property-no-deprecated": true,
+    "declaration-property-value-keyword-no-deprecated": true,
+    "declaration-property-value-no-unknown": true,
+    "media-feature-name-value-no-unknown": null,
+    "no-empty-source": null
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+      "customSyntax": "postcss-html",
+      "rules": {
+        "no-empty-source": null,
+        "at-rule-no-unknown": null,
+        "function-no-unknown": null,
+        "selector-pseudo-class-no-unknown": null,
+        "property-no-unknown": null,
+        "declaration-property-value-no-unknown": null,
+        "media-feature-name-value-no-unknown": null,
+        "rule-empty-line-before": null,
+        "declaration-block-single-line-max-declarations": null,
+        "no-duplicate-selectors": null,
+        "no-descending-specificity": null,
+        "selector-max-specificity": null,
+        "selector-max-type": null,
+        "selector-class-pattern": null,
+        "selector-id-pattern": null,
+        "custom-property-pattern": null,
+        "keyframes-name-pattern": null,
+        "property-no-deprecated": null,
+        "declaration-property-value-keyword-no-deprecated": null,
+        "declaration-block-no-duplicate-properties": null,
+        "max-nesting-depth": null,
+        "property-no-vendor-prefix": null,
+        "declaration-no-important": null
+      }
+    },
+    {
+      "files": ["src/styles/docs/docs.css"],
+      "rules": {
+        "selector-max-type": null,
+        "declaration-no-important": null,
+        "selector-class-pattern": null,
+        "selector-pseudo-class-no-unknown": null,
+        "at-rule-no-unknown": null,
+        "declaration-block-no-duplicate-properties": null,
+        "max-nesting-depth": null,
+        "selector-max-specificity": null,
+        "custom-property-pattern": null,
+        "property-no-vendor-prefix": null,
+        "keyframes-name-pattern": null,
+        "selector-id-pattern": null,
+        "property-no-deprecated": null,
+        "declaration-property-value-keyword-no-deprecated": null,
+        "declaration-property-value-no-unknown": null,
+        "rule-empty-line-before": null,
+        "no-duplicate-selectors": null,
+        "no-descending-specificity": null,
+        "declaration-block-single-line-max-declarations": null,
+        "media-feature-name-value-no-unknown": null
+      }
+    }
+  ]
 }

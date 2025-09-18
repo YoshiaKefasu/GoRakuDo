@@ -1,17 +1,29 @@
 ---
-import { ViewTransitions } from "astro:transitions";
-import UnifiedSEO from "../../components/UnifiedSEO.astro";
+import { ViewTransitions } from 'astro:transitions';
+import UnifiedSEO from '../../components/UnifiedSEO.astro';
 
 // SEO data - Astroネイティブアプローチ（設定ファイル不要）
 const seoData = {
-  title: "Komunitas Pembelajaran Bahasa Jepang - Discord GoRakuDo",
-  description: "Bergabung dengan komunitas pembelajaran bahasa Jepang terbesar Indonesia. Berbagi pengalaman, dapatkan bantuan, dan pelajari bahasa Jepang bersama-sama",
-  keywords: ["komunitas", "discord", "bahasa", "jepang", "belajar", "pembelajaran", "bersama", "pengalaman", "bantuan", "learning"],
-  pageType: "website" as const
+  title: 'Komunitas Pembelajaran Bahasa Jepang - Discord GoRakuDo',
+  description:
+    'Bergabung dengan komunitas pembelajaran bahasa Jepang terbesar Indonesia. Berbagi pengalaman, dapatkan bantuan, dan pelajari bahasa Jepang bersama-sama',
+  keywords: [
+    'komunitas',
+    'discord',
+    'bahasa',
+    'jepang',
+    'belajar',
+    'pembelajaran',
+    'bersama',
+    'pengalaman',
+    'bantuan',
+    'learning',
+  ],
+  pageType: 'website' as const,
 };
 ---
 
-<html lang="id">
+<html lang='id'>
   <head>
     <!-- UnifiedSEO - Astroネイティブアプローチ（設定ファイル不要） -->
     <UnifiedSEO
@@ -19,29 +31,29 @@ const seoData = {
       description={seoData.description}
       keywords={seoData.keywords}
       pageType={seoData.pageType}
-      lang="id"
+      lang='id'
       gtag={import.meta.env.PUBLIC_GA_ID}
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
-      rel="stylesheet"
+      href='https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap'
+      rel='stylesheet'
     />
     <style>
       * {
-        box-sizing: border-box;
-        padding: 0;
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
       body {
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         min-height: 100vh;
         padding: 20px;
-        font-family: Inter, sans-serif;
-        color: #333;
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        color: #333;
+        font-family: Inter, sans-serif;
       }
 
       .invitation-container {
@@ -49,11 +61,11 @@ const seoData = {
         width: 100%;
         max-width: 600px;
         padding: 50px;
-        background: #fdfdf6;
-        border: 1px solid rgb(139 93 255 / 10%);
+        border: 1px solid rgb(139 93 255 / 0.1);
         border-radius: 12px;
-        box-shadow: 0 20px 60px rgb(139 93 255 / 20%);
+        background: #fdfdf6;
         animation: fadeIn 1s ease-out;
+        box-shadow: 0 20px 60px rgb(139 93 255 / 0.2);
       }
 
       @keyframes fadeIn {
@@ -73,53 +85,55 @@ const seoData = {
         top: 20px;
         left: 20px;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         width: 40px;
         height: 40px;
-        font-size: 24px;
-        color: #666;
-        cursor: pointer;
-        background: none;
         border: none;
         border-radius: 50%;
+        background: none;
+        color: #666;
+        font-size: 24px;
+        cursor: pointer;
         transition: all 0.3s ease;
       }
 
       .back-button:hover {
-        color: #333;
         background: #f0f0f0;
+        color: #333;
       }
 
       .header {
-        padding-bottom: 25px;
         margin-bottom: 30px;
-        text-align: center;
+        padding-bottom: 25px;
         border-bottom: 1px solid #e0e0e0;
+        text-align: center;
       }
 
       .japanese-title {
-        font-family: "Yuji Syuku", serif;
+        color: #333;
+        font-family:
+          Yuji Syuku,
+          serif;
         font-size: 4.5rem;
         font-weight: 400;
         line-height: 1;
-        color: #333;
         ruby-position: over;
       }
 
       .japanese-title rt {
+        color: #666;
         font-family: Inter, sans-serif;
         font-size: 0.9rem;
         font-weight: 600;
-        color: #666;
       }
 
       .content {
         margin-bottom: 30px;
+        color: #3c3c3c;
         font-family: Lora, serif;
         font-size: 1.1rem;
         line-height: 1.8;
-        color: #3c3c3c;
       }
 
       .content p {
@@ -131,8 +145,8 @@ const seoData = {
       }
 
       .member-list {
-        padding-left: 0;
         margin: 25px 0;
+        padding-left: 0;
         list-style: none;
       }
 
@@ -143,44 +157,44 @@ const seoData = {
 
       .final-pitch {
         margin-top: 30px;
+        color: #333;
         font-size: 1.15rem;
         font-weight: 600;
-        color: #333;
         text-align: center;
       }
 
       .discord-link {
         display: block;
-        padding: 20px;
         margin-top: 20px;
         margin-bottom: 40px;
+        padding: 20px;
+        border: 1px solid #eaeaea;
+        border-radius: 8px;
+        background-color: #f8f9fa;
         color: #333;
         text-decoration: none;
         cursor: pointer;
-        background-color: #f8f9fa;
-        border: 1px solid #eaeaea;
-        border-radius: 8px;
         transition: all 0.3s ease;
       }
 
       .discord-link:hover {
         border-color: #8b5dff;
-        box-shadow: 0 5px 15px rgb(139 93 255 / 20%);
+        box-shadow: 0 5px 15px rgb(139 93 255 / 0.2);
       }
 
       .discord-header {
         margin-bottom: 8px;
+        color: #666;
         font-family: Inter, sans-serif;
         font-size: 0.9rem;
         font-weight: 600;
-        color: #666;
       }
 
       .discord-url {
+        color: #8b5dff;
         font-family: Inter, sans-serif;
         font-size: 1.1rem;
         font-weight: 600;
-        color: #8b5dff;
         overflow-wrap: break-word;
       }
 
@@ -196,23 +210,23 @@ const seoData = {
 
       .signature {
         display: flex;
-        align-items: flex-end;
         justify-content: space-between;
+        align-items: flex-end;
         margin-top: 20px;
       }
 
       .logo {
         display: flex;
-        flex-shrink: 0;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         width: 80px;
         height: 80px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #8b5dff 0%, #7b4def 100%);
+        color: white;
         font-size: 32px;
         font-weight: bold;
-        color: white;
-        background: linear-gradient(135deg, #8b5dff 0%, #7b4def 100%);
-        border-radius: 12px;
+        flex-shrink: 0;
       }
 
       .logo-stamp {
@@ -233,9 +247,11 @@ const seoData = {
       }
 
       .signature-name {
-        font-family: "Cedarville Cursive", cursive;
-        font-size: 1.9rem;
         color: #333;
+        font-family:
+          Cedarville cursive,
+          cursive;
+        font-size: 1.9rem;
         text-align: right;
       }
 
@@ -243,8 +259,8 @@ const seoData = {
       .floating-particle {
         position: fixed;
         z-index: -1;
-        pointer-events: none;
         opacity: 0.15;
+        pointer-events: none;
       }
 
       @keyframes float {
@@ -259,7 +275,7 @@ const seoData = {
       }
 
       /* Responsive design */
-      @media (width <= 768px) {
+      @media (max-width: 768px) {
         .invitation-container {
           padding: 40px 25px;
         }
@@ -277,11 +293,11 @@ const seoData = {
         }
       }
 
-      @media (width <= 480px) {
+      @media (max-width: 480px) {
         .signature {
           flex-direction: column;
-          gap: 20px;
           align-items: center;
+          gap: 20px;
         }
 
         .signature-text {
@@ -291,16 +307,16 @@ const seoData = {
     </style>
   </head>
   <body>
-    <div class="invitation-container">
-      <button class="back-button" onclick="goBack()">←</button>
+    <div class='invitation-container'>
+      <button class='back-button' onclick='goBack()'>←</button>
 
-      <div class="header">
-        <ruby class="japanese-title">
+      <div class='header'>
+        <ruby class='japanese-title'>
           語<rt>ご</rt>楽<rt>らく</rt>道<rt>どう</rt>
         </ruby>
       </div>
 
-      <div class="content">
+      <div class='content'>
         <p>
           Kami bukan komunitas biasa. Kita adalah rumah bagi para pembelajar
           otodidak yang terjun langsung ke <strong>🌊 Metode IMMERSION</strong
@@ -309,7 +325,7 @@ const seoData = {
         </p>
 
         <p><strong>Siapa yang kami cari?</strong></p>
-        <ul class="member-list">
+        <ul class='member-list'>
           <li>
             ✅ <strong>Otaku & Anime Lovers:</strong> Ubah hobimu jadi skill!
           </li>
@@ -318,55 +334,60 @@ const seoData = {
           </li>
         </ul>
 
-        <p class="final-pitch">
+        <p class='final-pitch'>
           Semua 100% GRATIS. Yang kamu butuhkan hanya NIAT.<br />Ayo bergabung!
           👍
         </p>
       </div>
 
       <a
-        href="https://discord.gg/j8qmYPAGQh"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="discord-link">
-        <div class="discord-header">Alamat Komunitas Digital Kami:</div>
-        <div class="discord-url">
-          discord.gg/j8qmYPAGQh <span class="arrow">→</span>
+        href='https://discord.gg/j8qmYPAGQh'
+        target='_blank'
+        rel='noopener noreferrer'
+        class='discord-link'
+      >
+        <div class='discord-header'>Alamat Komunitas Digital Kami:</div>
+        <div class='discord-url'>
+          discord.gg/j8qmYPAGQh <span class='arrow'>→</span>
         </div>
       </a>
 
-      <div class="signature">
+      <div class='signature'>
         <img
-          src="/img/Logo%20Discord%2080px.webp"
-          alt="Logo Gorakudou"
-          class="logo-stamp"
+          src='/img/Logo%20Discord%2080px.webp'
+          alt='Logo Gorakudou'
+          class='logo-stamp'
         />
-        <div class="signature-text">
-          <div class="signature-title">Hormat kami,</div>
-          <p class="signature-name">Tim GoRakuDo</p>
+        <div class='signature-text'>
+          <div class='signature-title'>Hormat kami,</div>
+          <p class='signature-name'>Tim GoRakuDo</p>
         </div>
       </div>
     </div>
 
     <!-- Floating background elements -->
     <div
-      class="floating-particle"
-      style="top: 10%; left: 10%; animation: float 6s ease-in-out infinite;">
+      class='floating-particle'
+      style='top: 10%; left: 10%; animation: float 6s ease-in-out infinite;'
+    >
       🌸
     </div>
     <div
-      class="floating-particle"
-      style="top: 20%; right: 10%; animation: float 8s ease-in-out infinite 2s;">
+      class='floating-particle'
+      style='top: 20%; right: 10%; animation: float 8s ease-in-out infinite 2s;'
+    >
       ⭐
     </div>
     <div
-      class="floating-particle"
-      style="bottom: 20%; left: 20%; animation: float 7s ease-in-out infinite 1s;">
+      class='floating-particle'
+      style='bottom: 20%; left: 20%; animation: float 7s ease-in-out infinite 1s;'
+    >
       🎌
     </div>
     <div
-      class="floating-particle"
-      style=" right: 20%;bottom: 30%; animation: float 9s ease-in-out infinite 3s;">
+      class='floating-particle'
+      style=' right: 20%;bottom: 30%; animation: float 9s ease-in-out infinite 3s;'
+    >
       🌊
     </div>
 
@@ -380,26 +401,26 @@ const seoData = {
           window.history.back();
         } else {
           // Default to home page if no referrer or external referrer
-          window.location.href = "/";
+          window.location.href = '/';
         }
       }
 
       // Add some subtle animations on load
-      document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener('DOMContentLoaded', function () {
         // Animate the content elements
         const elements = document.querySelectorAll(
-          ".content p, .member-list li"
+          '.content p, .member-list li'
         );
         elements.forEach((el, index) => {
           const element = el as HTMLElement;
-          element.style.opacity = "0";
-          element.style.transform = "translateY(20px)";
-          element.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+          element.style.opacity = '0';
+          element.style.transform = 'translateY(20px)';
+          element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
 
           setTimeout(
             () => {
-              element.style.opacity = "1";
-              element.style.transform = "translateY(0)";
+              element.style.opacity = '1';
+              element.style.transform = 'translateY(0)';
             },
             (index + 1) * 100
           );
@@ -407,21 +428,21 @@ const seoData = {
 
         // Add hover effect to discord link
         const discordLink = document.querySelector(
-          ".discord-link"
+          '.discord-link'
         ) as HTMLElement;
         if (discordLink) {
-          discordLink.addEventListener("mouseenter", function () {
-            this.style.transform = "scale(1.02)";
+          discordLink.addEventListener('mouseenter', function () {
+            this.style.transform = 'scale(1.02)';
           });
-          discordLink.addEventListener("mouseleave", function () {
-            this.style.transform = "scale(1)";
+          discordLink.addEventListener('mouseleave', function () {
+            this.style.transform = 'scale(1)';
           });
         }
       });
 
       // Keyboard navigation
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
           goBack();
         }
       });

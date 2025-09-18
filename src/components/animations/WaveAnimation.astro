@@ -59,28 +59,26 @@ const config = { ...defaultConfig, ...Astro.props };
   .transparent-layer {
     --_bg-layer-normal: linear-gradient(
       180deg,
-      oklch(1% 0.01 280deg / 75%) 0%,
-      oklch(1.5% 0.01 285deg / 50%) 30%,
-      oklch(2% 0.01 290deg / 40%) 60%,
-      oklch(2.5% 0.01 295deg / 30%) 100%
+      oklch(1% 0.01 280deg / 0.75) 0%,
+      oklch(1.5% 0.01 285deg / 0.5) 30%,
+      oklch(2% 0.01 290deg / 0.4) 60%,
+      oklch(2.5% 0.01 295deg / 0.3) 100%
     );
     --_bg-layer-darker: linear-gradient(
       180deg,
-      oklch(2.5% 0.01 295deg / 35%) 0%,
-      oklch(1.5% 0.01 285deg / 75%) 60%,
-      oklch(1% 0.01 280deg / 90%) 100%
+      oklch(2.5% 0.01 295deg / 0.35) 0%,
+      oklch(1.5% 0.01 285deg / 0.75) 60%,
+      oklch(1% 0.01 280deg / 0.9) 100%
     );
 
-    position: fixed !important;
-    inset: 0; /* 四方を固定 */ /* 四方を固定 */
+    position: fixed;
     z-index: -50;
-    width: 100vw;
-    width: 100lvw;
-    height: 100vh;
-    height: 100lvh;
     overflow: hidden; /* 念のため、はみ出しをクリップ */
-    pointer-events: none;
+    width: 100lvw;
+    height: 100lvh;
     background: var(--_bg-layer-normal);
+    pointer-events: none;
+    inset: 0; /* 四方を固定 */ /* 四方を固定 */
     mix-blend-mode: multiply;
   }
 
@@ -90,25 +88,23 @@ const config = { ...defaultConfig, ...Astro.props };
   }
 
   .wave-animation-container {
-    position: fixed !important;
-    inset: 0; /* 四方を固定 */ /* 四方を固定 */
+    position: fixed;
     z-index: -75;
-    width: 100vw; /* 明示的にビューポート幅を指定 */
-    height: 100vh; /* 明示的にビューポート高を指定 */
-    height: 100lvh; /* 明示的にビューポート高を指定 */
     overflow: hidden;
+    width: 100vw; /* 明示的にビューポート幅を指定 */ /* 明示的にビューポート高を指定 */
+    height: 100lvh; /* 明示的にビューポート高を指定 */
     pointer-events: none;
+    inset: 0; /* 四方を固定 */ /* 四方を固定 */
   }
 
   .wave-canvas {
-    position: fixed !important;
-    inset: 0; /* 四方を固定 */ /* 四方を固定 */
+    position: fixed;
     z-index: -60;
-    width: 100vw; /* 明示的にビューポート幅を指定 */
-    height: 100vh; /* 明示的にビューポート高を指定 */
-    height: 100lvh; /* 明示的にビューポート高を指定 */
     overflow: hidden;
+    width: 100vw; /* 明示的にビューポート幅を指定 */ /* 明示的にビューポート高を指定 */
+    height: 100lvh; /* 明示的にビューポート高を指定 */
     pointer-events: none;
+    inset: 0; /* 四方を固定 */ /* 四方を固定 */
   }
 </style>
 

@@ -1,99 +1,100 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content"
-import { statSync } from "fs"
-import { join } from "path"
-import UnifiedSEO from "../../components/UnifiedSEO.astro"
-import Navbar from "../../components/public-components/Navbar.astro"
-import PostLayout from "../../layouts/PostLayout.astro"
-import {
-  resolvePath,
-  getCollectionInfo,
-} from "../../utils/collections"
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { statSync } from 'fs';
+import { join } from 'path';
+import UnifiedSEO from '../../components/UnifiedSEO.astro';
+import Navbar from '../../components/public-components/Navbar.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { resolvePath, getCollectionInfo } from '../../utils/collections';
 
 // Import content page styles with Tailwind v4 optimization
-import "../../styles/content-page.css"
+import '../../styles/content-page.css';
 
 // Generate static paths for all docs posts
 export async function getStaticPaths() {
-  const posts = await getCollection("docs")
+  const posts = await getCollection('docs');
 
-  return posts.map((post) => ({
+  return posts.map(post => ({
     params: { slug: post.slug },
     props: { post },
-  }))
+  }));
 }
 
 // Get the post from props with explicit type casting
-const { post } = Astro.props as { post: CollectionEntry<"docs"> }
+const { post } = Astro.props as { post: CollectionEntry<'docs'> };
 
 // Smart error handling - redirect to docs listing if post not found
 if (!post) {
-  return Astro.redirect("/docs?error=post-not-found")
+  return Astro.redirect('/docs?error=post-not-found');
 }
 
 // Render the post content
-const { Content, headings } = await post.render()
+const { Content, headings } = await post.render();
 
 // Filter headings for TOC (h2-h3 levels work best for navigation)
-const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3)
+const tocHeadings = headings.filter(
+  heading => heading.depth >= 2 && heading.depth <= 3
+);
 
 // Dynamic content path resolution for SEO
-const resolvedPath = { path: resolvePath("docs", post.slug) }
-const collectionMetadata = getCollectionInfo("docs")
+const resolvedPath = { path: resolvePath('docs', post.slug) };
+const collectionMetadata = getCollectionInfo('docs');
 
 // ファイルシステムから自動的に作成日・更新日を取得
 function getFileDates(slug: string) {
   try {
-    const filePath = join(process.cwd(), 'src/content/docs', `${slug}.md`)
-    const stats = statSync(filePath)
-    
+    const filePath = join(process.cwd(), 'src/content/docs', `${slug}.md`);
+    const stats = statSync(filePath);
+
     return {
       createdDate: stats.birthtime.toISOString(),
-      modifiedDate: stats.mtime.toISOString()
-    }
+      modifiedDate: stats.mtime.toISOString(),
+    };
   } catch (error) {
-    console.warn(`⚠️ Could not get file dates for ${slug}:`, error)
+    console.warn(`⚠️ Could not get file dates for ${slug}:`, error);
     return {
       createdDate: new Date().toISOString(),
-      modifiedDate: new Date().toISOString()
-    }
+      modifiedDate: new Date().toISOString(),
+    };
   }
 }
 
 // ファイルの作成日・更新日を自動取得
-const fileDates = getFileDates(post.slug)
+const fileDates = getFileDates(post.slug);
 
 // Dynamic SEO data based on document content (フロントマター完全対応 + 自動日付)
 const seoData = {
   title: post.data.title || `Documentation - ${post.slug}`,
-  description: post.data.description || `Learn about ${post.slug} in GoRakuDo documentation`,
-  keywords: post.data.tags || ["documentation", post.slug, "guide"], // ✅ tagsフィールドを使用
-  articleType: "guide",
-  learningStage: post.data.difficulty || "intermediate", // ✅ difficultyフィールドを使用
-  searchIntent: "informational",
+  description:
+    post.data.description ||
+    `Learn about ${post.slug} in GoRakuDo documentation`,
+  keywords: post.data.tags || ['documentation', post.slug, 'guide'], // ✅ tagsフィールドを使用
+  articleType: 'guide',
+  learningStage: post.data.difficulty || 'intermediate', // ✅ difficultyフィールドを使用
+  searchIntent: 'informational',
   // フロントマターの日付があれば使用、なければファイルシステムの日付を使用
   publishedDate: post.data.publishedDate || fileDates.createdDate,
   modifiedDate: post.data.modifiedDate || fileDates.modifiedDate,
-  isDraft: post.data.isDraft || false
-}
+  isDraft: post.data.isDraft || false,
+};
 
 // Prepare minimal data for client-side scripts
 const postData = {
   title: post.data.title,
   description: post.data.description,
   resolvedPath: resolvedPath.path,
-}
+};
 ---
 
-<html lang="ja">
+<html lang='ja'>
   <head>
     <!-- UnifiedSEO - シンプルなAstroネイティブ実装 -->
     <UnifiedSEO
       title={seoData.title}
       description={seoData.description}
       keywords={seoData.keywords}
-      pageType="article"
-      author={post.data.author || "GoRakuDo Team"}
+      pageType='article'
+      author={post.data.author || 'GoRakuDo Team'}
       publishedDate={seoData.publishedDate}
       modifiedDate={seoData.modifiedDate}
       noindex={seoData.isDraft}
@@ -101,8 +102,8 @@ const postData = {
 
     <!-- Fonts with display=swap for better performance -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap"
-      rel="stylesheet"
+      href='https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&display=swap'
+      rel='stylesheet'
     />
   </head>
 
@@ -110,21 +111,19 @@ const postData = {
     <!-- Navigation -->
     <Navbar />
 
-
     <!-- Use the new PostLayout component -->
-    <PostLayout 
-      {post} 
-      {collectionMetadata} 
+    <PostLayout
+      {post}
+      {collectionMetadata}
       headings={tocHeadings}
       breadcrumbConfig={{
-        variant: "compact",
+        variant: 'compact',
         showIcons: true,
-        ariaLabel: "Documentation navigation breadcrumb"
+        ariaLabel: 'Documentation navigation breadcrumb',
       }}
     >
       <!-- Render the markdown content in the default slot -->
       <Content />
-      
     </PostLayout>
 
     <!-- Main Application Script -->
@@ -133,19 +132,19 @@ const postData = {
       function sharePost() {
         const shareUrl = postData?.resolvedPath
           ? `${window.location.origin}${postData.resolvedPath}`
-          : window.location.href
+          : window.location.href;
 
         if (navigator.share) {
           navigator.share({
-            title: postData?.title || "GoRakuDo Post",
-            text: postData?.description || "Check out this post from GoRakuDo",
+            title: postData?.title || 'GoRakuDo Post',
+            text: postData?.description || 'Check out this post from GoRakuDo',
             url: shareUrl,
-          })
+          });
         } else {
           // Fallback: copy to clipboard
           navigator.clipboard.writeText(shareUrl).then(() => {
-            alert("Link berhasil disalin ke clipboard!")
-          })
+            alert('Link berhasil disalin ke clipboard!');
+          });
         }
       }
 
@@ -154,37 +153,34 @@ const postData = {
 
       // Reading progress indicator
       function addReadingProgress() {
-        const progressBar = document.createElement("div")
-        progressBar.className = "reading-progress"
-        progressBar.setAttribute("role", "progressbar")
-        progressBar.setAttribute("aria-label", "Reading progress")
-        progressBar.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 0%;
-          height: 3px;
-          background: linear-gradient(90deg, #8b5dff, #7b4def);
-          z-index: 1000;
-          transition: width 0.1s ease;
-        `
-        document.body.appendChild(progressBar)
+        const progressBar = document.createElement('div');
+        progressBar.className = 'reading-progress';
+        progressBar.setAttribute('role', 'progressbar');
+        progressBar.setAttribute('aria-label', 'Reading progress');
+        progressBar.style.position = 'fixed';
+        progressBar.style.top = '0';
+        progressBar.style.left = '0';
+        progressBar.style.width = '0%';
+        progressBar.style.height = '3px';
+        progressBar.style.background =
+          'linear-gradient(90deg, #8b5dff, #7b4def)';
+        progressBar.style.zIndex = '1000';
+        progressBar.style.transition = 'width 0.1s ease';
+        document.body.appendChild(progressBar);
 
-        window.addEventListener("scroll", () => {
-          const scrollTop = window.pageYOffset
-          const docHeight = document.body.scrollHeight - window.innerHeight
-          const scrollPercent = (scrollTop / docHeight) * 100
-          progressBar.style.width = scrollPercent + "%"
-          progressBar.setAttribute("aria-valuenow", Math.round(scrollPercent))
-        })
+        window.addEventListener('scroll', () => {
+          const scrollTop = window.pageYOffset;
+          const docHeight = document.body.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          progressBar.style.width = scrollPercent + '%';
+          progressBar.setAttribute('aria-valuenow', Math.round(scrollPercent));
+        });
       }
 
       // Initialize when DOM is ready
-      document.addEventListener("DOMContentLoaded", function () {
-        addReadingProgress()
-      })
+      document.addEventListener('DOMContentLoaded', function () {
+        addReadingProgress();
+      });
     </script>
-
-
   </body>
 </html>
