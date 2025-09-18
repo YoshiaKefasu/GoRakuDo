@@ -128,6 +128,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
 <style>
   /* ========== ASTRO NATIVE CSS OPTIMIZATION - NO !IMPORTANT ========== */
+
   /* 
  * ARCHITECTURAL DECISION: Astro's scoped CSS provides natural specificity isolation
  * This eliminates the need for !important declarations while maintaining
@@ -148,6 +149,8 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
   /* ---------- Component Root Variables - Integrated with Global System ---------- */
   .navbar-wrapper {
+    box-sizing: border-box;
+
     /* REASONING: Single root element with proper layout flow */
     display: block;
 
@@ -155,33 +158,31 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     width: 100vw; /* Fallback for older browsers */
     width: 100dvw; /* Dynamic viewport width - excludes scrollbars */
 
-    /* REASONING: Safe area considerations using global variables */
-    padding-left: var(--safe-area-left);
-    padding-right: var(--safe-area-right);
-
     /* REASONING: Prevent horizontal overflow and ensure proper containment */
     max-width: 100%;
+    padding-right: var(--safe-area-right);
+
+    /* REASONING: Safe area considerations using global variables */
+    padding-left: var(--safe-area-left);
     overflow-x: hidden;
-    box-sizing: border-box;
   }
 
   /* ---------- Integrated Design System Variables - Global Consistency ---------- */
   .navbar-wrapper {
     /* REASONING: Integrated glass morphism using global design system */
-    --glass-bg: oklch(6% 0.008 270 / 0.12);
-    --glass-border: oklch(25% 0.015 270 / 0.15);
-    --glass-glow: oklch(65% 0.18 280 / 0.08);
+    --glass-bg: oklch(6% 0.008 270deg / 12%);
+    --glass-border: oklch(25% 0.015 270deg / 15%);
+    --glass-glow: oklch(65% 0.18 280deg / 8%);
 
     /* REASONING: Unified interactive states using global variables */
-    --interactive-hover: oklch(98% 0.002 270 / 0.1);
-    --interactive-focus: oklch(98% 0.002 270 / 0.15);
-    --interactive-active: oklch(98% 0.002 270 / 0.2);
+    --interactive-hover: oklch(98% 0.002 270deg / 10%);
+    --interactive-focus: oklch(98% 0.002 270deg / 15%);
+    --interactive-active: oklch(98% 0.002 270deg / 20%);
 
     /* REASONING: Brand elements using global design tokens */
-    --brand-glow: oklch(65% 0.18 280 / 0.6);
-    --brand-ruby: oklch(65% 0.008 270);
-    --brand-ruby-hover: oklch(70% 0.12 280);
-
+    --brand-glow: oklch(65% 0.18 280deg / 60%);
+    --brand-ruby: oklch(65% 0.008 270deg);
+    --brand-ruby-hover: oklch(70% 0.12 280deg);
     --navbar-opacity: 1;
   }
 
@@ -191,37 +192,33 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     position: fixed;
     top: 0; /* Fallback for browsers without safe-area support */
     top: env(safe-area-inset-top, 0);
-    left: 0;
     right: 0;
+    left: 0;
     z-index: 1000;
 
     /* REASONING: Responsive padding using REM units with safe area consideration */
     padding: 0.75rem 0; /* Fallback for browsers without safe-area support */
     padding-top: calc(0.75rem + env(safe-area-inset-top, 0));
 
-    /* REASONING: CSS Scroll-driven Animation for opacity based on scroll */
-    animation: navbarScrollOpacity linear;
-    animation-timeline: scroll(root);
-    animation-range: 0px 200px;
-
     /* REASONING: Optimized single glass morphism background */
     background:
       linear-gradient(
         135deg,
         var(--glass-bg) 0%,
-        oklch(8% 0.01 270 / 0.08) 50%,
+        oklch(8% 0.01 270deg / 8%) 50%,
         var(--glass-bg) 100%
       ),
       radial-gradient(ellipse at 50% 0%, var(--glass-glow) 0%, transparent 60%);
 
-    /* REASONING: Enhanced backdrop filters for glass effect */
-    backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
-    -webkit-backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
-      contrast(1.02);
-
     /* REASONING: Optimized glass border styling */
     border: 1px solid var(--glass-border);
     border-radius: 0.75rem;
+
+    /* REASONING: Enhanced backdrop filters for glass effect */
+    backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
+      contrast(1.02);
+    backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
+    transform: translateZ(0);
 
     /* REASONING: Unified transition system with GPU acceleration */
     transition:
@@ -230,39 +227,45 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
       border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
+    /* REASONING: CSS Scroll-driven Animation for opacity based on scroll */
+    animation: navbarScrollOpacity linear;
+
     /* REASONING: GPU acceleration for smooth animations */
     will-change: background, backdrop-filter, border-color, transform;
-    transform: translateZ(0);
+    animation-timeline: scroll(root);
+    animation-range: 0 200px;
   }
 
   /* ---------- Navigation Container - Flexbox Layout ---------- */
   .nav-container {
-    /* REASONING: Centered container with responsive max-width */
-    margin: 0 auto;
-    max-width: 75rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-width: 75rem;
 
     /* REASONING: Responsive padding using REM units */
-    padding: 0 0;
+    padding: 0;
+
+    /* REASONING: Centered container with responsive max-width */
+    margin: 0 auto;
     background: transparent;
   }
 
   /* ---------- SVG Icon System - Unified Styling ---------- */
   .nav-svg-icon {
-    /* REASONING: Consistent icon styling with inheritance */
-    color: inherit;
-    stroke: currentColor;
-    fill: none;
-
     /* REASONING: Flexible sizing with proper constraints */
     flex-shrink: 0;
-    vertical-align: middle;
     width: 1em;
-    height: 1em;
     max-width: 100%;
+    height: 1em;
     max-height: 100%;
+    vertical-align: middle;
+
+    /* REASONING: Consistent icon styling with inheritance */
+    color: inherit;
+    fill: none;
+    stroke: currentcolor;
+    transform: translateZ(0);
 
     /* REASONING: Unified transition system with GPU acceleration */
     transition:
@@ -272,18 +275,17 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
     /* REASONING: GPU acceleration for icon animations */
     will-change: transform, opacity;
-    transform: translateZ(0);
   }
 
   /* REASONING: Interactive states for SVG icons with GPU acceleration */
   .nav-svg-icon:hover {
-    transform: translateZ(0) scale(1.05);
     opacity: 0.9;
+    transform: translateZ(0) scale(1.05);
   }
 
   .nav-svg-icon:active {
-    transform: translateZ(0) scale(0.95);
     opacity: 0.8;
+    transform: translateZ(0) scale(0.95);
   }
 
   .nav-svg-icon:focus {
@@ -306,28 +308,29 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   .nav-right {
-    justify-content: flex-end;
     gap: 0.5rem;
+    justify-content: flex-end;
   }
 
   /* ---------- Navigation Items - Touch-Optimized Interactive Elements ---------- */
   .nav-item {
-    /* REASONING: Touch-optimized accessible interactive elements */
-    cursor: pointer;
-    font-size: var(--navbar-item-size);
-    color: var(--color-muted-foreground);
-
-    /* REASONING: Touch target optimization - minimum 44px for accessibility */
-    min-height: var(--touch-target-min);
-    min-width: var(--touch-target-min);
-    padding: var(--touch-target-padding) 0.75rem;
-    border-radius: 0.375rem;
-    outline: none;
-
     /* REASONING: Flexbox for proper touch target alignment */
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: var(--touch-target-min);
+
+    /* REASONING: Touch target optimization - minimum 44px for accessibility */
+    min-height: var(--touch-target-min);
+    padding: var(--touch-target-padding) 0.75rem;
+    font-size: var(--navbar-item-size);
+    color: var(--color-muted-foreground);
+
+    /* REASONING: Touch-optimized accessible interactive elements */
+    cursor: pointer;
+    outline: none;
+    border-radius: 0.375rem;
+    transform: translateZ(0);
 
     /* REASONING: Unified transition system with GPU acceleration */
     transition:
@@ -338,7 +341,6 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
     /* REASONING: GPU acceleration for navigation items */
     will-change: transform, background-color;
-    transform: translateZ(0);
   }
 
   .nav-item:hover {
@@ -354,28 +356,21 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   .nav-item:active {
-    transform: translateZ(0) translateY(0);
     background-color: var(--interactive-active);
+    transform: translateZ(0) translateY(0);
   }
 
   /* ---------- Mobile Menu Button - Enhanced Touch Optimization ---------- */
   .mobile-menu-btn {
     /* REASONING: Mobile-first button with enhanced touch targets */
     display: var(--navbar-mobile-display);
+    gap: 0.25rem;
     align-items: center;
     justify-content: center;
-    gap: 0.25rem;
+    min-width: var(--touch-target-min);
 
     /* REASONING: Touch target optimization - minimum 44px for accessibility */
     min-height: var(--touch-target-min);
-    min-width: var(--touch-target-min);
-
-    /* REASONING: Accessible button styling with enhanced touch feedback */
-    cursor: pointer;
-    border: none;
-    border-radius: 20px;
-    background-color: var(--color-primary);
-    color: var(--color-primary-foreground);
 
     /* REASONING: Touch-optimized padding with proper spacing */
     padding: var(--touch-target-padding) 1rem;
@@ -383,7 +378,16 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     /* REASONING: Typography with accessibility scaling */
     font-size: 0.875rem;
     font-weight: 500;
+    color: var(--color-primary-foreground);
     letter-spacing: 0.02em;
+    touch-action: manipulation;
+
+    /* REASONING: Accessible button styling with enhanced touch feedback */
+    cursor: pointer;
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: 20px;
+    transform: translateZ(0);
 
     /* REASONING: Unified transition system with GPU acceleration */
     transition:
@@ -393,33 +397,38 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
     /* REASONING: GPU acceleration for mobile menu button */
     will-change: transform, background-color;
-    transform: translateZ(0);
 
     /* REASONING: Touch-specific enhancements */
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
   }
 
   .mobile-menu-btn:hover {
     background-color: var(--color-primary-dark);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
     transform: translateZ(0) translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .mobile-menu-btn:active {
+    box-shadow: 0 2px 6px rgb(0 0 0 / 10%);
     transform: translateZ(0) translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
   /* ---------- Logo Component - Brand Identity ---------- */
   .logo-japanese {
-    /* REASONING: Brand-consistent logo styling */
-    cursor: pointer;
+    font-family: var(--font-jp);
     font-size: 1.5rem;
     line-height: 1;
-    text-decoration: none;
-    font-family: var(--font-jp);
     color: var(--color-foreground);
+    text-decoration: none;
+
+    /* REASONING: Initial state with subtle glow */
+    text-shadow:
+      0 0 0 var(--brand-glow),
+      0 0 0 var(--brand-glow);
+
+    /* REASONING: Brand-consistent logo styling */
+    cursor: pointer;
+    transform: translateZ(0);
 
     /* REASONING: Unified transition system with GPU acceleration */
     transition:
@@ -430,40 +439,34 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
     /* REASONING: GPU acceleration for logo animations */
     will-change: transform, color, text-shadow, filter;
-    transform: translateZ(0);
-
-    /* REASONING: Initial state with subtle glow */
-    text-shadow:
-      0 0 0px var(--brand-glow),
-      0 0 0px var(--brand-glow);
   }
 
   .logo-japanese:hover {
-    /* REASONING: Lift effect with enhanced glow and GPU acceleration */
-    transform: translateZ(0) translateY(-2px) scale(1.02);
     color: var(--color-primary);
     text-shadow:
       0 0 8px var(--brand-glow),
       0 0 16px var(--brand-glow),
       0 0 24px var(--brand-glow);
     filter: drop-shadow(0 0 8px var(--brand-glow));
+
+    /* REASONING: Lift effect with enhanced glow and GPU acceleration */
+    transform: translateZ(0) translateY(-2px) scale(1.02);
   }
 
   /* ---------- Ruby Text Styling - Japanese Typography ---------- */
   .logo-japanese rt {
     /* REASONING: Precise ruby text positioning */
     margin-bottom: -15px;
+    font-family: Inter, sans-serif;
     font-size: 0.4em;
     font-weight: 600;
-    font-family: 'Inter', sans-serif;
     color: var(--brand-ruby);
+    text-shadow: 0 0 0 var(--brand-glow);
 
     /* REASONING: Coordinated transitions with parent */
     transition:
       color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
       text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    text-shadow: 0 0 0px var(--brand-glow);
   }
 
   .logo-japanese:hover rt {
@@ -475,26 +478,28 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
   /* ---------- Get Started Buttons - Touch-Optimized Call to Action ---------- */
   .get-started-btn {
-    /* REASONING: Touch-optimized button styling with accessibility */
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    color: var(--color-primary-foreground);
-    background-color: var(--color-primary);
-    border-radius: var(--border-radius-btn-small);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* REASONING: Flexbox for icon and text alignment */
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-target-min);
 
     /* REASONING: Touch target optimization - minimum 44px for accessibility */
     min-height: var(--touch-target-min);
-    min-width: var(--touch-target-min);
     padding: var(--touch-target-padding) 1.15rem;
 
-    /* REASONING: Flexbox for icon and text alignment */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
+    /* REASONING: Touch-optimized button styling with accessibility */
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-primary-foreground);
+    touch-action: manipulation;
+    cursor: pointer;
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--border-radius-btn-small);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    transform: translateZ(0);
 
     /* REASONING: Unified transition system with GPU acceleration */
     transition:
@@ -505,24 +510,22 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
     /* REASONING: GPU acceleration for get started buttons */
     will-change: transform, background-color, box-shadow;
-    transform: translateZ(0);
 
     /* REASONING: Touch-specific enhancements */
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
   }
 
   .get-started-btn:hover {
     background-color: var(--color-primary-dark);
     box-shadow:
-      0 8px 25px rgba(0, 0, 0, 0.2),
-      0 4px 12px rgba(0, 0, 0, 0.15);
+      0 8px 25px rgb(0 0 0 / 20%),
+      0 4px 12px rgb(0 0 0 / 15%);
     transform: translateZ(0) translateY(-1px);
   }
 
   .get-started-btn:active {
-    transform: translateZ(0) translateY(0);
     opacity: 0.98;
+    transform: translateZ(0) translateY(0);
   }
 
   /* ---------- Safe CSS Viewport Units - Stable Implementation ---------- */
@@ -541,13 +544,14 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
     --navbar-width: 100vw;
     --navbar-height: 100vh;
 
+    container-name: navbar;
+
     /* REASONING: Container query setup for responsive design */
     container-type: inline-size;
-    container-name: navbar;
   }
 
   /* ---------- Tablet Breakpoint (768px+) - Enhanced Mobile Experience ---------- */
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .navbar-wrapper {
       --navbar-padding-y: 1rem;
       --navbar-padding-x: 0;
@@ -559,7 +563,7 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   /* ---------- Desktop Breakpoint (1024px+) - Full Navigation ---------- */
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     .navbar-wrapper {
       --navbar-nav-display: flex;
       --navbar-mobile-display: none;
@@ -599,22 +603,20 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
 
   /* ---------- Apply Safe Responsive Variables ---------- */
   .navbar {
-    padding: var(--navbar-padding-y);
-    /* REASONING: Apply safe viewport width to navbar */
-    width: var(--navbar-width);
-
     /* REASONING: Safe area positioning using global variables */
     top: var(--safe-area-top);
-    left: var(--safe-area-left);
     right: var(--safe-area-right);
+    left: var(--safe-area-left);
+
+    /* REASONING: Apply safe viewport width to navbar */
+    width: var(--navbar-width);
+    padding: var(--navbar-padding-y);
   }
 
   .nav-container {
+    padding: 0 calc(var(--navbar-padding-x) + var(--safe-area-right)) 0 calc(var(--navbar-padding-x) + var(--safe-area-left));
+
     /* REASONING: Safe area padding using global variables */
-    padding-left: calc(var(--navbar-padding-x) + var(--safe-area-left));
-    padding-right: calc(var(--navbar-padding-x) + var(--safe-area-right));
-    padding-top: 0;
-    padding-bottom: 0;
   }
 
   .nav-left,
@@ -629,8 +631,8 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   }
 
   .nav-right {
-    justify-content: flex-end;
     gap: var(--navbar-gap-right);
+    justify-content: flex-end;
   }
 
   .nav-item {
@@ -648,8 +650,8 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
   /* ---------- Container Query Support - Modern Responsive Design ---------- */
   @supports (container-type: inline-size) {
     .navbar-wrapper {
-      container-type: inline-size;
       container-name: navbar;
+      container-type: inline-size;
     }
   }
 
@@ -660,27 +662,28 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
       background:
         linear-gradient(
           135deg,
-          oklch(6% 0.008 270 / 0) 0%,
-          oklch(8% 0.01 270 / 0) 50%,
-          oklch(6% 0.008 270 / 0) 100%
+          oklch(6% 0.008 270deg / 0%) 0%,
+          oklch(8% 0.01 270deg / 0%) 50%,
+          oklch(6% 0.008 270deg / 0%) 100%
         ),
         radial-gradient(
           ellipse at 50% 0%,
-          oklch(65% 0.18 280 / 0) 0%,
+          oklch(65% 0.18 280deg / 0%) 0%,
           transparent 60%
         );
-      backdrop-filter: blur(0px) saturate(100%) brightness(1) contrast(1);
-      -webkit-backdrop-filter: blur(0px) saturate(100%) brightness(1)
+      border-color: oklch(25% 0.015 270deg / 0%);
+      backdrop-filter: blur(0) saturate(100%) brightness(1)
         contrast(1);
-      border-color: oklch(25% 0.015 270 / 0);
+      backdrop-filter: blur(0) saturate(100%) brightness(1) contrast(1);
     }
+
     to {
       /* REASONING: Final state - full glass morphism effect */
       background:
         linear-gradient(
           135deg,
           var(--glass-bg) 0%,
-          oklch(8% 0.01 270 / 0.08) 50%,
+          oklch(8% 0.01 270deg / 8%) 50%,
           var(--glass-bg) 100%
         ),
         radial-gradient(
@@ -688,10 +691,10 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
           var(--glass-glow) 0%,
           transparent 60%
         );
-      backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
-      -webkit-backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
-        contrast(1.02);
       border-color: var(--glass-border);
+      backdrop-filter: blur(12px) saturate(150%) brightness(1.05)
+        contrast(1.02);
+      backdrop-filter: blur(12px) saturate(150%) brightness(1.05) contrast(1.05);
     }
   }
 
@@ -702,31 +705,33 @@ const navItems = Object.entries(NAV_ROUTES).map(([key, route]) => ({
       background:
         linear-gradient(
           135deg,
-          oklch(6% 0.008 270 / var(--navbar-opacity, 0.12)) 0%,
-          oklch(8% 0.01 270 / calc(var(--navbar-opacity, 0.12) * 0.67)) 50%,
-          oklch(6% 0.008 270 / var(--navbar-opacity, 0.12)) 100%
+          oklch(6% 0.008 270deg / var(--navbar-opacity, 0.12)) 0%,
+          oklch(8% 0.01 270deg / calc(var(--navbar-opacity, 0.12) * 0.67)) 50%,
+          oklch(6% 0.008 270deg / var(--navbar-opacity, 0.12)) 100%
         ),
         radial-gradient(
           ellipse at 50% 0%,
-          oklch(65% 0.18 280 / calc(var(--navbar-opacity, 0.12) * 0.67)) 0%,
+          oklch(65% 0.18 280deg / calc(var(--navbar-opacity, 0.12) * 0.67)) 0%,
           transparent 60%
         );
+      border-color: oklch(
+        25% 0.015 270deg / calc(var(--navbar-opacity, 0.12) * 1.25)
+      );
+      backdrop-filter: blur(calc(var(--navbar-opacity, 0.12) * 100px))
+        saturate(calc(100% + var(--navbar-opacity, 0.12) * 50%))
+        brightness(calc(1 + var(--navbar-opacity, 0.12) * 0.05))
+        contrast(calc(1 + var(--navbar-opacity, 0.12) * 0.02));
       backdrop-filter: blur(calc(var(--navbar-opacity, 0.12) * 100px))
         saturate(calc(100% + var(--navbar-opacity, 0.12) * 50%))
         brightness(calc(1 + var(--navbar-opacity, 0.12) * 0.05))
         contrast(calc(1 + var(--navbar-opacity, 0.12) * 0.05));
-      -webkit-backdrop-filter: blur(calc(var(--navbar-opacity, 0.12) * 100px))
-        saturate(calc(100% + var(--navbar-opacity, 0.12) * 50%))
-        brightness(calc(1 + var(--navbar-opacity, 0.12) * 0.05))
-        contrast(calc(1 + var(--navbar-opacity, 0.12) * 0.02));
-      border-color: oklch(
-        25% 0.015 270 / calc(var(--navbar-opacity, 0.12) * 1.25)
-      );
     }
   }
 
   /* ---------- Safe Viewport Units Support - Removed Problematic Units ---------- */
+
   /* REASONING: Removed modern viewport units that were causing display issues */
+
   /* Using stable 100vw/100vh for consistent cross-browser compatibility */
 </style>
 

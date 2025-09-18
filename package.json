@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run lint && astro check && astro build && npm run lint:css",
+    "build": "npm run lint && astro check && astro build && npm run stylelint",
     "build:quality": "npm run quality && astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -17,7 +17,8 @@
     "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,json,css,md}",
     "quality": "npm run lint && npm run format:check && npm run type-check",
     "lint:css": "stylelint \"**/*.{css,scss,astro}\"",
-    "lint:css-fix": "stylelint \"**/*.{css,scss,astro}\" --fix"
+    "lint:css-fix": "stylelint \"**/*.{css,scss,astro}\" --fix",
+    "lint:css-file": "stylelint"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

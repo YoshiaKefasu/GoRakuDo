@@ -1,6 +1,6 @@
 ---
 // ========== OPTIMIZED TOOLS GRID SECTION ==========
-// Tools-GridSection.astro - 最適化されたツールグリッドセクションコンポーネント
+// Tools-GridSection.astro - 最適化されたチE�EルグリチE��セクションコンポ�EネンチE
 
 // ========== SIMPLIFIED TYPE DEFINITIONS ==========
 export interface Tool {
@@ -45,7 +45,7 @@ const {
   showTitle = false,
 } = Astro.props;
 
-// ツールの検証とフィルタリング
+// チE�Eルの検証とフィルタリング
 const validTools: Tool[] = tools.filter(validateTool);
 ---
 
@@ -54,12 +54,8 @@ const validTools: Tool[] = tools.filter(validateTool);
   aria-labelledby='tools-title'
   id='tools-main-content'
 >
-  <div class='container px-4 sm:px-6 lg:px-8'>
-    <div
-      class='tools-grid max-w-7xl mx-auto'
-      role='list'
-      aria-label='Available learning tools'
-    >
+  <div class='w-full flex justify-center px-2 sm:px-6 lg:px-8'>
+    <div class='tools-grid' role='list' aria-label='Available learning tools'>
       {
         validTools.map(tool => (
           <div class='tool-grid-item' role='listitem'>
@@ -130,48 +126,118 @@ const validTools: Tool[] = tools.filter(validateTool);
 
 <style>
   /* ========== CONFLICT-FREE COMPONENT STYLES ========== */
-  /* すべてのセレクタをコンポーネント固有のクラスでスコープ化 */
+
+  /* すべてのセレクタをコンポ�Eネント固有�Eクラスでスコープ化 */
+
+  /* ========== CSS変数定義 ========== */
+  :root {
+    --tool-icon-scale: 1.05;
+    --tool-arrow-translate: 4px;
+    --tool-card-scale: 1.02;
+    --tool-card-opacity: 0.9;
+  }
+
+  /* ========== グリッドレイアウト ========== */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+    max-width: 75rem; /* 1200px */
+  }
+
+  @media (width >= 640px) {
+    .tools-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+      justify-content: center;
+    }
+  }
+
+  @media (width >= 1024px) {
+    .tools-grid {
+      grid-template-columns: repeat(3, minmax(20rem, 24rem)); /* 320px-288px */
+      gap: 2rem;
+      align-items: start;
+      justify-content: center;
+    }
+  }
+
+  @media (width >= 1280px) {
+    .tools-grid {
+      grid-template-columns: repeat(3, minmax(24rem, 28rem)); /* 384px-448px */
+      gap: 2.5rem;
+      align-items: start;
+      justify-content: center;
+      max-width: 75rem; /* 1200px */
+    }
+  }
 
   /* ========== カード構造 ========== */
+  .tools-grid .tool-grid-item {
+    display: flex;
+    justify-self: center;
+    width: 100%;
+    max-width: 25rem; /* 400px */
+    height: 100%;
+  }
+
   .tools-grid .tool-grid-item .tool-card-wrapper {
     position: relative;
+    display: flex;
+    width: 100%;
     height: 100%;
   }
 
   .tools-grid .tool-grid-item .tool-card-frame {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
     height: 100%;
-    max-height: 380px;
-    gap: var(--spacing-md);
+    min-height: 16.25rem; /* 260px */
+    max-height: 20rem; /* 320px */
+    padding: 1rem;
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 640px) {
     .tools-grid .tool-grid-item .tool-card-frame {
-      gap: var(--spacing-lg);
+      padding: 1rem;
+    }
+  }
+
+  @media (width >= 1024px) {
+    .tools-grid .tool-grid-item .tool-card-frame {
+      gap: 0.75rem;
+      padding: 1.25rem;
     }
   }
 
   /* ========== ヘッダー ========== */
   .tools-grid .tool-grid-item .tool-card-header {
     flex-shrink: 0;
-    margin-bottom: var(--spacing-sm);
+    padding: 0;
+    margin-bottom: 0.375rem;
   }
 
   .tools-grid .tool-grid-item .tool-title-container {
     display: flex;
+    gap: 1em; /* 親要素のフォントサイズに相対 */
     align-items: center;
-    gap: var(--spacing-md);
     width: 100%;
+    min-height: 4rem;
   }
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .tools-grid .tool-grid-item .tool-title-container {
       gap: var(--spacing-lg);
     }
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .tools-grid .tool-grid-item .tool-title-container {
       gap: var(--spacing-lg);
     }
@@ -179,30 +245,34 @@ const validTools: Tool[] = tools.filter(validateTool);
 
   /* ========== アイコン ========== */
   .tools-grid .tool-grid-item .tool-icon {
-    flex-shrink: 0;
-    width: 3rem;
-    height: 3rem;
+    position: relative;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    border-radius: 0.75rem;
-    position: relative;
-    overflow: hidden;
-    transition: all var(--transition-speed) var(--transition-ease);
-    will-change: transform;
+    width: 56px; /* 固定サイズ - PX単位 */
+    height: 56px; /* 固定サイズ - PX単位 */
     contain: layout style;
+    overflow: visible;
+    background: transparent;
+    border: none;
+    border-radius: 16px; /* 固定サイズ - PX単位 */
+    box-shadow: none;
+    filter: drop-shadow(0 4px 8px oklch(0% 0 0deg / 30%));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
   }
 
   .tools-grid .tool-grid-item .tool-icon-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    border-radius: 0.25rem;
+    border-radius: 4px; /* 固定サイズ - PX単位 */
     transition: transform var(--transition-speed) var(--transition-ease);
   }
 
-  .tools-grid .tool-grid-item .tool-card:hover .tool-icon-image {
-    transform: scale(1.05);
+  .tool-card:hover .tool-icon-image {
+    transform: scale(var(--tool-icon-scale));
   }
 
   .tools-grid .tool-grid-item .tool-icon-image:not([src]),
@@ -211,185 +281,279 @@ const validTools: Tool[] = tools.filter(validateTool);
   }
 
   .tools-grid .tool-grid-item .tool-icon::before {
-    content: '🔧';
-    font-size: 1.25rem;
     display: none;
+    font-size: 1.25rem;
+    content: '🔧';
   }
 
-  .tools-grid
-    .tool-grid-item
-    .tool-icon:has(.tool-icon-image:not([src]))::before,
-  .tools-grid .tool-grid-item .tool-icon:has(.tool-icon-image[src=''])::before {
+  .tool-icon:has(.tool-icon-image:not([src]))::before,
+  .tool-icon:has(.tool-icon-image[src=''])::before {
     display: block;
   }
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .tools-grid .tool-grid-item .tool-icon {
-      width: 3.5rem;
-      height: 3.5rem;
+      width: 56px; /* 固定サイズ - PX単位 */
+      height: 56px; /* 固定サイズ - PX単位 */
     }
   }
 
   /* ========== タイトル ========== */
   .tools-grid .tool-grid-item .tool-name {
-    font-size: var(--fs-h3);
-    font-weight: 600;
-    margin: 0;
-    line-height: 1.25;
-    color: oklch(0.95 0 0);
     flex: 1;
+    margin: 0;
+    font-size: 1.685rem; /* ルート要素に相対 - REM単位 */
+    font-weight: 700;
+    line-height: 1.3;
+    color: oklch(98% 0 0deg);
+    letter-spacing: -0.025em;
   }
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .tools-grid .tool-grid-item .tool-name {
-      font-size: 1.25rem;
+      font-size: 1.875rem; /* ルート要素に相対 - REM単位 */
+    }
+  }
+
+  @media (width >= 768px) {
+    .tools-grid .tool-grid-item .tool-name {
+      font-size: 1.5rem; /* ルート要素に相対 - REM単位 */
+    }
+  }
+
+  @media (width >= 1024px) {
+    .tools-grid .tool-grid-item .tool-name {
+      font-size: 1.5rem; /* ルート要素に相対 - REM単位 */
     }
   }
 
   /* ========== ボディ ========== */
   .tools-grid .tool-grid-item .tool-card-body {
-    flex-grow: 0;
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     justify-content: flex-start;
     min-height: 0;
-    padding-bottom: var(--spacing-sm);
+    padding-bottom: 1rem;
   }
 
   .tools-grid .tool-grid-item .tool-description-card {
-    font-size: var(--fs-sm);
-    line-height: 1.6;
-    color: oklch(0.85 0 0);
-    margin: 0;
-    flex-grow: 0;
+    display: -webkit-box;
+    flex-grow: 1;
     flex-shrink: 1;
+    margin: 0;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    font-size: 0.875rem; /* ルート要素に相対 - REM単位 */
+    font-weight: 400;
+    line-height: 1.5;
+    color: oklch(88% 0 0deg);
   }
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .tools-grid .tool-grid-item .tool-description-card {
       font-size: var(--fs-base);
     }
   }
 
   /* ========== フッター ========== */
-  .tools-grid .tool-grid-item .tool-card .tool-card-footer {
-    flex-shrink: 0;
+  .tools-grid .tool-grid-item .tool-card-footer {
+    position: relative;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: space-between;
-    padding-top: var(--spacing-sm);
-    border-top: 1px solid oklch(1 0 0 / 0.15);
-    position: relative;
     width: 100%;
+    padding-top: 1rem;
+    margin-top: auto;
+    border-top: 1px solid oklch(100% 0 0deg / 20%);
   }
 
-  .tools-grid .tool-grid-item .tool-card .tool-card-footer::before {
-    content: '';
+  .tools-grid .tool-grid-item .tool-card-footer::before {
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
+    left: 0;
     height: 1px;
+    content: '';
     background: linear-gradient(
       90deg,
       transparent,
-      oklch(1 0 0 / 0.2),
+      oklch(100% 0 0deg / 20%),
       transparent
     );
   }
 
-  .tools-grid .tool-grid-item .tool-card .tool-cta-text {
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: oklch(0.7 0.2 280);
+  .tools-grid .tool-grid-item .tool-cta-text {
+    font-size: 0.875rem; /* ルート要素に相対 - REM単位 */
+    font-weight: 600;
+    color: oklch(75% 0.25 280deg);
+    letter-spacing: 0.025em;
   }
 
-  .tools-grid .tool-grid-item .tool-card .tool-arrow {
-    width: 1rem;
-    height: 1rem;
-    color: oklch(0.9 0 0);
-    transition: transform var(--transition-speed) var(--transition-ease);
+  .tools-grid .tool-grid-item .tool-arrow {
+    width: 18px; /* 固定サイズ - PX単位 */
+    height: 18px; /* 固定サイズ - PX単位 */
+    color: oklch(85% 0.2 280deg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  @media (min-width: 768px) {
-    .tools-grid .tool-grid-item .tool-card .tool-card-footer {
+  @media (width >= 768px) {
+    .tools-grid .tool-grid-item .tool-card-footer {
       padding-top: 0.5rem;
     }
   }
 
-  @media (min-width: 1024px) {
-    .tools-grid .tool-grid-item .tool-card .tool-card-footer {
+  @media (width >= 1024px) {
+    .tools-grid .tool-grid-item .tool-card-footer {
       padding-top: 0.75rem;
     }
   }
 
   /* ========== インタラクション ========== */
-  .tools-grid .tool-grid-item .group:hover .tool-arrow {
-    transform: translateX(4px);
+  .group:hover .tool-arrow {
+    transform: translateX(var(--tool-arrow-translate));
   }
 
   .tools-grid .tool-grid-item .animation-scale:hover {
-    transform: scale(1.02);
+    transform: scale(var(--tool-card-scale));
   }
 
   .tools-grid .tool-grid-item .animation-slide:hover {
-    transform: translateX(4px);
+    transform: translateX(var(--tool-arrow-translate));
   }
 
   .tools-grid .tool-grid-item .animation-fade:hover {
-    opacity: 0.9;
+    opacity: var(--tool-card-opacity);
   }
 
-  /* ========== アクセシビリティ ========== */
+  /* ========== カードホバーエフェクト ========== */
+  .tool-card {
+    overflow: hidden;
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .tool-card:hover {
+    box-shadow:
+      0 20px 40px -10px oklch(0% 0 0deg / 30%),
+      0 8px 16px -4px oklch(0% 0 0deg / 15%);
+    transform: translateY(-6px);
+  }
+
+  .tool-card:hover .tool-icon {
+    background: transparent;
+    box-shadow: none;
+    filter: drop-shadow(0 6px 12px oklch(0% 0 0deg / 40%));
+    transform: scale(1.05);
+  }
+
+  /* ========== アクセシビリチE�� ========== */
+  .tools-grid .tool-grid-item .tool-card {
+    outline: none;
+  }
+
   .tools-grid .tool-grid-item .tool-card:focus-visible {
-    outline: 3px solid oklch(0.7 0.2 280);
+    outline: 3px solid oklch(70% 0.2 280deg);
     outline-offset: 2px;
-    box-shadow: 0 0 0 1px oklch(0.7 0.2 280 / 0.3);
+    box-shadow: 0 0 0 1px oklch(70% 0.2 280deg / 30%);
   }
 
-  .tools-grid .tool-grid-item .tool-card:hover .tool-name {
-    color: oklch(1 0 0);
+  .tool-card:hover .tool-name {
+    color: oklch(100% 0 0deg);
   }
 
-  .tools-grid .tool-grid-item .tool-card:hover .tool-description-card {
-    color: oklch(0.9 0 0);
+  .tool-card:hover .tool-description-card {
+    color: oklch(90% 0 0deg);
   }
 
-  .tools-grid .tool-grid-item .tool-card:hover .tool-cta-text {
-    color: oklch(0.75 0.22 280);
+  .tool-card:hover .tool-cta-text {
+    color: oklch(75% 0.22 280deg);
   }
 
-  .tools-grid .tool-grid-item .tool-card:hover .tool-arrow {
-    color: oklch(1 0 0);
+  .tool-card:hover .tool-arrow {
+    color: oklch(100% 0 0deg);
   }
 
   @media (prefers-contrast: high) {
     .tools-grid .tool-grid-item .tool-name {
-      color: oklch(1 0 0);
+      color: oklch(100% 0 0deg);
     }
+
     .tools-grid .tool-grid-item .tool-description-card {
-      color: oklch(0.95 0 0);
+      color: oklch(95% 0 0deg);
     }
+
     .tools-grid .tool-grid-item .tool-cta-text {
-      color: oklch(0.8 0.25 280);
+      color: oklch(80% 0.25 280deg);
     }
+
     .tools-grid .tool-grid-item .tool-arrow {
-      color: oklch(1 0 0);
+      color: oklch(100% 0 0deg);
     }
+
     .tools-grid .tool-grid-item .tool-title-container {
-      border-bottom: 1px solid oklch(1 0 0 / 0.3);
       padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid oklch(100% 0 0deg / 30%);
+    }
+  }
+
+  /* ========== レスポンシブ最適化 ========== */
+  @media (width < 640px) {
+    .tools-grid {
+      gap: 1rem;
+      padding: 0 0.5rem;
+    }
+
+    .tools-grid .tool-grid-item .tool-card-frame {
+      min-height: 15rem; /* 240px - REM単位 */
+      max-height: 19rem; /* 304px - REM単位 */
+    }
+
+    .tools-grid .tool-grid-item .tool-icon {
+      width: 48px; /* 固定サイズ - PX単位 */
+      height: 48px; /* 固定サイズ - PX単位 */
+    }
+
+    .tools-grid .tool-grid-item .tool-name {
+      font-size: 1.5rem; /* ルート要素に相対 - REM単位 */
+    }
+
+    .tools-grid .tool-grid-item .tool-description-card {
+      -webkit-line-clamp: 3;
+      font-size: 0.875rem; /* ルート要素に相対 - REM単位 */
+    }
+  }
+
+  @media (width >= 640px) and (width < 1024px) {
+    .tools-grid {
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (width >= 1024px) {
+    .tools-grid {
+      padding: 0 2rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tools-grid .tool-grid-item .tool-card:hover .tool-icon-image,
-    .tools-grid .tool-grid-item .animation-scale:hover,
-    .tools-grid .tool-grid-item .animation-slide:hover,
-    .tools-grid .tool-grid-item .animation-fade:hover,
-    .tools-grid .tool-grid-item .group:hover .tool-arrow {
-      transform: none;
+    .tool-card,
+    .tool-card:hover .tool-icon-image,
+    .animation-scale:hover,
+    .animation-slide:hover,
+    .animation-fade:hover,
+    .group:hover .tool-arrow {
       opacity: 1;
+      transform: none;
+      transition: none;
     }
+  }
+
+  /* ========== パフォーマンス最適化 ========== */
+
+  .tools-grid .tool-grid-item .tool-card:hover {
+    will-change: auto;
   }
 </style>

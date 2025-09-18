@@ -1,29 +1,36 @@
 /*  Docs Page Styles - Tailwind v4 Conversion */
+
 /* Converted from post-styles.css with accessibility-first approach */
 @import '../global.css';
+
 /* --- Background Elements --- */
 
 /* Posts/Documentation page styles */
 .posts-page {
   @apply relative z-10 min-h-screen pt-20 text-white;
-  /* Prevent horizontal overflow */
-  overflow-x: hidden;
+
   width: 100%;
   max-width: 100vw;
+
+  /* Prevent horizontal overflow */
+  overflow-x: hidden;
 }
 
 .posts-container {
   @apply mx-auto max-w-7xl px-6;
+
   /* GitHub Pages optimized container constraints */
   max-width: min(80rem, 98vw);
-  overflow-x: hidden;
+  padding-right: clamp(1rem, 4vw, 3rem);
+
   /* Responsive padding for better mobile experience */
   padding-left: clamp(1rem, 4vw, 3rem);
-  padding-right: clamp(1rem, 4vw, 3rem);
+  overflow-x: hidden;
 }
 
 .posts-header {
   @apply mb-20 text-center;
+
   /* Prevent header overflow */
   max-width: 100%;
   overflow-x: hidden;
@@ -31,19 +38,21 @@
 
 .posts-header h1 {
   @apply mb-5 text-5xl font-semibold text-white;
+
   /* Responsive typography */
   font-size: clamp(2rem, 6vw, 3rem);
+
   /* Prevent text overflow */
-  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
 .posts-header p {
   @apply mx-auto max-w-2xl text-lg leading-relaxed text-gray-400;
+
   /* Responsive typography */
   font-size: clamp(1rem, 3vw, 1.125rem);
+
   /* Prevent text overflow */
-  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
@@ -118,6 +127,7 @@
 /* Search Results Container - Optimized for immediate visibility */
 .search-results {
   @apply transition-all duration-300 ease-in-out;
+
   /* Ensure search results are immediately visible and properly positioned */
   display: block;
   width: 100%;
@@ -140,6 +150,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -171,6 +182,7 @@
 
 .post-card {
   @apply relative cursor-pointer rounded-2xl border border-purple-500/10 bg-purple-500/5 p-8;
+
   transition:
     box-shadow var(--animate-duration-normal) ease,
     transform var(--animate-duration-fast) ease,
@@ -179,8 +191,9 @@
 
 .post-card:hover {
   @apply border-purple-500/30 bg-purple-500/10;
-  transform: translateY(-1px);
+
   box-shadow: 0 12px 35px var(--color-accent-shadow);
+  transform: translateY(-1px);
   transition:
     box-shadow var(--animate-duration-normal) ease,
     transform var(--animate-duration-fast) ease,
@@ -244,8 +257,9 @@
   @apply relative my-10 mb-5 text-3xl font-semibold text-white;
 }
 
-.post-content h2:before {
+.post-content h2::before {
   content: '';
+
   @apply absolute -left-5 top-1/2 h-5 w-1 -translate-y-1/2 rounded bg-gradient-to-br from-purple-500 to-purple-600;
 }
 
@@ -266,8 +280,9 @@
   @apply relative mb-2 pl-1;
 }
 
-.post-content ul li:before {
+.post-content ul li::before {
   content: '→';
+
   @apply absolute -left-5 font-bold text-purple-400;
 }
 
@@ -283,8 +298,9 @@
   @apply relative my-5 overflow-x-auto rounded-lg border border-purple-500/10 bg-gray-900 p-5;
 }
 
-.post-content pre:before {
+.post-content pre::before {
   content: '';
+
   @apply absolute left-0 right-0 top-0 h-0.5 rounded-t-lg bg-gradient-to-r from-purple-500 to-purple-600;
 }
 
@@ -355,6 +371,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -370,6 +387,7 @@
     opacity: 0;
     transform: translateY(2rem);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -387,6 +405,7 @@
     opacity: 0;
     transform: translateY(1.25rem);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -401,6 +420,7 @@
 /* Main Content Layout */
 .main-content {
   @apply relative z-20 min-h-screen;
+
   background: transparent !important;
 }
 
@@ -410,11 +430,13 @@
 
 .posts-container {
   @apply relative z-20 mx-auto max-w-7xl px-5 py-10;
+
   /* GitHub Pages optimized container constraints - override duplicate rule */
   max-width: min(80rem, 98vw);
+  padding-right: clamp(1rem, 4vw, 3rem);
+
   /* Responsive padding for better mobile experience */
   padding-left: clamp(1rem, 4vw, 3rem);
-  padding-right: clamp(1rem, 4vw, 3rem);
 }
 
 /* Posts Header */
@@ -424,12 +446,12 @@
 
 .posts-header h1 {
   @apply mb-5 text-4xl font-semibold text-white md:text-5xl lg:text-6xl;
+
   background: linear-gradient(
     135deg,
-    var(--clr-text-primary, #ffffff) 0%,
-    var(--clr-text-secondary, #cccccc) 100%
+    var(--clr-text-primary, #fff) 0%,
+    var(--clr-text-secondary, #ccc) 100%
   );
-  -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -491,39 +513,39 @@
 /* Tag Popup Styles */
 .tag-popup {
   position: absolute;
+  right: 0;
   bottom: 100%;
   left: 0;
-  right: 0;
-  background: rgba(20, 20, 20, 0.98);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  border-radius: 12px;
+  z-index: 1000;
+  visibility: hidden;
   padding: 12px;
   margin-bottom: 8px;
+  background: rgb(20 20 20 / 98%);
+  border: 1px solid rgb(139 93 255 / 20%);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 40%);
   opacity: 0;
-  visibility: hidden;
+  backdrop-filter: blur(12px);
   transform: translateY(8px);
   transition: all 0.2s ease;
-  z-index: 1000;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .tag-popup.show {
-  opacity: 1;
   visibility: visible;
+  opacity: 1;
   transform: translateY(0);
 }
 
 .tag-popup::before {
-  content: '';
   position: absolute;
   top: 100%;
   left: 20px;
   width: 0;
   height: 0;
-  border-left: 6px solid transparent;
+  content: '';
+  border-top: 6px solid rgb(139 93 255 / 20%);
   border-right: 6px solid transparent;
-  border-top: 6px solid rgba(139, 93, 255, 0.2);
+  border-left: 6px solid transparent;
 }
 
 .tag-popup-content {
@@ -534,6 +556,7 @@
 
 .tag-popup-tag {
   @apply rounded-lg border border-purple-500/20 bg-purple-500/15 px-2 py-1 text-xs text-purple-300;
+
   font-size: 11px;
 }
 
@@ -542,16 +565,17 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .tag-popup {
-    left: -10px;
     right: -10px;
+    left: -10px;
   }
 }
 
 /* Read more button */
 .post-card .read-more-btn {
   @apply mt-auto inline-flex items-center justify-center rounded-lg border border-purple-200 bg-white px-4 py-2 text-sm font-medium text-purple-600 no-underline;
+
   transition: all 0.2s ease;
 }
 
@@ -560,12 +584,14 @@
 }
 
 /* Responsive Design */
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .posts-container {
     @apply px-4;
+
+    padding-right: clamp(1rem, 3vw, 1.5rem);
+
     /* Maintain responsive padding for mobile */
     padding-left: clamp(1rem, 3vw, 1.5rem);
-    padding-right: clamp(1rem, 3vw, 1.5rem);
   }
 
   .posts-header {
@@ -581,12 +607,14 @@
   }
 }
 
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .posts-container {
     @apply px-4;
+
+    padding-right: clamp(1rem, 3vw, 1.5rem);
+
     /* Maintain responsive padding for mobile */
     padding-left: clamp(1rem, 3vw, 1.5rem);
-    padding-right: clamp(1rem, 3vw, 1.5rem);
   }
 
   .posts-header h1 {
@@ -618,7 +646,7 @@
     @apply px-5;
   }
 
-  .post-content h2:before {
+  .post-content h2::before {
     @apply -left-4 h-4 w-0.5;
   }
 
@@ -631,7 +659,7 @@
   }
 }
 
-@media (max-width: 30rem) {
+@media (width <= 30rem) {
   .posts-header h1 {
     @apply text-3xl;
   }
@@ -655,18 +683,20 @@
 }
 
 /*  Comprehensive Sticky Note Design */
+
 /* Transform post cards into inspirational sticky note aesthetic with Tailwind v4 */
 
 .post-card {
   @apply relative mx-auto block w-full max-w-96 cursor-pointer rounded-2xl;
-  background: white;
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
   min-height: 280px;
   padding: 1.5rem;
-  transform: rotate(-1deg);
   overflow: visible;
+  background: white;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -2px rgb(0 0 0 / 5%);
+  transform: rotate(-1deg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -674,12 +704,15 @@
 .post-card-0 {
   @apply bg-yellow-50;
 }
+
 .post-card-1 {
   @apply bg-pink-50;
 }
+
 .post-card-2 {
   @apply bg-blue-50;
 }
+
 .post-card-3 {
   @apply bg-green-50;
 }
@@ -696,9 +729,10 @@
 /* Hardware-accelerated hover effects */
 .post-card:hover {
   @apply z-10;
-  transform: rotate(0deg) translateY(-1px) scale(1.01);
-  box-shadow: 0 12px 35px var(--color-accent-shadow);
+
   background: white; /* Ensure solid background on hover */
+  box-shadow: 0 12px 35px var(--color-accent-shadow);
+  transform: rotate(0deg) translateY(-1px) scale(1.01);
   transition:
     box-shadow var(--animate-duration-normal) ease,
     transform var(--animate-duration-fast) ease,
@@ -707,27 +741,29 @@
 
 /* Rocket Graphic - Positioned like screenshot */
 .post-card::before {
-  content: '';
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
-  font-size: 1.5rem;
-  transform: rotate(15deg);
   z-index: 10;
-  filter: drop-shadow(0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2));
+  font-size: 1.5rem;
+  content: '';
+  filter: drop-shadow(0 0.0625rem 0.125rem rgb(0 0 0 / 20%));
+  transform: rotate(15deg);
 }
 
 /* Content Container - Adaptive Layout */
 .posts-card-container {
   @apply flex w-full flex-col items-center justify-start;
+
   flex: 1;
-  min-height: 0; /* Allow content to shrink */
   gap: clamp(0.5rem, 1.5vw, 1rem); /* Adaptive spacing based on viewport */
+  min-height: 0; /* Allow content to shrink */
 }
 
 /* Card container with improved spacing */
 .post-card-container {
   @apply flex h-full flex-col;
+
   min-height: 240px;
 }
 
@@ -738,13 +774,15 @@
 
 .post-card .post-title {
   @apply text-3xl/5! mb-2 leading-tight text-gray-800;
+
+  min-height: 2.5rem;
   font-family: 'Gochi Hand', cursive, system-ui;
   font-size: 2em;
-  min-height: 2.5rem;
 }
 
 .post-card .post-title a {
   @apply text-gray-800 no-underline;
+
   transition: color 0.2s ease;
 }
 
@@ -766,12 +804,12 @@
 
   /* Responsive text handling - no harsh truncation */
   display: -webkit-box;
-  -webkit-box-orient: vertical;
+  max-height: calc(1.4em * 4);
 
   /* Dynamic line clamping based on screen size */
   -webkit-line-clamp: 4;
   line-height: 1.4;
-  max-height: calc(1.4em * 4);
+  -webkit-box-orient: vertical;
 }
 
 /* Tags section */
@@ -781,140 +819,139 @@
 
 .post-card .post-tag {
   @apply rounded-lg border px-2 py-1 text-xs font-medium;
-  border: 1px solid rgba(139, 93, 255, 0.3);
-  background: rgba(139, 93, 255, 0.15);
+
   color: #8b5dff;
+  background: rgb(139 93 255 / 15%);
+  border: 1px solid rgb(139 93 255 / 30%);
   transition: all 0.2s ease;
 }
 
 .post-card .post-tag:hover {
-  background: rgba(139, 93, 255, 0.2);
-  border-color: rgba(139, 93, 255, 0.4);
+  background: rgb(139 93 255 / 20%);
+  border-color: rgb(139 93 255 / 40%);
   transform: translateY(-1px);
 }
 
 .post-card .post-tag-more {
   @apply cursor-pointer rounded-lg border px-2 py-1 text-xs font-medium;
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  background: rgba(139, 93, 255, 0.1);
+
   color: #8b5dff;
+  background: rgb(139 93 255 / 10%);
+  border: 1px solid rgb(139 93 255 / 20%);
   transition: all 0.2s ease;
 }
 
 .post-card .post-tag-more:hover {
-  background: rgba(139, 93, 255, 0.15);
-  border-color: rgba(139, 93, 255, 0.3);
+  background: rgb(139 93 255 / 15%);
+  border-color: rgb(139 93 255 / 30%);
   transform: translateY(-1px);
 }
 
 /* Emoji positioning - top-right corner */
 .post-card .post-emoji {
   position: absolute;
-  font-size: 4rem;
   top: -1rem;
   right: -1rem;
-  transform: rotate(15deg);
   z-index: 10;
+  font-size: 4rem;
   pointer-events: none;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 10%));
+  transform: rotate(15deg);
 }
 
 /* ========== CALL TO ACTION ========== */
 .features-cta {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 40px 30px; /* Improved padding */
   margin-top: 0; /* Remove top margin since pagination has bottom margin */
   margin-bottom: 1rem;
-  padding: 40px 30px; /* Improved padding */
+  overflow: hidden;
   background: linear-gradient(
     135deg,
-    rgba(139, 93, 255, 0.05) 0%,
-    rgba(139, 93, 255, 0.1) 100%
+    rgb(139 93 255 / 5%) 0%,
+    rgb(139 93 255 / 10%) 100%
   );
+  border: 1px solid rgb(139 93 255 / 20%);
   border-radius: 24px; /* Consistent with other components */
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  width: 100%;
-  box-sizing: border-box;
   backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
 }
 
 .cta-content {
-  text-align: center;
-  max-width: 600px; /* Better max-width for readability */
-  margin: 0 auto;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
   position: relative;
   z-index: 2;
+  max-width: 600px; /* Better max-width for readability */
+  margin: 0 auto;
+  text-align: center;
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .cta-title {
+  max-width: 100%;
+  margin-block: 1rem; /* Spacing */
   font-size: 1.375rem; /* Reduced from 1.75rem */
   font-weight: 600; /* Reduced from 700 */
-  margin-block: 1rem; /* Spacing */
-  color: #ffffff; /* Ensure white text */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  max-width: 100%;
   line-height: 1.3;
+  color: #fff; /* Ensure white text */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .cta-description {
-  font-size: 0.9375rem; /* Reduced from 1.125rem */
-  color: rgba(255, 255, 255, 0.8); /* Better contrast */
-  line-height: 1.5;
-  margin-bottom: 0.5rem; /* Spacing */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
   max-width: 100%;
+  margin-bottom: 0.5rem; /* Spacing */
+  font-size: 0.9375rem; /* Reduced from 1.125rem */
+  line-height: 1.5;
+  color: rgb(255 255 255 / 80%); /* Better contrast */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .cta-button {
+  position: relative;
   display: inline-flex;
-  align-items: center;
   gap: 0.5rem; /* Reduced gap */
-  background: linear-gradient(135deg, #8b5dff 0%, #7c3aed 100%);
-  color: white;
-  border: none;
-  border-radius: 50px; /* Pill shape */
+  align-items: center;
+  min-height: 40px; /* Reduced minimum height */
   padding: 0.75rem 1.5rem; /* Reduced padding */
-  margin-bottom: 0.5rem;
   margin-block: 1rem;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
   font-size: 0.875rem; /* Reduced font size */
   font-weight: 500; /* Reduced weight */
+  color: white;
   cursor: pointer;
+  background: linear-gradient(135deg, #8b5dff 0%, #7c3aed 100%);
+  border: none;
+  border-radius: 50px; /* Pill shape */
+  box-shadow: 0 4px 15px rgb(139 93 255 / 30%);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 40px; /* Reduced minimum height */
-  box-shadow: 0 4px 15px rgba(139, 93, 255, 0.3);
-  position: relative;
-  overflow: hidden;
 }
 
 .cta-button:hover {
   background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  box-shadow: 0 8px 25px rgb(139 93 255 / 40%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(139, 93, 255, 0.4);
 }
 
 .cta-button:active {
+  box-shadow: 0 4px 15px rgb(139 93 255 / 30%);
   transform: translateY(0);
-  box-shadow: 0 4px 15px rgba(139, 93, 255, 0.3);
 }
 
 .cta-button:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 3px rgba(255, 255, 255, 0.1),
-    0 0 0 5px rgba(139, 93, 255, 0.3);
+    0 0 0 3px rgb(255 255 255 / 10%),
+    0 0 0 5px rgb(139 93 255 / 30%);
 }
 
 .cta-arrow {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 16px; /* Reduced size */
   height: 16px; /* Reduced size */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cta-button:hover .cta-arrow {
@@ -930,16 +967,16 @@
 }
 
 .cta-button::before {
-  content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
+  content: '';
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgb(255 255 255 / 20%),
     transparent
   );
   transition: left 0.5s;
@@ -956,9 +993,8 @@
 
 /* GPU acceleration for animated elements */
 .cta-button {
-  will-change: transform, opacity;
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 /* Focus management */
@@ -976,16 +1012,16 @@
 }
 
 .features-cta::before {
-  content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 200%;
   height: 100%;
+  content: '';
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(139, 92, 246, 0.05),
+    rgb(139 92 246 / 5%),
     transparent
   );
   animation: cta-shimmer 8s infinite;
@@ -995,29 +1031,32 @@
   0% {
     left: -100%;
   }
+
   100% {
     left: 100%;
   }
 }
 
 /* Responsive improvements */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .post-card {
     @apply max-w-80;
+
     min-height: 260px;
     padding: 1.25rem;
   }
 
   .post-emoji {
-    font-size: 3rem;
     top: -0.75rem;
     right: -0.75rem;
+    font-size: 3rem;
   }
 
   .post-card .post-description {
+    max-height: calc(1.4em * 5);
+
     /* More lines on mobile for better readability */
     -webkit-line-clamp: 5;
-    max-height: calc(1.4em * 5);
   }
 
   .posts-grid {
@@ -1032,44 +1071,46 @@
   }
 
   .cta-title {
-    font-size: 1.25rem; /* Reduced from 1.5rem */
     margin-bottom: 0.75rem;
+    font-size: 1.25rem; /* Reduced from 1.5rem */
   }
 
   .cta-description {
-    font-size: 0.875rem; /* Reduced from 1rem */
     margin-bottom: 1.5rem;
+    font-size: 0.875rem; /* Reduced from 1rem */
   }
 
   .cta-button {
+    min-height: 40px; /* Reduced height */
     padding: 0.75rem 1.25rem; /* Reduced padding */
     font-size: 0.8125rem; /* Reduced font size */
-    min-height: 40px; /* Reduced height */
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .post-card {
     @apply max-w-full;
+
     min-height: 240px;
     padding: 1rem;
   }
 
   .post-card .post-emoji {
-    font-size: 2.5rem;
     top: -0.5rem;
     right: -0.5rem;
+    font-size: 2.5rem;
   }
 
   .post-card .post-title {
-    font-size: 1.125em;
     min-height: 2rem;
+    font-size: 1.125em;
   }
 
   .post-card .post-description {
+    max-height: calc(1.4em * 6);
+
     /* Even more flexible on very small screens */
     -webkit-line-clamp: 6;
-    max-height: calc(1.4em * 6);
   }
 
   .posts-grid {
@@ -1085,21 +1126,21 @@
   }
 
   .cta-title {
-    font-size: 1.125rem; /* Reduced from 1.25rem */
     margin-bottom: 0.5rem;
+    font-size: 1.125rem; /* Reduced from 1.25rem */
   }
 
   .cta-description {
-    font-size: 0.8125rem; /* Reduced from 0.875rem */
     margin-bottom: 1.25rem;
+    font-size: 0.8125rem; /* Reduced from 0.875rem */
     line-height: 1.5;
   }
 
   .cta-button {
+    gap: 0.375rem; /* Reduced gap */
+    min-height: 36px; /* Reduced height */
     padding: 0.625rem 1rem; /* Reduced padding */
     font-size: 0.75rem; /* Reduced font size */
-    min-height: 36px; /* Reduced height */
-    gap: 0.375rem; /* Reduced gap */
   }
 
   .cta-arrow {
@@ -1109,28 +1150,30 @@
 }
 
 /* Larger screens */
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
   .post-card {
     @apply max-w-96;
+
     min-height: 320px;
   }
 
   .post-card .post-description {
+    max-height: calc(1.4em * 3);
+
     /* Slightly fewer lines on larger screens for better proportions */
     -webkit-line-clamp: 3;
-    max-height: calc(1.4em * 3);
   }
 }
 
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
   .posts-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2.5rem;
   }
 
   .features-cta {
-    padding: var(--spacing-12);
     max-width: 100%;
+    padding: var(--spacing-12);
     margin-inline: auto;
   }
 
@@ -1148,14 +1191,14 @@
   }
 
   .cta-button {
+    min-height: 48px;
     padding: var(--spacing-4) var(--spacing-8);
     font-size: var(--fs-base);
-    min-height: 48px;
   }
 }
 
 /* 200% Zoom Accessibility Support */
-@media screen and (min-resolution: 2dppx) {
+@media screen and (resolution >= 2dppx) {
   .post-card {
     /* Ensure cards remain readable at 200% zoom */
     min-width: 12rem;
@@ -1171,16 +1214,18 @@
   }
 
   .post-card .read-more-btn {
-    font-size: clamp(0.6875rem, 2.5vw, 0.8125rem);
     padding: clamp(0.375rem, 1.5vw, 0.625rem) clamp(0.75rem, 2.5vw, 1rem);
+    font-size: clamp(0.6875rem, 2.5vw, 0.8125rem);
   }
 }
 
 /* Container constraints - Relaxed for natural layout */
 .posts-container {
   @apply mx-auto max-w-6xl px-10;
+
   /* Relaxed container constraints for natural layout */
   max-width: min(80rem, 98vw);
+
   /* Remove aggressive overflow hiding */
   overflow-x: visible;
 }
@@ -1188,24 +1233,25 @@
 /* Grid layout */
 .posts-grid {
   @apply mt-8 grid justify-items-center gap-8;
+
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .posts-grid {
     grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
     gap: clamp(1.25rem, 3vw, 2rem);
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .posts-grid {
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
     gap: clamp(1rem, 2.5vw, 1.75rem);
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .posts-grid {
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     gap: clamp(0.875rem, 2vw, 1.5rem);
@@ -1213,10 +1259,12 @@
 }
 
 /* Sticky Note Animation - Static Design */
+
 /* Removed floating animation for static appearance while keeping tilt */
 
 .post-card {
   /* Static design - no floating animation */
+
   /* Keep static tilt for sticky note aesthetic */
   transform: rotate(-1deg);
 }
@@ -1232,11 +1280,11 @@
 /* Accessibility improvements */
 @media {
   .post-card {
+    transform: rotate(-1deg);
     transition:
       box-shadow var(--animate-duration-normal) ease,
       transform var(--animate-duration-fast) ease,
       opacity var(--animate-duration-fast) ease;
-    transform: rotate(-1deg);
   }
 
   .post-card:nth-child(even) {
@@ -1248,8 +1296,8 @@
   }
 
   .post-card:hover {
-    transform: rotate(0deg) translateY(-1px) scale(1.01);
     box-shadow: 0 12px 35px var(--color-accent-shadow);
+    transform: rotate(0deg) translateY(-1px) scale(1.01);
   }
 
   .post-card .read-more-btn,
@@ -1267,27 +1315,28 @@
   }
 
   .post-card .post-tag {
+    background: rgb(139 93 255 / 20%);
     border: 2px solid #8b5dff;
-    background: rgba(139, 93, 255, 0.2);
   }
 }
 
 /* ===== CONSOLIDATED DOCS PAGE STYLES ===== */
+
 /* Moved from docs.astro to create single source of truth */
 
 /* Search Functionality Styles */
 .search-container {
-  margin-bottom: 40px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(139, 93, 255, 0.05);
-  border-radius: 20px;
   padding: 30px;
+  margin-bottom: 40px;
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid rgb(139 93 255 / 5%);
+  border-radius: 20px;
 }
 
 .search-header {
   display: flex;
-  align-items: center;
   gap: 15px;
+  align-items: center;
   margin-bottom: 20px;
 }
 
@@ -1297,10 +1346,10 @@
 }
 
 .search-title {
+  margin: 0;
   font-size: 20px;
   font-weight: 600;
   color: var(--color-text-primary);
-  margin: 0;
 }
 
 .search-input-group {
@@ -1311,18 +1360,18 @@
 .search-input {
   width: 100%;
   padding: 15px 20px 15px 50px;
-  background: rgba(139, 93, 255, 0.1);
-  border: 2px solid rgba(139, 93, 255, 0.2);
-  border-radius: 12px;
-  color: var(--color-text-primary);
   font-size: 16px;
+  color: var(--color-text-primary);
+  background: rgb(139 93 255 / 10%);
+  border: 2px solid rgb(139 93 255 / 20%);
+  border-radius: 12px;
   transition: all 0.3s ease;
 }
 
 .search-input:focus {
   outline: none;
   border-color: var(--color-accent-purple);
-  box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1);
+  box-shadow: 0 0 0 3px rgb(139 93 255 / 10%);
 }
 
 .search-input::placeholder {
@@ -1331,106 +1380,111 @@
 
 .search-input-icon {
   position: absolute;
-  left: 15px;
   top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-muted);
+  left: 15px;
   font-size: 18px;
+  color: var(--color-text-muted);
+  transform: translateY(-50%);
 }
 
 .search-filters {
   display: flex;
-  gap: 15px;
   flex-wrap: wrap;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
 .filter-button {
   padding: 8px 16px;
-  background: rgba(139, 93, 255, 0.1);
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  border-radius: 20px;
-  color: var(--color-text-primary);
   font-size: 14px;
+  color: var(--color-text-primary);
   cursor: pointer;
+  background: rgb(139 93 255 / 10%);
+  border: 1px solid rgb(139 93 255 / 20%);
+  border-radius: 20px;
   transition: all 0.3s ease;
 }
 
 .filter-button.active {
+  color: white;
   background: var(--color-accent-purple);
   border-color: var(--color-accent-purple);
-  color: white;
 }
 
 .filter-button:hover {
-  background: rgba(139, 93, 255, 0.2);
+  background: rgb(139 93 255 / 20%);
   border-color: var(--color-accent-purple);
 }
 
 /* FIXED: Search Results Layout - Optimized for immediate visibility */
 .search-results {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  transition: all 0.3s ease-in-out;
   /* Ensure search results are immediately visible below search input */
   position: relative;
   z-index: 10;
-  /* Add clear visual separation from search input */
-  border-top: 1px solid rgba(139, 93, 255, 0.1);
   padding-top: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  /* Add clear visual separation from search input */
+  border-top: 1px solid rgb(139 93 255 / 10%);
+  transition: all 0.3s ease-in-out;
 }
 
 .search-stats {
   display: flex;
-  justify-content: space-between;
+  visibility: visible;
   align-items: center;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(139, 93, 255, 0.1);
+  margin-bottom: 1.5rem;
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid rgb(139 93 255 / 10%);
   border-radius: var(--radius-lg);
+
   /* Ensure search stats are immediately visible */
   opacity: 1;
-  visibility: visible;
+
   /* Add subtle animation for better UX */
   animation: fadeInUp 0.3s ease-out;
 }
 
 .search-results-count {
+  font-size: 1rem;
   font-weight: 500;
   color: var(--color-text-primary);
-  font-size: 1rem;
 }
 
 .clear-search-btn {
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
   background: none;
   border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
-  cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out);
-  font-size: var(--font-size-sm);
 }
 
 .clear-search-btn:hover {
+  color: var(--color-text-primary);
   background: var(--color-background-secondary);
   border-color: var(--color-border-hover);
-  color: var(--color-text-primary);
 }
 
 /* FIXED: Search Results Grid - Optimized for search context */
 .search-results-grid {
   display: grid;
+  visibility: visible;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.25rem;
-  margin-top: 1rem;
+
   /* Ensure results are immediately visible */
   max-width: 100%;
+  margin-top: 1rem;
   overflow: visible;
+
   /* Add immediate visibility styling */
   opacity: 1;
-  visibility: visible;
   transform: none;
 }
 
@@ -1438,36 +1492,37 @@
 .search-result-card {
   /* Use exact same styling as main post cards with Design #17 features */
   @apply relative mx-auto block w-full max-w-96 cursor-pointer rounded-2xl;
-  background: white;
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  min-height: 280px;
-  padding: 1.5rem;
-  transform: rotate(-1deg); /* Use same rotation as main cards */
-  overflow: visible;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Design #17: Add search-specific visual indicator */
   position: relative;
+  min-height: 280px;
+  padding: 1.5rem;
+  overflow: visible;
+  background: white;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -2px rgb(0 0 0 / 5%);
+  transform: rotate(-1deg); /* Use same rotation as main cards */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Design #17: Search icon badge for visual indicator */
 .search-result-card::before {
-  content: '🔍';
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
-  background: #8b5dff;
-  color: white;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 2rem;
+  height: 2rem;
   font-size: 0.875rem;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(139, 93, 255, 0.3);
+  color: white;
+  content: '🔍';
+  background: #8b5dff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgb(139 93 255 / 30%);
 }
 
 /* Add color variants for search result cards to match main design */
@@ -1489,9 +1544,10 @@
 
 .search-result-card:hover {
   @apply z-10;
-  transform: rotate(0deg) translateY(-1px) scale(1.01);
-  box-shadow: 0 12px 35px var(--color-accent-shadow);
+
   background: white; /* Use same hover effect as main cards */
+  box-shadow: 0 12px 35px var(--color-accent-shadow);
+  transform: rotate(0deg) translateY(-1px) scale(1.01);
 }
 
 /* Design #17: Enhanced Post Meta Layout - Vertical Stacking */
@@ -1499,94 +1555,101 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin: 1rem 0;
+
   /* Enhanced spacing for better visual hierarchy */
   padding: 0.75rem;
-  background: rgba(139, 93, 255, 0.02);
+  margin: 1rem 0;
+  background: rgb(139 93 255 / 2%);
+  border: 1px solid rgb(139 93 255 / 10%);
   border-radius: 0.5rem;
-  border: 1px solid rgba(139, 93, 255, 0.1);
 }
 
 /* Design #17: Enhanced Search Relevance Indicator */
 .search-relevance {
-  font-size: 0.875rem; /* Slightly larger */
-  color: #10b981;
-  font-weight: 600;
-  background: rgba(16, 185, 129, 0.1);
-  padding: 0.5rem 0.75rem; /* More padding */
-  border-radius: 0.5rem;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  /* Design #17: Add subtle animation */
-  transition: all 0.2s ease;
-  /* Enhanced prominence */
-  text-align: center;
-  font-weight: 700;
   /* Ensure it fits well within the post-meta layout */
   display: inline-block;
+  padding: 0.5rem 0.75rem; /* More padding */
   margin-top: 0.5rem;
+  font-size: 0.875rem; /* Slightly larger */
+  font-weight: 600;
+  font-weight: 700;
+  color: #10b981;
+
+  /* Enhanced prominence */
+  text-align: center;
+  background: rgb(16 185 129 / 10%);
+  border: 1px solid rgb(16 185 129 / 20%);
+  border-radius: 0.5rem;
+
   /* Add subtle glow effect */
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 2px 4px rgb(16 185 129 / 10%);
+
+  /* Design #17: Add subtle animation */
+  transition: all 0.2s ease;
 }
 
 .search-relevance:hover {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgb(16 185 129 / 15%);
+  box-shadow: 0 4px 8px rgb(16 185 129 / 20%);
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
 }
 
 /* Design #17: Compact Search Relevance Indicator - Screenshot Match */
 .search-relevance-compact {
-  font-size: 0.75rem;
-  color: #10b981;
-  font-weight: 600;
-  background: rgba(16, 185, 129, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  transition: all 0.2s ease;
   /* Compact pill design like screenshot */
   display: inline-flex;
-  align-items: center;
   gap: 0.25rem;
-  /* Subtle shadow for depth */
-  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.1);
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+
   /* Ensure it fits well in metadata row */
   margin-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #10b981;
   white-space: nowrap;
+  background: rgb(16 185 129 / 10%);
+  border: 1px solid rgb(16 185 129 / 20%);
+  border-radius: 0.75rem;
+
+  /* Subtle shadow for depth */
+  box-shadow: 0 1px 2px rgb(16 185 129 / 10%);
+  transition: all 0.2s ease;
 }
 
 .search-relevance-compact:hover {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgb(16 185 129 / 15%);
+  box-shadow: 0 2px 4px rgb(16 185 129 / 20%);
   transform: scale(1.05);
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 }
 
 /* Design #17: Enhanced Post Date Styling */
 .search-result-card .post-date {
-  font-size: 0.875rem;
-  color: #6b7280;
-  font-weight: 500;
   padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: rgb(107 114 128 / 5%);
+  border: 1px solid rgb(107 114 128 / 10%);
   border-radius: 0.25rem;
-  background: rgba(107, 114, 128, 0.05);
-  border: 1px solid rgba(107, 114, 128, 0.1);
   transition: all 0.2s ease;
 }
 
 .search-result-card .post-date:hover {
-  background: rgba(107, 114, 128, 0.1);
+  background: rgb(107 114 128 / 10%);
   transform: scale(1.02);
 }
 
 /* Design #17: Enhanced Title Styling - BIGGER and More Prominent */
 .search-result-card .post-title {
+  margin-bottom: 1rem;
   font-size: 1.5rem; /* Increased from default */
   font-weight: 700; /* Bolder weight */
   line-height: 1.3;
-  margin-bottom: 1rem;
   color: var(--color-gray-800);
+
   /* Enhanced visual prominence */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 5%);
 }
 
 .search-result-card .post-title a {
@@ -1601,75 +1664,76 @@
 
 /* Design #17: Enhanced Content Snippet Styling */
 .content-snippet {
-  margin: 1rem 0;
-  padding: 1rem;
-  background: #f3f4f6;
-  border-left: 3px solid #8b5dff;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(139, 93, 255, 0.1);
-  /* Design #17: Add subtle shadow for depth */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   /* Design #17: Add search context indicator */
   position: relative;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: #f3f4f6;
+  border: 1px solid rgb(139 93 255 / 10%);
+  border-left: 3px solid #8b5dff;
+  border-radius: 0.5rem;
+
+  /* Design #17: Add subtle shadow for depth */
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
 }
 
 /* Design #17: Add "Search Context" label */
 .content-snippet::before {
-  content: '🔍 Konteks Pencarian';
   position: absolute;
   top: -0.5rem;
   left: 1rem;
-  background: #8b5dff;
-  color: white;
+  z-index: 5;
   padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
   font-size: 0.75rem;
   font-weight: 600;
-  z-index: 5;
+  color: white;
+  content: '🔍 Konteks Pencarian';
+  background: #8b5dff;
+  border-radius: 0.25rem;
 }
 
 /* Design #17: Enhanced Snippet Text Styling */
 .snippet-text {
-  font-size: 0.875rem;
-  color: #6b7280;
-  line-height: 1.6;
-  margin: 0;
-  font-style: italic;
   /* Design #17: Add padding for search context label */
   padding-top: 0.5rem;
+  margin: 0;
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: #6b7280;
 }
 
 /* Design #17: Highlight search terms in snippet */
 .snippet-text mark {
-  background: #fef3c7;
   padding: 0.1rem 0.2rem;
-  border-radius: 0.25rem;
   font-weight: 600;
   color: #92400e;
+  background: #fef3c7;
+  border-radius: 0.25rem;
 }
 
 .search-metadata {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin: 1rem 0;
-  flex-wrap: wrap;
 }
 
 .metadata-tag {
-  font-size: var(--font-size-xs);
   padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border-radius: var(--radius-sm);
 }
 
 /* Design #17: Enhanced Metadata Tags */
 .metadata-tag.category {
-  background: #8b5dff;
-  color: white;
-  border: 1px solid #8b5dff;
   font-weight: 600;
+  color: white;
+  background: #8b5dff;
+  border: 1px solid #8b5dff;
   transition: all 0.2s ease;
 }
 
@@ -1680,10 +1744,10 @@
 
 /* Design #17: Enhanced Difficulty Tag */
 .metadata-tag.difficulty {
-  background: #10b981;
-  color: white;
-  border: 1px solid #10b981;
   font-weight: 600;
+  color: white;
+  background: #10b981;
+  border: 1px solid #10b981;
   transition: all 0.2s ease;
 }
 
@@ -1694,10 +1758,10 @@
 
 /* Design #17: Enhanced Stage Tag */
 .metadata-tag.stage {
-  background: #3b82f6;
-  color: white;
-  border: 1px solid #3b82f6;
   font-weight: 600;
+  color: white;
+  background: #3b82f6;
+  border: 1px solid #3b82f6;
   transition: all 0.2s ease;
 }
 
@@ -1708,10 +1772,10 @@
 
 /* Design #17: Enhanced Complexity Tag */
 .metadata-tag.complexity {
-  background: #a855f7;
-  color: white;
-  border: 1px solid #a855f7;
   font-weight: 600;
+  color: white;
+  background: #a855f7;
+  border: 1px solid #a855f7;
   transition: all 0.2s ease;
 }
 
@@ -1724,45 +1788,46 @@
 
 /* Design #17: Enhanced Semantic Keywords */
 .semantic-keywords {
-  margin: 1rem 0;
   padding: 1rem;
+  margin: 1rem 0;
   background: #f8fafc;
-  border-radius: 0.5rem;
+  border: 1px solid rgb(139 93 255 / 10%);
   border-left: 3px solid #8b5dff;
-  border: 1px solid rgba(139, 93, 255, 0.1);
+  border-radius: 0.5rem;
+
   /* Design #17: Add subtle shadow */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
 }
 
 .semantic-label {
-  font-size: 0.75rem;
-  color: #6b7280;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  display: block;
   /* Design #17: Add search icon */
   position: relative;
+  display: block;
   padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
 }
 
 .semantic-label::before {
-  content: '🔍';
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
   font-size: 0.875rem;
+  content: '🔍';
 }
 
 .semantic-keyword {
   display: inline-block;
-  background: #8b5dff;
-  color: white;
   padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
   margin: 0.25rem 0.25rem 0.25rem 0;
-  border: 1px solid #8b5dff;
+  font-size: 0.75rem;
   font-weight: 600;
+  color: white;
+  background: #8b5dff;
+  border: 1px solid #8b5dff;
+  border-radius: 0.25rem;
   transition: all 0.2s ease;
 }
 
@@ -1773,28 +1838,28 @@
 
 /* Design #17: Enhanced Word Count */
 .word-count {
+  padding: 0.25rem 0.5rem;
+  margin-left: 1rem;
   font-size: 0.75rem;
   color: #9ca3af;
-  margin-left: 1rem;
-  background: rgba(156, 163, 175, 0.1);
-  padding: 0.25rem 0.5rem;
+  background: rgb(156 163 175 / 10%);
+  border: 1px solid rgb(156 163 175 / 20%);
   border-radius: 0.25rem;
-  border: 1px solid rgba(156, 163, 175, 0.2);
   transition: all 0.2s ease;
 }
 
 .word-count:hover {
-  background: rgba(156, 163, 175, 0.15);
+  background: rgb(156 163 175 / 15%);
   transform: scale(1.05);
 }
 
 /* Design #17: Enhanced Search Highlight */
 .search-highlight {
-  background: #fef3c7;
-  color: #92400e;
   padding: 0.1rem 0.2rem;
-  border-radius: 0.25rem;
   font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  border-radius: 0.25rem;
   transition: all 0.2s ease;
 }
 
@@ -1804,30 +1869,30 @@
 }
 
 .search-no-results {
-  text-align: center;
   padding: 3rem 1rem;
+  margin-top: 2rem;
+  text-align: center;
   background: var(--color-background-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  margin-top: 2rem;
 }
 
 .search-no-results .no-results-icon {
-  font-size: 3rem;
   margin-bottom: 1rem;
+  font-size: 3rem;
   opacity: 0.5;
 }
 
 .search-no-results h3 {
+  margin-bottom: 0.5rem;
   font-size: var(--font-size-xl);
   font-weight: 600;
-  margin-bottom: 0.5rem;
   color: var(--color-text-primary);
 }
 
 .search-no-results p {
-  color: var(--color-text-secondary);
   margin-bottom: 1.5rem;
+  color: var(--color-text-secondary);
 }
 
 .search-suggestions {
@@ -1838,17 +1903,17 @@
 
 /* Search Input Enhancement */
 .search-input-ready {
-  border-color: var(--color-accent-purple-glow-medium) !important;
   background: var(--color-background-input) !important;
+  border-color: var(--color-accent-purple-glow-medium) !important;
 }
 
 .search-input-ready:focus {
   border-color: var(--color-primary) !important;
-  box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1) !important;
+  box-shadow: 0 0 0 3px rgb(139 93 255 / 10%) !important;
 }
 
 /* FIXED: Responsive Design for Search Results */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .search-results-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -1864,8 +1929,8 @@
   .search-stats {
     flex-direction: column;
     gap: 0.75rem;
-    text-align: center;
     padding: 0.75rem;
+    text-align: center;
   }
 
   .search-filters {
@@ -1874,12 +1939,12 @@
   }
 
   .filter-button {
-    text-align: center;
     padding: 0.75rem 1rem;
+    text-align: center;
   }
 }
 
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .search-results-grid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
@@ -1893,8 +1958,8 @@
   }
 
   .search-loading-indicator {
-    gap: 4px;
     display: none;
+    gap: 4px;
   }
 
   .search-loading-indicator .loading-text {
@@ -1902,7 +1967,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .search-results-grid {
     grid-template-columns: 1fr;
     gap: 0.5rem;
@@ -1923,82 +1988,86 @@
 
 /* FIXED: Content State Management - Proper Visibility Control */
 #contentState {
-  transition: all 0.3s ease-in-out;
-  opacity: 1;
   visibility: visible;
+
   /* Preserve the posts-grid layout - don't override display */
   width: 100%;
   max-width: 100%;
   overflow: visible;
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
 }
 
 #contentState.hidden {
-  opacity: 0;
   visibility: hidden;
-  pointer-events: none;
+
   /* Ensure it doesn't take up space when hidden */
   max-height: 0;
-  overflow: hidden;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
 }
 
 #searchResults {
-  transition: all 0.3s ease-in-out;
-  opacity: 1;
   visibility: visible;
+
   /* Preserve the search-results-grid layout - don't override display */
   width: 100%;
   max-width: 100%;
   overflow: visible;
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
 }
 
 #searchResults.hidden {
-  opacity: 0;
   visibility: hidden;
-  pointer-events: none;
+
   /* Ensure it doesn't take up space when hidden */
   max-height: 0;
-  overflow: hidden;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
 }
 
 /* FIXED: Loading States */
 .search-input-loading {
-  opacity: 0.6;
   cursor: not-allowed;
-  background: rgba(139, 93, 255, 0.05);
-  border-color: rgba(139, 93, 255, 0.1);
+  background: rgb(139 93 255 / 5%);
+  border-color: rgb(139 93 255 / 10%);
+  opacity: 0.6;
 }
 
 .search-input-loading:focus {
-  border-color: rgba(139, 93, 255, 0.1);
+  border-color: rgb(139 93 255 / 10%);
   box-shadow: none;
 }
 
 .search-loading-indicator {
   position: absolute;
-  right: 15px;
   top: 50%;
-  transform: translateY(-50%);
+  right: 15px;
   display: flex;
-  align-items: center;
   gap: 6px;
-  opacity: 0.7;
+  align-items: center;
   padding: 0;
   background: transparent;
   border: none;
+  opacity: 0.7;
+  transform: translateY(-50%);
 }
 
 .loading-text {
-  white-space: nowrap;
-  overflow: hidden;
   max-width: 120px;
+  overflow: hidden;
   font-size: 12px;
-  line-height: 1.25;
-  color: rgba(139, 93, 255, 0.6);
   font-weight: 400;
+  line-height: 1.25;
+  color: rgb(139 93 255 / 60%);
+  white-space: nowrap;
 }
 
 .search-input-ready .search-loading-indicator {
@@ -2006,23 +2075,23 @@
 }
 
 .search-input-ready {
-  opacity: 1;
   cursor: text;
-  background: rgba(139, 93, 255, 0.1);
-  border-color: rgba(139, 93, 255, 0.2);
+  background: rgb(139 93 255 / 10%);
+  border-color: rgb(139 93 255 / 20%);
+  opacity: 1;
 }
 
 .search-input-ready:focus {
   border-color: var(--color-accent-purple);
-  box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1);
+  box-shadow: 0 0 0 3px rgb(139 93 255 / 10%);
 }
 
 .filter-button-loading {
-  opacity: 0.5;
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .loading-text {
     max-width: 140px;
     font-size: 12px;
@@ -2031,52 +2100,52 @@
 
 /* Pagination Styles */
 .pagination-container {
+  padding: 30px;
   margin-top: 40px;
   margin-bottom: 60px; /* Add proper spacing before features-cta */
-  padding: 30px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(139, 93, 255, 0.1);
+  background: rgb(255 255 255 / 3%);
+  border: 1px solid rgb(139 93 255 / 10%);
   border-radius: 20px;
   backdrop-filter: blur(10px);
 }
 
 .pagination-info {
-  text-align: center;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .pagination-stats {
-  color: var(--color-text-secondary);
   font-size: 14px;
+  color: var(--color-text-secondary);
 }
 
 .pagination-controls {
   display: flex;
+  gap: 15px;
   align-items: center;
   justify-content: center;
-  gap: 15px;
   margin-bottom: 20px;
 }
 
 .pagination-btn {
   padding: 10px 20px;
-  background: rgba(139, 93, 255, 0.1);
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  border-radius: 12px;
-  color: var(--color-text-primary);
   font-size: 14px;
+  color: var(--color-text-primary);
   cursor: pointer;
+  background: rgb(139 93 255 / 10%);
+  border: 1px solid rgb(139 93 255 / 20%);
+  border-radius: 12px;
   transition: all 0.3s ease;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: rgba(139, 93, 255, 0.2);
+  background: rgb(139 93 255 / 20%);
   border-color: var(--color-accent-purple);
 }
 
 .pagination-btn:disabled {
-  opacity: 0.5;
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .pagination-numbers {
@@ -2085,29 +2154,29 @@
 }
 
 .pagination-number {
-  width: 40px;
-  height: 40px;
-  background: rgba(139, 93, 255, 0.1);
-  border: 1px solid rgba(139, 93, 255, 0.2);
-  border-radius: 8px;
-  color: var(--color-text-primary);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  background: rgb(139 93 255 / 10%);
+  border: 1px solid rgb(139 93 255 / 20%);
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .pagination-number:hover {
-  background: rgba(139, 93, 255, 0.2);
+  background: rgb(139 93 255 / 20%);
   border-color: var(--color-accent-purple);
 }
 
 .pagination-number.active {
+  color: white;
   background: var(--color-accent-purple);
   border-color: var(--color-accent-purple);
-  color: white;
 }
 
 .pagination-toggle {
@@ -2116,11 +2185,11 @@
 
 .pagination-mode-toggle {
   display: inline-flex;
-  align-items: center;
   gap: 10px;
-  cursor: pointer;
-  color: var(--color-text-secondary);
+  align-items: center;
   font-size: 14px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
 }
 
 .pagination-mode-toggle input[type='checkbox'] {
@@ -2128,23 +2197,23 @@
 }
 
 .toggle-slider {
+  position: relative;
   width: 50px;
   height: 24px;
-  background: rgba(139, 93, 255, 0.2);
+  background: rgb(139 93 255 / 20%);
   border-radius: 12px;
-  position: relative;
   transition: all 0.3s ease;
 }
 
-.toggle-slider:before {
-  content: '';
+.toggle-slider::before {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  background: white;
-  border-radius: 50%;
   top: 2px;
   left: 2px;
+  width: 20px;
+  height: 20px;
+  content: '';
+  background: white;
+  border-radius: 50%;
   transition: all 0.3s ease;
 }
 
@@ -2152,40 +2221,41 @@
   background: var(--color-accent-purple);
 }
 
-.pagination-mode-toggle input[type='checkbox']:checked + .toggle-slider:before {
+.pagination-mode-toggle input[type='checkbox']:checked + .toggle-slider::before {
   transform: translateX(26px);
 }
 
 /* Enhanced post-meta layout to accommodate compact relevance */
 .post-card .post-meta {
   @apply mb-2;
+
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   gap: 0.5rem;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 /* Ensure search relevance doesn't interfere with existing post-date styling */
 .post-card .post-meta .post-date {
   @apply text-sm text-gray-500;
-  font-weight: 500;
+
   display: flex;
-  align-items: center;
   gap: 0.25rem;
+  align-items: center;
+  font-weight: 500;
 }
 
 /* Add calendar icon for date */
 .post-card .post-meta .post-date::before {
-  content: '📅';
   font-size: 0.875rem;
+  content: '📅';
 }
 
 /* Responsive adjustments for compact relevance in cards */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .search-relevance-compact {
-    font-size: 0.7rem;
     padding: 0.2rem 0.4rem;
+    font-size: 0.7rem;
   }
 
   .post-card .post-meta {
@@ -2193,20 +2263,21 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .search-relevance-compact {
-    font-size: 0.65rem;
     padding: 0.15rem 0.35rem;
+    font-size: 0.65rem;
   }
 
   .post-card .post-meta {
     flex-direction: column;
-    align-items: flex-start;
     gap: 0.3rem;
+    align-items: flex-start;
   }
 }
 
 /* Page-specific styles only - reusable styles moved to docs.css */
+
 /* Critical inline styles and page-specific overrides remain here */
 
 /* Search Results Styles */
@@ -2216,13 +2287,13 @@
 
 .search-stats {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
   padding: 1rem;
-  background: rgba(139, 93, 255, 0.05);
+  margin-bottom: 1.5rem;
+  background: rgb(139 93 255 / 5%);
+  border: 1px solid rgb(139 93 255 / 10%);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(139, 93, 255, 0.1);
 }
 
 .search-results-count {
@@ -2231,20 +2302,20 @@
 }
 
 .clear-search-btn {
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
   background: none;
   border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
-  cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out);
-  font-size: var(--font-size-sm);
 }
 
 .clear-search-btn:hover {
+  color: var(--color-text-primary);
   background: var(--color-background-secondary);
   border-color: var(--color-border-hover);
-  color: var(--color-text-primary);
 }
 
 .search-results-grid {
@@ -2258,30 +2329,30 @@
 /* All search result card styles now use enhanced CSS from docs.css */
 
 .search-no-results {
-  text-align: center;
   padding: 3rem 1rem;
+  margin-top: 2rem;
+  text-align: center;
   background: var(--color-background-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  margin-top: 2rem;
 }
 
 .search-no-results .no-results-icon {
-  font-size: 3rem;
   margin-bottom: 1rem;
+  font-size: 3rem;
   opacity: 0.5;
 }
 
 .search-no-results h3 {
+  margin-bottom: 0.5rem;
   font-size: var(--font-size-xl);
   font-weight: 600;
-  margin-bottom: 0.5rem;
   color: var(--color-text-primary);
 }
 
 .search-no-results p {
-  color: var(--color-text-secondary);
   margin-bottom: 1.5rem;
+  color: var(--color-text-secondary);
 }
 
 .search-suggestions {
@@ -2292,11 +2363,11 @@
 
 /* Search Input Enhancement */
 .search-input-ready {
-  border-color: var(--color-accent-purple-glow-medium) !important;
   background: var(--color-background-input) !important;
+  border-color: var(--color-accent-purple-glow-medium) !important;
 }
 
 .search-input-ready:focus {
   border-color: var(--color-primary) !important;
-  box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1) !important;
+  box-shadow: 0 0 0 3px rgb(139 93 255 / 10%) !important;
 }
