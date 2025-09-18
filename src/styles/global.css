@@ -526,21 +526,6 @@
    * CHANGE: All colors now use OKLCH for better perceptual uniformity and future-proofing
    */
 
-  /* Base colors - fully OKLCH optimized */
-  --color-background: var(--clr-background);
-  --color-foreground: var(--clr-text-primary);
-
-  /* Surface colors - enhanced from legacy */
-  --color-card: oklch(8% 0.008 270deg); /* Slightly lighter than background */
-  --color-card-foreground: oklch(95% 0.002 270deg);
-  --color-popover: oklch(6% 0.006 270deg);
-  --color-popover-foreground: oklch(98% 0.002 270deg);
-
-  /* Primary purple - now references the primary color system */
-  --color-primary: var(--clr-primary);
-  --color-primary-dark: var(--clr-primary-dark);
-  --color-primary-foreground: oklch(98% 0.002 270deg);
-
   /* Secondary gold - OKLCH optimized */
   --color-secondary: oklch(75% 0.12 65deg);
   --color-secondary-foreground: oklch(15% 0.005 270deg);
@@ -565,18 +550,6 @@
   --color-border: var(--clr-text-muted);
   --color-input: oklch(15% 0.008 270deg);
   --color-ring: var(--clr-accent);
-
-  /* Extended neutral palette - preserved from legacy */
-  --color-neutral-50: oklch(98% 0.005 254.624deg);
-  --color-neutral-100: oklch(95% 0.01 254.624deg);
-  --color-neutral-200: oklch(90% 0.015 254.624deg);
-  --color-neutral-300: oklch(80% 0.02 254.624deg);
-  --color-neutral-400: oklch(70% 0.025 254.624deg);
-  --color-neutral-500: oklch(60% 0.03 254.624deg);
-  --color-neutral-600: oklch(50% 0.035 254.624deg);
-  --color-neutral-700: oklch(40% 0.04 254.624deg);
-  --color-neutral-800: oklch(30% 0.045 254.624deg);
-  --color-neutral-900: oklch(20% 0.05 254.624deg);
 
   /* ===== DESIGN TOKENS - PRESERVED AND ENHANCED FROM LEGACY ===== */
 
