@@ -117,7 +117,7 @@ export default defineConfig({
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@/types/*": ["src/types/*"]
+      "@/types/*": ["src/scripts/type-scripts/*"]
     },
     "types": ["node"],
     "esModuleInterop": true,

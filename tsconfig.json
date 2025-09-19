@@ -9,7 +9,11 @@
     "astro.config.mjs",
     "tailwind.config.mjs"
   ],
-  "exclude": ["dist", "node_modules", "src/**/*.astro"],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "src/**/*.astro"
+  ],
   "compilerOptions": {
     "strict": true,
     "strictNullChecks": true,
@@ -25,10 +29,16 @@
     "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@/types/*": ["src/types/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@/types/*": [
+        "src/scripts/type-scripts/*"
+      ]
     },
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,

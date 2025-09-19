@@ -119,21 +119,27 @@ const formatToolName = (tool: string): string =>
     overflow: hidden;
     height: fit-content;
     margin: 0 clamp(var(--spacing-xs), 2vw, var(--spacing-md));
-    border: 1px solid var(--clr-text-muted);
     border-radius: var(--radius-xl);
-    background: var(--clr-background);
+    background: oklch(from var(--clr-background) l c h / 0.25);
+    box-shadow: var(--shadow-md);
     transition:
       transform var(--transition-normal),
       box-shadow var(--transition-normal);
     contain: layout style paint;
-    backdrop-filter: blur(20px);
     will-change: transform;
+  }
+
+  /* Reduce layout thrashing */
+  .article-card-optimized .card-meta,
+  .article-card-optimized .card-tags {
+    contain: layout;
   }
 
   .article-card-optimized:hover {
     border-color: var(--clr-accent-glow-medium);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    transform: var(--hover-lift-enhanced);
+    transition: all var(--transition-smooth);
   }
 
   .card-link {

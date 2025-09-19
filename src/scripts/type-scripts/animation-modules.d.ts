@@ -49,3 +49,4 @@ declare module '../scripts/ui/background-animations/stars-animation.js' {
     config?: Partial<StarsConfig>
   ): StarsAnimation;
 }
+

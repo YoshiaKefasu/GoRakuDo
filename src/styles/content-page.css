@@ -161,9 +161,13 @@
 
 .post-date,
 .post-author,
-.post-read-time { @apply text-[var(--clr-content-meta)]; }
+.post-read-time {
+  @apply text-[var(--clr-content-meta)];
+}
 
-.post-title { @apply text-inherit; }
+.post-title {
+  @apply text-inherit;
+}
 
 /* ========== DIFFICULTY BADGES ========== */
 
@@ -345,8 +349,8 @@
   .reading-progress,
   .internal-link,
   .internal-link::before {
-    transition: none ;
-    animation: none ;
+    transition: none;
+    animation: none;
   }
 }
 

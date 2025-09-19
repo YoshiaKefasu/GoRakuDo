@@ -23,41 +23,42 @@
   --clr-accent-fallback: var(--clr-accent);
 
   /* ===== ANIMATION SYSTEM - REUSABLE TRANSITIONS ===== */
-  
+
   /* Smooth hover transitions - Material Design inspired */
   --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Individual property transitions for fine control */
   --transition-bg: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-shadow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-transform: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-opacity: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-border: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Hover effects */
   --hover-lift: translateY(-2px);
   --hover-lift-small: translateY(-1px);
   --hover-scale: scale(1.02);
-  
+
   /* Shadow effects */
-  --shadow-hover: 
-    0 8px 25px oklch(0% 0 0deg / 0.2),
-    0 4px 12px oklch(0% 0 0deg / 0.15);
+  --shadow-hover:
+    0 8px 25px oklch(0% 0 0deg / 0.2), 0 4px 12px oklch(0% 0 0deg / 0.15);
   --shadow-base: 0 2px 8px oklch(0% 0 0deg / 0.1);
   --shadow-active: 0 1px 4px oklch(0% 0 0deg / 0.2);
-  
+
   /* Enhanced hover effects */
   --hover-lift-enhanced: translateY(-3px);
   --hover-scale-enhanced: scale(1.02);
 
   /* ===== LEGACY COLOR MAPPING - COMPATIBILITY LAYER ===== */
-  
+
   /* Legacy variables now reference the primary color system - DEPRECATED */
 
   /* These are kept for backward compatibility but should not be used in new code */
-  --color-accent-purple-rgb: 139, 93, 255; /* Legacy RGB values - use OKLCH instead */
+  --color-accent-purple-rgb:
+    139, 93, 255; /* Legacy RGB values - use OKLCH instead */
+
   --color-gold-dark-transparent: oklch(75% 0.12 85deg / 0.25);
 
   /* ===== PAPER THEME - OKLCH ===== */
@@ -77,9 +78,12 @@
   /* ===== TYPOGRAPHY SYSTEM ===== */
 
   /* Primary font with comprehensive fallbacks */
-  --font-primary: 'Inter', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, sans-serif;
+  --font-primary:
+    'Inter', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', roboto,
+    sans-serif;
   --font-serif: 'Lora', 'Times New Roman', times, serif;
-  --font-jp: 'Yuji Syuku', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', serif;
+  --font-jp:
+    'Yuji Syuku', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', serif;
   --font-cursive: 'Cedarville Cursive', cursive;
 
   /* Legacy compatibility - now references primary font system */
@@ -115,13 +119,13 @@
 
   /* ===== OPTIMIZATION FLAGS ===== */
   --localhost-optimization: true;
-  
+
   /* ===== OKLCH PERFORMANCE OPTIMIZATIONS ===== */
   --oklch-cache: true; /* Enable OKLCH color caching */
   --oklch-gpu-acceleration: true; /* Enable GPU acceleration for OKLCH */
 
   /* ===== CONTENT PAGE SYSTEM - OKLCH OPTIMIZED ===== */
-  
+
   /* Content page base colors */
   --clr-content-background: oklch(8% 0.01 270deg / 0.95);
   --clr-content-background-light: oklch(8% 0.01 270deg / 0.5);
@@ -146,7 +150,7 @@
   --z-content-modal: 100;
 
   /* ===== PRIMARY COLOR ALIASES - FREQUENTLY USED ===== */
-  
+
   /* Primary color aliases for content pages (3+ uses) - consolidated from content-page.css */
   --clr-primary: var(--clr-accent);
   --clr-primary-dark: var(--clr-accent-dark);
@@ -159,14 +163,21 @@
 /* Enhanced font support for Japanese and emoji */
 .emoji {
   font-family:
-    Noto emoji, Apple Color emoji, Segoe UI emoji, Segoe UI Symbol,
+    Noto emoji,
+    Apple Color emoji,
+    Segoe UI emoji,
+    Segoe UI Symbol,
     sans-serif;
   font-variant-emoji: emoji;
 }
 
 .japanese {
   font-family:
-    Yuji Syuku, Noto Sans JP, Hiragino Sans, Yu Gothic, Meiryo,
+    Yuji Syuku,
+    Noto Sans JP,
+    Hiragino Sans,
+    Yu Gothic,
+    Meiryo,
     sans-serif;
 }
 
@@ -308,7 +319,10 @@
   padding: 1rem;
   border-radius: 0.5rem;
   background: oklch(10% 0.01 270deg / 0.9);
-  font-family: Fira Code, Courier New, monospace;
+  font-family:
+    Fira Code,
+    Courier New,
+    monospace;
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -318,7 +332,10 @@
   border-radius: 0.25rem;
   background: oklch(15% 0.02 270deg / 0.8);
   color: var(--clr-gold-dark);
-  font-family: Fira Code, Courier New, monospace;
+  font-family:
+    Fira Code,
+    Courier New,
+    monospace;
   font-size: 0.875rem;
 }
 
@@ -600,8 +617,10 @@
 
   /* Shadow system - enhanced from legacy */
   --shadow-sm: 0 1px 2px oklch(0% 0 0deg / 0.05);
-  --shadow-md: 0 4px 8px oklch(0% 0 0deg / 0.15), 0 2px 4px oklch(0% 0 0deg / 0.1);
-  --shadow-lg: 0 8px 16px oklch(0% 0 0deg / 0.2), 0 4px 8px oklch(0% 0 0deg / 0.1);
+  --shadow-md:
+    0 4px 8px oklch(0% 0 0deg / 0.15), 0 2px 4px oklch(0% 0 0deg / 0.1);
+  --shadow-lg:
+    0 8px 16px oklch(0% 0 0deg / 0.2), 0 4px 8px oklch(0% 0 0deg / 0.1);
   --shadow-xl:
     0 16px 32px oklch(0% 0 0deg / 0.25), 0 8px 16px oklch(0% 0 0deg / 0.15);
 
@@ -826,7 +845,6 @@
     background: transparent !important;
   }
 
-
   /* Focus management for accessibility */
   *:focus {
     outline: none;
@@ -845,7 +863,13 @@
   }
 
   /* Smooth transitions for theme switching - but not affecting buttons */
-  :not(button, .btn-primary, .btn-secondary, .primary-button, .secondary-button) {
+  :not(
+    button,
+    .btn-primary,
+    .btn-secondary,
+    .primary-button,
+    .secondary-button
+  ) {
     transition:
       background-color var(--duration-normal) ease,
       border-color var(--duration-normal) ease,
@@ -938,7 +962,7 @@
       padding: 14px 28px;
       font-size: 15px;
     }
-    
+
     /* Article content responsive styles */
     .article-content ul,
     .article-content ol {
@@ -1617,7 +1641,7 @@
     border: 1px solid black;
     background: white;
   }
-  
+
   /* Article content print styles */
   .article-content ul,
   .article-content ol {
@@ -1727,9 +1751,13 @@
 
 /* Core animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
+  from {
+    opacity: 0;
+  }
 
-  to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -1757,7 +1785,8 @@
 }
 
 @keyframes bounceSubtle {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
 
@@ -1850,7 +1879,7 @@
 
 /* Smooth hover effect utility classes */
 .hover-smooth {
-  transition: 
+  transition:
     background-color var(--transition-smooth),
     border-color var(--transition-smooth),
     box-shadow var(--transition-smooth),

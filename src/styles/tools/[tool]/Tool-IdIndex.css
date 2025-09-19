@@ -84,12 +84,6 @@
   will-change: transform;
 }
 
-/* Reduce layout thrashing */
-.article-card-optimized .card-meta,
-.article-card-optimized .card-tags {
-  contain: layout;
-}
-
 /* Optimize image rendering */
 .article-image-container {
   image-rendering: crisp-edges;
@@ -171,7 +165,7 @@
 .header-meta {
   display: flex;
   justify-content: center;
-  gap: var(--tool-spacing-xs) ;
+  gap: var(--tool-spacing-xs);
   flex-flow: column wrap;
 }
 
@@ -213,8 +207,8 @@
   display: flex;
   justify-content: center;
   width: fit-content;
-  margin: 0 ;
-  padding: 0.5rem ;
+  margin: 0;
+  padding: 0.5rem;
   border-radius: calc((var(--tool-radius-xl) + var(--tool-radius-2xl)) / 2);
 }
 
@@ -233,7 +227,7 @@
   }
 
   .tool-navigation-wrapper .breadcrumb-section {
-    padding: 0.5rem 0.75rem ;
+    padding: 0.5rem 0.75rem;
   }
 }
 
@@ -250,7 +244,7 @@
   .tool-navigation-wrapper .breadcrumb-section {
     justify-content: flex-start;
     width: auto;
-    padding: 0.5rem 0.17rem ;
+    padding: 0.5rem 0.17rem;
   }
 
   .tool-navigation-wrapper .search-section {
@@ -654,7 +648,7 @@
   .header-meta {
     flex-direction: row;
     justify-content: flex-start;
-    gap: var(--tool-spacing-lg) ;
+    gap: var(--tool-spacing-lg);
   }
 
   .tool-navigation-wrapper {
@@ -720,8 +714,8 @@
   .empty-state-btn,
   .suggestion-item,
   .hover-lift {
-    transition: none ;
-    animation: none ;
+    transition: none;
+    animation: none;
   }
 }
 
@@ -1423,7 +1417,10 @@
   border-radius: var(--tool-radius-sm);
   background: var(--tool-color-bg-card);
   color: var(--tool-color-secondary);
-  font-family: Fira Code, Courier New, monospace;
+  font-family:
+    Fira Code,
+    Courier New,
+    monospace;
   font-size: var(--tool-font-size-base);
 }
 
@@ -1717,12 +1714,12 @@
   .reading-progress-bar,
   .action-btn,
   .back-to-tools {
-    transition: none ;
+    transition: none;
   }
 
   .action-btn:hover,
   .back-to-tools:hover {
-    transform: none ;
+    transform: none;
   }
 }
 
@@ -1752,16 +1749,16 @@
   .article-navigation,
   .article-progress,
   .navbar {
-    display: none ;
+    display: none;
   }
 
   .article-content-wrapper {
-    background: white ;
+    background: white;
   }
 
   .article-content,
   .article-content-enhanced {
-    color: #000 ;
+    color: #000;
     font-size: 11pt;
     line-height: 1.4;
   }
@@ -1788,6 +1785,6 @@
   .article-content-enhanced h1,
   .article-content-enhanced h2,
   .article-content-enhanced h3 {
-    color: black ;
+    color: black;
   }
 }

@@ -17,14 +17,8 @@ declare global {
       startGroup: (title: string) => void;
       endGroup: (title: string) => void;
     };
-    searchLoadingManager?: {
-      isLoading: boolean;
-      setLoading: (loading: boolean) => void;
-    };
-    searchEngine?: {
-      search: (query: string) => Promise<unknown[]>;
-      filter: (filters: Record<string, unknown>) => unknown[];
-    };
+    searchLoadingManager?: import('./docs/index/global').SearchLoadingManager;
+    searchEngine?: import('./docs/index/global').ModernSearchEngine;
     contentConfig?: {
       getCategories: () => unknown[];
       getTags: () => unknown[];
