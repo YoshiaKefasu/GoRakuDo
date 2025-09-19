@@ -6,8 +6,11 @@
 
 // Import required dependencies
 import { getCollection, type CollectionEntry } from 'astro:content';
-import ToolArticleLayout from '../../../layouts/ToolArticleLayout.astro';
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
 import ToolIdContentGrid from '../../../components/tools/Tool-IdContentGrid.astro';
+import Breadcrumb from '../../../components/public-components/Breadcrumb.astro';
+import ToolSearchPopover from '../../../components/tools/Tool-SearchPopover.astro';
+import ToolIdHeader from '../../../components/tools/Tool-IdHeader.astro';
 
 // ========== OPTIMIZED TOOL DISCOVERY ==========
 // Single function for tool discovery with caching
@@ -183,7 +186,7 @@ const contentGridData = {
 };
 ---
 
-<ToolArticleLayout
+<ArticleLayout
   title={`${formattedToolName} - GoRakuDo`}
   description={`All articles and guides for ${tool} tool`}
   lang='id'
@@ -192,13 +195,42 @@ const contentGridData = {
   toolTitle={headerData.title}
   toolDescription={headerData.description}
   iconPath={headerData.iconPath}
-  formattedToolName={headerData.formattedToolName}
   currentYear={headerData.currentYear}
 >
+  <ToolIdHeader
+    slot='articles-header'
+    tool={tool}
+    articleCount={headerData.articleCount}
+    title={headerData.title}
+    description={headerData.description}
+    iconPath={headerData.iconPath}
+    formattedToolName={headerData.formattedToolName}
+    currentYear={headerData.currentYear}
+  />
+
+  <Breadcrumb
+    slot='breadcrumb'
+    currentPath={`/tools/${tool}`}
+    showHome={true}
+    variant='compact'
+    orientation='horizontal'
+    showIcons={true}
+    ariaLabel='Tool navigation breadcrumb'
+  />
+
+  <ToolSearchPopover
+    slot='search'
+    buttonStyle='rounded'
+    placeholder={`Search ${formattedToolName} articles...`}
+    searchAction={`/search?tool=${tool}`}
+    className='tool-search-popover'
+    toolFilter={tool}
+  />
+
   <ToolIdContentGrid
     hasArticles={contentGridData.hasArticles}
     toolArticles={contentGridData.toolArticles}
     tool={contentGridData.tool}
     formattedToolName={contentGridData.formattedToolName}
   />
-</ToolArticleLayout>
+</ArticleLayout>

@@ -18,8 +18,7 @@
   /* Borders & Shadows - ツールページ専用 */
 
   /* ボーダーラディウス変数はglobal.cssから継承 */
-  --shadow-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg-accent: 0 10px 30px rgb(139 92 246 / 0.2);
 
   /* Transitions - ツールページ専用 */
@@ -32,6 +31,12 @@
   --clr-safe-accent-glow-faint: rgb(139 92 246 / 0.05);
   --clr-safe-accent-glow-medium: rgb(139 92 246 / 0.35);
   --clr-safe-accent-glow-strong: rgb(139 92 246 / 0.7);
+
+  /* Tools Grid Section Component Variables */
+  --tool-icon-scale: 1.05;
+  --tool-arrow-translate: 4px;
+  --tool-card-scale: 1.02;
+  --tool-card-opacity: 0.9;
 }
 
 /* ========== BASE & LAYOUT ========== */
@@ -72,8 +77,12 @@
   --grid-gap: var(--spacing-lg);
 
   display: grid;
+  justify-content: center;
+  align-items: start;
   gap: var(--grid-gap);
   grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 75rem; /* 1200px */
   margin: 0;
   padding: 0;
 }
@@ -85,20 +94,18 @@
 /* ========== TOOL CARD ========== */
 .tool-card {
   display: block;
+  overflow: hidden;
   height: 100%;
   min-height: 44px; /* AC 9: Touch Target Compliance */
   padding: var(--spacing-sm);
   border: 1px solid var(--clr-accent-glow-medium);
-  border-radius: var(--border-radius-card);
-  background: var(--clr-accent-glow-faint);
+  border-radius: 1rem;
+  background: oklch(from var(--clr-background) l c h / 0.25);
   text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* AC 2 & 7: Performance Optimization */
   will-change: transform, border-color, box-shadow;
-  transition:
-    transform var(--transition-speed) var(--transition-ease),
-    border-color var(--transition-speed) var(--transition-ease),
-    box-shadow var(--transition-speed) var(--transition-ease);
 }
 
 .tool-card article {
@@ -141,12 +148,6 @@
   text-transform: capitalize;
 }
 
-.tool-difficulty {
-  border: 1px solid #574d82;
-  background-color: #3b335b;
-  color: #c4b5fd;
-}
-
 .tool-category {
   border: 1px solid #4a4a50;
   background-color: #2a2a2e;
@@ -187,9 +188,11 @@
 
 /* --- Interaction States --- */
 .tool-card:hover {
-  transform: translateY(-1px);
+  transform: translateY(-6px);
   border-color: var(--clr-accent-glow-strong);
-  box-shadow: var(--shadow-lg-accent);
+  box-shadow:
+    0 20px 40px -10px oklch(0% 0 0deg / 0.3),
+    0 8px 16px -4px oklch(0% 0 0deg / 0.15);
 }
 
 .tool-card:hover .tool-card-footer {
@@ -197,17 +200,17 @@
 }
 
 .tool-card:hover .tool-arrow {
-  transform: translateX(4px);
+  color: oklch(100% 0 0deg);
+  transform: translateX(var(--tool-arrow-translate));
 }
 
 /* AC 10: Clear Focus Indicator */
 .tool-card:focus-visible {
-  outline: none;
+  outline: 3px solid oklch(70% 0.2 280deg);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px oklch(70% 0.2 280deg / 0.3);
   transform: translateY(-1px);
   border-color: var(--clr-accent-glow-strong);
-  box-shadow:
-    0 0 0 3px var(--clr-background),
-    0 0 0 5px var(--clr-accent);
 }
 
 /* ========== RESPONSIVE DESIGN (AC 6: Mobile-First with all Breakpoints) ========== */
@@ -217,6 +220,9 @@
 /* Small devices (640px) - Enhanced mobile experience */
 @media (min-width: 640px) {
   .tools-grid {
+    justify-content: center;
+    align-items: start;
+    gap: 1.5rem;
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -232,8 +238,10 @@
   }
 
   .tools-grid {
-    gap: var(--spacing-xl);
-    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    align-items: start;
+    gap: 2rem;
+    grid-template-columns: repeat(3, minmax(20rem, 24rem)); /* 320px-288px */
   }
 
   /* カードレイアウトの最適化 - 768px以上 */
@@ -249,8 +257,10 @@
 /* Laptops (1024px) - Desktop optimization */
 @media (min-width: 1024px) {
   .tools-grid {
-    gap: var(--spacing-2xl);
-    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    align-items: start;
+    gap: 2rem;
+    grid-template-columns: repeat(3, minmax(20rem, 24rem)); /* 320px-288px */
   }
 
   .container {
@@ -270,7 +280,11 @@
   }
 
   .tools-grid {
-    gap: var(--spacing-2xl);
+    justify-content: center;
+    align-items: start;
+    gap: 2.5rem;
+    grid-template-columns: repeat(3, minmax(24rem, 28rem)); /* 384px-448px */
+    max-width: 75rem; /* 1200px */
   }
 
   /* 大画面用のカードレイアウト最終調整 */
@@ -281,47 +295,6 @@
   .tool-card-body {
     /* 大画面用のmargin-bottomを削除 */
   }
-}
-
-/* ========== LAYOUT ENHANCEMENT UTILITIES ========== */
-
-/* Enhanced spacing utilities for better visual hierarchy */
-.layout-spacing-enhanced {
-  --enhanced-spacing-xs: 0.5rem; /* 8px */
-  --enhanced-spacing-sm: 0.75rem; /* 12px */
-  --enhanced-spacing-md: 1.25rem; /* 20px */
-  --enhanced-spacing-lg: 1.75rem; /* 28px */
-  --enhanced-spacing-xl: 2.5rem; /* 40px */
-  --enhanced-spacing-2xl: 3.5rem; /* 56px */
-}
-
-/* Enhanced visual balance utilities */
-.visual-balance-grid {
-  display: grid;
-  align-items: center;
-  gap: var(--spacing-md);
-  grid-template-columns: 1fr min-content 1fr;
-}
-
-.visual-balance-center {
-  place-items: center;
-  text-align: center;
-}
-
-/* Enhanced readability utilities */
-.readability-optimized {
-  max-width: 65ch;
-  line-height: 1.65;
-  letter-spacing: 0.01em;
-}
-
-/* Enhanced touch targets for mobile */
-.touch-target-enhanced {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 48px;
-  min-height: 48px;
 }
 
 /* ========== ANIMATIONS & REDUCED MOTION ========== */
@@ -337,7 +310,6 @@
 
 /* .loading クラスは global.css から継承 */
 
-
 @media (prefers-reduced-motion: reduce) {
   .tool-card,
   .tool-arrow {
@@ -351,89 +323,13 @@
   }
 }
 
-/* ========== SECURITY & CROSS-BROWSER COMPATIBILITY ========== */
-
-/* CSP-Friendly CSS Variables */
-
-/* All CSS variables use safe, predefined values to prevent injection attacks */
-
-/* Security: Sanitized Animation Classes */
-
-/* Predefined animation classes prevent dynamic class injection */
-.animation-safe-fade-in {
-  opacity: 0;
-  animation: safe-fade-in 0.3s ease-out forwards;
-}
-
-.animation-safe-slide-up {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: safe-slide-up 0.3s ease-out forwards;
-}
-
-.animation-safe-scale-in {
-  opacity: 0;
-  transform: scale(0.95);
-  animation: safe-scale-in 0.2s ease-out forwards;
-}
-
-/* Safe keyframes - global.css から継承 */
-
-/* Cross-Browser Compatibility Utilities */
-.browser-compat-grid {
-  /* Fallback for CSS Grid in older browsers */
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-.browser-compat-flex {
-  /* Enhanced flexbox support */
-  display: flex;
-}
-
-.browser-compat-clamp {
-  /* Fallback for clamp() function */
-
-  /* Fallback value */
-  font-size: clamp(0.875rem, 2vw, 1.125rem);
-}
-
-/* Browser-Specific Optimizations */
-@supports (-webkit-appearance: none) {
-  /* Safari-specific optimizations */
-  .safari-optimized {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizelegibility;
-  }
-}
-
-@supports (-moz-appearance: none) {
-  /* Firefox-specific optimizations */
-  .firefox-optimized {
-    -moz-osx-font-smoothing: auto;
-  }
-}
-
-/* Edge/Chrome specific optimizations */
-.chromium-optimized {
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-}
-
 /* ========== TRANSITIONS & LOADING STATES ========== */
-
-/* Page Load Animation Utilities - global.css から継承 */
 
 /* Staggered animation for card grids */
 .stagger-animation {
   animation: stagger-fade-in 0.4s ease-out forwards;
   animation-delay: calc(var(--stagger-delay, 0) * 100ms);
 }
-
-/* stagger-fade-in キーフレームは global.css から継承 */
-
-/* Scroll Reveal Animations - global.css から継承 */
 
 /* Micro-interaction utilities */
 .micro-interaction-scale {
@@ -460,27 +356,15 @@
   transform: scale(1.01);
 }
 
-.loading-pulse {
-  /* animation: loading-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
-  opacity: 1;
-}
-
-
 .loading-spinner {
   animation: loading-spinner 1s linear infinite;
 }
 
-/* loading-spinner キーフレームは global.css から継承 */
-
 /* Progressive enhancement for reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .page-load-fade-in,
-  .page-load-slide-up,
   .stagger-animation,
-  /* .scroll-reveal クラスは global.css から継承 */
   .micro-interaction-scale,
-  .focus-enhanced,
-  .loading-pulse {
+  .focus-enhanced {
     opacity: 1;
     transform: none;
     transition: none;
@@ -488,11 +372,7 @@
   }
 }
 
-/* ========== PHASE 2: LOW-RISK MIGRATION UTILITIES ========== */
-
-/* Tailwind-Optimized Layout Utilities */
-
-/* These work alongside existing CSS during migration */
+/* ========== LAYOUT UTILITIES ========== */
 
 .tools-layout-optimized {
   /* Enhanced container with Tailwind patterns */
@@ -500,222 +380,363 @@
   --container-padding: clamp(1rem, 4vw, 2rem);
 }
 
-.tools-grid-optimized {
-  /* Modern grid system with Tailwind integration */
-  display: grid;
-  gap: clamp(1rem, 3vw, 2rem);
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  place-items: start;
-}
+/* ========== TOOLS GRID SECTION COMPONENT STYLES ========== */
 
-.tools-card-optimized {
-  /* Enhanced card layout with better spacing */
+/* ========== CSS変数定義 ========== */
+
+/* ========== グリッドレイアウト ========== */
+
+/* ========== カード構造 ========== */
+.tools-grid .tool-grid-item {
   display: flex;
-  flex-direction: column;
+  justify-self: center;
+  width: 100%;
+  max-width: 25rem; /* 400px */
   height: 100%;
-  padding: clamp(1.25rem, 4vw, 2rem);
-  border: 1px solid var(--clr-accent-glow-medium);
-  border-radius: clamp(0.75rem, 2vw, 1rem);
-  background: var(--clr-accent-glow-faint);
-  transition: all 0.2s ease-out;
 }
 
-.tools-card-optimized:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg-accent);
-  border-color: var(--clr-accent-glow-strong);
-}
-
-/* Enhanced Typography with Tailwind Patterns */
-.tools-typography-optimized {
-  /* Responsive typography scale */
-  --text-scale-xs: clamp(0.75rem, 2vw, 0.875rem);
-  --text-scale-sm: clamp(0.875rem, 2.5vw, 1rem);
-  --text-scale-base: clamp(1rem, 3vw, 1.125rem);
-  --text-scale-lg: clamp(1.125rem, 3.5vw, 1.25rem);
-  --text-scale-xl: clamp(1.25rem, 4vw, 1.5rem);
-  --text-scale-2xl: clamp(1.5rem, 5vw, 2rem);
-  --text-scale-3xl: clamp(2rem, 6vw, 3rem);
-}
-
-.tools-heading-optimized {
-  color: var(--clr-text-primary);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-.tools-body-optimized {
-  color: var(--clr-text-secondary);
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-/* Enhanced Spacing System */
-.tools-spacing-optimized {
-  /* Logical spacing scale integrated with Tailwind */
-  --space-1: 0.25rem; /* 4px */
-  --space-2: 0.5rem; /* 8px */
-  --space-3: 0.75rem; /* 12px */
-  --space-4: 1rem; /* 16px */
-  --space-6: 1.5rem; /* 24px */
-  --space-8: 2rem; /* 32px */
-  --space-12: 3rem; /* 48px */
-  --space-16: 4rem; /* 64px */
-  --space-20: 5rem; /* 80px */
-  --space-24: 6rem; /* 96px */
-}
-
-/* Enhanced Interactive States */
-.tools-interactive-optimized {
-  /* Better focus and hover states */
-  cursor: pointer;
-  transition: all 0.15s ease-out;
-}
-
-.tools-interactive-optimized:hover {
-  transform: scale(1.02);
-  box-shadow: var(--shadow-lg-accent);
-}
-
-.tools-interactive-optimized:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--clr-accent-glow-strong);
-  transform: scale(1.01);
-}
-
-/* Enhanced Responsive Design */
-.tools-responsive-optimized {
-  /* Mobile-first responsive utilities */
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-}
-
-/* Enhanced Animation System */
-.tools-animation-optimized {
-  /* Optimized animation curves */
-  --ease-out-circ: cubic-bezier(0, 0.55, 0.45, 1);
-  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-
-  animation-timing-function: var(--ease-out-circ);
-  animation-fill-mode: both;
-}
-
-/* Enhanced Loading States */
-.tools-loading-optimized {
-  /* Better loading animations */
+.tools-grid .tool-grid-item .tool-card-wrapper {
   position: relative;
-  overflow: hidden;
-}
-
-.tools-loading-optimized::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
+  display: flex;
   width: 100%;
   height: 100%;
+}
+
+.tools-grid .tool-grid-item .tool-card-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  height: 100%;
+  min-height: 16.25rem; /* 260px */
+  max-height: 20rem; /* 320px */
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .tools-grid .tool-grid-item .tool-card-frame {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tools-grid .tool-grid-item .tool-card-frame {
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+}
+
+/* ========== ヘッダー ========== */
+.tools-grid .tool-grid-item .tool-card-header {
+  margin-bottom: 0.375rem;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.tools-grid .tool-grid-item .tool-title-container {
+  display: flex;
+  align-items: center;
+  gap: 1em; /* 親要素のフォントサイズに相対 */
+  width: 100%;
+  min-height: 4rem;
+}
+
+@media (min-width: 640px) {
+  .tools-grid .tool-grid-item .tool-title-container {
+    gap: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .tools-grid .tool-grid-item .tool-title-container {
+    gap: var(--spacing-lg);
+  }
+}
+
+/* ========== アイコン ========== */
+.tools-grid .tool-grid-item .tool-icon {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  width: 56px; /* 固定サイズ - PX単位 */
+  height: 56px; /* 固定サイズ - PX単位 */
+  border: none;
+  border-radius: 16px; /* 固定サイズ - PX単位 */
+  background: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  contain: layout style;
+  box-shadow: none;
+  filter: drop-shadow(0 4px 8px oklch(0% 0 0deg / 0.3));
+  will-change: transform;
+}
+
+.tool-icon-image:not([src]),
+.tool-icon-image[src=''] {
+  display: none;
+}
+
+.tools-grid .tool-grid-item .tool-icon-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 4px; /* 固定サイズ - PX単位 */
+  transition: transform var(--transition-speed) var(--transition-ease);
+}
+
+.tool-card:hover .tool-icon-image {
+  transform: scale(var(--tool-icon-scale));
+}
+
+.tool-icon::before {
+  display: none;
+  font-size: 1.25rem;
+  content: '🔧';
+}
+
+.tool-icon:has([src=''])::before,
+.tool-icon:has(:not([src]))::before {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .tools-grid .tool-grid-item .tool-icon {
+    width: 56px; /* 固定サイズ - PX単位 */
+    height: 56px; /* 固定サイズ - PX単位 */
+  }
+}
+
+/* ========== タイトル ========== */
+.tools-grid .tool-grid-item .tool-name {
+  flex: 1;
+  margin: 0;
+  color: oklch(98% 0 0deg);
+  font-size: 1.685rem; /* ルート要素に相対 - REM単位 */
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 640px) {
+  .tools-grid .tool-grid-item .tool-name {
+    font-size: 1.875rem; /* ルート要素に相対 - REM単位 */
+  }
+}
+
+@media (min-width: 768px) {
+  .tools-grid .tool-grid-item .tool-name {
+    font-size: 1.5rem; /* ルート要素に相対 - REM単位 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .tools-grid .tool-grid-item .tool-name {
+    font-size: 1.5rem; /* ルート要素に相対 - REM単位 */
+  }
+}
+
+/* ========== ボディ ========== */
+.tools-grid .tool-grid-item .tool-card-body {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 0;
+  padding-bottom: 1rem;
+}
+
+.tools-grid .tool-grid-item .tool-description-card {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: oklch(88% 0 0deg);
+  font-size: 0.875rem; /* ルート要素に相対 - REM単位 */
+  font-weight: 400;
+  line-height: 1.5;
+  flex-grow: 1;
+  flex-shrink: 1;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+@media (min-width: 640px) {
+  .tools-grid .tool-grid-item .tool-description-card {
+    font-size: var(--fs-base);
+  }
+}
+
+/* ========== フッター ========== */
+.tools-grid .tool-grid-item .tool-card-footer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid oklch(100% 0 0deg / 0.2);
+  flex-shrink: 0;
+}
+
+.tool-card-footer::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  content: '';
   background: linear-gradient(
     90deg,
     transparent,
-    var(--clr-accent-glow-medium),
+    oklch(100% 0 0deg / 0.2),
     transparent
   );
-  animation: loading-shimmer 1.5s infinite;
 }
 
-/* ========== MIGRATION FLAG SYSTEM ========== */
-
-/* Feature flags for gradual migration */
-.tools-migration-enabled {
-  /* Enable new optimized classes */
-  --migration-phase: 2;
+.tools-grid .tool-grid-item .tool-cta-text {
+  color: oklch(75% 0.25 280deg);
+  font-size: 0.875rem; /* ルート要素に相対 - REM単位 */
+  font-weight: 600;
+  letter-spacing: 0.025em;
 }
 
-.tools-migration-disabled {
-  /* Keep legacy classes during migration */
-  --migration-phase: 1;
+.tools-grid .tool-grid-item .tool-arrow {
+  width: 18px; /* 固定サイズ - PX単位 */
+  height: 18px; /* 固定サイズ - PX単位 */
+  color: oklch(85% 0.2 280deg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ========== ASTRO NATIVE LAZY LOADING (0 JavaScript) ========== */
-
-/* CSS-only lazy loading with Intersection Observer API and CSS animations */
-
-/* Lazy loading base styles */
-[data-lazy] {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.6s ease-out,
-    transform 0.6s ease-out;
-}
-
-/* Lazy loading pulse animation - DISABLED */
-[data-lazy]:not(.loaded) {
-  /* animation: loading-pulse 2s ease-in-out infinite; */
-  opacity: 1;
-}
-
-
-/* Astro Native Scroll Reveal (0 JavaScript) */
-@supports (animation-timeline: view()) {
-  [data-lazy] {
-    animation: lazyReveal linear;
-    animation-timeline: view();
-    animation-range: entry 0% entry 20%;
-  }
-
-  @keyframes lazyReveal {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+@media (min-width: 768px) {
+  .tools-grid .tool-grid-item .tool-card-footer {
+    padding-top: 0.5rem;
   }
 }
 
-/* Enhanced CSS-only scroll reveal for all elements - global.css から継承 */
-
-/* Fallback for browsers without animation-timeline support */
-@supports not (animation-timeline: view()) {
-  [data-lazy] {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  /* CSS-only reveal using viewport intersection */
-  @media (min-height: 100vh) {
-    [data-lazy] {
-      opacity: 1;
-      transform: translateY(0);
-    }
+@media (min-width: 1024px) {
+  .tools-grid .tool-grid-item .tool-card-footer {
+    padding-top: 0.75rem;
   }
 }
 
-
-.loaded {
-  opacity: 1;
-  transform: translateY(0);
-  animation: none;
+/* ========== インタラクション ========== */
+.group:hover .tool-arrow {
+  transform: translateX(var(--tool-arrow-translate));
 }
 
-/* Performance-optimized animations */
+.animation-scale:hover {
+  transform: scale(var(--tool-card-scale));
+}
+
+.animation-slide:hover {
+  transform: translateX(var(--tool-arrow-translate));
+}
+
+.animation-fade:hover {
+  opacity: var(--tool-card-opacity);
+}
+
+/* ========== カードホバーエフェクト ========== */
+
+.tool-card:hover .tool-icon {
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 6px 12px oklch(0% 0 0deg / 0.4));
+  transform: scale(1.05);
+}
+
+/* ========== アクセシビリティ ========== */
+
+.tools-grid .tool-grid-item .tool-card {
+  outline: none;
+}
+
+.tool-card:hover .tool-name {
+  color: oklch(100% 0 0deg);
+}
+
+.tool-card:hover .tool-description-card {
+  color: oklch(90% 0 0deg);
+}
+
+.tool-card:hover .tool-cta-text {
+  color: oklch(75% 0.22 280deg);
+}
+
+@media (prefers-contrast: high) {
+  .tools-grid .tool-grid-item .tool-name {
+    color: oklch(100% 0 0deg);
+  }
+
+  .tools-grid .tool-grid-item .tool-description-card {
+    color: oklch(95% 0 0deg);
+  }
+
+  .tools-grid .tool-grid-item .tool-cta-text {
+    color: oklch(80% 0.25 280deg);
+  }
+
+  .tools-grid .tool-grid-item .tool-arrow {
+    color: oklch(100% 0 0deg);
+  }
+
+  .tools-grid .tool-grid-item .tool-title-container {
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid oklch(100% 0 0deg / 0.3);
+  }
+}
+
+/* ========== レスポンシブ最適化 ========== */
+@media (max-width: 639px) {
+  .tools-grid {
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .tools-grid .tool-grid-item .tool-card-frame {
+    min-height: 15rem; /* 240px - REM単位 */
+    max-height: 19rem; /* 304px - REM単位 */
+  }
+
+  .tools-grid .tool-grid-item .tool-icon {
+    width: 48px; /* 固定サイズ - PX単位 */
+    height: 48px; /* 固定サイズ - PX単位 */
+  }
+
+  .tools-grid .tool-grid-item .tool-name {
+    font-size: 1.5rem; /* ルート要素に相対 - REM単位 */
+  }
+
+  .tools-grid .tool-grid-item .tool-description-card {
+    -webkit-line-clamp: 3;
+    font-size: 0.875rem; /* ルート要素に相対 - REM単位 */
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .tools-grid {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tools-grid {
+    padding: 0 2rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  [data-lazy] {
-    transition: none;
-    animation: none;
-  }
-
-  [data-lazy].loaded {
+  .tool-card,
+  .tool-card:hover .tool-icon-image,
+  .animation-scale:hover,
+  .animation-slide:hover,
+  .animation-fade:hover,
+  .group:hover .tool-arrow {
     opacity: 1;
     transform: none;
+    transition: none;
   }
 }
 

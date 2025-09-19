@@ -119,6 +119,7 @@ const formatToolName = (tool: string): string =>
     overflow: hidden;
     height: fit-content;
     margin: 0 clamp(var(--spacing-xs), 2vw, var(--spacing-md));
+    padding: var(--spacing-sm);
     border-radius: var(--radius-xl);
     background: oklch(from var(--clr-background) l c h / 0.25);
     box-shadow: var(--shadow-md);
@@ -130,8 +131,7 @@ const formatToolName = (tool: string): string =>
   }
 
   /* Reduce layout thrashing */
-  .article-card-optimized .card-meta,
-  .article-card-optimized .card-tags {
+  .article-card-optimized .card-meta {
     contain: layout;
   }
 
@@ -178,7 +178,7 @@ const formatToolName = (tool: string): string =>
   /* ========== メインコンテンツ ========== */
   .card-content {
     flex: 1;
-    padding: var(--spacing-sm) clamp(var(--spacing-md), 4vw, var(--spacing-lg));
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .card-image-section {
@@ -238,25 +238,40 @@ const formatToolName = (tool: string): string =>
   /* ========== カードフッター ========== */
   .card-footer {
     margin-top: auto;
-    padding: var(--spacing-sm) clamp(var(--spacing-md), 4vw, var(--spacing-lg))
-      var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
   }
 
   .card-tags {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
     gap: var(--spacing-sm);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    contain: layout;
+  }
+
+  .card-tags::-webkit-scrollbar {
+    display: none;
   }
 
   .card-tag {
-    padding: clamp(var(--spacing-xs), 1vw, var(--spacing-sm))
-      clamp(var(--spacing-sm), 2vw, var(--spacing-md));
+    flex-shrink: 0;
+    padding: clamp(
+        calc(var(--spacing-xs) / 4),
+        0.75vw,
+        calc(var(--spacing-sm) / 4)
+      )
+      clamp(calc(var(--spacing-sm) / 2), 1vw, calc(var(--spacing-md) / 2));
     border: 1px solid oklch(from var(--clr-primary) l c h / 0.2);
     border-radius: var(--radius-md);
     background: oklch(from var(--clr-primary) l c h / 0.15);
     color: var(--clr-primary);
-    font-size: clamp(var(--font-size-xs), 1vw, var(--font-size-sm));
-    font-weight: 600;
+    font-size: clamp(var(--font-size-xs), 0.75vw, var(--font-size-sm));
+    font-weight: 300;
+    white-space: nowrap;
     cursor: pointer;
     user-select: none;
     transition: all var(--transition-fast);
@@ -266,7 +281,6 @@ const formatToolName = (tool: string): string =>
     background: oklch(from var(--clr-primary) l c h / 0.2);
     border-color: oklch(from var(--clr-primary) l c h / 0.4);
     box-shadow: 0 2px 8px oklch(from var(--clr-primary) l c h / 0.2);
-    transform: translateY(-1px);
   }
 
   /* ========== アクションインジケーター ========== */
@@ -304,13 +318,17 @@ const formatToolName = (tool: string): string =>
 
   /* モバイル (320px+) - デフォルト */
 
-  /* article-card-optimized styles moved to main selector above */
-
-  /* デスクトップ表示ではコンテンツに合わせて高さを調整 */
+  /* タブレット (768px+) */
   @media (min-width: 768px) {
     .article-card-optimized {
       height: fit-content;
       min-height: auto;
+      padding: 0;
+    }
+
+    .card-content {
+      padding: var(--spacing-sm)
+        clamp(var(--spacing-md), 4vw, var(--spacing-lg));
     }
 
     .card-footer {
