@@ -28,102 +28,9 @@
   padding-left: clamp(1rem, 4vw, 3rem);
 }
 
-.posts-header {
-  @apply mb-20 text-center;
+/* Posts Header styles moved to PostsHeader.astro component */
 
-  overflow-x: hidden;
-
-  /* Prevent header overflow */
-  max-width: 100%;
-}
-
-.posts-header h1 {
-  @apply mb-5 text-5xl font-semibold text-white;
-
-  /* Responsive typography */
-  font-size: clamp(2rem, 6vw, 3rem);
-
-  /* Prevent text overflow */
-  overflow-wrap: break-word;
-}
-
-.posts-header p {
-  @apply mx-auto max-w-2xl text-lg leading-relaxed text-gray-400;
-
-  /* Responsive typography */
-  font-size: clamp(1rem, 3vw, 1.125rem);
-
-  /* Prevent text overflow */
-  overflow-wrap: break-word;
-}
-
-/* Posts Instructions */
-.posts-instructions {
-  @apply my-8 rounded-xl border border-purple-500/20 bg-purple-500/5 p-6;
-}
-
-.posts-instructions h3 {
-  @apply mb-4 text-lg text-purple-400;
-}
-
-.posts-instructions ol {
-  @apply pl-5 leading-relaxed text-gray-400;
-}
-
-.posts-instructions code {
-  @apply rounded bg-purple-500/10 px-1.5 py-0.5 text-sm text-purple-400;
-}
-
-/* Manual Posts Section */
-.manual-posts-section {
-  @apply my-12 rounded-2xl border border-purple-500/10 bg-purple-500/5 p-8;
-}
-
-.manual-posts-section h2 {
-  @apply mb-4 text-2xl text-purple-400;
-}
-
-.example-links {
-  @apply mt-6 grid gap-5;
-}
-
-.example-link {
-  @apply block rounded-xl border border-purple-500/10 bg-purple-500/5 p-5 text-inherit no-underline transition-all duration-300;
-}
-
-.example-link:hover {
-  @apply -translate-y-0.5 border-purple-500/30 bg-purple-500/5;
-}
-
-.example-link h4 {
-  @apply mb-2 text-base text-purple-400;
-}
-
-.example-link p {
-  @apply break-all font-mono text-sm text-gray-400;
-}
-
-/* Posts Grid */
-.posts-grid {
-  @apply mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3;
-}
-
-/* Search State Display Styles */
-.search-state-info {
-  @apply mb-6 flex flex-col items-start justify-between gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-4 sm:flex-row sm:items-center;
-}
-
-.search-results-count {
-  @apply text-base font-medium text-blue-400;
-}
-
-.search-mode-indicator {
-  @apply text-sm text-blue-300 opacity-80;
-}
-
-.search-mode-text {
-  @apply font-medium text-blue-400;
-}
+/* Posts Grid styles moved to PostsGrid.astro component */
 
 /* Search Results Container - Optimized for immediate visibility */
 .search-results {
@@ -136,453 +43,31 @@
   max-width: 100%;
 }
 
-.search-results.hidden {
-  @apply pointer-events-none opacity-0;
-}
+/* Search Results Animation - using global fadeInUp */
 
-.search-results.visible {
-  @apply opacity-100;
-}
+/* Post card styles moved to PostsGrid.astro component */
 
+/* Docs Button styles - using global .docs-button with docs-specific overrides */
 
-/* Search Results Animation */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
+/* Animations moved to global.css to avoid duplication */
 
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* Loading Trigger */
-.loading-trigger {
-  @apply w-full;
-}
-
-/* Progressive Loading Animations */
-.post-card {
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-}
-
-.post-card.loading-in {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.post-card.loaded-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.post-card {
-  @apply relative cursor-pointer rounded-2xl border border-purple-500/10 bg-purple-500/5 p-8;
-
-  transition:
-    box-shadow var(--animate-duration-normal) ease,
-    transform var(--animate-duration-fast) ease,
-    opacity var(--animate-duration-fast) ease;
-}
-
-.post-card:hover {
-  @apply border-purple-500/30 bg-purple-500/10;
-
-  box-shadow: 0 12px 35px var(--clr-accent-shadow);
-  transform: translateY(-1px);
-  transition:
-    box-shadow var(--animate-duration-normal) ease,
-    transform var(--animate-duration-fast) ease,
-    opacity var(--animate-duration-fast) ease;
-}
-
-.post-icon {
-  @apply mb-4 text-center text-5xl;
-}
-
-.post-card h3 {
-  @apply mb-4 text-2xl font-semibold text-white;
-}
-
-.post-card p {
-  @apply mb-5 leading-relaxed text-gray-300;
-}
-
-.post-meta {
-  @apply my-5 flex items-center justify-between text-sm text-gray-400;
-}
-
-.post-status {
-  @apply rounded-xl bg-white/5 px-2 py-1 text-xs;
-}
-
-.post-actions {
-  @apply mt-5 flex items-center justify-between;
-}
-
-.post-link {
-  @apply rounded-lg border border-purple-500/20 bg-purple-500/10 px-4 py-2 font-medium text-purple-400 no-underline transition-all duration-300;
-}
-
-.post-link:hover {
-  @apply bg-purple-500 text-white;
-}
-
-.copy-url-btn {
-  @apply cursor-pointer rounded-lg border border-purple-500/20 bg-transparent px-3 py-2 text-sm text-purple-400 transition-all duration-300;
-}
-
-.copy-url-btn:hover {
-  @apply bg-purple-500/10;
-}
-
-.post-date {
-  @apply text-purple-400;
-}
-
-/* Individual post page styles */
-.post-content {
-  @apply mx-auto max-w-4xl px-10 leading-relaxed;
-}
-
-.post-content h1 {
-  @apply mb-5 text-4xl font-semibold text-white;
-}
-
-.post-content h2 {
-  @apply relative my-10 mb-5 text-3xl font-semibold text-white;
-}
-
-.post-content h2::before {
-  content: '';
-
-  @apply absolute -left-5 top-1/2 h-5 w-1 -translate-y-1/2 rounded bg-gradient-to-br from-purple-500 to-purple-600;
-}
-
-.post-content h3 {
-  @apply my-8 mb-4 text-2xl font-semibold text-white;
-}
-
-.post-content p {
-  @apply mb-5 text-base text-gray-300;
-}
-
-.post-content ul,
-.post-content ol {
-  @apply mb-5 pl-8 text-gray-300;
-}
-
-.post-content li {
-  @apply relative mb-2 pl-1;
-}
-
-.post-content ul li::before {
-  content: '→';
-
-  @apply absolute -left-5 font-bold text-purple-400;
-}
-
-.post-content blockquote {
-  @apply relative my-5 rounded-lg border-l-4 border-purple-500 bg-purple-500/5 p-5 italic text-gray-400;
-}
-
-.post-content code {
-  @apply rounded bg-purple-500/10 px-1.5 py-0.5 font-mono text-sm text-purple-400;
-}
-
-.post-content pre {
-  @apply relative my-5 overflow-x-auto rounded-lg border border-purple-500/10 bg-gray-900 p-5;
-}
-
-.post-content pre::before {
-  content: '';
-
-  @apply absolute left-0 right-0 top-0 h-0.5 rounded-t-lg bg-gradient-to-r from-purple-500 to-purple-600;
-}
-
-.post-content pre code {
-  @apply bg-transparent p-0 text-gray-300;
-}
-
-.post-content a {
-  @apply border-b border-transparent text-purple-400 no-underline transition-colors duration-300;
-}
-
-.post-content a:hover {
-  @apply border-purple-400;
-}
-
-.back-to-posts {
-  @apply mb-8 inline-flex items-center gap-2 font-medium text-purple-400 no-underline transition-colors duration-300;
-}
-
-.back-to-posts:hover {
-  @apply text-purple-600;
-}
-
-/* CTA Button */
-.cta-button {
-  @apply py-4.5 inline-flex cursor-pointer items-center gap-3 rounded-full border-none bg-gradient-to-br from-purple-500 to-purple-600 px-10 text-lg font-semibold text-white transition-all duration-300;
-}
-
-.cta-button:hover {
-  @apply -translate-y-1 shadow-2xl shadow-purple-500/40;
-}
-
-.docs-button {
-  @apply py-4.5 inline-flex cursor-pointer items-center gap-3 rounded-full border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/80 to-purple-600/80 px-10 text-lg font-semibold text-white transition-all duration-300;
-}
-
-.docs-button:hover {
-  @apply -translate-y-1 border-purple-500 bg-gradient-to-br from-purple-500 to-purple-600 shadow-2xl shadow-purple-500/40;
-}
-
-.docs-button.secondary {
-  @apply border-2 border-purple-500 bg-transparent text-purple-400;
-}
-
-.docs-button.secondary:hover {
-  @apply bg-purple-500 text-white;
-}
-
-/* Loading and Error States */
-.loading-indicator,
-.error-message {
-  @apply px-5 py-16 text-center text-gray-400;
-}
-
-.error-message h2 {
-  @apply mb-4 text-2xl text-red-400;
-}
-
-.error-actions {
-  @apply mt-8 flex flex-wrap justify-center gap-4;
-}
-
-.loading-spinner {
-  @apply border-3 mx-auto mb-5 h-10 w-10 animate-spin rounded-full border-purple-500/10 border-t-purple-500;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Enhanced markdown content animations */
-.markdown-content {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(2rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* Progressive Loading Animation */
-.posts-grid {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(1.25rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Progressive Loading Animation moved to PostsGrid.astro component */
 
 /* 🌊 DOCS PAGE SPECIFIC STYLES - Google Engineering Team 2025 */
 
 /* Background Elements - Removed wave and stars animations */
 
+/* Main Content Layout - using global .main-content */
 
-/* Main Content Layout */
-.main-content {
-  @apply relative z-20 min-h-screen;
+/* Posts Header styles moved to PostsHeader.astro component */
 
-  background: transparent ;
-}
+/* Posts Grid styles moved to PostsGrid.astro component */
 
-.posts-page {
-  @apply relative z-10 min-h-screen pt-20;
-}
+/* Post card styles moved to PostCard.astro component */
 
-.posts-container {
-  @apply relative z-20 mx-auto max-w-7xl px-5 py-10;
+/* Tag styles moved to PostsGrid.astro component */
 
-  /* GitHub Pages optimized container constraints - override duplicate rule */
-  max-width: min(80rem, 98vw);
-  padding-right: clamp(1rem, 4vw, 3rem);
-
-  /* Responsive padding for better mobile experience */
-  padding-left: clamp(1rem, 4vw, 3rem);
-}
-
-/* Posts Header */
-.posts-header {
-  @apply mb-16 rounded-2xl border border-purple-500/10 bg-white/5 py-10 text-center backdrop-blur-sm;
-}
-
-.posts-header h1 {
-  @apply mb-5 text-4xl font-semibold text-white md:text-5xl lg:text-6xl;
-
-  background: linear-gradient(
-    135deg,
-    var(--clr-text-primary, #fff) 0%,
-    var(--clr-text-secondary, #ccc) 100%
-  );
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.posts-header p {
-  @apply mx-auto max-w-4xl text-lg leading-relaxed text-gray-300;
-}
-
-/* Posts Grid */
-.posts-grid {
-  @apply mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3;
-}
-
-.post-card {
-  @apply rounded-2xl border border-purple-500/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-300;
-}
-
-.post-card:hover {
-  @apply -translate-y-1 border-purple-500/20 shadow-2xl shadow-purple-500/10;
-}
-
-.post-title a {
-  @apply text-xl font-semibold leading-tight text-white no-underline;
-}
-
-.post-title a:hover {
-  @apply text-purple-400;
-}
-
-.post-meta {
-  @apply my-4 flex gap-4 text-sm text-gray-400;
-}
-
-.post-description {
-  @apply my-4 leading-relaxed text-gray-300;
-}
-
-.post-tags {
-  @apply my-4 flex flex-wrap gap-2;
-}
-
-.post-tag {
-  @apply rounded-xl border border-purple-500/20 bg-purple-500/10 px-3 py-1 text-xs text-purple-400;
-}
-
-/* Minimalist Tag Design with Hover Popup */
-.post-tags {
-  @apply relative;
-}
-
-.post-tag-more {
-  @apply cursor-pointer rounded-xl border border-purple-500/10 bg-purple-500/5 px-3 py-1 text-xs text-purple-300 transition-all duration-200;
-}
-
-.post-tag-more:hover {
-  @apply border-purple-500/30 bg-purple-500/15 text-purple-200;
-}
-
-/* Tag Popup Styles */
-.tag-popup {
-  position: absolute;
-  right: 0;
-  bottom: 100%;
-  left: 0;
-  z-index: 1000;
-  margin-bottom: 8px;
-  padding: 12px;
-  border: 1px solid rgb(139 93 255 / 0.2);
-  border-radius: 12px;
-  background: rgb(20 20 20 / 0.98);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-  transition: all 0.2s ease;
-  box-shadow: 0 8px 32px rgb(0 0 0 / 0.4);
-  backdrop-filter: blur(12px);
-}
-
-.tag-popup.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.tag-popup::before {
-  position: absolute;
-  top: 100%;
-  left: 20px;
-  width: 0;
-  height: 0;
-  content: '';
-  border-top: 6px solid rgb(139 93 255 / 0.2);
-  border-right: 6px solid transparent;
-  border-left: 6px solid transparent;
-}
-
-.tag-popup-content {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag-popup-tag {
-  @apply rounded-lg border border-purple-500/20 bg-purple-500/15 px-2 py-1 text-xs text-purple-300;
-
-  font-size: 11px;
-}
-
-.tag-popup-header {
-  @apply mb-2 text-xs font-medium text-purple-200 opacity-80;
-}
-
-/* Responsive adjustments */
-@media (max-width: 48rem) {
-  .tag-popup {
-    right: -10px;
-    left: -10px;
-  }
-}
-
-/* Read more button */
-.post-card .read-more-btn {
-  @apply mt-auto inline-flex items-center justify-center rounded-lg border border-purple-200 bg-white px-4 py-2 text-sm font-medium text-purple-600 no-underline;
-
-  transition: all 0.2s ease;
-}
-
-.post-card .read-more-btn:hover {
-  @apply border-purple-300 bg-purple-50 text-purple-700;
-}
+/* Read more button styles moved to PostsGrid.astro component */
 
 /* Responsive Design */
 @media (max-width: 48rem) {
@@ -595,17 +80,9 @@
     padding-left: clamp(1rem, 3vw, 1.5rem);
   }
 
-  .posts-header {
-    @apply mb-10 px-5 py-8;
-  }
+  /* Posts Header responsive styles moved to PostsHeader.astro component */
 
-  .posts-grid {
-    @apply grid-cols-1 gap-5;
-  }
-
-  .post-card {
-    @apply p-5;
-  }
+  /* Posts grid responsive styles moved to PostsGrid.astro component */
 }
 
 @media (max-width: 48rem) {
@@ -618,247 +95,22 @@
     padding-left: clamp(1rem, 3vw, 1.5rem);
   }
 
-  .posts-header h1 {
-    @apply text-4xl;
-  }
+  /* Posts Header h1 responsive styles moved to PostsHeader.astro component */
 
-  .posts-instructions {
-    @apply p-5;
-  }
+  /* Post actions responsive styles moved to PostsGrid.astro component */
 
-  .manual-posts-section {
-    @apply p-5;
-  }
-
-  .post-actions {
-    @apply flex-col gap-2.5;
-  }
-
-  .post-link,
-  .copy-url-btn {
-    @apply w-full text-center;
-  }
-
-  .example-link p {
-    @apply text-sm;
-  }
-
-  .post-content {
-    @apply px-5;
-  }
-
-  .post-content h2::before {
-    @apply -left-4 h-4 w-0.5;
-  }
-
-  .error-actions {
-    @apply flex-col items-center;
-  }
-
-  .docs-button {
-    @apply max-w-70 w-full;
-  }
+  /* Docs button responsive styles - using global button classes */
 }
 
 @media (max-width: 30rem) {
-  .posts-header h1 {
-    @apply text-3xl;
-  }
+  /* Posts Header h1 responsive styles moved to PostsHeader.astro component */
 
-  .post-card {
-    @apply p-5;
-  }
+  /* Post card responsive styles moved to PostsGrid.astro component */
 
-  .post-icon {
-    @apply text-4xl;
-  }
-
-  .post-card h3 {
-    @apply text-xl;
-  }
-
-  .cta-button,
-  .docs-button {
-    @apply px-7 py-3.5 text-base;
-  }
+  /* Button responsive styles - using global button classes */
 }
 
-/*  Comprehensive Sticky Note Design */
-
-/* Transform post cards into inspirational sticky note aesthetic with Tailwind v4 */
-
-.post-card {
-  @apply relative mx-auto block w-full max-w-96 cursor-pointer rounded-2xl;
-
-  overflow: visible;
-  min-height: 280px;
-  padding: 1.5rem;
-  background: white;
-  transform: rotate(-1deg);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -2px rgb(0 0 0 / 0.05);
-}
-
-/* Multi-color card variants for visual variety */
-.post-card-0 {
-  @apply bg-yellow-50;
-}
-
-.post-card-1 {
-  @apply bg-pink-50;
-}
-
-.post-card-2 {
-  @apply bg-blue-50;
-}
-
-.post-card-3 {
-  @apply bg-green-50;
-}
-
-/* Enhanced rotation patterns for authentic sticky note feel */
-.post-card:nth-child(even) {
-  transform: rotate(1deg);
-}
-
-.post-card:nth-child(3n) {
-  transform: rotate(-2deg);
-}
-
-/* Hardware-accelerated hover effects */
-.post-card:hover {
-  @apply z-10;
-
-  background: white; /* Ensure solid background on hover */
-  box-shadow: 0 12px 35px var(--clr-accent-shadow);
-  transform: rotate(0deg) translateY(-1px) scale(1.01);
-  transition:
-    box-shadow var(--animate-duration-normal) ease,
-    transform var(--animate-duration-fast) ease,
-    opacity var(--animate-duration-fast) ease;
-}
-
-/* Rocket Graphic - Positioned like screenshot */
-.post-card::before {
-  position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
-  z-index: 10;
-  font-size: 1.5rem;
-  content: '';
-  filter: drop-shadow(0 0.0625rem 0.125rem rgb(0 0 0 / 0.2));
-  transform: rotate(15deg);
-}
-
-/* Content Container - Adaptive Layout */
-.posts-card-container {
-  @apply flex w-full flex-col items-center justify-start;
-
-  flex: 1;
-  gap: clamp(0.5rem, 1.5vw, 1rem); /* Adaptive spacing based on viewport */
-  min-height: 0; /* Allow content to shrink */
-}
-
-/* Card container with improved spacing */
-.post-card-container {
-  @apply flex h-full flex-col;
-
-  min-height: 240px;
-}
-
-/* Header section */
-.post-card .post-header {
-  @apply mb-4;
-}
-
-.post-card .post-title {
-  @apply text-3xl/5! mb-2 leading-tight text-gray-800;
-
-  min-height: 2.5rem;
-  font-family: Gochi Hand, cursive, system-ui;
-  font-size: 2em;
-}
-
-.post-card .post-title a {
-  @apply text-gray-800 no-underline;
-
-  transition: color 0.2s ease;
-}
-
-.post-card .post-title a:hover {
-  @apply text-purple-600;
-}
-
-.post-card .post-meta {
-  @apply flex items-center justify-end text-sm text-gray-600;
-}
-
-.post-card .post-date {
-  @apply text-gray-600;
-}
-
-/* Description with improved responsive text handling */
-.post-card .post-description {
-  @apply mb-4 flex-grow overflow-hidden text-sm leading-relaxed text-gray-700;
-
-  /* Responsive text handling - no harsh truncation */
-  display: -webkit-box;
-  max-height: calc(1.4em * 4);
-
-  /* Dynamic line clamping based on screen size */
-  -webkit-line-clamp: 4;
-  line-height: 1.4;
-  -webkit-box-orient: vertical;
-}
-
-/* Tags section */
-.post-card .post-tags {
-  @apply mb-4 mt-auto flex flex-wrap justify-center gap-2;
-}
-
-.post-card .post-tag {
-  @apply rounded-lg border px-2 py-1 text-xs font-medium;
-
-  border: 1px solid rgb(139 93 255 / 0.3);
-  background: rgb(139 93 255 / 0.15);
-  color: #8b5dff;
-  transition: all 0.2s ease;
-}
-
-.post-card .post-tag:hover {
-  background: rgb(139 93 255 / 0.2);
-  border-color: rgb(139 93 255 / 0.4);
-  transform: translateY(-1px);
-}
-
-.post-card .post-tag-more {
-  @apply cursor-pointer rounded-lg border px-2 py-1 text-xs font-medium;
-
-  border: 1px solid rgb(139 93 255 / 0.2);
-  background: rgb(139 93 255 / 0.1);
-  color: #8b5dff;
-  transition: all 0.2s ease;
-}
-
-.post-card .post-tag-more:hover {
-  background: rgb(139 93 255 / 0.15);
-  border-color: rgb(139 93 255 / 0.3);
-  transform: translateY(-1px);
-}
-
-/* Emoji positioning - top-right corner */
-.post-card .post-emoji {
-  position: absolute;
-  top: -1rem;
-  right: -1rem;
-  z-index: 10;
-  font-size: 4rem;
-  pointer-events: none;
-  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.1));
-  transform: rotate(15deg);
-}
+/* Comprehensive Sticky Note Design moved to PostCard.astro component */
 
 /* ========== CALL TO ACTION ========== */
 .features-cta {
@@ -868,12 +120,12 @@
   margin-top: 0; /* Remove top margin since pagination has bottom margin */
   margin-bottom: 1rem;
   padding: 40px 30px; /* Improved padding */
-  border: 1px solid rgb(139 93 255 / 0.2);
+  border: 1px solid oklch(60% 0.3 280deg / 0.2);
   border-radius: 24px; /* Consistent with other components */
   background: linear-gradient(
     135deg,
-    rgb(139 93 255 / 0.05) 0%,
-    rgb(139 93 255 / 0.1) 100%
+    oklch(60% 0.3 280deg / 0.05) 0%,
+    oklch(60% 0.3 280deg / 0.1) 100%
   );
   box-sizing: border-box;
   backdrop-filter: blur(10px);
@@ -891,7 +143,7 @@
 
 .cta-title {
   max-width: 100%;
-  color: #fff; /* Ensure white text */
+  color: oklch(100% 0 0deg); /* Ensure white text */
   font-size: 1.375rem; /* Reduced from 1.75rem */
   font-weight: 600; /* Reduced from 700 */
   line-height: 1.3;
@@ -903,51 +155,14 @@
 .cta-description {
   max-width: 100%;
   margin-bottom: 0.5rem; /* Spacing */
-  color: rgb(255 255 255 / 0.8); /* Better contrast */
+  color: oklch(100% 0 0deg / 0.8); /* Better contrast */
   font-size: 0.9375rem; /* Reduced from 1.125rem */
   line-height: 1.5;
   hyphens: auto;
   overflow-wrap: break-word;
 }
 
-.cta-button {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem; /* Reduced gap */
-  overflow: hidden;
-  min-height: 40px; /* Reduced minimum height */
-  margin-bottom: 0.5rem;
-  padding: 0.75rem 1.5rem; /* Reduced padding */
-  border: none;
-  border-radius: 50px; /* Pill shape */
-  background: linear-gradient(135deg, #8b5dff 0%, #7c3aed 100%);
-  color: white;
-  font-size: 0.875rem; /* Reduced font size */
-  font-weight: 500; /* Reduced weight */
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-block: 1rem;
-  box-shadow: 0 4px 15px rgb(139 93 255 / 0.3);
-}
-
-.cta-button:hover {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-  box-shadow: 0 8px 25px rgb(139 93 255 / 0.4);
-  transform: translateY(-2px);
-}
-
-.cta-button:active {
-  box-shadow: 0 4px 15px rgb(139 93 255 / 0.3);
-  transform: translateY(0);
-}
-
-.cta-button:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 3px rgb(255 255 255 / 0.1),
-    0 0 0 5px rgb(139 93 255 / 0.3);
-}
+/* CTA Button styles - using global .cta-button with docs-specific overrides */
 
 .cta-arrow {
   width: 16px; /* Reduced size */
@@ -962,10 +177,6 @@
 /* ========== ENHANCED CTA ANIMATIONS ========== */
 
 /* CTA button advanced interactions */
-.cta-button {
-  position: relative;
-  overflow: hidden;
-}
 
 .cta-button::before {
   position: absolute;
@@ -977,7 +188,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(255 255 255 / 0.2),
+    oklch(100% 0 0deg / 0.2),
     transparent
   );
   transition: left 0.5s;
@@ -988,28 +199,8 @@
 }
 
 .cta-button.is-clicked {
-  transform: scale(0.95) ;
-  transition-duration: 75ms ;
-}
-
-/* GPU acceleration for animated elements */
-.cta-button {
-  backface-visibility: hidden;
-  will-change: transform, opacity;
-}
-
-/* Focus management */
-.cta-button:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 3px var(--clr-bg),
-    0 0 0 5px var(--clr-accent);
-}
-
-/* CTA section background animation */
-.features-cta {
-  position: relative;
-  overflow: hidden;
+  transform: scale(0.95);
+  transition-duration: 75ms;
 }
 
 .features-cta::before {
@@ -1022,13 +213,13 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(139 92 246 / 0.05),
+    oklch(60% 0.3 280deg / 0.05),
     transparent
   );
-  animation: cta-shimmer 8s infinite;
+  animation: ctaShimmer 8s infinite;
 }
 
-@keyframes cta-shimmer {
+@keyframes ctaShimmer {
   0% {
     left: -100%;
   }
@@ -1040,30 +231,7 @@
 
 /* Responsive improvements */
 @media (max-width: 640px) {
-  .post-card {
-    @apply max-w-80;
-
-    min-height: 260px;
-    padding: 1.25rem;
-  }
-
-  .post-emoji {
-    top: -0.75rem;
-    right: -0.75rem;
-    font-size: 3rem;
-  }
-
-  .post-card .post-description {
-    max-height: calc(1.4em * 5);
-
-    /* More lines on mobile for better readability */
-    -webkit-line-clamp: 5;
-  }
-
-  .posts-grid {
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  }
+  /* Post card mobile styles moved to PostsGrid.astro component */
 
   /* Features CTA responsive improvements */
   .features-cta {
@@ -1089,35 +257,7 @@
 }
 
 @media (max-width: 480px) {
-  .post-card {
-    @apply max-w-full;
-
-    min-height: 240px;
-    padding: 1rem;
-  }
-
-  .post-card .post-emoji {
-    top: -0.5rem;
-    right: -0.5rem;
-    font-size: 2.5rem;
-  }
-
-  .post-card .post-title {
-    min-height: 2rem;
-    font-size: 1.125em;
-  }
-
-  .post-card .post-description {
-    max-height: calc(1.4em * 6);
-
-    /* Even more flexible on very small screens */
-    -webkit-line-clamp: 6;
-  }
-
-  .posts-grid {
-    gap: 1rem;
-    grid-template-columns: 1fr;
-  }
+  /* Post card small mobile styles moved to PostsGrid.astro component */
 
   /* Features CTA mobile improvements */
   .features-cta {
@@ -1150,27 +290,10 @@
   }
 }
 
-/* Larger screens */
-@media (min-width: 1024px) {
-  .post-card {
-    @apply max-w-96;
-
-    min-height: 320px;
-  }
-
-  .post-card .post-description {
-    max-height: calc(1.4em * 3);
-
-    /* Slightly fewer lines on larger screens for better proportions */
-    -webkit-line-clamp: 3;
-  }
-}
+/* Larger screens - post card styles moved to PostsGrid.astro component */
 
 @media (min-width: 1280px) {
-  .posts-grid {
-    gap: 2.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  }
+  /* Posts grid large screen styles moved to PostsGrid.astro component */
 
   .features-cta {
     max-width: 100%;
@@ -1198,128 +321,13 @@
   }
 }
 
-/* 200% Zoom Accessibility Support */
-@media screen and (min-resolution: 2dppx) {
-  .post-card {
-    /* Ensure cards remain readable at 200% zoom */
-    min-width: 12rem;
-    min-height: 9rem;
-  }
+/* 200% Zoom Accessibility Support - moved to PostsGrid.astro component */
 
-  .post-card .post-title {
-    font-size: clamp(0.875rem, 3.5vw, 1.125rem);
-  }
+/* Grid layout styles moved to PostsGrid.astro component */
 
-  .post-card .post-description {
-    font-size: clamp(0.6875rem, 2.5vw, 0.8125rem);
-  }
+/* Sticky Note Animation moved to PostCard.astro component */
 
-  .post-card .read-more-btn {
-    padding: clamp(0.375rem, 1.5vw, 0.625rem) clamp(0.75rem, 2.5vw, 1rem);
-    font-size: clamp(0.6875rem, 2.5vw, 0.8125rem);
-  }
-}
-
-/* Container constraints - Relaxed for natural layout */
-.posts-container {
-  @apply mx-auto max-w-6xl px-10;
-
-  /* Remove aggressive overflow hiding */
-  overflow-x: visible;
-
-  /* Relaxed container constraints for natural layout */
-  max-width: min(80rem, 98vw);
-}
-
-/* Grid layout */
-.posts-grid {
-  @apply mt-8 grid justify-items-center gap-8;
-
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-}
-
-@media (max-width: 1024px) {
-  .posts-grid {
-    gap: clamp(1.25rem, 3vw, 2rem);
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .posts-grid {
-    gap: clamp(1rem, 2.5vw, 1.75rem);
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .posts-grid {
-    gap: clamp(0.875rem, 2vw, 1.5rem);
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  }
-}
-
-/* Sticky Note Animation - Static Design */
-
-/* Removed floating animation for static appearance while keeping tilt */
-
-.post-card {
-  /* Static design - no floating animation */
-
-  /* Keep static tilt for sticky note aesthetic */
-  transform: rotate(-1deg);
-}
-
-.post-card:nth-child(even) {
-  /* Remove animation delay - all cards static */
-}
-
-.post-card:nth-child(3n) {
-  /* Remove animation delay - all cards static */
-}
-
-/* Accessibility improvements */
-@media {
-  .post-card {
-    transform: rotate(-1deg);
-    transition:
-      box-shadow var(--animate-duration-normal) ease,
-      transform var(--animate-duration-fast) ease,
-      opacity var(--animate-duration-fast) ease;
-  }
-
-  .post-card:nth-child(even) {
-    transform: rotate(1deg);
-  }
-
-  .post-card:nth-child(3n) {
-    transform: rotate(-2deg);
-  }
-
-  .post-card:hover {
-    box-shadow: 0 12px 35px var(--clr-accent-shadow);
-    transform: rotate(0deg) translateY(-1px) scale(1.01);
-  }
-
-  .post-card .read-more-btn,
-  .post-card .post-title a,
-  .post-card .post-tag,
-  .post-card .post-tag-more {
-    transition: none;
-  }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: more) {
-  .post-card {
-    border: 2px solid #6b7280;
-  }
-
-  .post-card .post-tag {
-    border: 2px solid #8b5dff;
-    background: rgb(139 93 255 / 0.2);
-  }
-}
+/* High contrast mode support moved to PostCard.astro component */
 
 /* ===== CONSOLIDATED DOCS PAGE STYLES ===== */
 
@@ -1329,9 +337,9 @@
 .search-container {
   margin-bottom: 40px;
   padding: 30px;
-  border: 1px solid rgb(139 93 255 / 0.05);
+  border: 1px solid oklch(60% 0.3 280deg / 0.05);
   border-radius: 20px;
-  background: rgb(255 255 255 / 0.05);
+  background: oklch(100% 0 0deg / 0.05);
 }
 
 .search-header {
@@ -1361,9 +369,9 @@
 .search-input {
   width: 100%;
   padding: 15px 20px 15px 50px;
-  border: 2px solid rgb(139 93 255 / 0.2);
+  border: 2px solid oklch(60% 0.3 280deg / 0.2);
   border-radius: 12px;
-  background: rgb(139 93 255 / 0.1);
+  background: oklch(60% 0.3 280deg / 0.1);
   color: var(--clr-text-primary);
   font-size: 16px;
   transition: all 0.3s ease;
@@ -1372,7 +380,7 @@
 .search-input:focus {
   outline: none;
   border-color: var(--clr-accent);
-  box-shadow: 0 0 0 3px rgb(139 93 255 / 0.1);
+  box-shadow: 0 0 0 3px oklch(60% 0.3 280deg / 0.1);
 }
 
 .search-input::placeholder {
@@ -1397,9 +405,9 @@
 
 .filter-button {
   padding: 8px 16px;
-  border: 1px solid rgb(139 93 255 / 0.2);
+  border: 1px solid oklch(60% 0.3 280deg / 0.2);
   border-radius: 20px;
-  background: rgb(139 93 255 / 0.1);
+  background: oklch(60% 0.3 280deg / 0.1);
   color: var(--clr-text-primary);
   font-size: 14px;
   cursor: pointer;
@@ -1413,963 +421,105 @@
 }
 
 .filter-button:hover {
-  background: rgb(139 93 255 / 0.2);
+  background: oklch(60% 0.3 280deg / 0.2);
   border-color: var(--clr-accent);
 }
 
-/* FIXED: Search Results Layout - Optimized for immediate visibility */
-.search-results {
-  /* Ensure search results are immediately visible below search input */
-  position: relative;
-  z-index: 10;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  padding-top: 2rem;
-
-  /* Add clear visual separation from search input */
-  border-top: 1px solid rgb(139 93 255 / 0.1);
-  transition: all 0.3s ease-in-out;
-}
-
-.search-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border: 1px solid rgb(139 93 255 / 0.1);
-  border-radius: var(--radius-lg);
-  background: rgb(255 255 255 / 0.05);
-
-  /* Ensure search stats are immediately visible */
-  opacity: 1;
-  visibility: visible;
-
-  /* Add subtle animation for better UX */
-  animation: fadeInUp 0.3s ease-out;
-}
-
-.search-results-count {
-  color: var(--clr-text-primary);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.clear-search-btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--clr-text-muted);
-  border-radius: var(--radius-md);
-  background: none;
-  color: var(--clr-text-secondary);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out);
-}
-
-.clear-search-btn:hover {
-  background: var(--clr-background);
-  color: var(--clr-text-primary);
-  border-color: var(--clr-accent-glow-medium);
-}
-
-/* FIXED: Search Results Grid - Optimized for search context */
-.search-results-grid {
-  display: grid;
-  gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  overflow: visible;
-
-  /* Ensure results are immediately visible */
-  max-width: 100%;
-  margin-top: 1rem;
-
-  /* Add immediate visibility styling */
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-}
-
-/* FIXED: Search Result Cards - Design #17 with Main Post Card Styling */
-.search-result-card {
-  /* Use exact same styling as main post cards with Design #17 features */
-  @apply relative mx-auto block w-full max-w-96 cursor-pointer rounded-2xl;
-
-  /* Design #17: Add search-specific visual indicator */
-  position: relative;
-  overflow: visible;
-  min-height: 280px;
-  padding: 1.5rem;
-  background: white;
-  transform: rotate(-1deg); /* Use same rotation as main cards */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -2px rgb(0 0 0 / 0.05);
-}
-
-/* Design #17: Search icon badge for visual indicator */
-.search-result-card::before {
-  position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
-  z-index: 10;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: #8b5dff;
-  color: white;
-  font-size: 0.875rem;
-  content: '🔍';
-  box-shadow: 0 2px 8px rgb(139 93 255 / 0.3);
-}
-
-/* Add color variants for search result cards to match main design */
-.search-result-card:nth-child(4n + 1) {
-  @apply bg-yellow-50;
-}
-
-.search-result-card:nth-child(4n + 2) {
-  @apply bg-pink-50;
-}
-
-.search-result-card:nth-child(4n + 3) {
-  @apply bg-blue-50;
-}
-
-.search-result-card:nth-child(4n + 4) {
-  @apply bg-green-50;
-}
-
-.search-result-card:hover {
-  @apply z-10;
-
-  background: white; /* Use same hover effect as main cards */
-  box-shadow: 0 12px 35px var(--clr-accent-shadow);
-  transform: rotate(0deg) translateY(-1px) scale(1.01);
-}
-
-/* Design #17: Enhanced Post Meta Layout - Vertical Stacking */
-.search-result-card .post-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 1rem 0;
-
-  /* Enhanced spacing for better visual hierarchy */
-  padding: 0.75rem;
-  border: 1px solid rgb(139 93 255 / 0.1);
-  border-radius: 0.5rem;
-  background: rgb(139 93 255 / 0.02);
-}
-
-/* Design #17: Enhanced Search Relevance Indicator */
-.search-relevance {
-  /* Ensure it fits well within the post-meta layout */
-  display: inline-block;
-  margin-top: 0.5rem;
-  padding: 0.5rem 0.75rem; /* More padding */
-  border: 1px solid rgb(16 185 129 / 0.2);
-  border-radius: 0.5rem;
-  background: rgb(16 185 129 / 0.1);
-  color: #10b981;
-  font-size: 0.875rem; /* Slightly larger */
-  font-weight: 600;
-  font-weight: 700;
-
-  /* Enhanced prominence */
-  text-align: center;
-
-  /* Design #17: Add subtle animation */
-  transition: all 0.2s ease;
-
-  /* Add subtle glow effect */
-  box-shadow: 0 2px 4px rgb(16 185 129 / 0.1);
-}
-
-.search-relevance:hover {
-  background: rgb(16 185 129 / 0.15);
-  box-shadow: 0 4px 8px rgb(16 185 129 / 0.2);
-  transform: scale(1.05);
-}
-
-/* Design #17: Compact Search Relevance Indicator - Screenshot Match */
-.search-relevance-compact {
-  /* Compact pill design like screenshot */
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-
-  /* Ensure it fits well in metadata row */
-  margin-left: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgb(16 185 129 / 0.2);
-  border-radius: 0.75rem;
-  background: rgb(16 185 129 / 0.1);
-  color: #10b981;
-  font-size: 0.75rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-
-  /* Subtle shadow for depth */
-  box-shadow: 0 1px 2px rgb(16 185 129 / 0.1);
-}
-
-.search-relevance-compact:hover {
-  background: rgb(16 185 129 / 0.15);
-  box-shadow: 0 2px 4px rgb(16 185 129 / 0.2);
-  transform: scale(1.05);
-}
-
-/* Design #17: Enhanced Post Date Styling */
-.search-result-card .post-date {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgb(107 114 128 / 0.1);
-  border-radius: 0.25rem;
-  background: rgb(107 114 128 / 0.05);
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.search-result-card .post-date:hover {
-  background: rgb(107 114 128 / 0.1);
-  transform: scale(1.02);
-}
-
-/* Design #17: Enhanced Title Styling - BIGGER and More Prominent */
-.search-result-card .post-title {
-  margin-bottom: 1rem;
-  color: var(--clr-text-muted);
-  font-size: 1.5rem; /* Increased from default */
-  font-weight: 700; /* Bolder weight */
-  line-height: 1.3;
-
-  /* Enhanced visual prominence */
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
-}
-
-.search-result-card .post-title a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.search-result-card .post-title a:hover {
-  color: var(--clr-accent);
-}
-
-/* Design #17: Enhanced Content Snippet Styling */
-.content-snippet {
-  /* Design #17: Add search context indicator */
-  position: relative;
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid rgb(139 93 255 / 0.1);
-  border-left: 3px solid #8b5dff;
-  border-radius: 0.5rem;
-  background: #f3f4f6;
-
-  /* Design #17: Add subtle shadow for depth */
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-}
-
-/* Design #17: Add "Search Context" label */
-.content-snippet::before {
-  position: absolute;
-  top: -0.5rem;
-  left: 1rem;
-  z-index: 5;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  background: #8b5dff;
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  content: '🔍 Konteks Pencarian';
-}
-
-/* Design #17: Enhanced Snippet Text Styling */
-.snippet-text {
-  margin: 0;
-
-  /* Design #17: Add padding for search context label */
-  padding-top: 0.5rem;
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-style: italic;
-  line-height: 1.6;
-}
-
-/* Design #17: Highlight search terms in snippet */
-.snippet-text mark {
-  padding: 0.1rem 0.2rem;
-  border-radius: 0.25rem;
-  background: #fef3c7;
-  color: #92400e;
-  font-weight: 600;
-}
-
-.search-metadata {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 1rem 0;
-}
-
-.metadata-tag {
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Design #17: Enhanced Metadata Tags */
-.metadata-tag.category {
-  border: 1px solid #8b5dff;
-  background: #8b5dff;
-  color: white;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.metadata-tag.category:hover {
-  background: #7c3aed;
-  transform: scale(1.05);
-}
-
-/* Design #17: Enhanced Difficulty Tag */
-.metadata-tag.difficulty {
-  border: 1px solid #10b981;
-  background: #10b981;
-  color: white;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.metadata-tag.difficulty:hover {
-  background: #059669;
-  transform: scale(1.05);
-}
-
-/* Design #17: Enhanced Stage Tag */
-.metadata-tag.stage {
-  border: 1px solid #3b82f6;
-  background: #3b82f6;
-  color: white;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.metadata-tag.stage:hover {
-  background: #2563eb;
-  transform: scale(1.05);
-}
-
-/* Design #17: Enhanced Complexity Tag */
-.metadata-tag.complexity {
-  border: 1px solid #a855f7;
-  background: #a855f7;
-  color: white;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.metadata-tag.complexity:hover {
-  background: #9333ea;
-  transform: scale(1.05);
-}
-
-/* Feature tags removed based on user feedback - simplified design */
-
-/* Design #17: Enhanced Semantic Keywords */
-.semantic-keywords {
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid rgb(139 93 255 / 0.1);
-  border-left: 3px solid #8b5dff;
-  border-radius: 0.5rem;
-  background: #f8fafc;
-
-  /* Design #17: Add subtle shadow */
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-}
-
-.semantic-label {
-  /* Design #17: Add search icon */
-  position: relative;
-  display: block;
-  margin-bottom: 0.5rem;
-  padding-left: 1.5rem;
-  color: #6b7280;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.semantic-label::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-size: 0.875rem;
-  content: '🔍';
-}
-
-.semantic-keyword {
-  display: inline-block;
-  margin: 0.25rem 0.25rem 0.25rem 0;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #8b5dff;
-  border-radius: 0.25rem;
-  background: #8b5dff;
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.semantic-keyword:hover {
-  background: #7c3aed;
-  transform: scale(1.05);
-}
-
-/* Design #17: Enhanced Word Count */
-.word-count {
-  margin-left: 1rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgb(156 163 175 / 0.2);
-  border-radius: 0.25rem;
-  background: rgb(156 163 175 / 0.1);
-  color: #9ca3af;
-  font-size: 0.75rem;
-  transition: all 0.2s ease;
-}
-
-.word-count:hover {
-  background: rgb(156 163 175 / 0.15);
-  transform: scale(1.05);
-}
-
-/* Design #17: Enhanced Search Highlight */
-.search-highlight {
-  padding: 0.1rem 0.2rem;
-  border-radius: 0.25rem;
-  background: #fef3c7;
-  color: #92400e;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.search-highlight:hover {
-  background: #fde68a;
-  transform: scale(1.05);
-}
-
-.search-no-results {
-  margin-top: 2rem;
-  padding: 3rem 1rem;
-  border: 1px solid var(--clr-text-muted);
-  border-radius: var(--radius-lg);
-  background: var(--clr-background);
-  text-align: center;
-}
-
-.search-no-results .no-results-icon {
-  margin-bottom: 1rem;
-  font-size: 3rem;
-  opacity: 0.5;
-}
-
-.search-no-results h3 {
-  margin-bottom: 0.5rem;
-  color: var(--clr-text-primary);
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-}
-
-.search-no-results p {
-  margin-bottom: 1.5rem;
-  color: var(--clr-text-secondary);
-}
-
-.search-suggestions {
-  margin: 1.5rem 0;
-}
-
-
-
-/* Search Input Enhancement */
-.search-input-ready {
-  background: var(--clr-background) ;
-  border-color: var(--clr-accent-glow-medium) ;
-}
-
-.search-input-ready:focus {
-  border-color: var(--clr-primary) ;
-  box-shadow: 0 0 0 3px rgb(139 93 255 / 0.1) ;
-}
-
-/* FIXED: Responsive Design for Search Results */
-@media (max-width: 768px) {
-  .search-results-grid {
-    gap: 1rem;
-    grid-template-columns: 1fr;
-    margin-top: 0.75rem;
-  }
-
-  .search-result-card {
-    min-height: 220px;
-    margin-bottom: 0.5rem;
-    padding: 1.5rem;
-  }
-
-  .search-stats {
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    text-align: center;
-  }
-
-  .search-filters {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .filter-button {
-    padding: 0.75rem 1rem;
-    text-align: center;
-  }
-}
-
-@media (max-width: 640px) {
-  .search-results-grid {
-    gap: 0.75rem;
-    grid-template-columns: 1fr;
-    margin-top: 0.5rem;
-  }
-
-  .search-result-card {
-    min-height: 200px;
-    margin-bottom: 0.25rem;
-    padding: 1.25rem;
-  }
-
-  .search-loading-indicator {
-    display: none;
-    gap: 4px;
-  }
-
-  .search-loading-indicator .loading-text {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-results-grid {
-    gap: 0.5rem;
-    grid-template-columns: 1fr;
-    margin-top: 0.25rem;
-  }
-
-  .search-result-card {
-    min-height: 180px;
-    margin-bottom: 0.25rem;
-    padding: 1rem;
-  }
-
-  .search-loading-indicator {
-    right: 10px;
-    gap: 3px;
-  }
-}
-
-/* FIXED: Content State Management - Proper Visibility Control */
-#contentState {
-  overflow: visible;
-
-  /* Preserve the posts-grid layout - don't override display */
-  width: 100%;
-  max-width: 100%;
-  opacity: 1;
-  visibility: visible;
-  transition: all 0.3s ease-in-out;
-}
-
-#contentState.hidden {
-  overflow: hidden;
-
-  /* Ensure it doesn't take up space when hidden */
-  max-height: 0;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-#searchResults {
-  overflow: visible;
-
-  /* Preserve the search-results-grid layout - don't override display */
-  width: 100%;
-  max-width: 100%;
-  opacity: 1;
-  visibility: visible;
-  transition: all 0.3s ease-in-out;
-}
-
-#searchResults.hidden {
-  overflow: hidden;
-
-  /* Ensure it doesn't take up space when hidden */
-  max-height: 0;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* FIXED: Loading States */
-.search-input-loading {
-  background: rgb(139 93 255 / 0.05);
-  opacity: 0.6;
-  cursor: not-allowed;
-  border-color: rgb(139 93 255 / 0.1);
-}
-
-.search-input-loading:focus {
-  border-color: rgb(139 93 255 / 0.1);
-  box-shadow: none;
-}
-
-.search-loading-indicator {
-  position: absolute;
-  top: 50%;
-  right: 15px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  opacity: 0.7;
-  transform: translateY(-50%);
-}
-
-.loading-text {
-  overflow: hidden;
-  max-width: 120px;
-  color: rgb(139 93 255 / 0.6);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.25;
-  white-space: nowrap;
-}
-
-.search-input-ready .search-loading-indicator {
-  display: none;
-}
-
-.search-input-ready {
-  background: rgb(139 93 255 / 0.1);
-  opacity: 1;
-  cursor: text;
-  border-color: rgb(139 93 255 / 0.2);
-}
-
-.search-input-ready:focus {
-  border-color: var(--clr-accent);
-  box-shadow: 0 0 0 3px rgb(139 93 255 / 0.1);
-}
-
-.filter-button-loading {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-@media (min-width: 640px) {
-  .loading-text {
-    max-width: 140px;
-    font-size: 12px;
-  }
-}
-
-/* Pagination Styles */
 .pagination-container {
   margin-top: 40px;
-  margin-bottom: 60px; /* Add proper spacing before features-cta */
+  margin-bottom: 60px;
   padding: 30px;
-  border: 1px solid rgb(139 93 255 / 0.1);
+  border: 1px solid oklch(60% 0.3 280deg / 0.1);
   border-radius: 20px;
-  background: rgb(255 255 255 / 0.03);
+  background: oklch(100% 0 0deg / 0.03);
   backdrop-filter: blur(10px);
 }
 
-.pagination-info {
-  margin-bottom: 20px;
-  text-align: center;
-}
+/* Post meta and date styles moved to PostsGrid.astro component */
 
-.pagination-stats {
-  color: var(--clr-text-secondary);
-  font-size: 14px;
-}
-
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.pagination-btn {
-  padding: 10px 20px;
-  border: 1px solid rgb(139 93 255 / 0.2);
-  border-radius: 12px;
-  background: rgb(139 93 255 / 0.1);
-  color: var(--clr-text-primary);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background: rgb(139 93 255 / 0.2);
-  border-color: var(--clr-accent);
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.pagination-numbers {
-  display: flex;
-  gap: 8px;
-}
-
-.pagination-number {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgb(139 93 255 / 0.2);
-  border-radius: 8px;
-  background: rgb(139 93 255 / 0.1);
-  color: var(--clr-text-primary);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.pagination-number:hover {
-  background: rgb(139 93 255 / 0.2);
-  border-color: var(--clr-accent);
-}
-
-.pagination-number.active {
-  background: var(--clr-accent);
-  color: white;
-  border-color: var(--clr-accent);
-}
-
-.pagination-toggle {
-  text-align: center;
-}
-
-.pagination-mode-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--clr-text-secondary);
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.pagination-mode-toggle input[type='checkbox'] {
-  display: none;
-}
-
-.toggle-slider {
-  position: relative;
-  width: 50px;
-  height: 24px;
-  border-radius: 12px;
-  background: rgb(139 93 255 / 0.2);
-  transition: all 0.3s ease;
-}
-
-.toggle-slider::before {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: white;
-  transition: all 0.3s ease;
-  content: '';
-}
-
-.pagination-mode-toggle input[type='checkbox']:checked + .toggle-slider {
-  background: var(--clr-accent);
-}
-
-.pagination-mode-toggle input[type='checkbox']:checked + .toggle-slider::before {
-  transform: translateX(26px);
-}
-
-/* Enhanced post-meta layout to accommodate compact relevance */
-.post-card .post-meta {
-  @apply mb-2;
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-flow: row wrap;
-}
-
-/* Ensure search relevance doesn't interfere with existing post-date styling */
-.post-card .post-meta .post-date {
-  @apply text-sm text-gray-500;
-
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-weight: 500;
-}
-
-/* Add calendar icon for date */
-.post-card .post-meta .post-date::before {
-  font-size: 0.875rem;
-  content: '📅';
-}
-
-/* Responsive adjustments for compact relevance in cards */
-@media (max-width: 768px) {
-  .search-relevance-compact {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.7rem;
-  }
-
-  .post-card .post-meta {
-    gap: 0.4rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-relevance-compact {
-    padding: 0.15rem 0.35rem;
-    font-size: 0.65rem;
-  }
-
-  .post-card .post-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3rem;
-  }
-}
+/* Responsive adjustments moved to PostCard.astro component */
 
 /* Page-specific styles only - reusable styles moved to docs.css */
 
 /* Critical inline styles and page-specific overrides remain here */
 
-/* Search Results Styles */
-.search-results {
-  margin-top: 2rem;
+.cta-button {
+  min-height: 40px; /* Reduced height */
+  padding: 0.75rem 1.25rem; /* Reduced padding */
+  font-size: 0.8125rem; /* Reduced font size */
 }
 
-.search-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border: 1px solid rgb(139 93 255 / 0.1);
-  border-radius: var(--radius-lg);
-  background: rgb(139 93 255 / 0.05);
+@media (max-width: 480px) {
+  /* Post card small mobile styles moved to PostsGrid.astro component */
+
+  /* Features CTA mobile improvements */
+
+  .features-cta {
+    margin-bottom: 30px;
+    padding: 25px 15px;
+    border-radius: 20px;
+  }
+
+  .cta-button {
+    gap: 0.375rem; /* Reduced gap */
+    min-height: 36px; /* Reduced height */
+    padding: 0.625rem 1rem; /* Reduced padding */
+    font-size: 0.75rem; /* Reduced font size */
+  }
+
+  .cta-arrow {
+    width: 14px; /* Reduced size */
+    height: 14px; /* Reduced size */
+  }
 }
 
-.search-results-count {
-  color: var(--clr-text-primary);
-  font-weight: 500;
+/* Larger screens - post card styles moved to PostsGrid.astro component */
+
+@media (min-width: 1280px) {
+  /* Posts grid large screen styles moved to PostsGrid.astro component */
+
+  .features-cta {
+    max-width: 100%;
+    padding: var(--spacing-12);
+    margin-inline: auto;
+  }
+
+  .cta-content {
+    max-width: 70ch;
+    margin: 0 auto;
+  }
+
+  .cta-button {
+    min-height: 48px;
+    padding: var(--spacing-4) var(--spacing-8);
+    font-size: var(--fs-base);
+  }
 }
 
-.clear-search-btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--clr-text-muted);
-  border-radius: var(--radius-md);
-  background: none;
-  color: var(--clr-text-secondary);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out);
-}
+/* 200% Zoom Accessibility Support - moved to PostsGrid.astro component */
 
-.clear-search-btn:hover {
-  background: var(--clr-background);
-  color: var(--clr-text-primary);
-  border-color: var(--clr-accent-glow-medium);
-}
+/* Grid layout styles moved to PostsGrid.astro component */
 
-.search-results-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
+/* Sticky Note Animation moved to PostCard.astro component */
 
-/* Design #17: Search result cards now use enhanced CSS styling */
+/* High contrast mode support moved to PostCard.astro component */
 
-/* All search result card styles now use enhanced CSS from docs.css */
+/* ===== CONSOLIDATED DOCS PAGE STYLES ===== */
 
-.search-no-results {
-  margin-top: 2rem;
-  padding: 3rem 1rem;
-  border: 1px solid var(--clr-text-muted);
-  border-radius: var(--radius-lg);
-  background: var(--clr-background);
-  text-align: center;
-}
+/* Moved from docs.astro to create single source of truth */
 
-.search-no-results .no-results-icon {
-  margin-bottom: 1rem;
-  font-size: 3rem;
-  opacity: 0.5;
-}
+/* Post meta and date styles moved to PostsGrid.astro component */
 
-.search-no-results h3 {
-  margin-bottom: 0.5rem;
-  color: var(--clr-text-primary);
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-}
+/* Responsive adjustments moved to PostCard.astro component */
 
-.search-no-results p {
-  margin-bottom: 1.5rem;
-  color: var(--clr-text-secondary);
-}
+/* Page-specific styles only - reusable styles moved to docs.css */
 
-.search-suggestions {
-  margin: 1.5rem 0;
-}
+/* Critical inline styles and page-specific overrides remain here */
 
+/* Post meta and date styles moved to PostsGrid.astro component */
 
+/* Responsive adjustments moved to PostCard.astro component */
 
-/* Search Input Enhancement */
-.search-input-ready {
-  background: var(--clr-background) ;
-  border-color: var(--clr-accent-glow-medium) ;
-}
+/* Page-specific styles only - reusable styles moved to docs.css */
 
-.search-input-ready:focus {
-  border-color: var(--clr-primary) ;
-  box-shadow: 0 0 0 3px rgb(139 93 255 / 0.1) ;
-}
+/* Critical inline styles and page-specific overrides remain here */

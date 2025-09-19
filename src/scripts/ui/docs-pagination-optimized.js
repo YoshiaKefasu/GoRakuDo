@@ -93,8 +93,8 @@ class DocsPagination {
       this.loadNextSearchBatch();
       this.setupProgressiveLoadingObserver();
     } else {
-      this.searchResults.forEach(post => {
-        const postCard = this.createPostCard(post);
+      this.searchResults.forEach((post, index) => {
+        const postCard = this.createPostCard(post, index);
         contentState.appendChild(postCard);
       });
       this.progressiveLoading.loadedSearchResults = this.searchResults.length;
@@ -149,7 +149,7 @@ class DocsPagination {
       const postsToLoad = this.searchResults.slice(startIndex, endIndex);
       postsToLoad.forEach((post, index) => {
         setTimeout(() => {
-          const postCard = this.createPostCard(post);
+          const postCard = this.createPostCard(post, index);
           postCard.style.opacity = '0';
           postCard.style.transform = 'translateY(20px)';
           contentState.appendChild(postCard);
@@ -373,8 +373,8 @@ class DocsPagination {
     const contentState = document.getElementById('contentState');
     if (!contentState) return;
 
-    postsToLoad.forEach(post => {
-      const postCard = this.createPostCard(post);
+    postsToLoad.forEach((post, index) => {
+      const postCard = this.createPostCard(post, index);
       contentState.appendChild(postCard);
     });
 
@@ -385,26 +385,45 @@ class DocsPagination {
   /**
    * Create post card element
    */
-  createPostCard(post) {
+  createPostCard(post, index = 0) {
     const article = document.createElement('article');
-    article.className = 'post-card';
+    const cardVariant = `post-card-${index % 4}`;
+    article.className = `post-card ${cardVariant}`;
     article.setAttribute('data-post-slug', post.slug);
+    article.setAttribute('data-content-type', post.category || '');
+    article.setAttribute(
+      'data-is-recommended',
+      post.isRecommended ? 'true' : 'false'
+    );
+    article.setAttribute(
+      'data-is-beginner',
+      post.isBeginner ? 'true' : 'false'
+    );
+    article.setAttribute('data-is-tool', post.isTool ? 'true' : 'false');
+
+    const displayTags = (post.tags || []).slice(0, 3);
+    const remainingTags =
+      (post.tags || []).length > 3 ? (post.tags || []).length - 3 : 0;
 
     article.innerHTML = `
-      <div class="post-header">
-        <h2 class="post-title">
-          <a href="${post.url || `/docs/${post.slug}`}">${post.title}</a>
-        </h2>
-        <div class="post-meta">
-          <span class="post-date">${post.date}</span>
-          ${post.readTime ? `<span class="post-readtime">${post.readTime}</span>` : ''}
+      ${post.emoji ? `<div class="post-emoji">${post.emoji}</div>` : ''}
+      <div class="post-card-container">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="${post.url || `/docs/${post.slug}`}">${post.title}</a>
+          </h2>
+          <div class="post-meta">
+            <span class="post-date">${post.date}</span>
+            ${post.readTime ? `<span class="post-readtime">${post.readTime}</span>` : ''}
+          </div>
         </div>
+        <p class="post-description">${post.description}</p>
+        <div class="post-tags" data-all-tags='${JSON.stringify(post.tags || [])}'>
+          ${displayTags.map(tag => `<span class="post-tag">${tag}</span>`).join('')}
+          ${remainingTags > 0 ? `<span class="post-tag-more" data-count="${remainingTags}">+${remainingTags}</span>` : ''}
+        </div>
+        <a href="${post.url || `/docs/${post.slug}`}" class="read-more-btn">Baca Selengkapnya →</a>
       </div>
-      <p class="post-description">${post.description}</p>
-      <div class="post-tags">
-        ${post.tags.map(tag => `<span class="post-tag">${tag}</span>`).join('')}
-      </div>
-      <a href="${post.url || `/docs/${post.slug}`}" class="read-more-btn">Baca Selengkapnya →
     `;
 
     return article;
@@ -438,8 +457,8 @@ class DocsPagination {
 
     contentState.innerHTML = '';
 
-    postsToShow.forEach(post => {
-      const postCard = this.createPostCard(post);
+    postsToShow.forEach((post, index) => {
+      const postCard = this.createPostCard(post, index);
       contentState.appendChild(postCard);
     });
 
@@ -515,8 +534,8 @@ class DocsPagination {
     contentState.innerHTML = '';
 
     const postsToShow = this.allPosts.slice(0, this.loadedPosts);
-    postsToShow.forEach(post => {
-      const postCard = this.createPostCard(post);
+    postsToShow.forEach((post, index) => {
+      const postCard = this.createPostCard(post, index);
       contentState.appendChild(postCard);
     });
   }

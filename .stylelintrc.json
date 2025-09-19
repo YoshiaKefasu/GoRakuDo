@@ -3,7 +3,8 @@
     "stylelint-config-standard",
     "stylelint-config-recess-order",
     "stylelint-config-html",
-    "stylelint-config-tailwindcss"],
+    "stylelint-config-tailwindcss"
+  ],
   "plugins": ["stylelint-order"],
   "rules": {
     "order/properties-order": [
@@ -108,9 +109,7 @@
     "declaration-no-important": [
       true,
       {
-        "ignore": [
-          "background"
-        ]
+        "ignore": ["background"]
       }
     ],
     "selector-class-pattern": "^[a-z][a-zA-Z0-9-]*$",
@@ -123,7 +122,15 @@
     "at-rule-no-unknown": [
       true,
       {
-        "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen", "layer", "theme"]
+        "ignoreAtRules": [
+          "tailwind",
+          "apply",
+          "variants",
+          "responsive",
+          "screen",
+          "layer",
+          "theme"
+        ]
       }
     ],
     "max-nesting-depth": 3,
@@ -165,31 +172,6 @@
         "max-nesting-depth": null,
         "property-no-vendor-prefix": null,
         "declaration-no-important": null
-      }
-    },
-    {
-      "files": ["src/styles/docs/docs.css"],
-      "rules": {
-        "selector-max-type": null,
-        "declaration-no-important": null,
-        "selector-class-pattern": null,
-        "selector-pseudo-class-no-unknown": null,
-        "at-rule-no-unknown": null,
-        "declaration-block-no-duplicate-properties": null,
-        "max-nesting-depth": null,
-        "selector-max-specificity": null,
-        "custom-property-pattern": null,
-        "property-no-vendor-prefix": null,
-        "keyframes-name-pattern": null,
-        "selector-id-pattern": null,
-        "property-no-deprecated": null,
-        "declaration-property-value-keyword-no-deprecated": null,
-        "declaration-property-value-no-unknown": null,
-        "rule-empty-line-before": null,
-        "no-duplicate-selectors": null,
-        "no-descending-specificity": null,
-        "declaration-block-single-line-max-declarations": null,
-        "media-feature-name-value-no-unknown": null
       }
     },
     {

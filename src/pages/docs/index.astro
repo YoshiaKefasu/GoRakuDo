@@ -1,32 +1,18 @@
 ---
-// ページネーション設定（Astro propsで制御可能）
-export interface Props {
-  currentPage?: number;
-  postsPerPage?: number;
-}
-
-const { currentPage = 1, postsPerPage = 12 } = Astro.props;
-
-// Core imports
+// シンプルなドキュメントページ - 検索システムなし
 import { getCollection, type CollectionEntry } from 'astro:content';
 import UnifiedSEO from '../../components/UnifiedSEO.astro';
 import Breadcrumb from '../../components/public-components/Breadcrumb.astro';
 import Navbar from '../../components/public-components/Navbar.astro';
-import { resolvePath, getCollectionInfo } from '../../utils/collections';
-import { logger, ConsoleLogger } from '../../utils/logging/console-logger';
+import PostsHeader from '../../components/docs/PostsHeader.astro';
+import PostsGrid from '../../components/docs/PostsGrid.astro';
 
 // Style imports
-import '../../styles/docs/docs.css';
 import '../../styles/global.css';
-import '../../styles/homepage/index.css';
+import '../../styles/docs/docs.css';
 
-// Configure logging for production build
-ConsoleLogger.setGlobalBuildMode(true);
-ConsoleLogger.setGlobalCriticalErrorsOnly(true);
-
-// Content processing and optimization
+// Content processing
 let posts: CollectionEntry<'docs'>[] = [];
-let error: string | null = null;
 
 try {
   // Build-time content filtering and validation
@@ -44,193 +30,27 @@ try {
       new Date(b.data.publishedDate).getTime() -
       new Date(a.data.publishedDate).getTime()
   );
-
-  // Generate search data for client-side functionality
-  const searchData = posts.map(post => ({
-    slug: post.slug,
-    title: post.data.title,
-    description: post.data.description || '',
-    tags: post.data.tags || [],
-    categories: post.data.categories || ['general'],
-    publishedDate: post.data.publishedDate,
-    lastModified: post.data.lastModified || post.data.publishedDate,
-    content: post.body.slice(0, 200), // Truncated content for search
-  }));
-
-  logger.log(
-    `${posts.length} posts loaded and sorted at build time`,
-    'success'
-  );
-  logger.log(`Search data generated for ${searchData.length} posts`, 'success');
 } catch (err: any) {
-  logger.log(`Content processing error: ${err.message}`, 'error');
-  error = err.message;
+  console.error('Content processing error:', err.message);
   posts = [];
 }
 
-// Posts are already sorted at build time
-const sortedPosts = posts;
-
-// Pagination configuration
-const totalPosts = sortedPosts.length;
-const startIndex = 0;
-const endIndex = Math.min(postsPerPage, totalPosts);
-const currentPosts = sortedPosts.slice(startIndex, endIndex);
-
-logger.logPaginationInfo(totalPosts, postsPerPage, currentPage);
-
-// Content categorization for filtering
-const contentCategories = {
-  beginner: sortedPosts.filter(post => false),
-  tools: sortedPosts.filter(post => {
-    const isTool =
-      post.data.category === 'tools' ||
-      post.data.title.toLowerCase().includes('anki') ||
-      post.data.description.toLowerCase().includes('anki') ||
-      post.data.tags.some((tag: string) => tag.toLowerCase().includes('tool'));
-    return isTool;
-  }),
-  methodology: sortedPosts.filter(post => post.data.category === 'methodology'),
-  recommended: sortedPosts.slice(0, 3),
-};
-
-logger.log(`Categories pre-computed at build time`, 'success');
-
-// Extract categorized content for backward compatibility
-const beginnerContent = contentCategories.beginner;
-const toolContent = contentCategories.tools;
-const finalRecommendations = contentCategories.recommended;
-
-// Resolve dynamic paths for all posts
-const postsWithDynamicPaths = sortedPosts.map(post => {
-  const resolvedPath = { path: resolvePath('docs', post.slug) };
-  return {
-    ...post,
-    resolvedPath: resolvedPath.path,
-    collectionMetadata: getCollectionInfo('docs'),
-  };
-});
-
-// Process article content for search and display
-function processArticleContent(content: string) {
-  if (!content)
-    return {
-      cleanedText: '',
-      hasCode: false,
-      hasImages: false,
-      hasSections: false,
-    };
-
-  // Extract text from HTML content (already processed by Astro)
-  const cleanedText = content
-    .replace(/<[^>]*>/g, ' ') // Remove HTML tags
-    .replace(/&[^;]+;/g, ' ') // Remove HTML entities
-    .replace(/\n+/g, ' ') // Replace newlines with spaces
-    .replace(/\s+/g, ' ') // Normalize spaces
-    .trim();
-
-  return {
-    cleanedText,
-    hasCode: /<pre|<code/.test(content), // Detect code blocks
-    hasImages: /!\[.*?\]\(.*?\)/.test(content),
-    hasSections: /^#{1,6}\s+/.test(content),
-  };
-}
-
-// Generate optimized search data
-const searchDataItems = sortedPosts.map(post => {
-  const fullContent = post.body || '';
-  const processedContent = processArticleContent(fullContent);
-
-  return {
-    // Core identifiers
-    slug: post.slug,
-    title: post.data.title,
-    description: post.data.description,
-    url: post.resolvedPath || `/docs/${post.slug}`,
-
-    // Essential fields for functionality
-    pubDate: post.data.publishedDate,
-    emoji: post.data.emoji,
-    contentLength: fullContent.length,
-    fullContent: fullContent,
-
-    // Search-optimized data
-    searchableText: [
-      post.data.title,
-      post.data.description,
-      processedContent.cleanedText,
-      ...(post.data.tags || []),
-      ...(post.data.categories || []),
-    ]
-      .join(' ')
-      .toLowerCase(),
-
-    // Essential metadata
-    categories: post.data.categories || ['general'],
-    tags: post.data.tags || [],
-
-    // Computed flags
-    isTool:
-      post.data.categories?.includes('tools') ||
-      post.data.title.toLowerCase().includes('anki'),
-    hasCodeBlocks: processedContent.hasCode,
-    hasImages: processedContent.hasImages,
-  };
-});
-
-logger.log(
-  `Search data optimized for ${searchDataItems.length} posts`,
-  'success'
-);
-
-// Final search data optimization
-const optimizedSearchData = searchDataItems.map(item => ({
-  ...item,
-  // Optimized search index
-  searchIndex: item.searchableText
-    .split(' ')
-    .filter(word => word.length > 2)
-    .map(word => word.toLowerCase())
-    .filter((word, index, arr) => arr.indexOf(word) === index),
-  // Build-time relevance scoring
-  relevanceScore: calculateRelevanceScore(item),
-  // Search metadata
-  searchMetadata: {
-    hasCode: item.hasCodeBlocks,
-    hasImages: item.hasImages,
-    isTool: item.isTool,
-    categories: item.categories,
-  },
+// Transform posts for PostsGrid component
+const transformedPosts = posts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description || '',
+  url: `/docs/${post.slug}`,
+  publishedDate: post.data.publishedDate,
+  emoji: post.data.emoji,
+  tags: post.data.tags || [],
+  category: post.data.category || 'general',
+  isRecommended: false,
+  isBeginner: post.data.category === 'getting-started',
+  isTool: post.data.category === 'tools',
 }));
 
-logger.log(`Final search optimization completed`, 'success');
-
-// Calculate relevance score for search ranking
-function calculateRelevanceScore(item: any): number {
-  let score = 0;
-
-  // Basic scoring
-  if (item.title) score += 15;
-  if (item.description) score += 8;
-  score += item.tags.length * 3;
-
-  // Content quality assessment
-  if (item.contentLength) {
-    score += Math.min(item.contentLength / 1000, 15);
-  }
-
-  // Feature-based scoring
-  if (item.hasCodeBlocks) score += 5;
-  if (item.hasImages) score += 3;
-
-  // Category-based scoring
-  if (item.category === 'tools') score += 10;
-
-  return Math.min(score, 100);
-}
-
-// SEO data configuration
+// SEO data
 const seoData = {
   title: 'Dokumentasi & Panduan',
   description:
@@ -243,69 +63,35 @@ const seoData = {
     'belajar',
     'immersion',
   ],
-  pageType: 'article' as const,
   author: 'Tim GoRakuDo',
 };
 
-// Format numbers with K, M, B suffixes
-function formatNumber(num: number): string {
-  if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(1) + 'B';
-  } else if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + 'M';
-  } else if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'K';
-  }
-  return num.toString();
-}
-
-// Format date for display
-function formatDate(dateString: string): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-
-  if (!dateString || typeof dateString !== 'string') {
-    logger.log(`Invalid date string provided: ${dateString}`, 'warning');
-    return 'Invalid Date';
-  }
-
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      logger.log(`Invalid date format: ${dateString}`, 'warning');
-      return 'Invalid Date';
-    }
-
-    return date.toLocaleDateString('id-ID', options);
-  } catch (error) {
-    logger.log(`Date formatting error: ${error}`, 'error');
-    return 'Invalid Date';
-  }
-}
+// Breadcrumb configuration
+const breadcrumbConfig = {
+  currentPath: '/docs',
+  showHome: true,
+  variant: 'compact' as const,
+  showIcons: true,
+  ariaLabel: 'Navigasi breadcrumb untuk halaman dokumentasi',
+};
 ---
 
-<!doctype html>
 <html lang='id'>
   <head>
-    <!-- SEO Configuration -->
     <UnifiedSEO
       title={seoData.title}
       description={seoData.description}
       keywords={seoData.keywords}
-      pageType={seoData.pageType}
+      canonical='https://gorakudo.org/docs'
+      lang='id'
+      pageType='article'
+      image='https://gorakudo.org/img/FullDC Logo.webp'
       author={seoData.author}
       publishedDate={new Date().toISOString()}
       modifiedDate={new Date().toISOString()}
-      gtag={import.meta.env.PUBLIC_GA_ID}
     />
 
-    <link
-      href='https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;600&family=Cedarville+Cursive&family=Gochi+Hand&display=swap'
-      rel='stylesheet'
-    />
+    <!-- Font loading handled by UnifiedSEO.astro -->
   </head>
   <body>
     <!-- Navigation -->
@@ -314,429 +100,26 @@ function formatDate(dateString: string): string {
     <!-- Main Content -->
     <main class='main-content'>
       <div class='posts-page'>
-        <div
-          class='posts-container'
-          id='postsContainer'
-          data-current-page={currentPage}
-          data-posts-per-page={postsPerPage}
-          data-total-posts={totalPosts}
-          data-search-data={JSON.stringify(optimizedSearchData)}
-          data-fuse-config={JSON.stringify({
-            keys: [
-              { name: 'title', weight: 0.7 },
-              { name: 'description', weight: 0.3 },
-              { name: 'content', weight: 0.2 },
-              { name: 'tags', weight: 0.1 },
-              { name: 'searchableText', weight: 0.15 },
-            ],
-            threshold: 0.4,
-            minMatchCharLength: 2,
-            includeScore: true,
-            includeMatches: true,
-          })}
-        >
-          <div class='posts-header'>
-            <h1>Dokumentasi & Panduan</h1>
-            <p>
-              Panduan lengkap untuk memulai perjalanan immersion bahasa Jepang
-              Anda. Dari langkah pertama hingga tingkat lanjut.
-            </p>
-          </div>
-
+        <div class='posts-container'>
           <!-- Breadcrumb Navigation -->
           <Breadcrumb
-            currentPath='/docs'
-            showIcons={true}
-            variant='compact'
-            ariaLabel='Documentation navigation breadcrumb'
+            currentPath={breadcrumbConfig.currentPath}
+            showHome={breadcrumbConfig.showHome}
+            variant={breadcrumbConfig.variant}
+            showIcons={breadcrumbConfig.showIcons}
+            ariaLabel={breadcrumbConfig.ariaLabel}
           />
 
-          <!-- Search Functionality -->
-          <div class='search-container'>
-            <div class='search-header'>
-              <span class='search-icon'>🔍</span>
-              <h2 class='search-title'>Cari Dokumentasi</h2>
-            </div>
+          <!-- Posts Header -->
+          <PostsHeader
+            title={seoData.title}
+            description={seoData.description}
+          />
 
-            <div class='search-input-group'>
-              <span class='search-input-icon'>📝</span>
-              <input
-                type='text'
-                id='searchInput'
-                class='search-input search-input-loading'
-                placeholder='Memuat sistem pencarian...'
-                autocomplete='off'
-                disabled
-              />
-              <div class='search-loading-indicator' id='searchLoadingIndicator'>
-                <!-- Loading Spinner -->
-                <div
-                  class='relative inline-flex items-center justify-center size-2.5'
-                >
-                  <div
-                    class='absolute inset-0 rounded-full border border-primary-200/20'
-                  >
-                  </div>
-                  <div
-                    class='absolute inset-0 rounded-full border border-transparent border-t-primary-500 animate-spin'
-                  >
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class='search-filters'>
-              {/* All posts filter */}
-              <button
-                class='filter-button filter-button-loading active'
-                data-filter='all'>Semua ({formatNumber(totalPosts)})</button
-              >
-
-              {/* Category filters */}
-              <button
-                class='filter-button filter-button-loading'
-                data-filter='getting-started'
-                data-filter-type='category'
-                data-filter-target='categories'
-              >
-                🚀 Getting Started
-              </button>
-              <button
-                class='filter-button filter-button-loading'
-                data-filter='methodology'
-                data-filter-type='category'
-                data-filter-target='categories'
-              >
-                🧠 Methodology
-              </button>
-              <button
-                class='filter-button filter-button-loading'
-                data-filter='tools'
-                data-filter-type='category'
-                data-filter-target='categories'
-              >
-                🛠️ Tools
-              </button>
-              <button
-                class='filter-button filter-button-loading'
-                data-filter='testing'
-                data-filter-type='category'
-                data-filter-target='categories'
-              >
-                🧪 Testing
-              </button>
-            </div>
-          </div>
-
-          <!-- Search Results -->
-          <div id='searchResults' class='search-results hidden'>
-            <div class='search-stats' id='searchStats'></div>
-            <div id='searchResultsContent'></div>
-          </div>
-
-          <!-- Content Display -->
-          <div id='contentState' class='posts-grid'>
-            {
-              error ? (
-                <div class='error-message'>
-                  <h2>❌ Error Loading Posts</h2>
-                  <p>{error}</p>
-                  <div class='error-actions'>
-                    <button
-                      onclick='window.location.reload()'
-                      class='docs-button'
-                    >
-                      🔄 Coba Lagi
-                    </button>
-                    <button
-                      onclick="window.location.href = '/'"
-                      class='docs-button secondary'
-                    >
-                      🏠 Kembali ke Beranda
-                    </button>
-                  </div>
-                </div>
-              ) : currentPosts.length === 0 ? (
-                <div class='no-results'>
-                  <div class='no-results-icon'>📚</div>
-                  <h3>Belum Ada Dokumentasi</h3>
-                  <p>
-                    Dokumentasi akan segera tersedia. Tetap pantau untuk
-                    pembaruan!
-                  </p>
-                </div>
-              ) : (
-                currentPosts.map((post, index) => (
-                  <article
-                    class={`post-card post-card-${index % 4}`}
-                    data-post-slug={post.slug}
-                    data-content-type={post.data.category || ''}
-                    data-is-recommended={
-                      finalRecommendations.some(rec => rec.slug === post.slug)
-                        ? 'true'
-                        : 'false'
-                    }
-                    data-is-beginner={
-                      beginnerContent.some(beg => beg.slug === post.slug)
-                        ? 'true'
-                        : 'false'
-                    }
-                    data-is-tool={
-                      toolContent.some(tool => tool.slug === post.slug)
-                        ? 'true'
-                        : 'false'
-                    }
-                  >
-                    {/* Emoji Display */}
-                    {post.data.emoji && (
-                      <div class='post-emoji'>{post.data.emoji}</div>
-                    )}
-                    <div class='post-card-container'>
-                      <div class='post-header'>
-                        <h2 class='post-title'>
-                          <a href={post.resolvedPath || `/docs/${post.slug}`}>
-                            {post.data.title}
-                          </a>
-                        </h2>
-                        <div class='post-meta'>
-                          <span class='post-date'>
-                            {formatDate(post.data.publishedDate)}
-                          </span>
-                        </div>
-                      </div>
-                      <p class='post-description'>{post.data.description}</p>
-                      <div
-                        class='post-tags'
-                        data-all-tags={JSON.stringify(post.data.tags || [])}
-                      >
-                        {post.data.tags?.slice(0, 3).map((tag: string) => (
-                          <span class='post-tag'>{tag}</span>
-                        ))}
-                        {post.data.tags && post.data.tags.length > 3 && (
-                          <span
-                            class='post-tag-more'
-                            data-count={post.data.tags.length - 3}
-                          >
-                            +{post.data.tags.length - 3}
-                          </span>
-                        )}
-                      </div>
-                      <a
-                        href={post.resolvedPath || `/docs/${post.slug}`}
-                        class='read-more-btn'
-                      >
-                        Baca Selengkapnya →
-                      </a>
-                    </div>
-                  </article>
-                ))
-              )
-            }
-          </div>
-
-          <!-- Pagination Controls -->
-          <div id='paginationControls' class='pagination-container'>
-            <!-- Pagination controls will be dynamically generated -->
-          </div>
-          <!-- Call to Action -->
-          <div class='features-cta'>
-            <div class='cta-content'>
-              <h3 class='cta-title'>Berkontribusi pada Roadmap</h3>
-              <p class='cta-description'>
-                Punya ide fitur atau dokumentasi yang ingin Anda lihat? Berikan
-                masukan Anda untuk membantu membentuk masa depan platform ini.
-              </p>
-              <button
-                class='cta-button'
-                type='button'
-                aria-label='Buka form masukan komunitas'
-              >
-                <span class='cta-button-text'>Berikan Masukan</span>
-                <svg
-                  class='cta-arrow'
-                  width='16'
-                  height='16'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  stroke-width='2.5'
-                >
-                  <path d='M5 12h14M12 5l7 7-7 7'></path>
-                </svg>
-              </button>
-            </div>
-          </div>
+          <!-- Posts Grid -->
+          <PostsGrid posts={transformedPosts} />
         </div>
       </div>
     </main>
-
-    <script>
-      // Initialize page functionality
-      document.addEventListener('DOMContentLoaded', async function () {
-        const startTime = performance.now();
-
-        try {
-          // Get container and data
-          const container = document.getElementById('postsContainer');
-          if (!container) {
-            throw new Error('Posts container not found');
-          }
-
-          // Parse data attributes
-          const currentPage = parseInt(container.dataset.currentPage || '1');
-          const postsPerPage = parseInt(container.dataset.postsPerPage || '12');
-          const totalPosts = parseInt(container.dataset.totalPosts || '0');
-          const searchData = container.dataset.searchData
-            ? JSON.parse(container.dataset.searchData)
-            : [];
-          const fuseConfig = container.dataset.fuseConfig
-            ? JSON.parse(container.dataset.fuseConfig)
-            : {};
-
-          // Set global search data
-          window.searchData = searchData;
-
-          // Initialize search system
-          try {
-            const { SearchLoadingManager } = await import(
-              '../../scripts/type-scripts/docs/index/search/search-loading-manager'
-            );
-            const searchLoadingManager = new SearchLoadingManager();
-            setTimeout(() => {
-              searchLoadingManager.initializeSearchSystem();
-            }, 50);
-          } catch (error) {
-            if (window.clientLogger && window.clientLogger.log) {
-              window.clientLogger.log(
-                `Search system initialization failed: ${error}`,
-                'error'
-              );
-            }
-          }
-
-          // Initialize tag popups
-          try {
-            const { SimpleTagPopup } = await import(
-              '../../scripts/type-scripts/docs/index/ui/simple-tag-popup'
-            );
-            const tagPopup = new SimpleTagPopup();
-            tagPopup.initialize();
-            window.simpleTagPopup = tagPopup;
-
-            if (window.clientLogger && window.clientLogger.log) {
-              window.clientLogger.log(
-                'Tag popups initialized for docs page',
-                'success'
-              );
-            }
-          } catch (error) {
-            if (window.clientLogger && window.clientLogger.log) {
-              window.clientLogger.log(
-                `Tag popups initialization failed: ${error}`,
-                'error'
-              );
-            }
-          }
-
-          // Initialize content system
-          try {
-            const { ContentProcessor } = await import(
-              '../../scripts/type-scripts/docs/index/content/content-processor'
-            );
-
-            const contentProcessor = new ContentProcessor(
-              currentPage,
-              postsPerPage
-            );
-            contentProcessor.setServerData(searchData, totalPosts);
-
-            window.contentProcessor = contentProcessor;
-
-            if (window.clientLogger && window.clientLogger.log) {
-              window.clientLogger.log(
-                'Content system initialized successfully',
-                'success'
-              );
-            }
-          } catch (error) {
-            if (window.clientLogger && window.clientLogger.log) {
-              window.clientLogger.log(
-                `Content system initialization failed: ${error}`,
-                'error'
-              );
-            }
-            throw error;
-          }
-
-          // Initialization complete
-        } catch (error) {
-          // Error handling
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(
-              `Docs Page Loading Failed: ${error}`,
-              'error'
-            );
-          }
-
-          handleInitializationError(error);
-        }
-
-        if (window.clientLogger && window.clientLogger.log) {
-          window.clientLogger.log('Docs Page Loaded Successfully!', 'success');
-        }
-      });
-
-      // Error handling function
-      function handleInitializationError(error: Error) {
-        try {
-          // Redirect to error page
-          const errorMessage = encodeURIComponent(error.message);
-          window.location.href = `/error?type=content-layer&message=${errorMessage}`;
-        } catch (redirectError) {
-          // Fallback error display
-          if (window.clientLogger && window.clientLogger.log) {
-            window.clientLogger.log(
-              `Failed to redirect to error page: ${redirectError}`,
-              'error'
-            );
-          }
-          document.body.innerHTML = `
-            <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-              <h1>Page Loading Error</h1>
-              <p>ページの読み込み中にエラーが発生しました。しばらく時間をおいてから再度お試しください。</p>
-              <button onclick="window.location.reload()" style="padding: 10px 20px; margin-top: 20px;">
-                ページを再読み込み
-              </button>
-            </div>
-          `;
-        }
-      }
-    </script>
-
-    <!-- Global Client Logger -->
-    <script>
-      // Client-side logger for consistent console output
-      window.clientLogger = {
-        log: (message, level = 'info') => {
-          const emoji = {
-            info: 'ℹ️',
-            success: '✅',
-            warning: '⚠️',
-            error: '❌',
-          }[level];
-          console.log(`${emoji} ${message}`);
-        },
-        startGroup: title => {
-          console.log(`\n${'='.repeat(50)}`);
-          console.log(`🚀 ${title}`);
-          console.log(`${'='.repeat(50)}`);
-        },
-        endGroup: title => {
-          console.log(`${'='.repeat(50)}`);
-          console.log(`✅ ${title}`);
-          console.log(`${'='.repeat(50)}\n`);
-        },
-      };
-    </script>
   </body>
 </html>
