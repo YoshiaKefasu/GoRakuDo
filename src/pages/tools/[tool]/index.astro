@@ -12,6 +12,9 @@ import Breadcrumb from '../../../components/public-components/Breadcrumb.astro';
 import ToolSearchPopover from '../../../components/tools/Tool-SearchPopover.astro';
 import ToolIdHeader from '../../../components/tools/Tool-IdHeader.astro';
 
+// Import tool-specific styles
+import '../../../styles/tools/[tool]/Tool-IdIndex.css';
+
 // ========== OPTIMIZED TOOL DISCOVERY ==========
 // Single function for tool discovery with caching
 async function getValidToolsFromCollection() {

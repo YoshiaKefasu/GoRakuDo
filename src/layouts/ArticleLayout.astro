@@ -10,7 +10,7 @@ import WaveAnimation from '../components/animations/WaveAnimation.astro';
 
 // Global CSS
 import '../styles/global.css';
-import '../styles/tools/[tool]/Tool-IdIndex.css';
+import '../styles/ArticleLayout.css';
 
 export interface Props {
   title: string;
@@ -97,6 +97,11 @@ const {
           <!-- Page Content Slot -->
           <div class='page-content'>
             <slot />
+          </div>
+
+          <!-- Pagination Slot -->
+          <div class='pagination-wrapper'>
+            <slot name='pagination' />
           </div>
         </div>
       </main>

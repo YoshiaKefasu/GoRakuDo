@@ -18,8 +18,7 @@ declare global {
     contentConfig?: ContentConfig;
     allPosts?: SearchDataItem[];
     Fuse?: import('fuse.js').default; // npmパッケージ版（型安全性向上）
-    contentProcessor?: ContentProcessor; // ContentProcessor instance
-    searchDataGenerator?: SearchDataGenerator; // SearchDataGenerator instance
+    // ContentProcessor and SearchDataGenerator removed - using pure Astro SSG
     // Animation and UI functions
     initializeTagPopups?: () => void;
     simpleTagPopup?: import('./ui/simple-tag-popup').SimpleTagPopup;
@@ -162,21 +161,6 @@ export interface FilterConfig {
   icon?: string;
 }
 
-// ContentProcessor and SearchDataGenerator interfaces
-export interface ContentProcessor {
-  changePage(page: number): void;
-  getTotalPages(): number;
-  getCurrentPage(): number;
-  isReady(): boolean;
-  updateDisplay(): void;
-  updatePaginationUI(): void;
-  updateContentDisplay(): void;
-}
+// ContentProcessor and SearchDataGenerator interfaces removed - using pure Astro SSG
 
-export interface SearchDataGenerator {
-  getSearchData(): SearchDataItem[];
-  getPostSearchData(slug: string): SearchDataItem | undefined;
-  refreshSearchData(): Promise<void>;
-}
-
-export {};
+export { };

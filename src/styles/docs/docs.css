@@ -7,7 +7,7 @@
 
 /* Posts/Documentation page styles */
 .posts-page {
-  @apply relative z-10 min-h-screen pt-20 text-white;
+  @apply relative z-10 min-h-screen text-white;
 
   /* Prevent horizontal overflow */
   overflow-x: hidden;
@@ -16,58 +16,24 @@
 }
 
 .posts-container {
-  @apply mx-auto max-w-7xl px-6;
+  @apply mx-auto max-w-7xl;
 
   overflow-x: hidden;
 
   /* GitHub Pages optimized container constraints */
   max-width: min(80rem, 98vw);
-  padding-right: clamp(1rem, 4vw, 3rem);
 
-  /* Responsive padding for better mobile experience */
-  padding-left: clamp(1rem, 4vw, 3rem);
+  /* モバイルのみ左右パディングを適用 */
+  padding: 0 clamp(1rem, 4vw, 3rem);
 }
 
-/* Posts Header styles moved to PostsHeader.astro component */
-
-/* Posts Grid styles moved to PostsGrid.astro component */
-
-/* Search Results Container - Optimized for immediate visibility */
-.search-results {
-  @apply transition-all duration-300 ease-in-out;
-
-  /* Ensure search results are immediately visible and properly positioned */
-  display: block;
-  overflow: visible;
-  width: 100%;
-  max-width: 100%;
+/* タブレットとデスクトップでは左右パディングを削除 */
+@media (min-width: 768px) {
+  .posts-container {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
-
-/* Search Results Animation - using global fadeInUp */
-
-/* Post card styles moved to PostsGrid.astro component */
-
-/* Docs Button styles - using global .docs-button with docs-specific overrides */
-
-/* Animations moved to global.css to avoid duplication */
-
-/* Progressive Loading Animation moved to PostsGrid.astro component */
-
-/* 🌊 DOCS PAGE SPECIFIC STYLES - Google Engineering Team 2025 */
-
-/* Background Elements - Removed wave and stars animations */
-
-/* Main Content Layout - using global .main-content */
-
-/* Posts Header styles moved to PostsHeader.astro component */
-
-/* Posts Grid styles moved to PostsGrid.astro component */
-
-/* Post card styles moved to PostCard.astro component */
-
-/* Tag styles moved to PostsGrid.astro component */
-
-/* Read more button styles moved to PostsGrid.astro component */
 
 /* Responsive Design */
 @media (max-width: 48rem) {
@@ -94,432 +60,73 @@
     /* Maintain responsive padding for mobile */
     padding-left: clamp(1rem, 3vw, 1.5rem);
   }
-
-  /* Posts Header h1 responsive styles moved to PostsHeader.astro component */
-
-  /* Post actions responsive styles moved to PostsGrid.astro component */
-
-  /* Docs button responsive styles - using global button classes */
 }
-
-@media (max-width: 30rem) {
-  /* Posts Header h1 responsive styles moved to PostsHeader.astro component */
-
-  /* Post card responsive styles moved to PostsGrid.astro component */
-
-  /* Button responsive styles - using global button classes */
-}
-
-/* Comprehensive Sticky Note Design moved to PostCard.astro component */
-
-/* ========== CALL TO ACTION ========== */
-.features-cta {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  margin-top: 0; /* Remove top margin since pagination has bottom margin */
-  margin-bottom: 1rem;
-  padding: 40px 30px; /* Improved padding */
-  border: 1px solid oklch(60% 0.3 280deg / 0.2);
-  border-radius: 24px; /* Consistent with other components */
-  background: linear-gradient(
-    135deg,
-    oklch(60% 0.3 280deg / 0.05) 0%,
-    oklch(60% 0.3 280deg / 0.1) 100%
-  );
-  box-sizing: border-box;
-  backdrop-filter: blur(10px);
-}
-
-.cta-content {
-  position: relative;
-  z-index: 2;
-  max-width: 600px; /* Better max-width for readability */
-  margin: 0 auto;
-  text-align: center;
-  hyphens: auto;
-  overflow-wrap: break-word;
-}
-
-.cta-title {
-  max-width: 100%;
-  color: oklch(100% 0 0deg); /* Ensure white text */
-  font-size: 1.375rem; /* Reduced from 1.75rem */
-  font-weight: 600; /* Reduced from 700 */
-  line-height: 1.3;
-  margin-block: 1rem; /* Spacing */
-  hyphens: auto;
-  overflow-wrap: break-word;
-}
-
-.cta-description {
-  max-width: 100%;
-  margin-bottom: 0.5rem; /* Spacing */
-  color: oklch(100% 0 0deg / 0.8); /* Better contrast */
-  font-size: 0.9375rem; /* Reduced from 1.125rem */
-  line-height: 1.5;
-  hyphens: auto;
-  overflow-wrap: break-word;
-}
-
-/* CTA Button styles - using global .cta-button with docs-specific overrides */
-
-.cta-arrow {
-  width: 16px; /* Reduced size */
-  height: 16px; /* Reduced size */
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cta-button:hover .cta-arrow {
-  transform: translateX(6px);
-}
-
-/* ========== ENHANCED CTA ANIMATIONS ========== */
-
-/* CTA button advanced interactions */
-
-.cta-button::before {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  content: '';
-  background: linear-gradient(
-    90deg,
-    transparent,
-    oklch(100% 0 0deg / 0.2),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.cta-button:hover::before {
-  left: 100%;
-}
-
-.cta-button.is-clicked {
-  transform: scale(0.95);
-  transition-duration: 75ms;
-}
-
-.features-cta::before {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 200%;
-  height: 100%;
-  content: '';
-  background: linear-gradient(
-    90deg,
-    transparent,
-    oklch(60% 0.3 280deg / 0.05),
-    transparent
-  );
-  animation: ctaShimmer 8s infinite;
-}
-
-@keyframes ctaShimmer {
-  0% {
-    left: -100%;
-  }
-
-  100% {
-    left: 100%;
-  }
-}
-
-/* Responsive improvements */
-@media (max-width: 640px) {
-  /* Post card mobile styles moved to PostsGrid.astro component */
-
-  /* Features CTA responsive improvements */
-  .features-cta {
-    margin-bottom: 40px;
-    padding: 30px 20px;
-  }
-
-  .cta-title {
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem; /* Reduced from 1.5rem */
-  }
-
-  .cta-description {
-    margin-bottom: 1.5rem;
-    font-size: 0.875rem; /* Reduced from 1rem */
-  }
-
-  .cta-button {
-    min-height: 40px; /* Reduced height */
-    padding: 0.75rem 1.25rem; /* Reduced padding */
-    font-size: 0.8125rem; /* Reduced font size */
-  }
-}
-
-@media (max-width: 480px) {
-  /* Post card small mobile styles moved to PostsGrid.astro component */
-
-  /* Features CTA mobile improvements */
-  .features-cta {
-    margin-bottom: 30px;
-    padding: 25px 15px;
-    border-radius: 20px;
-  }
-
-  .cta-title {
-    margin-bottom: 0.5rem;
-    font-size: 1.125rem; /* Reduced from 1.25rem */
-  }
-
-  .cta-description {
-    margin-bottom: 1.25rem;
-    font-size: 0.8125rem; /* Reduced from 0.875rem */
-    line-height: 1.5;
-  }
-
-  .cta-button {
-    gap: 0.375rem; /* Reduced gap */
-    min-height: 36px; /* Reduced height */
-    padding: 0.625rem 1rem; /* Reduced padding */
-    font-size: 0.75rem; /* Reduced font size */
-  }
-
-  .cta-arrow {
-    width: 14px; /* Reduced size */
-    height: 14px; /* Reduced size */
-  }
-}
-
-/* Larger screens - post card styles moved to PostsGrid.astro component */
-
-@media (min-width: 1280px) {
-  /* Posts grid large screen styles moved to PostsGrid.astro component */
-
-  .features-cta {
-    max-width: 100%;
-    padding: var(--spacing-12);
-    margin-inline: auto;
-  }
-
-  .cta-content {
-    max-width: 70ch;
-    margin: 0 auto;
-  }
-
-  .cta-title {
-    font-size: 1.75rem;
-  }
-
-  .cta-description {
-    font-size: 1.125rem;
-  }
-
-  .cta-button {
-    min-height: 48px;
-    padding: var(--spacing-4) var(--spacing-8);
-    font-size: var(--fs-base);
-  }
-}
-
-/* 200% Zoom Accessibility Support - moved to PostsGrid.astro component */
-
-/* Grid layout styles moved to PostsGrid.astro component */
-
-/* Sticky Note Animation moved to PostCard.astro component */
-
-/* High contrast mode support moved to PostCard.astro component */
 
 /* ===== CONSOLIDATED DOCS PAGE STYLES ===== */
 
-/* Moved from docs.astro to create single source of truth */
+/* Pagination styles removed - using simplified display approach */
 
-/* Search Functionality Styles */
-.search-container {
-  margin-bottom: 40px;
-  padding: 30px;
-  border: 1px solid oklch(60% 0.3 280deg / 0.05);
-  border-radius: 20px;
-  background: oklch(100% 0 0deg / 0.05);
+/* ===== PERFORMANCE OPTIMIZED STYLES ===== */
+
+/* 空の状態のスタイリング - パフォーマンス最適化 */
+.empty-state {
+  padding: 3rem 1rem;
+  color: oklch(60% 0 0deg);
+  text-align: center;
+  contain: layout style paint;
+  will-change: auto;
 }
 
-.search-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.search-icon {
-  color: var(--clr-accent);
-  font-size: 24px;
-}
-
-.search-title {
-  margin: 0;
-  color: var(--clr-text-primary);
-  font-size: 20px;
+.empty-state h2 {
+  margin-bottom: 1rem;
+  color: oklch(45% 0 0deg);
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
-.search-input-group {
-  position: relative;
-  margin-bottom: 20px;
+.empty-state p {
+  max-width: 500px;
+  margin: 0 auto;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
-.search-input {
-  width: 100%;
-  padding: 15px 20px 15px 50px;
-  border: 2px solid oklch(60% 0.3 280deg / 0.2);
-  border-radius: 12px;
-  background: oklch(60% 0.3 280deg / 0.1);
-  color: var(--clr-text-primary);
-  font-size: 16px;
-  transition: all 0.3s ease;
+/* メインコンテンツのパフォーマンス最適化 */
+.main-content {
+  contain: layout style paint;
+  will-change: auto;
 }
 
-.search-input:focus {
-  outline: none;
-  border-color: var(--clr-accent);
-  box-shadow: 0 0 0 3px oklch(60% 0.3 280deg / 0.1);
+/* フォント最適化 */
+body {
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.search-input::placeholder {
-  color: var(--clr-text-muted);
-}
-
-.search-input-icon {
-  position: absolute;
-  top: 50%;
-  left: 15px;
-  color: var(--clr-text-muted);
-  font-size: 18px;
-  transform: translateY(-50%);
-}
-
-.search-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.filter-button {
-  padding: 8px 16px;
-  border: 1px solid oklch(60% 0.3 280deg / 0.2);
-  border-radius: 20px;
-  background: oklch(60% 0.3 280deg / 0.1);
-  color: var(--clr-text-primary);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-button.active {
-  background: var(--clr-accent);
-  color: white;
-  border-color: var(--clr-accent);
-}
-
-.filter-button:hover {
-  background: oklch(60% 0.3 280deg / 0.2);
-  border-color: var(--clr-accent);
-}
-
-.pagination-container {
-  margin-top: 40px;
-  margin-bottom: 60px;
-  padding: 30px;
-  border: 1px solid oklch(60% 0.3 280deg / 0.1);
-  border-radius: 20px;
-  background: oklch(100% 0 0deg / 0.03);
-  backdrop-filter: blur(10px);
-}
-
-/* Post meta and date styles moved to PostsGrid.astro component */
-
-/* Responsive adjustments moved to PostCard.astro component */
-
-/* Page-specific styles only - reusable styles moved to docs.css */
-
-/* Critical inline styles and page-specific overrides remain here */
-
-.cta-button {
-  min-height: 40px; /* Reduced height */
-  padding: 0.75rem 1.25rem; /* Reduced padding */
-  font-size: 0.8125rem; /* Reduced font size */
-}
-
-@media (max-width: 480px) {
-  /* Post card small mobile styles moved to PostsGrid.astro component */
-
-  /* Features CTA mobile improvements */
-
-  .features-cta {
-    margin-bottom: 30px;
-    padding: 25px 15px;
-    border-radius: 20px;
+/* モバイルデバイス最適化 */
+@media (max-width: 767px) {
+  .main-content {
+    padding: 0 1rem;
   }
 
-  .cta-button {
-    gap: 0.375rem; /* Reduced gap */
-    min-height: 36px; /* Reduced height */
-    padding: 0.625rem 1rem; /* Reduced padding */
-    font-size: 0.75rem; /* Reduced font size */
+  .posts-page {
+    padding: 1rem 0;
   }
 
-  .cta-arrow {
-    width: 14px; /* Reduced size */
-    height: 14px; /* Reduced size */
-  }
-}
-
-/* Larger screens - post card styles moved to PostsGrid.astro component */
-
-@media (min-width: 1280px) {
-  /* Posts grid large screen styles moved to PostsGrid.astro component */
-
-  .features-cta {
+  .posts-container {
     max-width: 100%;
-    padding: var(--spacing-12);
-    margin-inline: auto;
-  }
-
-  .cta-content {
-    max-width: 70ch;
-    margin: 0 auto;
-  }
-
-  .cta-button {
-    min-height: 48px;
-    padding: var(--spacing-4) var(--spacing-8);
-    font-size: var(--fs-base);
+    padding: 0;
   }
 }
 
-/* 200% Zoom Accessibility Support - moved to PostsGrid.astro component */
+/* タッチデバイス最適化 */
+@media (hover: none) and (pointer: coarse) {
+  .main-content {
+    -webkit-overflow-scrolling: touch;
+  }
 
-/* Grid layout styles moved to PostsGrid.astro component */
-
-/* Sticky Note Animation moved to PostCard.astro component */
-
-/* High contrast mode support moved to PostCard.astro component */
-
-/* ===== CONSOLIDATED DOCS PAGE STYLES ===== */
-
-/* Moved from docs.astro to create single source of truth */
-
-/* Post meta and date styles moved to PostsGrid.astro component */
-
-/* Responsive adjustments moved to PostCard.astro component */
-
-/* Page-specific styles only - reusable styles moved to docs.css */
-
-/* Critical inline styles and page-specific overrides remain here */
-
-/* Post meta and date styles moved to PostsGrid.astro component */
-
-/* Responsive adjustments moved to PostCard.astro component */
-
-/* Page-specific styles only - reusable styles moved to docs.css */
-
-/* Critical inline styles and page-specific overrides remain here */
+  .posts-page {
+    -webkit-overflow-scrolling: touch;
+  }
+}

@@ -5,7 +5,6 @@
 ```
 src/scripts/
 ├── ui/                   # User interface and interaction scripts
-│   ├── docs-pagination.js
 │   └── settings-manager.js
 ├── core/                 # Core functionality and page-specific scripts
 │   ├── hompage-script.js
@@ -18,7 +17,6 @@ src/scripts/
 
 ### **UI Scripts** (`ui/`)
 
-- **docs-pagination.js**: Pagination functionality for docs listing page
 - **settings-manager.js**: Settings management and persistence
 
 ### **Core Scripts** (`core/`)
@@ -32,7 +30,7 @@ src/scripts/
 ### **Import from Index**
 
 ```javascript
-import { DocsPagination, SettingsManager, HomepageScript } from '@/scripts';
+import { SettingsManager, HomepageScript } from '@/scripts';
 ```
 
 ### **Dynamic Loading**
@@ -43,7 +41,7 @@ import { loadScript } from '@/scripts';
 // Load specific script
 const uiScript = await loadScript(
   'ui',
-  'docs-pagination'
+  'settings-manager'
 );
 ```
 
@@ -82,7 +80,7 @@ Scripts are integrated with Astro's build system for optimal bundling:
 ```javascript
 // Manual chunk splitting for performance
 manualChunks: {
-  "scripts-ui": ["./src/scripts/ui/docs-pagination.js"],
+  "scripts-ui": ["./src/scripts/ui/settings-manager.js"],
   "scripts-core": ["./src/scripts/core/hompage-script.js", "./src/scripts/core/post-script.js"],
 }
 ```

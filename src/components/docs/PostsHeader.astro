@@ -19,9 +19,16 @@ const { title, description } = Astro.props;
   .posts-header {
     overflow-x: hidden;
     max-width: 100%;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    margin: 0 clamp(0.75rem, 2vw, 1rem) clamp(2.5rem, 5vw, 4rem);
     padding: clamp(2rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem);
     text-align: center;
+  }
+
+  /* タブレットとデスクトップでマージンを半分に減らす */
+  @media (min-width: 768px) {
+    .posts-header {
+      margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+    }
   }
 
   .posts-header h1 {

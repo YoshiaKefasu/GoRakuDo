@@ -1,0 +1,622 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+  maxVisiblePages?: number;
+  showPageInfo?: boolean;
+  className?: string;
+}
+
+const {
+  currentPage,
+  totalPages,
+  baseUrl,
+  maxVisiblePages = 5,
+  showPageInfo = true,
+  className = '',
+} = Astro.props;
+
+// バリデーション
+if (
+  !Number.isInteger(currentPage) ||
+  !Number.isInteger(totalPages) ||
+  typeof baseUrl !== 'string' ||
+  currentPage > totalPages ||
+  totalPages <= 1
+) {
+  return null;
+}
+
+// 表示するページ番号の計算
+function getVisiblePages(
+  current: number,
+  total: number,
+  max: number
+): number[] {
+  if (total <= max) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const half = Math.floor(max / 2);
+  let start = Math.max(1, current - half);
+  let end = Math.min(total, start + max - 1);
+
+  if (end - start + 1 < max) {
+    start = Math.max(1, end - max + 1);
+  }
+
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+}
+
+// URL生成
+function getPageUrl(page: number): string {
+  return page === 1 ? baseUrl : `${baseUrl}/page/${page}`;
+}
+
+const visiblePages = getVisiblePages(currentPage, totalPages, maxVisiblePages);
+const prevPageUrl = currentPage > 1 ? getPageUrl(currentPage - 1) : null;
+const nextPageUrl =
+  currentPage < totalPages ? getPageUrl(currentPage + 1) : null;
+
+// 構造化データ
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  pagination: {
+    '@type': 'Pagination',
+    currentPage,
+    totalPages,
+    ...(prevPageUrl && { previousPage: prevPageUrl }),
+    ...(nextPageUrl && { nextPage: nextPageUrl }),
+  },
+};
+---
+
+<nav
+  class={`glassmorphism pagination-container ${className}`}
+  role='navigation'
+  aria-label='Paginasi'
+  aria-live='polite'
+>
+  <!-- 構造化データ -->
+  <script
+    type='application/ld+json'
+    set:html={JSON.stringify(structuredData)}
+  />
+  <div class='pagination-controls' role='group' aria-label='Navigasi halaman'>
+    <div class='pagination-numbers' role='group' aria-label='Nomor halaman'>
+      {
+        visiblePages[0] > 1 && (
+          <>
+            <a
+              href={getPageUrl(1)}
+              class='glassmorphism pagination-number pagination-ellipsis'
+              aria-label='Pindah ke halaman 1'
+            >
+              1
+            </a>
+            {visiblePages[0] > 2 && (
+              <span class='pagination-ellipsis-dots' aria-hidden='true'>
+                ...
+              </span>
+            )}
+          </>
+        )
+      }
+
+      {
+        visiblePages.map(page =>
+          page === currentPage ? (
+            <span
+              class='pagination-number pagination-current'
+              aria-current='page'
+              aria-label={`Halaman ${page} (halaman saat ini)`}
+            >
+              {page}
+            </span>
+          ) : (
+            <a
+              href={getPageUrl(page)}
+              class='glassmorphism pagination-number'
+              aria-label={`Pindah ke halaman ${page}`}
+            >
+              {page}
+            </a>
+          )
+        )
+      }
+
+      {
+        visiblePages[visiblePages.length - 1] < totalPages && (
+          <>
+            {visiblePages[visiblePages.length - 1] < totalPages - 1 && (
+              <span class='pagination-ellipsis-dots' aria-hidden='true'>
+                ...
+              </span>
+            )}
+            <a
+              href={getPageUrl(totalPages)}
+              class='glassmorphism pagination-number pagination-ellipsis'
+              aria-label={`Pindah ke halaman ${totalPages}`}
+            >
+              {totalPages}
+            </a>
+          </>
+        )
+      }
+    </div>
+
+    <div
+      class='pagination-nav-buttons'
+      role='group'
+      aria-label='Tombol navigasi'
+    >
+      <a
+        href={prevPageUrl || '#'}
+        class={`glassmorphism pagination-btn pagination-prev ${!prevPageUrl ? 'pagination-disabled' : ''}`}
+        aria-label={prevPageUrl
+          ? 'Pindah ke halaman sebelumnya'
+          : 'Halaman sebelumnya (tidak tersedia)'}
+        aria-disabled={!prevPageUrl}
+        rel={prevPageUrl ? 'prev' : undefined}
+        tabindex={prevPageUrl ? '0' : '-1'}
+      >
+        <svg
+          class='pagination-icon'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='2'
+        >
+          <path d='M15 18l-6-6 6-6'></path>
+        </svg>
+        <span class='pagination-btn-text'>Sebelumnya</span>
+      </a>
+
+      <a
+        href={nextPageUrl || '#'}
+        class={`glassmorphism pagination-btn pagination-next ${!nextPageUrl ? 'pagination-disabled' : ''}`}
+        aria-label={nextPageUrl
+          ? 'Pindah ke halaman berikutnya'
+          : 'Halaman berikutnya (tidak tersedia)'}
+        aria-disabled={!nextPageUrl}
+        rel={nextPageUrl ? 'next' : undefined}
+        tabindex={nextPageUrl ? '0' : '-1'}
+      >
+        <span class='pagination-btn-text'>Selanjutnya</span>
+        <svg
+          class='pagination-icon'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='2'
+        >
+          <path d='M9 18l6-6-6-6'></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  {
+    showPageInfo && (
+      <div class='pagination-info'>
+        <div class='pagination-progress'>
+          <div
+            class='pagination-progress-bar'
+            style={`width: ${(currentPage / totalPages) * 100}%`}
+            aria-hidden='true'
+          />
+        </div>
+      </div>
+    )
+  }
+</nav>
+
+<style>
+  /* ===== CSS変数定義 ===== */
+  :root {
+    /* カラーパレット */
+    --pagination-primary-hue: 280deg;
+    --pagination-primary-lightness: 30%;
+    --pagination-primary-chroma: 0.2;
+    --pagination-primary-color: oklch(
+      var(--pagination-primary-lightness) var(--pagination-primary-chroma)
+        var(--pagination-primary-hue)
+    );
+
+    --pagination-primary-hover-lightness: 20%;
+    --pagination-primary-hover-chroma: 0.3;
+    --pagination-primary-hover-color: oklch(
+      var(--pagination-primary-hover-lightness)
+        var(--pagination-primary-hover-chroma) var(--pagination-primary-hue)
+    );
+
+    --pagination-current-lightness: 45%;
+    --pagination-current-chroma: 0.5;
+    --pagination-current-color: oklch(
+      var(--pagination-current-lightness) var(--pagination-current-chroma)
+        var(--pagination-primary-hue)
+    );
+
+    --pagination-disabled-lightness: 55%;
+    --pagination-disabled-color: oklch(
+      var(--pagination-disabled-lightness) 0 0deg
+    );
+
+    --pagination-ellipsis-lightness: 50%;
+    --pagination-ellipsis-chroma: 0.1;
+    --pagination-ellipsis-color: oklch(
+      var(--pagination-ellipsis-lightness) var(--pagination-ellipsis-chroma)
+        var(--pagination-primary-hue)
+    );
+
+    /* スペーシング */
+    --pagination-spacing-xs: clamp(0.375rem, 1.2vw, 0.625rem);
+    --pagination-spacing-sm: clamp(0.5rem, 1.5vw, 0.75rem);
+    --pagination-spacing-md: clamp(0.75rem, 2vw, 1rem);
+    --pagination-spacing-lg: clamp(1rem, 2.5vw, 1.5rem);
+    --pagination-spacing-xl: clamp(1.5rem, 3vw, 2.5rem);
+
+    /* サイズ */
+    --pagination-font-size-sm: clamp(0.85rem, 2vw, 0.95rem);
+    --pagination-font-size-md: clamp(0.9rem, 2.2vw, 1rem);
+    --pagination-font-size-lg: clamp(0.95rem, 2.3vw, 1.05rem);
+    --pagination-font-size-xl: clamp(1rem, 2.2vw, 1.1rem);
+
+    --pagination-size-sm: clamp(32px, 6vw, 40px);
+    --pagination-size-md: clamp(48px, 9vw, 56px);
+    --pagination-size-lg: clamp(52px, 10vw, 60px);
+    --pagination-size-touch: clamp(56px, 12vw, 64px);
+
+    /* ボーダー半径 */
+    --pagination-radius-sm: clamp(0.875rem, 2.2vw, 1.125rem);
+    --pagination-radius-md: clamp(1rem, 2.5vw, 1.5rem);
+
+    /* トランジション */
+    --pagination-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --pagination-transition-slow: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===== ベーススタイル ===== */
+  .pagination-container {
+    max-width: clamp(20rem, 90vw, 50rem);
+    margin: var(--pagination-spacing-xl) auto;
+    padding: clamp(1.25rem, 3.5vw, 2rem);
+    border-radius: var(--pagination-radius-md);
+    contain: layout style paint;
+    transform: translateZ(0);
+  }
+
+  .pagination-info {
+    margin-top: var(--pagination-spacing-lg);
+    text-align: center;
+  }
+
+  .pagination-progress {
+    width: 100%;
+    height: 0.375rem;
+    background: oklch(88% 0.08 var(--pagination-primary-hue) / 0.4);
+    border-radius: 0.1875rem;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 2px oklch(0% 0 0deg / 0.1);
+  }
+
+  .pagination-progress-bar {
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      oklch(50% 0.4 var(--pagination-primary-hue)) 0%,
+      oklch(45% 0.5 300deg) 50%,
+      oklch(40% 0.6 320deg) 100%
+    );
+    border-radius: 0.1875rem;
+    transition: var(--pagination-transition-slow);
+    position: relative;
+    box-shadow: 0 1px 3px oklch(0% 0 0deg / 0.2);
+  }
+
+  .pagination-progress-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      oklch(100% 0 0deg / 0.3) 50%,
+      transparent 100%
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* ===== レイアウト ===== */
+  .pagination-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--pagination-spacing-md);
+    align-items: center;
+  }
+
+  .pagination-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--pagination-spacing-xs);
+    order: 1;
+  }
+
+  .pagination-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--pagination-spacing-sm);
+    order: 2;
+    width: 100%;
+  }
+
+  /* ===== ボタンとナンバーの共通スタイル ===== */
+  .pagination-btn,
+  .pagination-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--pagination-spacing-sm) var(--pagination-spacing-md);
+    border-radius: var(--pagination-radius-sm);
+    color: var(--pagination-primary-color);
+    font-size: var(--pagination-font-size-md);
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--pagination-transition);
+    letter-spacing: 0.025em;
+    line-height: 1.2;
+    contain: layout style paint;
+  }
+
+  .pagination-btn {
+    min-width: var(--pagination-size-lg);
+    min-height: var(--pagination-size-lg);
+  }
+
+  .pagination-number {
+    min-width: var(--pagination-size-md);
+    min-height: var(--pagination-size-md);
+    font-size: var(--pagination-font-size-lg);
+  }
+
+  /* ===== 状態別スタイル ===== */
+  .pagination-btn:hover:not(.pagination-disabled),
+  .pagination-number:hover {
+    color: var(--pagination-primary-hover-color);
+    transform: translateY(-0.1875rem) scale(1.08);
+    box-shadow: 0 0.5rem 1.5625rem oklch(0% 0 0deg / 0.15);
+  }
+
+  .pagination-btn:focus,
+  .pagination-number:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem oklch(60% 0 0deg / 0.4);
+    transform: translateY(-0.125rem) scale(1.05);
+  }
+
+  .pagination-number.pagination-current {
+    background: linear-gradient(
+      135deg,
+      oklch(45% 0.5 var(--pagination-primary-hue)) 0%,
+      oklch(40% 0.6 300deg) 50%,
+      oklch(35% 0.7 320deg) 100%
+    );
+    color: oklch(100% 0 0deg);
+    box-shadow: 0 0.25rem 0.75rem oklch(0% 0 0deg / 0.2);
+    cursor: default;
+    font-weight: 800;
+    transform: scale(1.05);
+  }
+
+  .pagination-number.pagination-current:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0.25rem 0.9375rem oklch(0% 0 0deg / 0.3);
+  }
+
+  .pagination-btn.pagination-disabled {
+    background: oklch(92% 0 0deg / 0.3);
+    color: var(--pagination-disabled-color);
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    border: 1px solid oklch(85% 0 0deg / 0.3);
+    box-shadow: inset 0 1px 2px oklch(0% 0 0deg / 0.1);
+  }
+
+  .pagination-btn.pagination-disabled:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .pagination-ellipsis {
+    color: var(--pagination-ellipsis-color);
+    font-weight: 500;
+  }
+
+  .pagination-ellipsis-dots {
+    color: oklch(50% 0.15 var(--pagination-primary-hue));
+    font-weight: 800;
+    font-size: var(--pagination-font-size-xl);
+    padding: 0 var(--pagination-spacing-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.1em;
+    min-width: var(--pagination-size-sm);
+    min-height: var(--pagination-size-sm);
+  }
+
+  /* ===== アイコンとテキスト ===== */
+  .pagination-icon {
+    width: clamp(1rem, 3vw, 1.25rem);
+    height: clamp(1rem, 3vw, 1.25rem);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .pagination-btn:hover .pagination-icon {
+    transform: translateX(-0.125rem);
+  }
+
+  .pagination-next:hover .pagination-icon {
+    transform: translateX(0.125rem);
+  }
+
+  .pagination-btn-text {
+    margin: 0 var(--pagination-spacing-xs);
+    font-weight: 700;
+    font-size: var(--pagination-font-size-sm);
+    letter-spacing: 0.025em;
+  }
+
+  /* ===== レスポンシブデザイン ===== */
+  @media (max-width: 40rem) {
+    .pagination-nav-buttons .pagination-btn {
+      flex: 1;
+      min-width: auto;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .pagination-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(1rem, 3vw, 2rem);
+    }
+
+    .pagination-numbers {
+      order: 2;
+      flex: 0 0 auto;
+    }
+
+    .pagination-nav-buttons {
+      display: contents;
+    }
+
+    .pagination-prev {
+      order: 1;
+    }
+    .pagination-next {
+      order: 3;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .pagination-container {
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .pagination-controls {
+      gap: clamp(1rem, 2.5vw, 1.5rem);
+    }
+
+    .pagination-numbers {
+      gap: clamp(0.5rem, 1.5vw, 0.75rem);
+    }
+  }
+
+  /* ===== アクセシビリティ対応 ===== */
+  @media (hover: none) and (pointer: coarse) {
+    .pagination-btn,
+    .pagination-number {
+      min-width: var(--pagination-size-touch);
+      min-height: var(--pagination-size-touch);
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+    }
+
+    .pagination-btn:active,
+    .pagination-number:active {
+      transform: scale(0.92);
+    }
+
+    .pagination-btn:hover,
+    .pagination-number:hover {
+      transform: none;
+    }
+  }
+
+  @media (prefers-contrast: high) {
+    .pagination-container {
+      background: oklch(100% 0 0deg);
+      border: 2px solid oklch(0% 0 0deg);
+    }
+
+    .pagination-btn,
+    .pagination-number {
+      background: oklch(100% 0 0deg);
+      border: 2px solid oklch(0% 0 0deg);
+      color: oklch(0% 0 0deg);
+    }
+
+    .pagination-btn:hover:not(.pagination-disabled),
+    .pagination-number:hover {
+      background: oklch(0% 0 0deg);
+      color: oklch(100% 0 0deg);
+    }
+
+    .pagination-number.pagination-current {
+      background: oklch(0% 0 0deg);
+      color: oklch(100% 0 0deg);
+    }
+
+    .pagination-btn.pagination-disabled {
+      background: oklch(90% 0 0deg);
+      color: oklch(50% 0 0deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pagination-btn,
+    .pagination-number,
+    .pagination-progress-bar,
+    .pagination-icon {
+      transition: none;
+    }
+
+    .pagination-progress-bar::after {
+      animation: none;
+    }
+
+    .pagination-btn:hover,
+    .pagination-number:hover {
+      transform: none;
+    }
+  }
+
+  /* ===== ダークモード対応 ===== */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --pagination-primary-lightness: 80%;
+      --pagination-primary-chroma: 0.15;
+      --pagination-primary-hover-lightness: 95%;
+      --pagination-primary-hover-chroma: 0.2;
+      --pagination-ellipsis-lightness: 70%;
+      --pagination-ellipsis-chroma: 0.1;
+    }
+
+    .pagination-progress {
+      background: oklch(20% 0.05 var(--pagination-primary-hue) / 0.4);
+    }
+
+    .pagination-btn.pagination-disabled {
+      color: oklch(50% 0 0deg);
+      background: oklch(15% 0 0deg / 0.3);
+    }
+  }
+</style>

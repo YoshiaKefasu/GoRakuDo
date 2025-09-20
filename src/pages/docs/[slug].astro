@@ -14,7 +14,7 @@ import '../../styles/content-page.css';
 export async function getStaticPaths() {
   const posts = await getCollection('docs');
 
-  return posts.map(post => ({
+  return posts.map((post: CollectionEntry<'docs'>) => ({
     params: { slug: post.slug },
     props: { post },
   }));
@@ -33,7 +33,7 @@ const { Content, headings } = await post.render();
 
 // Filter headings for TOC (h2-h3 levels work best for navigation)
 const tocHeadings = headings.filter(
-  heading => heading.depth >= 2 && heading.depth <= 3
+  (heading: { depth: number }) => heading.depth >= 2 && heading.depth <= 3
 );
 
 // Dynamic content path resolution for SEO
@@ -150,37 +150,6 @@ const postData = {
 
       // Make sharePost globally accessible for onclick handlers
       window.sharePost = sharePost;
-
-      // Reading progress indicator
-      function addReadingProgress() {
-        const progressBar = document.createElement('div');
-        progressBar.className = 'reading-progress';
-        progressBar.setAttribute('role', 'progressbar');
-        progressBar.setAttribute('aria-label', 'Reading progress');
-        progressBar.style.position = 'fixed';
-        progressBar.style.top = '0';
-        progressBar.style.left = '0';
-        progressBar.style.width = '0%';
-        progressBar.style.height = '3px';
-        progressBar.style.background =
-          'linear-gradient(90deg, #8b5dff, #7b4def)';
-        progressBar.style.zIndex = '1000';
-        progressBar.style.transition = 'width 0.1s ease';
-        document.body.appendChild(progressBar);
-
-        window.addEventListener('scroll', () => {
-          const scrollTop = window.pageYOffset;
-          const docHeight = document.body.scrollHeight - window.innerHeight;
-          const scrollPercent = (scrollTop / docHeight) * 100;
-          progressBar.style.width = scrollPercent + '%';
-          progressBar.setAttribute('aria-valuenow', Math.round(scrollPercent));
-        });
-      }
-
-      // Initialize when DOM is ready
-      document.addEventListener('DOMContentLoaded', function () {
-        addReadingProgress();
-      });
     </script>
   </body>
 </html>
