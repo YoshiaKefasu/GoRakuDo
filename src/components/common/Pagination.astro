@@ -28,24 +28,31 @@ if (
   return null;
 }
 
-// 表示するページ番号の計算
+// 表示するページ番号の計算（3ページ固定）
 function getVisiblePages(
   current: number,
   total: number,
-  max: number
+  max: number = 3
 ): number[] {
-  if (total <= max) {
+  if (total <= 3) {
     return Array.from({ length: total }, (_, i) => i + 1);
   }
 
-  const half = Math.floor(max / 2);
-  let start = Math.max(1, current - half);
-  let end = Math.min(total, start + max - 1);
+  // 常に3ページを表示するロジック
+  let start: number;
 
-  if (end - start + 1 < max) {
-    start = Math.max(1, end - max + 1);
+  if (current <= 2) {
+    // ページ1-2の場合は1,2,3を表示
+    start = 1;
+  } else if (current >= total - 1) {
+    // 最後の2ページの場合は最後の3ページを表示
+    start = Math.max(1, total - 2);
+  } else {
+    // 中間ページの場合は現在ページを中心に3ページ表示
+    start = current - 1;
   }
 
+  const end = Math.min(total, start + 2);
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 }
 
@@ -54,7 +61,7 @@ function getPageUrl(page: number): string {
   return page === 1 ? baseUrl : `${baseUrl}/page/${page}`;
 }
 
-const visiblePages = getVisiblePages(currentPage, totalPages, maxVisiblePages);
+const visiblePages = getVisiblePages(currentPage, totalPages, 3);
 const prevPageUrl = currentPage > 1 ? getPageUrl(currentPage - 1) : null;
 const nextPageUrl =
   currentPage < totalPages ? getPageUrl(currentPage + 1) : null;
@@ -214,7 +221,7 @@ const structuredData = {
 </nav>
 
 <style>
-  /* ===== CSS変数定義 ===== */
+  /* ===== CSS変数定義（モバイルファースト） ===== */
   :root {
     /* カラーパレット */
     --pagination-primary-hue: 280deg;
@@ -251,38 +258,39 @@ const structuredData = {
         var(--pagination-primary-hue)
     );
 
-    /* スペーシング */
-    --pagination-spacing-xs: clamp(0.375rem, 1.2vw, 0.625rem);
-    --pagination-spacing-sm: clamp(0.5rem, 1.5vw, 0.75rem);
-    --pagination-spacing-md: clamp(0.75rem, 2vw, 1rem);
-    --pagination-spacing-lg: clamp(1rem, 2.5vw, 1.5rem);
-    --pagination-spacing-xl: clamp(1.5rem, 3vw, 2.5rem);
+    /* モバイルファースト スペーシング（320px基準） */
+    --pagination-spacing-xs: 0.375rem; /* 6px */
+    --pagination-spacing-sm: 0.5rem; /* 8px */
+    --pagination-spacing-md: 0.75rem; /* 12px */
+    --pagination-spacing-lg: 1rem; /* 16px */
+    --pagination-spacing-xl: 1.5rem; /* 24px */
 
-    /* サイズ */
-    --pagination-font-size-sm: clamp(0.85rem, 2vw, 0.95rem);
-    --pagination-font-size-md: clamp(0.9rem, 2.2vw, 1rem);
-    --pagination-font-size-lg: clamp(0.95rem, 2.3vw, 1.05rem);
-    --pagination-font-size-xl: clamp(1rem, 2.2vw, 1.1rem);
+    /* モバイルファースト フォントサイズ */
+    --pagination-font-size-sm: 0.875rem; /* 14px */
+    --pagination-font-size-md: 0.9rem; /* 14.4px */
+    --pagination-font-size-lg: 0.95rem; /* 15.2px */
+    --pagination-font-size-xl: 1rem; /* 16px */
 
-    --pagination-size-sm: clamp(32px, 6vw, 40px);
-    --pagination-size-md: clamp(48px, 9vw, 56px);
-    --pagination-size-lg: clamp(52px, 10vw, 60px);
-    --pagination-size-touch: clamp(56px, 12vw, 64px);
+    /* モバイルファースト サイズ */
+    --pagination-size-sm: 32px;
+    --pagination-size-md: 40px;
+    --pagination-size-lg: 48px;
+    --pagination-size-touch: 56px;
 
-    /* ボーダー半径 */
-    --pagination-radius-sm: clamp(0.875rem, 2.2vw, 1.125rem);
-    --pagination-radius-md: clamp(1rem, 2.5vw, 1.5rem);
+    /* モバイルファースト ボーダー半径 */
+    --pagination-radius-sm: 0.75rem; /* 12px */
+    --pagination-radius-md: 1rem; /* 16px */
 
     /* トランジション */
     --pagination-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     --pagination-transition-slow: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* ===== ベーススタイル ===== */
+  /* ===== ベーススタイル（モバイルファースト） ===== */
   .pagination-container {
-    max-width: clamp(20rem, 90vw, 50rem);
-    margin: var(--pagination-spacing-xl) auto;
-    padding: clamp(1.25rem, 3.5vw, 2rem);
+    max-width: 100%;
+    margin: var(--pagination-spacing-xl) 0;
+    padding: var(--pagination-spacing-lg) 0.5rem;
     border-radius: var(--pagination-radius-md);
     contain: layout style paint;
     transform: translateZ(0);
@@ -339,10 +347,10 @@ const structuredData = {
     }
   }
 
-  /* ===== レイアウト ===== */
+  /* ===== レイアウト（モバイルファースト） ===== */
   .pagination-controls {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: var(--pagination-spacing-md);
     align-items: center;
   }
@@ -363,6 +371,13 @@ const structuredData = {
     gap: var(--pagination-spacing-sm);
     order: 2;
     width: 100%;
+  }
+
+  /* モバイルでのナビゲーションボタンの幅調整 */
+  .pagination-nav-buttons .pagination-btn {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
   }
 
   /* ===== ボタンとナンバーの共通スタイル ===== */
@@ -396,18 +411,26 @@ const structuredData = {
   }
 
   /* ===== 状態別スタイル ===== */
-  .pagination-btn:hover:not(.pagination-disabled),
   .pagination-number:hover {
     color: var(--pagination-primary-hover-color);
     transform: translateY(-0.1875rem) scale(1.08);
     box-shadow: 0 0.5rem 1.5625rem oklch(0% 0 0deg / 0.15);
   }
 
-  .pagination-btn:focus,
+  /* ナビゲーションボタンのホバーアニメーションを削除 */
+  .pagination-btn:hover:not(.pagination-disabled) {
+    color: var(--pagination-primary-hover-color);
+  }
+
   .pagination-number:focus {
     outline: none;
     box-shadow: 0 0 0 0.25rem oklch(60% 0 0deg / 0.4);
     transform: translateY(-0.125rem) scale(1.05);
+  }
+
+  .pagination-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem oklch(60% 0 0deg / 0.4);
   }
 
   .pagination-number.pagination-current {
@@ -469,14 +492,6 @@ const structuredData = {
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .pagination-btn:hover .pagination-icon {
-    transform: translateX(-0.125rem);
-  }
-
-  .pagination-next:hover .pagination-icon {
-    transform: translateX(0.125rem);
-  }
-
   .pagination-btn-text {
     margin: 0 var(--pagination-spacing-xs);
     font-weight: 700;
@@ -484,20 +499,42 @@ const structuredData = {
     letter-spacing: 0.025em;
   }
 
-  /* ===== レスポンシブデザイン ===== */
-  @media (max-width: 40rem) {
-    .pagination-nav-buttons .pagination-btn {
-      flex: 1;
-      min-width: auto;
-    }
-  }
+  /* ===== レスポンシブデザイン（モバイルファースト） ===== */
 
-  @media (min-width: 40rem) {
+  /* タブレット（768px以上） */
+  @media (min-width: 48rem) {
+    :root {
+      --pagination-spacing-xs: 0.5rem; /* 8px */
+      --pagination-spacing-sm: 0.625rem; /* 10px */
+      --pagination-spacing-md: 1rem; /* 16px */
+      --pagination-spacing-lg: 1.25rem; /* 20px */
+      --pagination-spacing-xl: 2rem; /* 32px */
+
+      --pagination-font-size-sm: 0.9rem; /* 14.4px */
+      --pagination-font-size-md: 0.95rem; /* 15.2px */
+      --pagination-font-size-lg: 1rem; /* 16px */
+      --pagination-font-size-xl: 1.1rem; /* 17.6px */
+
+      --pagination-size-sm: 36px;
+      --pagination-size-md: 44px;
+      --pagination-size-lg: 52px;
+      --pagination-size-touch: 60px;
+
+      --pagination-radius-sm: 0.875rem; /* 14px */
+      --pagination-radius-md: 1.25rem; /* 20px */
+    }
+
+    .pagination-container {
+      max-width: 100%;
+      margin: var(--pagination-spacing-xl) 0;
+      padding: var(--pagination-spacing-xl) 1rem;
+    }
+
     .pagination-controls {
-      display: flex;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
-      gap: clamp(1rem, 3vw, 2rem);
+      gap: var(--pagination-spacing-lg);
     }
 
     .pagination-numbers {
@@ -509,6 +546,14 @@ const structuredData = {
       display: contents;
     }
 
+    /* タブレット以上では適切なサイズに調整 */
+    .pagination-nav-buttons .pagination-btn {
+      flex: none;
+      min-width: var(--pagination-size-lg);
+      width: auto;
+      padding: var(--pagination-spacing-sm) var(--pagination-spacing-lg);
+    }
+
     .pagination-prev {
       order: 1;
     }
@@ -517,27 +562,59 @@ const structuredData = {
     }
   }
 
-  @media (min-width: 64rem) {
+  /* デスクトップ（1280px以上） */
+  @media (min-width: 80rem) {
+    :root {
+      --pagination-spacing-xs: 0.625rem; /* 10px */
+      --pagination-spacing-sm: 0.75rem; /* 12px */
+      --pagination-spacing-md: 1.25rem; /* 20px */
+      --pagination-spacing-lg: 1.5rem; /* 24px */
+      --pagination-spacing-xl: 2.5rem; /* 40px */
+
+      --pagination-font-size-sm: 0.95rem; /* 15.2px */
+      --pagination-font-size-md: 1rem; /* 16px */
+      --pagination-font-size-lg: 1.05rem; /* 16.8px */
+      --pagination-font-size-xl: 1.125rem; /* 18px */
+
+      --pagination-size-sm: 40px;
+      --pagination-size-md: 48px;
+      --pagination-size-lg: 56px;
+      --pagination-size-touch: 64px;
+
+      --pagination-radius-sm: 1rem; /* 16px */
+      --pagination-radius-md: 1.5rem; /* 24px */
+    }
+
     .pagination-container {
-      padding: clamp(1.5rem, 4vw, 2.5rem);
+      max-width: 100%;
+      margin: var(--pagination-spacing-xl) 0;
+      padding: 2.5rem 1.5rem;
     }
 
     .pagination-controls {
-      gap: clamp(1rem, 2.5vw, 1.5rem);
+      gap: 2rem;
     }
 
     .pagination-numbers {
-      gap: clamp(0.5rem, 1.5vw, 0.75rem);
+      gap: var(--pagination-spacing-sm);
+    }
+
+    /* デスクトップでも適切なサイズに調整 */
+    .pagination-nav-buttons .pagination-btn {
+      flex: none;
+      min-width: var(--pagination-size-lg);
+      width: auto;
+      padding: var(--pagination-spacing-sm) var(--pagination-spacing-lg);
     }
   }
 
-  /* ===== アクセシビリティ対応 ===== */
+  /* ===== アクセシビリティ対応（モバイルファースト） ===== */
   @media (hover: none) and (pointer: coarse) {
     .pagination-btn,
     .pagination-number {
       min-width: var(--pagination-size-touch);
       min-height: var(--pagination-size-touch);
-      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      font-size: var(--pagination-font-size-lg);
     }
 
     .pagination-btn:active,
