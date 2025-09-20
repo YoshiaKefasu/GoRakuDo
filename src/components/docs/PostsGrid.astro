@@ -107,21 +107,12 @@ const processedPosts = posts.map((post, index) => ({
 <style>
   /* ===== CSS CUSTOM PROPERTIES ===== */
   :root {
-    --card-padding-mobile: 1.25rem;
-    --card-padding-tablet: 1.25rem;
-    --card-padding-desktop: 1.25rem;
-    --grid-gap-mobile: 1.5rem;
-    --grid-gap-tablet: 2rem;
-    --grid-gap-desktop: 2.5rem;
-    --emoji-size-mobile: 4rem;
-    --emoji-size-tablet: 4.5rem;
-    --emoji-size-desktop: 5rem;
-    --title-font-mobile: 1.5rem;
-    --title-font-tablet: 1.25rem;
-    --title-font-desktop: 1rem;
+    /* Mobile First (320px+) */
+    --card-padding: 1rem;
+    --grid-gap: 1.25rem;
+    --emoji-size: 3.5rem;
+    --title-font: 1.375rem;
     --description-lines: 3;
-    --description-lines-tablet: 2;
-    --description-lines-desktop: 2;
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.2s ease;
     --shadow-subtle: 0 1px 3px oklch(0% 0 0deg / 0.1);
@@ -132,13 +123,13 @@ const processedPosts = posts.map((post, index) => ({
     --color-text-light: oklch(45% 0 0deg);
   }
 
-  /* ===== GRID LAYOUT ===== */
+  /* ===== GRID LAYOUT - MOBILE FIRST ===== */
   .posts-grid {
     display: grid;
-    gap: var(--grid-gap-mobile);
+    gap: var(--grid-gap);
     grid-template-columns: 1fr;
     max-width: 1400px;
-    margin: 0 auto 4rem;
+    margin: 0 auto 3rem;
     opacity: 1;
     transform: translateY(0);
     animation: fadeInUp 0.6s ease-out;
@@ -147,22 +138,34 @@ const processedPosts = posts.map((post, index) => ({
     overflow: visible;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
+    :root {
+      --card-padding: 1.25rem;
+      --grid-gap: 2rem;
+      --emoji-size: 4.5rem;
+      --title-font: 1.25rem;
+      --description-lines: 2;
+    }
+    
     .posts-grid {
-      gap: var(--grid-gap-tablet);
+      gap: var(--grid-gap);
       grid-template-columns: repeat(2, 1fr);
+      margin-bottom: 4rem;
     }
   }
 
-  @media (min-width: 1024px) {
-    .posts-grid {
-      gap: var(--grid-gap-desktop);
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
+  /* Desktop (1280px+) */
   @media (min-width: 1280px) {
+    :root {
+      --card-padding: 1.5rem;
+      --grid-gap: 2.5rem;
+      --emoji-size: 5rem;
+      --title-font: 1.125rem;
+    }
+    
     .posts-grid {
+      gap: var(--grid-gap);
       grid-template-columns: repeat(3, 1fr);
     }
   }
@@ -188,7 +191,7 @@ const processedPosts = posts.map((post, index) => ({
     }
   }
 
-  /* ===== CARD BASE STYLES ===== */
+  /* ===== CARD BASE STYLES - MOBILE FIRST ===== */
   .post-card {
     position: relative;
     display: flex;
@@ -196,27 +199,31 @@ const processedPosts = posts.map((post, index) => ({
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: var(--card-padding-mobile);
+    padding: var(--card-padding);
     cursor: pointer;
     transform: none;
     transition: var(--transition-smooth);
     will-change: transform, box-shadow;
-    border-radius: 1rem;
+    border-radius: 0.875rem;
     box-shadow: 
       0 4px 6px -1px oklch(0% 0 0deg / 0.1),
       0 2px 4px -1px oklch(0% 0 0deg / 0.06);
     overflow: visible;
   }
 
+  /* Tablet (768px+) */
   @media (min-width: 768px) {
     .post-card {
-      padding: var(--card-padding-tablet);
+      padding: var(--card-padding);
+      border-radius: 1rem;
     }
   }
 
-  @media (min-width: 1024px) {
+  /* Desktop (1280px+) */
+  @media (min-width: 1280px) {
     .post-card {
-      padding: var(--card-padding-desktop);
+      padding: var(--card-padding);
+      border-radius: 1.125rem;
     }
   }
 
@@ -272,13 +279,13 @@ const processedPosts = posts.map((post, index) => ({
     transition: var(--transition-fast);
   }
 
-  /* ===== EMOJI STYLING (ENHANCED) ===== */
+  /* ===== EMOJI STYLING - MOBILE FIRST ===== */
   .post-emoji {
     position: absolute;
     top: -0.5rem;
     right: -0.5rem;
     z-index: 15;
-    font-size: var(--emoji-size-mobile);
+    font-size: var(--emoji-size);
     pointer-events: none;
     filter: 
       drop-shadow(0 4px 8px oklch(0% 0 0deg / 0.15))
@@ -289,19 +296,21 @@ const processedPosts = posts.map((post, index) => ({
     opacity: 0.9;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
     .post-emoji {
       top: -1rem;
       right: -0.75rem;
-      font-size: var(--emoji-size-tablet);
+      font-size: var(--emoji-size);
     }
   }
 
-  @media (min-width: 1024px) {
+  /* Desktop (1280px+) */
+  @media (min-width: 1280px) {
     .post-emoji {
       top: -1.25rem;
       right: -1rem;
-      font-size: var(--emoji-size-desktop);
+      font-size: var(--emoji-size);
     }
   }
 
@@ -314,7 +323,7 @@ const processedPosts = posts.map((post, index) => ({
     animation-duration: 2s;
   }
 
-  /* ===== CONTENT CONTAINER ===== */
+  /* ===== CONTENT CONTAINER - MOBILE FIRST ===== */
   .post-card-container {
     display: flex;
     flex-direction: column;
@@ -325,31 +334,31 @@ const processedPosts = posts.map((post, index) => ({
     flex: 1;
   }
 
-  @media (min-width: 640px) {
-    .post-card-container {
-      gap: 0.625rem;
-      padding: 0.125rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .post-card-container {
-      gap: 0.625rem;
-      padding: 0.125rem;
-    }
-  }
-
   .post-header {
     margin-bottom: 0.75rem;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
+    .post-card-container {
+      gap: 0.625rem;
+      padding: 0.125rem;
+    }
+    
     .post-header {
       margin-bottom: 0.5rem;
     }
   }
 
-  /* ===== TYPOGRAPHY (ENHANCED) ===== */
+  /* Desktop (1280px+) */
+  @media (min-width: 1280px) {
+    .post-card-container {
+      gap: 0.625rem;
+      padding: 0.125rem;
+    }
+  }
+
+  /* ===== TYPOGRAPHY - MOBILE FIRST ===== */
   .post-title {
     position: relative;
     z-index: 5;
@@ -358,7 +367,7 @@ const processedPosts = posts.map((post, index) => ({
     padding-right: 5rem;
     color: var(--color-text-dark);
     font-family: 'Gochi Hand', 'Kalam', 'Caveat', 'Comic Sans MS', cursive, system-ui;
-    font-size: var(--title-font-mobile);
+    font-size: var(--title-font);
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: -0.01em;
@@ -370,9 +379,10 @@ const processedPosts = posts.map((post, index) => ({
     overflow-wrap: break-word;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
     .post-title {
-      font-size: var(--title-font-tablet);
+      font-size: var(--title-font);
       min-height: 3.5rem;
       margin-bottom: 1rem;
       padding-right: 2.5rem;
@@ -383,9 +393,10 @@ const processedPosts = posts.map((post, index) => ({
     }
   }
 
-  @media (min-width: 1024px) {
+  /* Desktop (1280px+) */
+  @media (min-width: 1280px) {
     .post-title {
-      font-size: var(--title-font-desktop);
+      font-size: var(--title-font);
       min-height: 3.5rem;
       margin-bottom: 1rem;
       font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
@@ -415,6 +426,7 @@ const processedPosts = posts.map((post, index) => ({
     transform: translateY(-2px);
   }
 
+  /* Tablet (768px+) */
   @media (min-width: 768px) {
     .post-title a:hover {
       transform: translateY(-1px);
@@ -454,31 +466,33 @@ const processedPosts = posts.map((post, index) => ({
     font-weight: 500;
     line-height: 1.4;
     flex-grow: 1;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: var(--description-lines);
     -webkit-box-orient: vertical;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
     .post-description {
-      max-height: calc(1.4em * var(--description-lines-tablet));
+      max-height: calc(1.4em * var(--description-lines));
       margin-bottom: 0.625rem;
       font-size: 0.95rem;
       line-height: 1.4;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: var(--description-lines);
     }
   }
 
-  @media (min-width: 1024px) {
+  /* Desktop (1280px+) */
+  @media (min-width: 1280px) {
     .post-description {
-      max-height: calc(1.4em * var(--description-lines-desktop));
+      max-height: calc(1.4em * var(--description-lines));
       margin-bottom: 0.625rem;
       font-size: 0.95rem;
       line-height: 1.4;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: var(--description-lines);
     }
   }
 
-  /* ===== TAGS STYLING (ENHANCED) ===== */
+  /* ===== TAGS STYLING - MOBILE FIRST ===== */
   .post-tags {
     position: relative;
     z-index: 5;
@@ -494,7 +508,8 @@ const processedPosts = posts.map((post, index) => ({
     box-sizing: border-box;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
     .post-tags {
       margin-bottom: 0.875rem;
       justify-content: center;
@@ -522,7 +537,8 @@ const processedPosts = posts.map((post, index) => ({
     min-width: fit-content;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
     .post-tag,
     .post-tag-more {
       padding: 0.5rem 0.875rem;
@@ -604,7 +620,8 @@ const processedPosts = posts.map((post, index) => ({
     transform: none;
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
     .read-more-btn {
       border-radius: 0.75rem;
       font-weight: 500;
@@ -637,7 +654,8 @@ const processedPosts = posts.map((post, index) => ({
       0 6px 12px oklch(0% 0 0deg / 0.1);
   }
 
-  @media (min-width: 640px) {
+  /* Tablet (768px+) */
+  @media (min-width: 768px) {
     .read-more-btn:hover {
       transform: translateY(-2px) scale(1.01);
     }
